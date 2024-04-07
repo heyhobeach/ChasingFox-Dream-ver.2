@@ -55,6 +55,23 @@ public partial class ControllerScript : MonoBehaviour
     private bool isGround = true;//점프 및 공격한것에 대한 테스트를 위함움직이면서 만약 안 된다면 다시 변수 만들어야함 공격을 했는지 판단하기 위함  
     public bool isHide = false;//크라우치 할 수 있는지 확인 용변수
     public bool isCrouching = false;//크라우치 중인지 확인뇽
+    private bool isJumping;
+    private bool isJumpReady;
+    private const float gravity = -9.81f;
+
+    private LayerMask lm;
+
+    [SerializeField] private float speed;
+    [SerializeField] private float accelerate;
+
+    
+    private float moveVec = 0;
+    private float velocity = 0;
+
+    private float distanceToCheck = 0.5f;
+    // private bool isGrounded;
+    private bool jumpKey;
+    private bool jumpKeyUp;
 
     [SerializeField] private GameObject currentOneWayPlatform;//떨어질수 있느 ㄴ바닥관련 오브젝트 담는 변수
     //[SerializeField] private BoxCollider2D playerCollider;//사용 안함
@@ -88,6 +105,9 @@ public partial class ControllerScript : MonoBehaviour
     void Start()
     {
         rg2d = GetComponent<Rigidbody2D>();
+        lm = ~(1<<gameObject.layer);
+        isJumpReady = true;
+        distanceToCheck = gameObject.GetComponent<BoxCollider2D>().size.y * 0.7f;
     }
 
 
@@ -96,7 +116,7 @@ public partial class ControllerScript : MonoBehaviour
     {
         if (collision.gameObject.tag == "ground" || collision.gameObject.tag == "platform")//지면 확인 점프용
         {
-            isGround = true;
+            // isGround = true;
             //WereWolf.Instance().isAttacking = false;// 이 부분이 있으면 땅에서 연속 공격 가능 
             if (collision.gameObject.tag == "platform")
             {
@@ -145,7 +165,7 @@ public partial class ControllerScript : MonoBehaviour
     {
         if (collision.gameObject.tag == "ground" || collision.gameObject.tag == "platform")//땅에서 벗어날경우
         {
-            isGround = false;
+            // isGround = false;
             if (collision.gameObject.tag == "platform")
             {
                 currentOneWayPlatform = null;//platform에서 벗어난거라면 플랫폼 변수를 비움
@@ -159,7 +179,7 @@ public partial class ControllerScript : MonoBehaviour
     {
         if (collision.gameObject.tag == "ground" || collision.gameObject.tag == "platform")
         {
-            isGround = true;
+            // isGround = true;
             if (collision.gameObject.tag == "platform")//플랫폼이라면 현재 플렛폼을 담음
             {
                 currentOneWayPlatform = collision.gameObject;
@@ -216,45 +236,49 @@ public partial class ControllerScript : MonoBehaviour
     private void FixedUpdate()
     {
 
-        if (jumpState.isJump)//점프중이라면
+        // if (jumpState.isJump)//점프중이라면
+        // {
+        //     switch (jumpState.jumptype)//LONG_JUMP판단을 위한부분임
+        //     {
+        //         case JumpState.State.IDLE:
+        //             //Debug.Log("일반");
+        //             break;
+        //         case JumpState.State.NORMAL_JUMP:
+        //             //Debug.Log("점프");
+        //             //Jump();
+        //             break;
+        //         case JumpState.State.LONG_JUMP:
+        //             //Debug.Log("긴 점프");
+        //             //Debug.Log("슈퍼 점프");
+        //             JumpHigher();//더 높게 점프
+        //             break;
+
+        //     }
+
+        // }
+
+        if (!isCrouching&&!WereWolf.Instance().isAttacking)//조건이 복잡한데 움직임을 입력 받은 상태며 숨지 않았으며 공격중이 아닐때, 즉 그냥 이동 + 점프상태만 받음
         {
-            switch (jumpState.jumptype)//LONG_JUMP판단을 위한부분임
-            {
-                case JumpState.State.IDLE:
-                    //Debug.Log("일반");
-                    break;
-                case JumpState.State.NORMAL_JUMP:
-                    //Debug.Log("점프");
-                    //Jump();
-                    break;
-                case JumpState.State.LONG_JUMP:
-                    //Debug.Log("긴 점프");
-                    //Debug.Log("슈퍼 점프");
-                    JumpHigher();//더 높게 점프
-                    break;
-
-            }
-
-        }
-
-        if (isMoving&&!isCrouching&&!WereWolf.Instance().isAttacking)//조건이 복잡한데 움직임을 입력 받은 상태며 숨지 않았으며 공격중이 아닐때, 즉 그냥 이동 + 점프상태만 받음
-        {
-            Move();
+            Move(new Vector3(HorizontalForce(), VerticalForce()) * Time.deltaTime);
         }
 
     }
-
-    private void Move()//이동관련부분은 세준이가 수정해야함
+    private float VerticalForce()
     {
-        Vector2 v2;
-        //if (Mathf.Sign(InxPos) != Mathf.Sign(rg2d.velocity.x))
-        //{
-        //    v2 = new Vector2(0, rg2d.velocity.y);
-        //}
-        v2 = new Vector2(InxPos, rg2d.velocity.y);
-
-        rg2d.velocity = v2;
+        velocity += gravity * Time.deltaTime;
+        if(isGround && velocity < 0) velocity = 0;
+        if(isJumping)
+        {
+            if(velocity <= 0) velocity = jumpForce/2;
+            velocity = Mathf.Sin(velocity/jumpForce) * jumpForce * 1.2f;
+        }
+        return velocity;
     }
+    private float HorizontalForce()
+    {
+        return moveVec * speed;
+    }
+    private void Move(Vector3 force) => transform.Translate(force);
 
     private void _Attack()//공격시 각 캐릭터별 공격 수행
     {
@@ -302,22 +326,36 @@ public partial class ControllerScript : MonoBehaviour
             Formchange();
         }
 
-        if (Input.GetKeyDown(KeyCode.W) && isGround&&!WereWolf.Instance().isAttacking)//점프키 관련 만약 키가 변한다면 keycode만 변경하면 됨
-        {//"W"가 점프라고 생각했을때 구현내용
-            Jump();
-        }
-        else if (Input.GetKey(KeyCode.W) && jumpState.isJump && Time.time - jumpState.jumpStartTime < jumpDuration)//점프 중이며 계속 누르고있으면 점프상태를 LONG_JUMP로 수정
-        {
-            //Debug.Log("HOLDDDDDDDDDDDDD");
-            jumpState.jumptype = JumpState.State.LONG_JUMP;
-        }
-        else//이게 아니라면 그냥 점프중이 아니라고 판단 따라서 isJump를 false로 수정하고 점프 상태를 IDLE로 변경
-        {
-            //Debug.Log("else");
-            jumpState.isJump = false;
-            jumpState.jumptype = JumpState.State.IDLE;
+        // if (Input.GetKeyDown(KeyCode.W) && isGround&&!WereWolf.Instance().isAttacking)//점프키 관련 만약 키가 변한다면 keycode만 변경하면 됨
+        // {//"W"가 점프라고 생각했을때 구현내용
+        //     // Jump();
+        // }
+        // else if (Input.GetKey(KeyCode.W) && jumpState.isJump && Time.time - jumpState.jumpStartTime < jumpDuration)//점프 중이며 계속 누르고있으면 점프상태를 LONG_JUMP로 수정
+        // {
+        //     //Debug.Log("HOLDDDDDDDDDDDDD");
+        //     jumpState.jumptype = JumpState.State.LONG_JUMP;
+        // }
+        // else//이게 아니라면 그냥 점프중이 아니라고 판단 따라서 isJump를 false로 수정하고 점프 상태를 IDLE로 변경
+        // {
+        //     //Debug.Log("else");
+        //     jumpState.isJump = false;
+        //     jumpState.jumptype = JumpState.State.IDLE;
 
+        // }
+        jumpKey = Input.GetKey(KeyCode.W);
+        if(!jumpKeyUp) jumpKeyUp = Input.GetKeyUp(KeyCode.W);
+        if(isGround && jumpKeyUp)
+        {
+            isJumpReady = true;
+            jumpKeyUp = false;
         }
+        if(isJumpReady && jumpKey)
+        {
+            isJumping = true;
+            if(jumpKeyUp) isJumpReady = false;
+            if(velocity/jumpForce >= 0.9f) isJumpReady = false;
+        }
+        else isJumping = false;
 
         //if (Input.GetKeyDown(KeyCode.S))
         if (Input.GetKey(KeyCode.S))//S를 누를때
@@ -349,25 +387,30 @@ public partial class ControllerScript : MonoBehaviour
             isCrouching = false;
         }
 
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))//이동 입력이 들어왔을때
-        {
-            InxPos = Input.GetAxis("Horizontal") * moveSpeed;
-            isMoving = true;
+        // if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))//이동 입력이 들어왔을때
+        // {
+        //     InxPos = Input.GetAxis("Horizontal") * moveSpeed;
+        //     isMoving = true;
 
-            //Debug.Log("좌우");
-        }
-        else if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))//이동 입력이 풀렸을때 isMoving을 false상태로 돌림
-        {
-            //InxPos = 0;
-            isMoving = false;
+        //     //Debug.Log("좌우");
+        // }
+        // else if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))//이동 입력이 풀렸을때 isMoving을 false상태로 돌림
+        // {
+        //     //InxPos = 0;
+        //     isMoving = false;
 
-            //Debug.Log("좌우 입력값 " + InxPos);
-        }
+        //     //Debug.Log("좌우 입력값 " + InxPos);
+        // }
+        isGround = Physics2D.Raycast(transform.position, Vector2.down, distanceToCheck, lm);
+        moveVec += (Input.GetAxisRaw("Horizontal")-moveVec) * accelerate;
+        if(Input.GetAxisRaw("Horizontal") == 0) moveVec += (Input.GetAxisRaw("Horizontal")-moveVec) * accelerate;
+        moveVec = Mathf.Clamp(moveVec, -1, 1);
     }
 
     private void Update()
     {
         InputManager();
+        // ConditionUpdate();
 
 
         if (charactor.isHuman)//인간상태일때 지속적으로 해야하는 함수들 넣기위함
