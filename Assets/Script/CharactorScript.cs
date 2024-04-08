@@ -7,9 +7,9 @@ using TMPro;
 
 public partial class ControllerScript : MonoBehaviour
 {
-    [SerializeField] GameObject attackPoint;//°ø°ÝÁöÁ¡
-     public GameObject bullet;//ÃÑ¾Ë ¿ÀºêÁ§Æ® ¿¬°á
-    public GameObject meleeAttack;//°ø°ÝÇÏ´Â ¿ÀºêÁ§Æ® ¿¬°á
+    [SerializeField] GameObject attackPoint;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+     public GameObject bullet;//ï¿½Ñ¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
+    public GameObject meleeAttack;//ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
     
     public class Charactor
     {
@@ -26,7 +26,7 @@ public partial class ControllerScript : MonoBehaviour
 
         }
 
-        public void SetInfo()//ÇØ´ç ÇÔ¼ö·Î Æû Ã¼ÀÎÁö½Ã º¯ÇÏ´Â ½ºÅ×ÀÌ½º ¼³Á¤ ÇÔ¼ö¸¦ ¸ð¾Æ¼­ ½ÇÇà½ÃÅ³°ÍÀÓ
+        public void SetInfo()//ï¿½Ø´ï¿½ ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½ï¿½ Ã¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½ï¿½Æ¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Å³ï¿½ï¿½ï¿½ï¿½
         {
             Setspeed();
             Setdamage();
@@ -36,81 +36,81 @@ public partial class ControllerScript : MonoBehaviour
         public virtual void Setdamage() { }
 
         public virtual void Attack() { }
-        public void Crouch(GameObject guard)//ref bool ·Î Á¢±Ù
+        public void Crouch(GameObject guard)//ref bool ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         {
 
-            Debug.Log("Å©¶ó¿ìÄ¡");
-            guard.SetActive(true);//Å©¶ó¿ìÄ¡ Çàµ¿½Ã °¡µå ¿ÀºêÁ§Æ®¸¦ È°¼ºÈ­ ½ÃÅ´
+            Debug.Log("Å©ï¿½ï¿½ï¿½Ä¡");
+            guard.SetActive(true);//Å©ï¿½ï¿½ï¿½Ä¡ ï¿½àµ¿ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ È°ï¿½ï¿½È­ ï¿½ï¿½Å´
 
 
-        }//´Á´ë¿Í ÀÎ°£ µÑ´Ù ¿õÅ©¸²ÀÌ °°´Ù°í °¡Á¤ÇÏ±â¿¡ ±×³É ÀÏ¹ÝÇÔ¼ö·Î ±¸Çö
+        }//ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Î°ï¿½ ï¿½Ñ´ï¿½ ï¿½ï¿½Å©ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ù°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±â¿¡ ï¿½×³ï¿½ ï¿½Ï¹ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
         public virtual void Reload() { }
     }
     public class WereWolf : Charactor
     {
-        public int life = 2;//´Á´ëÀÇ »ý¸íÀ» 2·Î ¼³Á¤ÇßÁö¸¸ ½ÇÁ¦·Î´Â 1ÀÌ¶ó¼­ ³ªÁß¿¡ ¼öÁ¤ ÇÊ¿äÇÔ
-        private static WereWolf instance;//½Ì±ÛÅÏÀ» À§ÇÑ º¯¼ö
+        public int life = 2;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 2ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Î´ï¿½ 1ï¿½Ì¶ï¿½ ï¿½ï¿½ï¿½ß¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½
+        private static WereWolf instance;//ï¿½Ì±ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         //IEnumerator tTimer;
-        public bool isAttacking = false;//°ø°Ý º¸¿©ÁÖ°í ÇÏ´Â ¿ë º¯¼ö °ø°Ý½Ã°£ µî Ã¼Å©ÇÒ¶§ »ç¿ëµÇ´ÂÁß
+        public bool isAttacking = false;//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö°ï¿½ ï¿½Ï´ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ý½Ã°ï¿½ ï¿½ï¿½ Ã¼Å©ï¿½Ò¶ï¿½ ï¿½ï¿½ï¿½Ç´ï¿½ï¿½ï¿½
 
-        //private bool showAttack = false;//ÇØ´ç º¯¼ö´Â »ç¿ë ¾È ÇØ¼­ ÁÖ¼®Ã³¸® ÇÔ
+        //private bool showAttack = false;//ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ø¼ï¿½ ï¿½Ö¼ï¿½Ã³ï¿½ï¿½ ï¿½ï¿½
 
         float t = 0;
 
-        public static WereWolf Instance()//´Á´ë ÀÎ½ºÅÏÆ®µî ½±°Ô ±³Ã¼ÇÏ±â À§ÇÔ ¾îÂ÷ÇÇ ´Á´ë¿Í ÀÎ°£Àº ÇÑ¹ø»ý¼ºµÇ¸é ´õ »ý¼ºÀÌ ¾ÈµÉ°ÍÀÌ¶ó°í »ý°¢ÇßÀ½
+        public static WereWolf Instance()//ï¿½ï¿½ï¿½ï¿½ ï¿½Î½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Î°ï¿½ï¿½ï¿½ ï¿½Ñ¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¸ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ÈµÉ°ï¿½ï¿½Ì¶ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         {
             if (instance == null)
             {
-                //Debug.Log("ºñ¾úÀ½ »ý¼º");
+                //Debug.Log("ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
                 instance = new WereWolf();
-                //´Á´ë »ý¼º½Ã ºÎÅÍ ±×³É ÄÚ·çÆ¾À» ½ÃÀÛ½ÃÄ×À½ ±×·³À¸·Î ÀÎÇØ °ø°Ý»óÅÂ¿¡ ´ëÇÑ isAttackingÀ» ÅëÇØ ÄÚ·çÆ¾ ½ÃÀÛ ¹× Àç½ÃÀÛ? À» Á¶ÀýÇÔ
-                ControllerScript.instance.StartCoroutine(instance.timer());//ÄÚ·çÆ¾ È£Ãâ ºÎºÐÀÌ Á¶±Ý ¼öÁ¤ ÇÒ ÇÊ¿äÀÖÀ»°Í °°À½ ÀüÁöÀü´ÉÇÑ Àë¹Ì´Ï¿¡°Ô ¹°¾îº¸¸é StartCorutineÀ» ±×³É °¡»óÇÔ¼ö·Î ¸¸µé¶ó°í ÇÏ±äÇÏ´õ¶ó
+                //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½×³ï¿½ ï¿½Ú·ï¿½Æ¾ï¿½ï¿½ ï¿½ï¿½ï¿½Û½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ý»ï¿½ï¿½Â¿ï¿½ ï¿½ï¿½ï¿½ï¿½ isAttackingï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ú·ï¿½Æ¾ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½? ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+                ControllerScript.instance.StartCoroutine(instance.timer());//ï¿½Ú·ï¿½Æ¾ È£ï¿½ï¿½ ï¿½Îºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ì´Ï¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½îº¸ï¿½ï¿½ StartCorutineï¿½ï¿½ ï¿½×³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï±ï¿½ï¿½Ï´ï¿½ï¿½ï¿½
 
             }
             else
             {
-                //Debug.Log("¾È ºñ¾ú±â¶§¹®¿¡ ±âÁ¸°Å Àü´Þ");
+                //Debug.Log("ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½â¶§ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
             }
             return instance;
         }
 
         private WereWolf()
         {
-            //if (instance == null) Debug.Log("´Á´ë");
+            //if (instance == null) Debug.Log("ï¿½ï¿½ï¿½ï¿½");
         }
 
         public override void Setspeed()
         {
-            Debug.Log("´Á´ë ¼Óµµ");
+            Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½Óµï¿½");
             this.speed = 5.0f;
         }
         public override void Setdamage()
         {
-            Debug.Log("´Á´ë °ø°Ý·Â");
+            Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ý·ï¿½");
             this.damage = 2 ;
         }
-        public override void Attack()//´Ù½Ã °ø°ÝÇÏ´Â°Í¿¡ ´ëÇÑ ±âÁØÀÌ ¾Ö¸ÅÇßÀ½ ÀÏ´ÜÀº ´ëÃæ ³»»ý°¢´ë·Î ¼³Á¤ÇÏ±â´Â Çß´Âµ¥ ¿À·ù°¡ Á¶±Ý Á¸ÀçÇÏ±â´ÂÇÔ
+        public override void Attack()//ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´Â°Í¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ï¿½ ï¿½ß´Âµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ï¿½ï¿½ï¿½
         {
-            Debug.Log("´Á´ë °ø°Ý");
+            Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
             //float startAttack = Time.time;
             float startAttack =0;
             t = 0;
-            ControllerScript.instance.meleeAttack.transform.position = ControllerScript.instance.attackPoint.transform.position;//meleeAttack¿ÀºêÁ§Æ®ÀÇ À§Ä¡¸¦ Ã³À½ ¼³Á¤ÇÑ attackPoint·Î ÀÌµ¿½ÃÅ´
+            ControllerScript.instance.meleeAttack.transform.position = ControllerScript.instance.attackPoint.transform.position;//meleeAttackï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ attackPointï¿½ï¿½ ï¿½Ìµï¿½ï¿½ï¿½Å´
 
 
             //ControllerScript.instance.meleeAttack.SetActive(true);
 
             //if (!showAttack)
             //{
-                if (!isAttacking)//°ø°ÝÇÑ ÀûÀÌ ¾øÀ»¶§ Áï Ã¹ °ø°ÝÀÏ°æ¿ì
+                if (!isAttacking)//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ Ã¹ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ï¿½
                 {
                     ControllerScript.instance.meleeAttack.SetActive(true);
                     Vector2 temp = (ControllerScript.instance.ClickPos() - ControllerScript.instance.transform.position).normalized;
-                    temp = temp.normalized;//ÂªÀº °Å¸®µµ 1·Î ¸ÂÃçÁÖ±â ±ÍÇÔ
+                    temp = temp.normalized;//Âªï¿½ï¿½ ï¿½Å¸ï¿½ï¿½ï¿½ 1ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö±ï¿½ ï¿½ï¿½ï¿½ï¿½
                     Debug.Log(temp);
-                    ControllerScript.instance.rg2d.AddForce(temp * 4, ForceMode2D.Impulse);//°ø°Ý½Ã ³¯¾Æ°¡´Â°Í? ÀÌµ¿À» À§ÇÔ, °ø°ÝÇÑ ¹æÇâÀ¸·Î ¿òÁ÷¿©Çá±â¶§¹®¿¡ yÃàµµ °°ÀÌ ÁÖ¾ú°í ´ëÃæ Å×½ºÆ® ÇßÀ»¶§ °ø°ÝÀÌ ¿¬ÀÌ¾î¼­ µé¾î°¡¸é ÀÌµ¿ÀÌ •è¶óÁü addForce°¡ ÃÊ±âÈ­°¡ ¾È µÇ¾îÀÖ¾î¼­ ±×·±°Í °°À½
-                    isAttacking = true;//(°ø°ÝÁßÀÌ¶ó°í ÆÇ´Ü)
+                    // ControllerScript.instance.rg2d.AddForce(temp * 4, ForceMode2D.Impulse);//ï¿½ï¿½ï¿½Ý½ï¿½ ï¿½ï¿½ï¿½Æ°ï¿½ï¿½Â°ï¿½? ï¿½Ìµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½â¶§ï¿½ï¿½ï¿½ï¿½ yï¿½àµµ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½×½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¾î¼­ ï¿½ï¿½î°¡ï¿½ï¿½ ï¿½Ìµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ addForceï¿½ï¿½ ï¿½Ê±ï¿½È­ï¿½ï¿½ ï¿½ï¿½ ï¿½Ç¾ï¿½ï¿½Ö¾î¼­ ï¿½×·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+                    isAttacking = true;//(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¶ï¿½ï¿½ ï¿½Ç´ï¿½)
                 }
                 //else
                 //{
@@ -126,18 +126,18 @@ public partial class ControllerScript : MonoBehaviour
             
             //ControllerScript.instance.StartCoroutine(tTimer);
 
-            //Debug.Log("³¡");
-            //invoke(eraseMelee,1);//¸¸¾à invoke·Î ¸¸µç´Ù¸é
+            //Debug.Log("ï¿½ï¿½");
+            //invoke(eraseMelee,1);//ï¿½ï¿½ï¿½ï¿½ invokeï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ù¸ï¿½
 
         }
+        public int sign;
         IEnumerator timer()
         {
             while (true)
             {
-                //¸¸¾à ¿¬¼Ó °ø°ÝÇÏ´Â°Ô ¾î»öÇÏ´Ù¸é ¾Æ·¡ °ø°Ý Áö¼Ó½Ã°£À» Âª°Ô ÇÔÀ¸·Î¼­ ÀÌ»óÇÔÀ» ÁÙ¿©º¸°í ±×·¡µµ ÀÌ»óÇÏ´Ù¸é ¼öÁ¤ ÇÊ¿ä
-                if (isAttacking)//if¸¦ Áö¿öµµ µÇÁö ¾ÊÀ»±î ¾îÂ÷ÇÇ Å¬¸¯ÀÚÃ¼°¡ ÀÌº¥Æ®ÀÌÀÚ ifÀÓ , if¸¦ Áö¿ì¸é 1.xÃÊ¿¡¼­ Å¬¸¯ÇÏ¸é Àá±ñ º¸ÀÌ°í ¾ø¾îÁü(ÇØ´ç ¾ÆÀÌµð¾î´Â ±¦Âú¾ÒÀ¸³ª ÄÚ·çÆ¾ÀÌ °è¼Ó ¿òÁ÷ÀÌ±â¿¡ ÄðÅ¸ÀÓÀÌ Á¤È®ÇÏ°Ô ¿òÁ÷ÀÌ·Á¸é if°¡ ÇÊ¿äÇßÀ½)
+                //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´Â°ï¿½ ï¿½ï¿½ï¿½ï¿½Ï´Ù¸ï¿½ ï¿½Æ·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ó½Ã°ï¿½ï¿½ï¿½ Âªï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Î¼ï¿½ ï¿½Ì»ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¿ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×·ï¿½ï¿½ï¿½ ï¿½Ì»ï¿½ï¿½Ï´Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½
+                if (isAttacking)//ifï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½Ìºï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ifï¿½ï¿½ , ifï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ 1.xï¿½Ê¿ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½Ìµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ú·ï¿½Æ¾ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì±â¿¡ ï¿½ï¿½Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È®ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì·ï¿½ï¿½ï¿½ ifï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½ï¿½ï¿½)
                 {
-                    
                     //if (t < 1.0f)
                     //{
                     //    ControllerScript.instance.meleeAttack.SetActive(true);
@@ -150,13 +150,13 @@ public partial class ControllerScript : MonoBehaviour
                     //    showAttack = false;
                     //    t = 0;
                     //}
-                    //¸¸¾à °ø°ÝÀÌ ¿¬¼ÓÇØ¼­ ³ª°¥ ¼ö ¾ø´Ù¸é ¾Æ·¡ ºÎºÐ ±×·¡µµ ¾Æ¸¶ À§¿¡ ºÎºÐ ÀÀ¿ëÇØ¼­ ¸¸µå´Â°Ô ÀÚ¿¬½º·¯¿ïµí
-                    Debug.Log("º¸ÀÓ");
-                    yield return new WaitForSeconds(0.5f);//0.5ÃÊ ÀÌÈÄ °ø°Ý ¿ÀºêÁ§Æ®¸¦ ¾È º¸ÀÌ°Ô ÇÔ
+                    //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Ù¸ï¿½ ï¿½Æ·ï¿½ ï¿½Îºï¿½ ï¿½×·ï¿½ï¿½ï¿½ ï¿½Æ¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½ï¿½ï¿½ï¿½Â°ï¿½ ï¿½Ú¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+                    Debug.Log("ï¿½ï¿½ï¿½ï¿½");
+                    yield return new WaitForSeconds(0.5f);//0.5ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½Ì°ï¿½ ï¿½ï¿½
                     
                     ControllerScript.instance.meleeAttack.SetActive(false);
                     //showAttack = false;
-                    isAttacking = false;//°ø°Ý Á¾·á·Î ÆÇ´Ü
+                    isAttacking = false;//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ç´ï¿½
 
                 }
 
@@ -164,12 +164,12 @@ public partial class ControllerScript : MonoBehaviour
             }
 
         }
-        public void SetFalse()//ÀÌ°Å´Â ¾Ï ¤¿¾ø¾îµµ µÉµí À§¿¡¼­ ±×³É ¹®±¸·Î ´Ù Ã³¸®ÇØ¼­ ±×°É ´ëÃ¼ÇÏ°íÀÚ ÇÒ¶§ ÇÊ¿äÇÔ
+        public void SetFalse()//ï¿½Ì°Å´ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½îµµ ï¿½Éµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½×°ï¿½ ï¿½ï¿½Ã¼ï¿½Ï°ï¿½ï¿½ï¿½ ï¿½Ò¶ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½
         {
             ControllerScript.instance.meleeAttack.SetActive(false);
         }
 
-        float Getspeed()//È¤½Ã³ª ÀÌµ¿¼Óµµ ¾òÀ»°æ¿ì°¡ ÀÖÀ»±îºÁ ¸¸µç ºÎºÐ ÇöÀç »ç¿ëµÇÁö´Â¾ÊÀ½
+        float Getspeed()//È¤ï¿½Ã³ï¿½ ï¿½Ìµï¿½ï¿½Óµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì°¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¾ï¿½ï¿½ï¿½
         {
             return this.speed;
         }
@@ -179,8 +179,8 @@ public partial class ControllerScript : MonoBehaviour
     public class Human : Charactor
     {
         public int ammo = 2;
-        public int spare_ammo = 0;//¿©ºÐ ÅºÈ¯À» ¸¸µé±â À§ÇÔ
-        private static Human instance;//À§¿¡ ´Á´ë¿Í ÀÌÀ¯ µ¿ÀÏ
+        public int spare_ammo = 0;//ï¿½ï¿½ï¿½ï¿½ ÅºÈ¯ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        private static Human instance;//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
 
 
@@ -198,44 +198,44 @@ public partial class ControllerScript : MonoBehaviour
         }
         public override void Attack()
         {
-            if (ammo <= 0)//ÃÑ¾ËÀÌ ¾øÀ»¶§ »ç°Ý ºÒ°¡
+            if (ammo <= 0)//ï¿½Ñ¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ò°ï¿½
             {
-                Debug.Log("ÀåÅº¼ö ºÎÁ·");
+                Debug.Log("ï¿½ï¿½Åºï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
                 return;
             }
-            Debug.Log("»ç¶÷ °ø°Ý »§¾ß");
-            Vector3 temp = ControllerScript.instance.ClickPos();//Å¬¸¯À§Ä¡¸¦ ´ã´Â º¯¼ö
-            GameObject _bullet = Instantiate(ControllerScript.instance.bullet, ControllerScript.instance.attackPoint.transform.position, ControllerScript.instance.transform.rotation);//ÃÑ¾ËÀ» °ø°ÝÆ÷Áö¼Ç¿¡¼­ »ý¼ºÇÔ
-            _bullet.GetComponent<BulletScript>().targetPos = temp;//Å¬¸¯ÇÑ À§Ä¡°¡ Å¸°Ù À§Ä¡ÀÓ
-            _bullet.GetComponent<BulletScript>().shootPos = ControllerScript.instance.transform.position;//³ªÁß¿¡ °Å¸®µû¶ó¼­ ÃÑ¾ËÀ» »èÁ¦ÇÒ¶§ ÇÊ¿äÇÑ°Í °°¾Æ¼­ ¸¸µé¾úÀ½, ¸»°íµµ ÀÌµ¿ ¹æÇâ¼³Á¤À» À§ÇØ ÇÊ¿äÇÑ ºÎºÐ
+            Debug.Log("ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
+            Vector3 temp = ControllerScript.instance.ClickPos();//Å¬ï¿½ï¿½ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+            GameObject _bullet = Instantiate(ControllerScript.instance.bullet, ControllerScript.instance.attackPoint.transform.position, ControllerScript.instance.transform.rotation);//ï¿½Ñ¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+            _bullet.GetComponent<BulletScript>().targetPos = temp;//Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ Å¸ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½
+            _bullet.GetComponent<BulletScript>().shootPos = ControllerScript.instance.transform.position;//ï¿½ï¿½ï¿½ß¿ï¿½ ï¿½Å¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ò¶ï¿½ ï¿½Ê¿ï¿½ï¿½Ñ°ï¿½ ï¿½ï¿½ï¿½Æ¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ ï¿½ï¿½ï¿½â¼³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½Îºï¿½
 
             //Debug.Log(ControllerScript.instance.worldPosition);
-            ammo--;//»ç°ÝÀÌ ÀÌ·ç¾îÁ³´Ù¸é ÃÑ¾ËÀ» ÁÙÀÓ
-            Debug.Log($"³²Àº ÀåÅº¼ö{ammo}");
+            ammo--;//ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì·ï¿½ï¿½ï¿½ï¿½ï¿½Ù¸ï¿½ ï¿½Ñ¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+            Debug.Log($"ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Åºï¿½ï¿½{ammo}");
 
         }
         public override void Setspeed()
         {
-            Debug.Log("»ç¶÷ ¼Óµµ");
+            Debug.Log("ï¿½ï¿½ï¿½ ï¿½Óµï¿½");
             this.speed = 3.0f;
         }
         public override void Setdamage()
         {
-            Debug.Log("»ç¶÷ °ø°Ý·Â");
+            Debug.Log("ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ý·ï¿½");
             this.damage = 2;
         }
-        public void GetAmmo()//ÇØ´çÇÔ¼ö´Â ÀÏ´Ü Á¢±ÙÀÌ Human.Instance().GetAmmo·Î µÇ¾îÀÖÁö¸¸ ³ªÁß¿¡ °¡»óÇÔ¼ö·Î ¸¸µé¾î¼­ ´Á´ë¿¡¼­µµ Á¢±Ù °¡´ÉÇÏµµ·Ï ÇØµµ µÇÁö¸¸ ±»ÀÌ¶ó´Â ´À³¦ÀÌ Á¸ÀçÇÔ
+        public void GetAmmo()//ï¿½Ø´ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Human.Instance().GetAmmoï¿½ï¿½ ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ß¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½î¼­ ï¿½ï¿½ï¿½ë¿¡ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ ï¿½Øµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¶ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         {
-            if (ammo < 2)//ÃÑ¾ËÀÌ 2¹ßº¸´Ù ¾Æ·¡ÀÏ¶§ ¿©ºÐ ÃÑ¾ËÀ» ¿Ã¸²
+            if (ammo < 2)//ï¿½Ñ¾ï¿½ï¿½ï¿½ 2ï¿½ßºï¿½ï¿½ï¿½ ï¿½Æ·ï¿½ï¿½Ï¶ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¾ï¿½ï¿½ï¿½ ï¿½Ã¸ï¿½
             {
                 spare_ammo++;
             }
         }
-        public override void Reload()//¸ÞÀÎ¿¡¼­ °è¼Ó µ¹¾Æ°¥ ÇÔ¼ö
+        public override void Reload()//ï¿½ï¿½ï¿½Î¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Æ°ï¿½ ï¿½Ô¼ï¿½
         {
-            if (isHuman && spare_ammo > 0)//ÀÎ°£ »óÅÂÀÌ¸ç ¿©ºÐ ÃÑ¾ËÀÌ 1¹ß ÀÌ»óÀÌ¶ó¸é ÀçÀåÀü ½ÇÇà
+            if (isHuman && spare_ammo > 0)//ï¿½Î°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¾ï¿½ï¿½ï¿½ 1ï¿½ï¿½ ï¿½Ì»ï¿½ï¿½Ì¶ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             {
-                if (ControllerScript.Instance._DrawReload(ref ControllerScript.instance.b_reload))//ÀçÀåÀü ¾Ö´Ï¸ÞÀÌ¼Ç ±×¸®°í ÇØ´ç ¾Ö´Ï¸ÞÀÌ¼ÇÀÌ ¼º°øÀûÀ¸·Î ±×·ÁÁ³´Ù¸é ¾Æ·¡ ½ÇÇà ±×¸®°í _DrawReloadÇÔ¼ö¿¡¼­ ÀçÀåÀü ÁßÀÎÁö ¾Æ´ÑÁö ÆÇ´ÜÇÏ´Â b_reloadº¯¼ö ÄÁÆ®·Ñ
+                if (ControllerScript.Instance._DrawReload(ref ControllerScript.instance.b_reload))//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½×¸ï¿½ï¿½ï¿½ ï¿½Ø´ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×·ï¿½ï¿½ï¿½ï¿½Ù¸ï¿½ ï¿½Æ·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½×¸ï¿½ï¿½ï¿½ _DrawReloadï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ´ï¿½ï¿½ï¿½ ï¿½Ç´ï¿½ï¿½Ï´ï¿½ b_reloadï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½
                 {
                     this.spare_ammo--;
                     this.ammo++;
@@ -246,21 +246,21 @@ public partial class ControllerScript : MonoBehaviour
                 //}
                 //
                 ////Debug.Log(UIController.Instance.reloadDoon);
-                //if (UIController.Instance.reloadDoon)//1¾È
+                //if (UIController.Instance.reloadDoon)//1ï¿½ï¿½
                 //{
                 //    UIController.Instance.StopCoroutine(UIController.Instance.DrawReload());
                 //    //ControllerScript.Instance._DrawReload();
                 //    //UIController.Instance._DrawReload();
-                //    Debug.Log("ÀÎ°£ »óÅÂ ÀçÀåÀü");
+                //    Debug.Log("ï¿½Î°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
                 //    spare_ammo--;
                 //    ammo++;
-                //    Debug.Log($"³²Àº ÀåÅº¼ö{ammo}");//ÀçÀåÀü ÄðÅ¸ÀÓ ÇÊ¿ä
+                //    Debug.Log($"ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Åºï¿½ï¿½{ammo}");//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¸ï¿½ï¿½ ï¿½Ê¿ï¿½
                 //}
-                //Debug.Log("ÀÎ°£ »óÅÂ ÀçÀåÀü");//2¾È
+                //Debug.Log("ï¿½Î°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");//2ï¿½ï¿½
                 //spare_ammo--;
                 //ammo++;
-                //Debug.Log($"³²Àº ÀåÅº¼ö{ammo}");//ÀçÀåÀü ÄðÅ¸ÀÓ ÇÊ¿ä
-                //UIController.Instance._DrawReload();//ÀçÀåÀü
+                //Debug.Log($"ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Åºï¿½ï¿½{ammo}");//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å¸ï¿½ï¿½ ï¿½Ê¿ï¿½
+                //UIController.Instance._DrawReload();//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                 //UIController.Calltest();
             }
             //ammo++;

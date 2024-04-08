@@ -10,15 +10,15 @@ using static PlatformScript;
 
 
 
-public class JumpState//±»ÀÌ Å¬·¡½º¿©¾ßÇÒ±î
+public class JumpState//ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò±ï¿½
 {
-    public float jumpPower = 0;//Á¡ÇÁ Èû
-    public bool isJump = false;//¾Æ·¡¶û °°À½¤¤
+    public float jumpPower = 0;//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
+    public bool isJump = false;//ï¿½Æ·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public float jumpStartTime = 0;
     public float jumpHight;
     public State jumptype;
 
-    public enum State { IDLE, NORMAL_JUMP, LONG_JUMP };//Á¡ÇÁ »óÅÂ¿¡µû¶ó¼­ ´Ù¸¥Á¡ÇÁ¸¦ ¸¸µé±â À§ÇØ ¸¸µç enumÀÌ¾úÀ½
+    public enum State { IDLE, NORMAL_JUMP, LONG_JUMP };//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¿ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ enumï¿½Ì¾ï¿½ï¿½ï¿½
 }
 
 public partial class ControllerScript : MonoBehaviour
@@ -37,24 +37,24 @@ public partial class ControllerScript : MonoBehaviour
     private ControllerScript() { }
 
 
-    public bool b_reload = false;//ÀçÀåÀü ÄÁÆ®·Ñ bool°ª
-    public float currentTime = 0;//ÀçÀåÀü°ü·ÃºÎºÐ
-    public float duration = 1f;//ÀçÀåÀü ½Ã°£ ³ªÁß¿¡ ´Á´ë ÀçÀåÀüÀº 2ÃÊ·Î ¼³Á¤ÇÏµµ·Ï Å¬·¡½º ¼öÁ¤ÇÊ¿ä SetDuration()°¡»óÇÔ¼ö·Î ¸¸µé°í ÀÎ°£Àº 1ÃÊ ´Á´ë´Â 2ÃÊ·Î ¼³Á¤
+    public bool b_reload = false;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½ boolï¿½ï¿½
+    public float currentTime = 0;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÃºÎºï¿½
+    public float duration = 1f;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ß¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 2ï¿½Ê·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ê¿ï¿½ SetDuration()ï¿½ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Î°ï¿½ï¿½ï¿½ 1ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ 2ï¿½Ê·ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-    Rigidbody2D rg2d;//ÀÌ¹ø ÇÁ·ÎÁ§Æ®¿¡¼­´Â rigdbody¸¦ ÀÌ¿ëÇØ¼­ ¿òÁ÷ÀÏ°ÍÀÓ
+    Rigidbody2D rg2d;//ï¿½Ì¹ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ rigdbodyï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½Ø¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ï¿½ï¿½
 
-    JumpState jumpState = new JumpState();//Á¡ÇÁ »óÅÂ¸¦ À§ÇÏ
+    JumpState jumpState = new JumpState();//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¸ï¿½ ï¿½ï¿½ï¿½ï¿½
     Charactor charactor = new Charactor();
 
 
-    public float jumpForce = 5f;//Á¡ÇÁ Èû ÇØ´ç ºÎºÐÀº ³ªÁß¿¡ Å¬·¡½º·Î ÅëÇÕÇØ¼­ º¸±â ÆíÇÏ°Ô ¼öÁ¤ÇØ¾ßÇÔ
-    public float jumpDuration = 0.5f;//±ä Á¡ÇÁ ÇÒ ¼ö ÀÖ´Â ½Ã°£ ÇØ´ç ºÎºÐÀº ³ªÁß¿¡ Å¬·¡½º·Î ÅëÇÕÇØ¼­ º¸±â ÆíÇÏ°Ô ¼öÁ¤ÇØ¾ßÇÔ
+    public float jumpForce = 5f;//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ø´ï¿½ ï¿½Îºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ß¿ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ï¿½ï¿½
+    public float jumpDuration = 0.5f;//ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½Ã°ï¿½ ï¿½Ø´ï¿½ ï¿½Îºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ß¿ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ï¿½ï¿½
     [SerializeField]
-    private bool isMoving = false;//update¿¡¼­ fixedUpdate·Î ¿òÁ÷ÀÓ ÀüÇØÁÖ±â À§ÇÔ 
+    private bool isMoving = false;//updateï¿½ï¿½ï¿½ï¿½ fixedUpdateï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö±ï¿½ ï¿½ï¿½ï¿½ï¿½ 
     [SerializeField]
-    private bool isGround = true;//Á¡ÇÁ ¹× °ø°ÝÇÑ°Í¿¡ ´ëÇÑ Å×½ºÆ®¸¦ À§ÇÔ¿òÁ÷ÀÌ¸é¼­ ¸¸¾à ¾È µÈ´Ù¸é ´Ù½Ã º¯¼ö ¸¸µé¾î¾ßÇÔ °ø°ÝÀ» Çß´ÂÁö ÆÇ´ÜÇÏ±â À§ÇÔ  
-    public bool isHide = false;//Å©¶ó¿ìÄ¡ ÇÒ ¼ö ÀÖ´ÂÁö È®ÀÎ ¿ëº¯¼ö
-    public bool isCrouching = false;//Å©¶ó¿ìÄ¡ ÁßÀÎÁö È®ÀÎ´¨
+    private bool isGround = true;//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ°Í¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½×½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½Ô¿ï¿½ï¿½ï¿½ï¿½Ì¸é¼­ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½È´Ù¸ï¿½ ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß´ï¿½ï¿½ï¿½ ï¿½Ç´ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½  
+    public bool isHide = false;//Å©ï¿½ï¿½ï¿½Ä¡ ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ï¿½ï¿½ È®ï¿½ï¿½ ï¿½ëº¯ï¿½ï¿½
+    public bool isCrouching = false;//Å©ï¿½ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½Î´ï¿½
     private bool isJumping;
     private bool isJumpReady;
     private const float gravity = -9.81f;
@@ -73,33 +73,33 @@ public partial class ControllerScript : MonoBehaviour
     private bool jumpKey;
     private bool jumpKeyUp;
 
-    [SerializeField] private GameObject currentOneWayPlatform;//¶³¾îÁú¼ö ÀÖ´À ¤¤¹Ù´Ú°ü·Ã ¿ÀºêÁ§Æ® ´ã´Â º¯¼ö
-    //[SerializeField] private BoxCollider2D playerCollider;//»ç¿ë ¾ÈÇÔ
-    //[SerializeField] BoxCollider2D platformCollider;//ÇöÀç ¾È¾¸
+    [SerializeField] private GameObject currentOneWayPlatform;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½Ù´Ú°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    //[SerializeField] private BoxCollider2D playerCollider;//ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    //[SerializeField] BoxCollider2D platformCollider;//ï¿½ï¿½ï¿½ï¿½ ï¿½È¾ï¿½
 
-    public float downTime = 0.4f;//´Ù¿î Á¡ÇÁÇÏ¸é ¿ÀºêÁ§Æ® Ãæµ¹ ¹«½ÃÇÏ´Â ½Ã°£
-    public bool canDown = false;//´Ù¿î Á¡ÇÁ °¡´É ±¸°£ È®ÀÎ
-    //private bool dJump = false;//´Ù¿î Á¡ÇÁ ÇöÀç ¾È¾¸
+    public float downTime = 0.4f;//ï¿½Ù¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½æµ¹ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Ã°ï¿½
+    public bool canDown = false;//ï¿½Ù¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
+    //private bool dJump = false;//ï¿½Ù¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½È¾ï¿½
 
 
-    public Vector3 worldPosition;//Å¬¸¯ÇÏ´Â À§Ä¡¸¦ ´ã±âÀ§ÇÑ º¯¼ö
-    public float moveSpeed = 5;//Ä³¸¯ÅÍ ÀÌµ¿¼Óµµ °ü·Ã ºÎºÐ ÇØ´ç ºÎºÐÀº Ä³¸¯ÅÍ Æû Ã¼ÀÎÁö½Ã speed¿À ¤¿°ü·Ã ÀÖÀ½ ¾Æ·¡ºÎºÐ º¸¸é ÆûÃ¼ÀÎÁö¿¡ ºÙ¾îÀÖÀ½
-    private float InxPos;//ÀÌµ¿ °ü·Ã º¯¼ö ÀÌ ºÎºÐÀº ³ªÁß¿¡ ÀÌµ¿°ú ÅëÇÕ½Ã »èÁ¦ °¡´É
+    public Vector3 worldPosition;//Å¬ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    public float moveSpeed = 5;//Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ï¿½Óµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½ ï¿½Ø´ï¿½ ï¿½Îºï¿½ï¿½ï¿½ Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ Ã¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ speedï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Æ·ï¿½ï¿½Îºï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¾ï¿½ï¿½ï¿½ï¿½ï¿½
+    private float InxPos;//ï¿½Ìµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Îºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ß¿ï¿½ ï¿½Ìµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Õ½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-    Vector2 vec;//·¹ÀÌ À§ÇÑ °Í
+    Vector2 vec;//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
 
-    [SerializeField] private GameObject guard;//¼û¾úÀ»¶§ ¸¸´Â´Â°Í
+    [SerializeField] private GameObject guard;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â´Â°ï¿½
 
     private void Awake()
     {
-        vec = Vector2.left;//Ä³¸¯ÅÍ ¹æÇâÅ° ÀÔ·Â¿¡ µû¸¥ ·¹ÀÌ º¯°æÀ» À§ÇØ
+        vec = Vector2.left;//Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Å° ï¿½Ô·Â¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (instance != null)
         {
             Destroy(this.gameObject);
             return;
         }
         instance = this;
-        StartCoroutine(DownJump());//¾Æ·¡ Á¡ÇÁ ÄÚ·çÆ¾ ÇØ´ç ÇÔ
+        StartCoroutine(DownJump());//ï¿½Æ·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ú·ï¿½Æ¾ ï¿½Ø´ï¿½ ï¿½ï¿½
     }
 
     void Start()
@@ -114,34 +114,34 @@ public partial class ControllerScript : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "ground" || collision.gameObject.tag == "platform")//Áö¸é È®ÀÎ Á¡ÇÁ¿ë
+        if (collision.gameObject.tag == "ground" || collision.gameObject.tag == "platform")//ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         {
             // isGround = true;
-            //WereWolf.Instance().isAttacking = false;// ÀÌ ºÎºÐÀÌ ÀÖÀ¸¸é ¶¥¿¡¼­ ¿¬¼Ó °ø°Ý °¡´É 
+            //WereWolf.Instance().isAttacking = false;// ï¿½ï¿½ ï¿½Îºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
             if (collision.gameObject.tag == "platform")
             {
-                currentOneWayPlatform = collision.gameObject;//ÇÃ·§ÆûÀÌ¶ó¸é ÇöÀç ÇÃ·¿ÆûÀ» ´ãÀ½
+                currentOneWayPlatform = collision.gameObject;//ï¿½Ã·ï¿½ï¿½ï¿½ï¿½Ì¶ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 //platformCollider = currentOneWayPlatform.GetComponent<BoxCollider2D>();
-                Debug.Log(collision.gameObject.GetComponent<PlatformScript>().dObject);//´Ù¿î ¿ÀºêÁ§Æ® Å¸ÀÔÈ®ÀÎ¿ë ·Î±×
-                switch (collision.gameObject.GetComponent<PlatformScript>().dObject)//´ë°¢¼± Á÷¼± ¿ÀºêÁ§Æ® ¸¶´Ù ¶³¾îÁö´Â ½Ã°£ÀÌ ´Ù¸¦¼öµµ ÀÖÀ¸´Ï
+                Debug.Log(collision.gameObject.GetComponent<PlatformScript>().dObject);//ï¿½Ù¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® Å¸ï¿½ï¿½È®ï¿½Î¿ï¿½ ï¿½Î±ï¿½
+                switch (collision.gameObject.GetComponent<PlatformScript>().dObject)//ï¿½ë°¢ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ ï¿½Ù¸ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
                 {
-                    case downJumpObject.STRAIGHT://Á÷¼±
-                        downTime = 0.4f;//¶³¾îÁö´Â ½Ã°£ ´Ù¸£°Ô ÇÏ±â À§ÇÔ
+                    case downJumpObject.STRAIGHT://ï¿½ï¿½ï¿½ï¿½
+                        downTime = 0.4f;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ ï¿½Ù¸ï¿½ï¿½ï¿½ ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½
                         break;
-                    case downJumpObject.DIAGONAL://´ë°¢¼±
-                        downTime = 0.6f;//¶³¾îÁö´Â ½Ã°£ ´Ù¸£°Ô ÇÏ±â À§ÇÔ
+                    case downJumpObject.DIAGONAL://ï¿½ë°¢ï¿½ï¿½
+                        downTime = 0.6f;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ ï¿½Ù¸ï¿½ï¿½ï¿½ ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½
                         break;
                 }
                 //canDown = true;
             }
         }
 
-        if (collision.gameObject.tag == "cover")//¾öÆä¹° È®ÀÎ¿ë ¾öÆä¿ë Áö±Ý º¸´Ï±î ÇÊ¿ä¾ø´Â°Å°°À½ ¿Ö³ÄÇÏ¸é ¾öÆä¹°Àº Áö±Ý trigger·Î ¹ßµ¿Áß
+        if (collision.gameObject.tag == "cover")//ï¿½ï¿½ï¿½ä¹° È®ï¿½Î¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½Â°Å°ï¿½ï¿½ï¿½ ï¿½Ö³ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ä¹°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ triggerï¿½ï¿½ ï¿½ßµï¿½ï¿½ï¿½
         {
-            Debug.Log("¾öÆä¹°");
+            Debug.Log("ï¿½ï¿½ï¿½ä¹°");
         }
 
-        if (collision.gameObject.tag == "enemyBullet")//ÇÃ·¹ÀÌ¾î°¡ ÃÑ¾ËÀ» ¸ÂÀ» °æ¿ì¸¦ ÀûÀº°Í ÁÂ¿¡¼­ ¸ÂÀºÁö ¿ì¿¡¼­ ¸ÂÀºÁö
+        if (collision.gameObject.tag == "enemyBullet")//ï¿½Ã·ï¿½ï¿½Ì¾î°¡ ï¿½Ñ¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ì¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Â¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ì¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         {
             Debug.Log("collision hit");
             Vector2 pos = collision.GetContact(0).point;
@@ -151,8 +151,8 @@ public partial class ControllerScript : MonoBehaviour
 
             float posCheck = Mathf.Sign(transform.position.x - pos.x);
             string leftright = "";
-            leftright = (posCheck > 0) ? "ÁÂ" : "¿ì";
-            Debug.Log($"Ãæµ¹ À§Ä¡ : {pos} À§Ä¡ Â÷ÀÌ {posCheck} {leftright} ¿¡¼­ ÇÇ°Ý");
+            leftright = (posCheck > 0) ? "ï¿½ï¿½" : "ï¿½ï¿½";
+            Debug.Log($"ï¿½æµ¹ ï¿½ï¿½Ä¡ : {pos} ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ {posCheck} {leftright} ï¿½ï¿½ï¿½ï¿½ ï¿½Ç°ï¿½");
 
         }
 
@@ -163,12 +163,12 @@ public partial class ControllerScript : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "ground" || collision.gameObject.tag == "platform")//¶¥¿¡¼­ ¹þ¾î³¯°æ¿ì
+        if (collision.gameObject.tag == "ground" || collision.gameObject.tag == "platform")//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½î³¯ï¿½ï¿½ï¿½
         {
             // isGround = false;
             if (collision.gameObject.tag == "platform")
             {
-                currentOneWayPlatform = null;//platform¿¡¼­ ¹þ¾î³­°Å¶ó¸é ÇÃ·§Æû º¯¼ö¸¦ ºñ¿ò
+                currentOneWayPlatform = null;//platformï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½î³­ï¿½Å¶ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
                 //canDown = false;
 
 
@@ -180,12 +180,12 @@ public partial class ControllerScript : MonoBehaviour
         if (collision.gameObject.tag == "ground" || collision.gameObject.tag == "platform")
         {
             // isGround = true;
-            if (collision.gameObject.tag == "platform")//ÇÃ·§ÆûÀÌ¶ó¸é ÇöÀç ÇÃ·¿ÆûÀ» ´ãÀ½
+            if (collision.gameObject.tag == "platform")//ï¿½Ã·ï¿½ï¿½ï¿½ï¿½Ì¶ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             {
                 currentOneWayPlatform = collision.gameObject;
             }
         }
-        if (collision.gameObject.tag == "Wall")//º®¿¡ Âß ºÙ¾îÀÖ´Â Áö±Ý ¸ð½À ¼öÁ¤ÇÏ±â À§ÇØ ¸¸µé¾ú´ø º¯¼ö
+        if (collision.gameObject.tag == "Wall")//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ù¾ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         {
 
         }
@@ -195,21 +195,21 @@ public partial class ControllerScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Æ®¸®°Å");
+        Debug.Log("Æ®ï¿½ï¿½ï¿½ï¿½");
 
-        if (collision.gameObject.tag == "cover")//¾öÆó¹°ÀÏ¶§
+        if (collision.gameObject.tag == "cover")//ï¿½ï¿½ï¿½ï¿½ï¿½Ï¶ï¿½
         {
-            Debug.Log($"°æ°è {collision.bounds.min.x}");
-            charactor.hidePos= HideDir(collision);//HideDir ÇÔ¼ö ½ÇÇà ÇØ´ç ÇÔ¼ö´Â ¼ûÀ½ + ¹æÇâ °íÁ¤
+            Debug.Log($"ï¿½ï¿½ï¿½ {collision.bounds.min.x}");
+            charactor.hidePos= HideDir(collision);//HideDir ï¿½Ô¼ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ø´ï¿½ ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ + ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         }
 
-        if(collision.gameObject.tag=="ammo")//ÃÑ¾ËÀÌ¶ó¸é
+        if(collision.gameObject.tag=="ammo")//ï¿½Ñ¾ï¿½ï¿½Ì¶ï¿½ï¿½
         {
-            Debug.Log("ÃÑ¾Ë È¹µæ");
+            Debug.Log("ï¿½Ñ¾ï¿½ È¹ï¿½ï¿½");
             if (Human.Instance().ammo < 2)
             {
-                Human.Instance().GetAmmo();//GetAmmoÀÇ Á¶°ÇÀ» ¾ø¾Öµµ µÉµí Áßº¹µÈ Á¶°ÇÀÓ
-                Destroy(collision.gameObject);//½ÀµæÇßÀ¸¹Ç·Î ÅºÃ¢¿ÀºêÁ§Æ®»èÁ¦
+                Human.Instance().GetAmmo();//GetAmmoï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Öµï¿½ ï¿½Éµï¿½ ï¿½ßºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+                Destroy(collision.gameObject);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ ÅºÃ¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½
                 //Human.Instance().Reload();
             }
 
@@ -218,16 +218,16 @@ public partial class ControllerScript : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "cover")//À§¿Í °°À½ ÀÌºÎºÐÀ» Ãß°¡·Î ÇØµÐ°ÍÀº ¼û´Â À§Ä¡ ¿ÀºêÁ§Æ® ¼Ó¿¡ µé¾î¿Â»óÅÂ¿¡¼­ ¼û¾úÀ»¶§¸¦ À§ÇÔ
+        if (collision.gameObject.tag == "cover")//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ÌºÎºï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½ï¿½ ï¿½ØµÐ°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ó¿ï¿½ ï¿½ï¿½ï¿½Â»ï¿½ï¿½Â¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         {
             charactor.hidePos = HideDir(collision);
         }
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "cover")//¸¸¾à ¹ÛÀ¸·Î ¹þ¾î³¯°æ¿ì¸¦ À§ÇØ ¸¸µç°Í ÇÏÁö¸¸ Áö±Ý ¾öÆóÁß¿¡ ÀÌµ¿ ºÒ°¡´ÉÇÏ±â¿¡ ±»ÀÌ ÇÊ¿ä´Â ¾ø±äÇÔ ¸¸¾à ÀÌµ¿°¡´ÉÇÏ´Ù¸é ÇÊ¿äÇÑºÎºÐ
+        if (collision.gameObject.tag == "cover")//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½î³¯ï¿½ï¿½ì¸¦ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß¿ï¿½ ï¿½Ìµï¿½ ï¿½Ò°ï¿½ï¿½ï¿½ï¿½Ï±â¿¡ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï´Ù¸ï¿½ ï¿½Ê¿ï¿½ï¿½ÑºÎºï¿½
         {
-            Debug.Log("»ç¶óÁü");
+            Debug.Log("ï¿½ï¿½ï¿½ï¿½ï¿½");
             isHide = false;
             guard.SetActive(false);
         }
@@ -236,31 +236,30 @@ public partial class ControllerScript : MonoBehaviour
     private void FixedUpdate()
     {
 
-        // if (jumpState.isJump)//Á¡ÇÁÁßÀÌ¶ó¸é
+        // if (jumpState.isJump)//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¶ï¿½ï¿½
         // {
-        //     switch (jumpState.jumptype)//LONG_JUMPÆÇ´ÜÀ» À§ÇÑºÎºÐÀÓ
+        //     switch (jumpState.jumptype)//LONG_JUMPï¿½Ç´ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ÑºÎºï¿½ï¿½ï¿½
         //     {
         //         case JumpState.State.IDLE:
-        //             //Debug.Log("ÀÏ¹Ý");
+        //             //Debug.Log("ï¿½Ï¹ï¿½");
         //             break;
         //         case JumpState.State.NORMAL_JUMP:
-        //             //Debug.Log("Á¡ÇÁ");
+        //             //Debug.Log("ï¿½ï¿½ï¿½ï¿½");
         //             //Jump();
         //             break;
         //         case JumpState.State.LONG_JUMP:
-        //             //Debug.Log("±ä Á¡ÇÁ");
-        //             //Debug.Log("½´ÆÛ Á¡ÇÁ");
-        //             JumpHigher();//´õ ³ô°Ô Á¡ÇÁ
+        //             //Debug.Log("ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
+        //             //Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
+        //             JumpHigher();//ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         //             break;
 
         //     }
 
         // }
 
-        if (!isCrouching&&!WereWolf.Instance().isAttacking)//Á¶°ÇÀÌ º¹ÀâÇÑµ¥ ¿òÁ÷ÀÓÀ» ÀÔ·Â ¹ÞÀº »óÅÂ¸ç ¼ûÁö ¾Ê¾ÒÀ¸¸ç °ø°ÝÁßÀÌ ¾Æ´Ò¶§, Áï ±×³É ÀÌµ¿ + Á¡ÇÁ»óÅÂ¸¸ ¹ÞÀ½
-        {
-            Move(new Vector3(HorizontalForce(), VerticalForce()) * Time.deltaTime);
-        }
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ´Ò¶ï¿½, ï¿½ï¿½ ï¿½×³ï¿½ ï¿½Ìµï¿½ + ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¸ï¿½ ï¿½ï¿½ï¿½ï¿½
+
+        Move(new Vector3(HorizontalForce(), VerticalForce()) * Time.deltaTime);
 
     }
     private float VerticalForce()
@@ -276,19 +275,19 @@ public partial class ControllerScript : MonoBehaviour
     }
     private float HorizontalForce()
     {
-        return moveVec * speed;
+        return moveVec * moveSpeed;
     }
-    private void Move(Vector3 force) => transform.Translate(force);
+    public void Move(Vector3 force) => transform.Translate(force);
 
-    private void _Attack()//°ø°Ý½Ã °¢ Ä³¸¯ÅÍº° °ø°Ý ¼öÇà
+    private void _Attack()//ï¿½ï¿½ï¿½Ý½ï¿½ ï¿½ï¿½ Ä³ï¿½ï¿½ï¿½Íºï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     {
         Debug.Log("Attack");
         charactor.Attack();
     }
 
-    private void Formchange()//ÆûÃ¼ÀÎÁö½Ã ÀÎ½ºÅÏ½º¸¦ ³Ö¾î¼­ ½ÇÇàÇÔ
+    private void Formchange()//ï¿½ï¿½Ã¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Î½ï¿½ï¿½Ï½ï¿½ï¿½ï¿½ ï¿½Ö¾î¼­ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     {
-        //if(charactor is WereWolf)//¾Æ·¡¿Í µ¿ÀÏ
+        //if(charactor is WereWolf)//ï¿½Æ·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         //{
         //
         //}
@@ -296,46 +295,46 @@ public partial class ControllerScript : MonoBehaviour
         //{
         //
         //}
-        if (charactor.isHuman)//»ç¶÷ÀÏ¶§ º¯½Å
+        if (charactor.isHuman)//ï¿½ï¿½ï¿½ï¿½Ï¶ï¿½ ï¿½ï¿½ï¿½ï¿½
         {
             charactor = WereWolf.Instance();
             charactor.isHuman = false;
-            Debug.Log("´Á´ë·Î º¯°æ");
+            Debug.Log("ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
         }
-        else//´Á´ëÀÏ¶§ º¯½Å
+        else//ï¿½ï¿½ï¿½ï¿½ï¿½Ï¶ï¿½ ï¿½ï¿½ï¿½ï¿½
         {
             charactor = Human.Instance();
             charactor.isHuman = true;
-            Debug.Log("»ç¶÷À¸·Î º¯°æ");
+            Debug.Log("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½");
         }
         charactor.SetInfo();
         //charactor.Setspeed();
         moveSpeed = charactor.speed;
 
     }
-    private void InputManager()//¸»ÀÌ InputManagerÁö¸¸ Update¿¡¼­ È¥ÀÚ ¿òÁ÷ÀÓ
+    private void InputManager()//ï¿½ï¿½ï¿½ï¿½ InputManagerï¿½ï¿½ï¿½ï¿½ Updateï¿½ï¿½ï¿½ï¿½ È¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     {
-        if (Input.GetMouseButtonDown(0))//ÁÂÅ¬¸¯ °ø°Ý½Ã
+        if (Input.GetMouseButtonDown(0))//ï¿½ï¿½Å¬ï¿½ï¿½ ï¿½ï¿½ï¿½Ý½ï¿½
         {
             _Attack();
 
 
         }
-        if (Input.GetMouseButtonDown(1)&&!isCrouching)//¿ìÅ¬¸¯, Å©¶ó¿ìÄ¡ ¾È ÇÏ°íÀÖÀ»¶§ ÆûÃ¼ÀÎÁö
+        if (Input.GetMouseButtonDown(1)&&!isCrouching)//ï¿½ï¿½Å¬ï¿½ï¿½, Å©ï¿½ï¿½ï¿½Ä¡ ï¿½ï¿½ ï¿½Ï°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ï¿½ï¿½
         {
             Formchange();
         }
 
-        // if (Input.GetKeyDown(KeyCode.W) && isGround&&!WereWolf.Instance().isAttacking)//Á¡ÇÁÅ° °ü·Ã ¸¸¾à Å°°¡ º¯ÇÑ´Ù¸é keycode¸¸ º¯°æÇÏ¸é µÊ
-        // {//"W"°¡ Á¡ÇÁ¶ó°í »ý°¢ÇßÀ»¶§ ±¸Çö³»¿ë
+        // if (Input.GetKeyDown(KeyCode.W) && isGround&&!WereWolf.Instance().isAttacking)//ï¿½ï¿½ï¿½ï¿½Å° ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å°ï¿½ï¿½ ï¿½ï¿½ï¿½Ñ´Ù¸ï¿½ keycodeï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½
+        // {//"W"ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         //     // Jump();
         // }
-        // else if (Input.GetKey(KeyCode.W) && jumpState.isJump && Time.time - jumpState.jumpStartTime < jumpDuration)//Á¡ÇÁ ÁßÀÌ¸ç °è¼Ó ´©¸£°íÀÖÀ¸¸é Á¡ÇÁ»óÅÂ¸¦ LONG_JUMP·Î ¼öÁ¤
+        // else if (Input.GetKey(KeyCode.W) && jumpState.isJump && Time.time - jumpState.jumpStartTime < jumpDuration)//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¸ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¸ï¿½ LONG_JUMPï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         // {
         //     //Debug.Log("HOLDDDDDDDDDDDDD");
         //     jumpState.jumptype = JumpState.State.LONG_JUMP;
         // }
-        // else//ÀÌ°Ô ¾Æ´Ï¶ó¸é ±×³É Á¡ÇÁÁßÀÌ ¾Æ´Ï¶ó°í ÆÇ´Ü µû¶ó¼­ isJump¸¦ false·Î ¼öÁ¤ÇÏ°í Á¡ÇÁ »óÅÂ¸¦ IDLE·Î º¯°æ
+        // else//ï¿½Ì°ï¿½ ï¿½Æ´Ï¶ï¿½ï¿½ ï¿½×³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ´Ï¶ï¿½ï¿½ ï¿½Ç´ï¿½ ï¿½ï¿½ï¿½ï¿½ isJumpï¿½ï¿½ falseï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¸ï¿½ IDLEï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         // {
         //     //Debug.Log("else");
         //     jumpState.isJump = false;
@@ -358,19 +357,19 @@ public partial class ControllerScript : MonoBehaviour
         else isJumping = false;
 
         //if (Input.GetKeyDown(KeyCode.S))
-        if (Input.GetKey(KeyCode.S))//S¸¦ ´©¸¦¶§
+        if (Input.GetKey(KeyCode.S))//Sï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         {
-            if (isHide)//¼û´Â ¿ÀºêÁ§Æ®¿Í »óÈ£ ÀÛ¿ëÀÌ °¡´ÉÇÏ´Ù¸é
+            if (isHide)//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½È£ ï¿½Û¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´Ù¸ï¿½
             {
-                guard.transform.position = this.gameObject.transform.GetChild(0).transform.position;//°¡µå À§Ä¡¸¦ °¡µå Æ÷ÀÎÆ® À§Ä¡·Î ¿Å±è
+                guard.transform.position = this.gameObject.transform.GetChild(0).transform.position;//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½Å±ï¿½
                 transform.position = charactor.hidePos;
-                rg2d.velocity = Vector2.zero;//¸¸¾à Á¡ÇÁ°¡ µÇ·Á°íÇÏ¸é x¸¸ 0À¸·Î ÃÊ±âÈ­
+                rg2d.velocity = Vector2.zero;//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ç·ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ xï¿½ï¿½ 0ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
                 //rg2d.position = transform.position;
                 charactor.Crouch(guard);
                 isCrouching = true;
                 isMoving = false;
             }
-            if (currentOneWayPlatform != null)//¹Ø ¾Æ·¡ Á¡ÇÁ °¡´ÉÇÑ ¿ÀºêÁ§Æ®¿Í ´ê¾ÆÀÖÀ»¶§ ,¿ì¼±¼øÀ§ µû¶ó¼­ À§·Î ¿Ã¸®°í returnÀÌ ÇÊ¿äÇÒµí 
+            if (currentOneWayPlatform != null)//ï¿½ï¿½ ï¿½Æ·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ,ï¿½ì¼±ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã¸ï¿½ï¿½ï¿½ returnï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½Òµï¿½ 
             {
                 Debug.Log("hello");
                 canDown = true;
@@ -383,28 +382,36 @@ public partial class ControllerScript : MonoBehaviour
         }
         else
         {
-            guard.SetActive(false);//s¸¦ ´©¸£Áö ¾Ê¾ÒÀ¸¹Ç·Î °¡µå¸¦ Ç¬´Ù
+            guard.SetActive(false);//sï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ ï¿½ï¿½ï¿½å¸¦ Ç¬ï¿½ï¿½
             isCrouching = false;
         }
 
-        // if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))//ÀÌµ¿ ÀÔ·ÂÀÌ µé¾î¿ÔÀ»¶§
+        // if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))//ï¿½Ìµï¿½ ï¿½Ô·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         // {
         //     InxPos = Input.GetAxis("Horizontal") * moveSpeed;
         //     isMoving = true;
 
-        //     //Debug.Log("ÁÂ¿ì");
+        //     //Debug.Log("ï¿½Â¿ï¿½");
         // }
-        // else if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))//ÀÌµ¿ ÀÔ·ÂÀÌ Ç®·ÈÀ»¶§ isMovingÀ» false»óÅÂ·Î µ¹¸²
+        // else if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))//ï¿½Ìµï¿½ ï¿½Ô·ï¿½ï¿½ï¿½ Ç®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ isMovingï¿½ï¿½ falseï¿½ï¿½ï¿½Â·ï¿½ ï¿½ï¿½ï¿½ï¿½
         // {
         //     //InxPos = 0;
         //     isMoving = false;
 
-        //     //Debug.Log("ÁÂ¿ì ÀÔ·Â°ª " + InxPos);
+        //     //Debug.Log("ï¿½Â¿ï¿½ ï¿½Ô·Â°ï¿½ " + InxPos);
         // }
-        isGround = Physics2D.Raycast(transform.position, Vector2.down, distanceToCheck, lm);
-        moveVec += (Input.GetAxisRaw("Horizontal")-moveVec) * accelerate;
-        if(Input.GetAxisRaw("Horizontal") == 0) moveVec += (Input.GetAxisRaw("Horizontal")-moveVec) * accelerate;
-        moveVec = Mathf.Clamp(moveVec, -1, 1);
+        if(!isCrouching&&!WereWolf.Instance().isAttacking)
+        {
+            isGround = Physics2D.Raycast(transform.position, Vector2.down, distanceToCheck, lm);
+            moveVec += (Input.GetAxisRaw("Horizontal")-moveVec) * accelerate;
+            if(Input.GetAxisRaw("Horizontal") == 0) moveVec += (Input.GetAxisRaw("Horizontal")-moveVec) * accelerate;
+            moveVec = Mathf.Clamp(moveVec, -1, 1);
+        }
+        else if(WereWolf.Instance().isAttacking)
+        {
+            moveVec = sign * 1.5f;
+            velocity = 3.5f;
+        }
     }
 
     private void Update()
@@ -413,19 +420,19 @@ public partial class ControllerScript : MonoBehaviour
         // ConditionUpdate();
 
 
-        if (charactor.isHuman)//ÀÎ°£»óÅÂÀÏ¶§ Áö¼ÓÀûÀ¸·Î ÇØ¾ßÇÏ´Â ÇÔ¼öµé ³Ö±âÀ§ÇÔ
+        if (charactor.isHuman)//ï¿½Î°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¶ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ø¾ï¿½ï¿½Ï´ï¿½ ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½
         {
             //StartCoroutine(UIController.Instance.DrawReload());
-            charactor.Reload();//´Á´ë»óÅÂµµ ÀçÀåÀüÀÌ °¡´ÉÇÏµµ·Ï ÇÑ´Ù¸é °¡»óÇÔ¼ö·Î ¸¸µé¾î¼­ ¹ÛÀ¸·Î »©µµ ¹«¹æÇÏ´Ù°í »ý°¢ÇÔ
+            charactor.Reload();//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ ï¿½Ñ´Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½î¼­ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´Ù°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         }
-        else//´Á´ë »óÅÂ¶§ Áö¼ÓÀûÀ¸·Î Ã¼Å©ÇÏ°Å³ª ¼öÇàÇØ¾ßÇÒ ºÎºÐ ³Ö¾î¾ßÇÔ
+        else//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â¶ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã¼Å©ï¿½Ï°Å³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ï¿½ï¿½ ï¿½Îºï¿½ ï¿½Ö¾ï¿½ï¿½ï¿½ï¿½
         {
 
         }
         //_Raycast();
     }
 
-    void _Raycast()//Ã³À½¿¡ ÃÑ¾Ë°ü·Ã Ãæµ¹, ¼û´Â ¿ÀºêÁ§Æ® È®ÀÎÀ» À§ÇØ ray¸¦ ½î¾Ò´Âµ¥ ÇöÀç´Â ¾øÀÌµµ µ¹¾Æ°¡¼­ »ç¿ëÇÏÁö ¾ÊÀº ÃßÈÄ¿¡ ray°¡ ÇÊ¿äÇÏ´Ù¸é Âü°í ÇÒ »ý°¢À¸·Î ³²°åÀ½
+    void _Raycast()//Ã³ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¾Ë°ï¿½ï¿½ï¿½ ï¿½æµ¹, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® È®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ rayï¿½ï¿½ ï¿½ï¿½Ò´Âµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìµï¿½ ï¿½ï¿½ï¿½Æ°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ä¿ï¿½ rayï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½Ï´Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     {
 
         if (Input.GetKey(KeyCode.A))
@@ -464,7 +471,7 @@ public partial class ControllerScript : MonoBehaviour
         //Debug.Log("nomal");
         //Debug.Log("jump Hight "+jumpState.jumpHight);
         jumpState.jumpHight = jumpForce;
-        jumpState.jumpStartTime = Time.time;//Á¡ÇÁ ½Ã°£ ÃøÁ¤
+        jumpState.jumpStartTime = Time.time;//ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½
         rg2d.AddForce(Vector3.up * jumpForce, ForceMode2D.Impulse);
         jumpState.isJump = true;
         jumpState.jumptype = JumpState.State.NORMAL_JUMP;
@@ -473,18 +480,18 @@ public partial class ControllerScript : MonoBehaviour
     private void JumpHigher()
     {
         //Debug.Log("higer");
-        rg2d.AddForce(Vector3.up * jumpForce * Time.deltaTime * 2, ForceMode2D.Impulse);//Ãß°¡ÀûÀÎ ÈûÀ» °è¼Ó ÁÖ´Â°Í time.deltatimeÀº ¾ÆÁÖÀÛÀº ¼Ò¼öÁ¡ÀÌ ³ª¿Ã°ÍÀÌ¹Ç·Î °öÇÏ°Ô µÇ¸é °ªÀÌ ¾ÆÁÖÀÛ¾ÆÁü
+        rg2d.AddForce(Vector3.up * jumpForce * Time.deltaTime * 2, ForceMode2D.Impulse);//ï¿½ß°ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½Ö´Â°ï¿½ time.deltatimeï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò¼ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ã°ï¿½ï¿½Ì¹Ç·ï¿½ ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½Ç¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Û¾ï¿½ï¿½ï¿½
     }
 
     IEnumerator DownJump()
     {
         while (true)
         {
-            if (canDown)//¾Æ·¡ Á¡ÇÁ °¡´ÉÇÑ ¿ÀºêÁ§Æ® ¸¸³¯°æ¿ì
+            if (canDown)//ï¿½Æ·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             {
                 Debug.Log("hi");
-                Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), true);//¿ø¸®´Â ±×³É ¼³Á¤ÇÑ ½Ã°£µ¿¾È ÇØ´ç ÇÃ·¿ÆûµéÀ» ±×³É ¹«½ÃÇÏ´Â½ÄÀ¸·Î ¼³Á¤ÇßÀ½ ±Ùµ¥ Áö±Ý »ý°¢ÇØº¸¸é Áö±Ý ÇÃ·¿ÆûÀ» ¹Þ¾Æ¿Í¼­ ÇÃ·¿ÆûÀÇ ³×ÀÓÀ» ¹«½ÃÇÏ´Â½ÄÀ¸·Î ÇØµµ µÇÁö¾ÊÀ»±î ÇÏ´Â ¿µ°¨ÀÌ ¶°¿À¸§
-                yield return new WaitForSeconds(downTime);//downtimeº¯¼ö´Â ³ªÁß¿¡ Áß·Â ¼³Á¤½Ã ÀÌÁú°¨ÀÌ µç´Ù¸é º¯°æÇÊ¿ä
+                Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), true);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ø´ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×³ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´Â½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ùµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Øºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿Í¼ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´Â½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Øµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+                yield return new WaitForSeconds(downTime);//downtimeï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ß¿ï¿½ ï¿½ß·ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ê¿ï¿½
                 Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), false);
                 canDown = false;
             }
@@ -496,41 +503,41 @@ public partial class ControllerScript : MonoBehaviour
 
     }
 
-    Vector3 HideDir(Collider2D collision)//¼û´Â ÇÔ¼ö
+    Vector3 HideDir(Collider2D collision)//ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½
     {
-        int check = CheckDir(collision.transform.position);//ÇöÀç ¿ÀºêÁ§Æ®¿Í ÇÃ·¹ÀÌ¾îÀÇ À§Ä¡¸¦ È®ÀÎÇØ¼­ À§Ä¡ÀÇ Â÷¸¦ º¸³»ÁÜ
-        Vector3 correct_pos = Vector3.zero;//»õ·Î ¼öÁ¤ÇÔ À§Ä¡¸¦ ´ã±âÀ§ÇÑ º¯¼ö
+        int check = CheckDir(collision.transform.position);//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ È®ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        Vector3 correct_pos = Vector3.zero;//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-        Debug.Log($"Æ®¸®°Å Ã¼Å© {Mathf.Sign(check)}");
-        isHide = true;//¼ûÀ½
-        Debug.Log("Æ®¸®°Å¾öÆä¹°");
+        Debug.Log($"Æ®ï¿½ï¿½ï¿½ï¿½ Ã¼Å© {Mathf.Sign(check)}");
+        isHide = true;//ï¿½ï¿½ï¿½ï¿½
+        Debug.Log("Æ®ï¿½ï¿½ï¿½Å¾ï¿½ï¿½ä¹°");
 
-        if ((int)Mathf.Sign(check) < 0)//À½¼ö = À¯Àú°¡ ¿ÀºêÁ§Æ®¿¡ ºñÇØ ´õ ¿À¸¥ÂÊ¿¡ ÀÖ´Ù
+        if ((int)Mathf.Sign(check) < 0)//ï¿½ï¿½ï¿½ï¿½ = ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ê¿ï¿½ ï¿½Ö´ï¿½
         {
-            this.gameObject.transform.GetChild(0).transform.localPosition = new Vector3(-0.78f, 0, 0);//0.78ÀÌ¶ó´Â °ªÀº ³»°¡ º¸¾ÒÀ»¶§ Àû´çÇÑ°ª
-            correct_pos = new Vector3(collision.bounds.max.x, transform.position.y, transform.position.z);//¼û´Â ¿ÀºêÁ§Æ®ÀÇ À§Ä¡¸¦ µû¼­ ¼û´Â°Í ÀÌ°Å Áö±Ýº¸´Ï±î ±×³É °ãÄ¡µµ·Ï µÇ¾îÀÖÀ½ °ÉÄ¡µµ·Ï ¾È µÇ¾îÀÖ¾î¼­ ¼öÁ¤ÇÊ¿ä
+            this.gameObject.transform.GetChild(0).transform.localPosition = new Vector3(-0.78f, 0, 0);//0.78ï¿½Ì¶ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ñ°ï¿½
+            correct_pos = new Vector3(collision.bounds.max.x, transform.position.y, transform.position.z);//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â°ï¿½ ï¿½Ì°ï¿½ ï¿½ï¿½ï¿½Ýºï¿½ï¿½Ï±ï¿½ ï¿½×³ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½ ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ç¾ï¿½ï¿½Ö¾î¼­ ï¿½ï¿½ï¿½ï¿½ï¿½Ê¿ï¿½
         }
-        else//¾ç¼ö À¯Àú°¡ ¿ÀºêÁ§Æ®¿¡ ºñÇØ ¿ÞÂÊ¿¡ ÀÖ´Ù
+        else//ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ê¿ï¿½ ï¿½Ö´ï¿½
         {
             this.gameObject.transform.GetChild(0).transform.localPosition = new Vector3(0.78f, 0, 0);
-            correct_pos = new Vector3(collision.bounds.min.x, transform.position.y, transform.position.z);//¼û´Â ¿ÀºêÁ§Æ®ÀÇ À§Ä¡¸¦ µû¼­ ¼û´Â°Í ÀÌ°Å Áö±Ýº¸´Ï±î ±×³É °ãÄ¡µµ·Ï µÇ¾îÀÖÀ½ °ÉÄ¡µµ·Ï ¾È µÇ¾îÀÖ¾î¼­ ¼öÁ¤ÇÊ¿ä
+            correct_pos = new Vector3(collision.bounds.min.x, transform.position.y, transform.position.z);//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â°ï¿½ ï¿½Ì°ï¿½ ï¿½ï¿½ï¿½Ýºï¿½ï¿½Ï±ï¿½ ï¿½×³ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½ ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ç¾ï¿½ï¿½Ö¾î¼­ ï¿½ï¿½ï¿½ï¿½ï¿½Ê¿ï¿½
         }
 
         return correct_pos;
     }
     int CheckDir(Vector3 tr)
     {
-        int check = (int)Mathf.Sign(tr.x - this.gameObject.transform.position.x);//¿ÀºêÁ§Æ®¿Í À¯ÀúÀÇ °ª¿¡ µû¶ó º¸³»ÁÜ
+        int check = (int)Mathf.Sign(tr.x - this.gameObject.transform.position.x);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         return check;
     }
 
-    public bool _DrawReload(ref bool r_bool)//ÀçÀåÀü Áö¼Ó½Ã°£? ¾Ö´Ï¸ÞÀÌ¼Ç Áö¼Ó½Ã°£ ¼³Á¤À» À§ÇÔ, ±×¸®°í ÇØ´çÇÔ¼ö°¡ ²ôÅº¸é true,false¸¦ ÀüÇØÁÖ¸é¼­ ÀçÀåÀüÀÌ ³¡³µ³Ä Áö¼ÓÁßÀÌ³Ä¸¦ ¾Ë·ÁÁÜ
+    public bool _DrawReload(ref bool r_bool)//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ó½Ã°ï¿½? ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ï¿½Ó½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½×¸ï¿½ï¿½ï¿½ ï¿½Ø´ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ ï¿½ï¿½Åºï¿½ï¿½ true,falseï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸é¼­ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì³Ä¸ï¿½ ï¿½Ë·ï¿½ï¿½ï¿½
     {
-        //ÀçÀåÀü ¾Ö´Ï¸ÞÀÌ¼Ç ¹× ³»¿ëµé
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
         if (currentTime <= duration)//1 = duration temp/duration 
         {
             currentTime += Time.deltaTime;
-            Debug.Log("¾ÆÁ÷"+currentTime);
+            Debug.Log("ï¿½ï¿½ï¿½ï¿½"+currentTime);
             r_bool = true;
             //_DrawReload();
             return false;
@@ -538,7 +545,7 @@ public partial class ControllerScript : MonoBehaviour
         else
         {
 
-            Debug.Log("1ÃÊ ¿Ï");
+            Debug.Log("1ï¿½ï¿½ ï¿½ï¿½");
             
             currentTime = 0;
             r_bool = false;
@@ -546,18 +553,22 @@ public partial class ControllerScript : MonoBehaviour
         }
     }
 
-    public Vector3 ClickPos()//Å¬¸¯ÇÑ ÁÂ·á¸¦ º¸³»ÁÖ¸ç ÇöÀç °ø°Ý Å¬¸¯½Ã Ä³¸¯ÅÍÀÇ ¹Ù¶óº¸´Â ¹æÇâµµ º¯ÇØ¾ßÇÑ´Ù°í »ý°¢ÇØ¼­ ÇÊ¿äÇß´ø ºÎºÐ
+    int sign;
+
+    public Vector3 ClickPos()//Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½Â·á¸¦ ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ Ä³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¶óº¸´ï¿½ ï¿½ï¿½ï¿½âµµ ï¿½ï¿½ï¿½Ø¾ï¿½ï¿½Ñ´Ù°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½Ê¿ï¿½ï¿½ß´ï¿½ ï¿½Îºï¿½
     {
-        var screenPoint = Input.mousePosition;//¸¶¿ì½º À§Ä¡ °¡Á®¿È
+        var screenPoint = Input.mousePosition;//ï¿½ï¿½ï¿½ì½º ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         screenPoint.z = Camera.main.transform.position.z;
         worldPosition=Camera.main.ScreenToWorldPoint(screenPoint);
-        int check = CheckDir(worldPosition);//Å¬¸¯ÇÑ ºÎºÐ°ú ÇÃ·¹ÀÌ¾îÀÇ À§Ä¡¿¡ ´ëÇÑ °ªÀ» Àü´ÞÇØÁÜ
-        if (check<0){//ÀÏ´ÜÀº Ä³¸¯ÅÍ°¡ ¿ìÃúÀ» º¸´Â°ÍÀ» ±âº»ÀÌ¶ó°í »ý°¢Çß´Âµ¥ ³ªÁß¿¡ ÀÌ¹ÌÁö ¹Þ¾Æ¿À¸é ÇØ´ç ÀÌ¹ÌÁö ³Ö¾î¼­ ´Ù½Ã ¼öÁ¤ÇØ¾ßÇÒ¼öµµÀÖÀ½ rotation°ü·Ã¸¸ 
-            this.gameObject.transform.rotation = Quaternion.Euler(0, 0, 180);
+        int check = CheckDir(worldPosition);//Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½ÎºÐ°ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        if (check<0){//ï¿½Ï´ï¿½ï¿½ï¿½ Ä³ï¿½ï¿½ï¿½Í°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Â°ï¿½ï¿½ï¿½ ï¿½âº»ï¿½Ì¶ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß´Âµï¿½ ï¿½ï¿½ï¿½ß¿ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½Þ¾Æ¿ï¿½ï¿½ï¿½ ï¿½Ø´ï¿½ ï¿½Ì¹ï¿½ï¿½ï¿½ ï¿½Ö¾î¼­ ï¿½Ù½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ï¿½Ò¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ rotationï¿½ï¿½ï¿½Ã¸ï¿½ 
+            this.gameObject.transform.rotation = Quaternion.Euler(0, 180, 0);
+            sign = -1;
         }
         else
         {
             this.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
+            sign = 1;
         }
 
 
