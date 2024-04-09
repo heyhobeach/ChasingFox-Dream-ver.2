@@ -260,15 +260,10 @@ public partial class ControllerScript : MonoBehaviour
 
         // }
         
-        if (!isCrouching&&!WereWolf.Instance().isAttacking)//조건이 복잡한데 움직임을 입력 받은 상태며 숨지 않았으며 공격중이 아닐때, 즉 그냥 이동 + 점프상태만 받음
-        {
+        // if (!isCrouching&&!WereWolf.Instance().isAttacking)//조건이 복잡한데 움직임을 입력 받은 상태며 숨지 않았으며 공격중이 아닐때, 즉 그냥 이동 + 점프상태만 받음
+        // {
             Move(new Vector3(HorizontalForce(), VerticalForce()) * Time.deltaTime);
-        }
-        else if(WereWolf.Instance().isAttacking)
-        {
-             Move(new Vector3(moveSpeed * 1.5f, 4) * Time.deltaTime);
-        }
-
+        // }
     }
     private float VerticalForce()
     {
@@ -433,12 +428,18 @@ public partial class ControllerScript : MonoBehaviour
 
         //     //Debug.Log("좌우 입력값 " + InxPos);
         // }
-        isGround = Physics2D.Raycast(transform.position, Vector2.down, distanceToCheck, lm);
-        moveVec += (Input.GetAxisRaw("Horizontal")-moveVec) * accelerate;
-
-        if(Input.GetAxisRaw("Horizontal") == 0) moveVec += (Input.GetAxisRaw("Horizontal")-moveVec) * accelerate;
-        moveVec = Mathf.Clamp(moveVec, -1, 1);
-
+        if (!isCrouching&&!WereWolf.Instance().isAttacking)
+        {
+            isGround = Physics2D.Raycast(transform.position, Vector2.down, distanceToCheck, lm);
+            moveVec += (Input.GetAxisRaw("Horizontal")-moveVec) * accelerate;
+            if(Input.GetAxisRaw("Horizontal") == 0) moveVec += (Input.GetAxisRaw("Horizontal")-moveVec) * accelerate;
+            moveVec = Mathf.Clamp(moveVec, -1, 1);
+        }
+        else
+        {
+            moveVec = 1.5f * sign;
+            velocity = 4;
+        }
     }
 
     private void Update()
@@ -590,12 +591,14 @@ public partial class ControllerScript : MonoBehaviour
         int check = CheckDir(worldPosition);//클릭한 부분과 플레이어의 위치에 대한 값을 전달해줌
         if (check<0){//일단은 캐릭터가 우츨을 보는것을 기본이라고 생각했는데 나중에 이미지 받아오면 해당 이미지 넣어서 다시 수정해야할수도있음 rotation관련만 
             this.gameObject.transform.rotation = Quaternion.Euler(0, 180, 0);
+            sign = -1;
             //GetComponent<SpriteRenderer>().flipX = true;
         }
         else
         {
             //GetComponent<SpriteRenderer>().flipX = false;
             this.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
+            sign = 1;
         }
 
 
