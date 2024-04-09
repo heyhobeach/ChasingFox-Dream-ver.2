@@ -264,6 +264,10 @@ public partial class ControllerScript : MonoBehaviour
         {
             Move(new Vector3(HorizontalForce(), VerticalForce()) * Time.deltaTime);
         }
+        else if(WereWolf.Instance().isAttacking)
+        {
+             Move(new Vector3(moveSpeed * 1.5f, 4) * Time.deltaTime);
+        }
 
     }
     private float VerticalForce()
@@ -577,6 +581,7 @@ public partial class ControllerScript : MonoBehaviour
         }
     }
 
+    private int sign;
     public Vector3 ClickPos()//클릭한 좌료를 보내주며 현재 공격 클릭시 캐릭터의 바라보는 방향도 변해야한다고 생각해서 필요했던 부분
     {
         var screenPoint = Input.mousePosition;//마우스 위치 가져옴

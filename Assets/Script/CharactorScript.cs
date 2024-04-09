@@ -140,7 +140,7 @@ public partial class ControllerScript : MonoBehaviour
                     Vector2 temp = (ControllerScript.instance.ClickPos() - ControllerScript.instance.transform.position).normalized;
                     temp = temp.normalized;//짧은 거리도 1로 맞춰주기 귀함
                     Debug.Log(temp);
-                    ControllerScript.instance.rg2d.AddForce(temp * 4, ForceMode2D.Impulse);//공격시 날아가는것? 이동을 위함, 공격한 방향으로 움직여햐기때문에 y축도 같이 주었고 대충 테스트 했을때 공격이 연이어서 들어가면 이동이 뺠라짐 addForce가 초기화가 안 되어있어서 그런것 같음
+                    // ControllerScript.instance.rg2d.AddForce(temp * 4, ForceMode2D.Impulse);//공격시 날아가는것? 이동을 위함, 공격한 방향으로 움직여햐기때문에 y축도 같이 주었고 대충 테스트 했을때 공격이 연이어서 들어가면 이동이 뺠라짐 addForce가 초기화가 안 되어있어서 그런것 같음
                     isAttacking = true;//(공격중이라고 판단)
                 }
                 //else
