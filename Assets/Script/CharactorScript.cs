@@ -7,16 +7,20 @@ using TMPro;
 
 public partial class ControllerScript : MonoBehaviour
 {
-    [SerializeField] GameObject attackPoint;//°ø°İÁöÁ¡
-     public GameObject bullet;//ÃÑ¾Ë ¿ÀºêÁ§Æ® ¿¬°á
-    public GameObject meleeAttack;//°ø°İÇÏ´Â ¿ÀºêÁ§Æ® ¿¬°á
-    
-    public class Charactor
+    [SerializeField] GameObject attackPoint;//ê³µê²©ì§€ì 
+    public GameObject bullet;//ì´ì•Œ ì˜¤ë¸Œì íŠ¸ ì—°ê²°
+    public GameObject meleeAttack;//ê³µê²©í•˜ëŠ” ì˜¤ë¸Œì íŠ¸ ì—°ê²°
+
+    public class Charactor//ìƒì†ì˜ êµ¬ì¡°ê°€ ê·¸ëƒ¥ ê°’ì— ëŒ€í•œ ë³µì‚¬ì´ê¸° ë•Œë¬¸ì— ìƒê¸°ëŠ” ë¬¸ì œ
     {
         public float speed;
         public bool isHuman = true;
         public Vector3 hidePos;
         public int damage = 0;
+        public float reloadTime = 1;
+
+        public static int ammo = 2;
+        public int spare_ammo = 0;//ì—¬ë¶„ íƒ„í™˜ì„ ë§Œë“¤ê¸° ìœ„í•¨
 
 
 
@@ -26,245 +30,277 @@ public partial class ControllerScript : MonoBehaviour
 
         }
 
-        public void SetInfo()//ÇØ´ç ÇÔ¼ö·Î Æû Ã¼ÀÎÁö½Ã º¯ÇÏ´Â ½ºÅ×ÀÌ½º ¼³Á¤ ÇÔ¼ö¸¦ ¸ğ¾Æ¼­ ½ÇÇà½ÃÅ³°ÍÀÓ
+        public void SetInfo()//í•´ë‹¹ í•¨ìˆ˜ë¡œ í¼ ì²´ì¸ì§€ì‹œ ë³€í•˜ëŠ” ìŠ¤í…Œì´ìŠ¤ ì„¤ì • í•¨ìˆ˜ë¥¼ ëª¨ì•„ì„œ ì‹¤í–‰ì‹œí‚¬ê²ƒì„
         {
             Setspeed();
             Setdamage();
+            SetReloadTime();
+            Debug.Log("ì¥íƒ„ìˆ˜" + ammo);
         }
 
         public virtual void Setspeed() { }
         public virtual void Setdamage() { }
+        public virtual void SetReloadTime() { }
 
         public virtual void Attack() { }
-        public void Crouch(GameObject guard)//ref bool ·Î Á¢±Ù
+        public void Crouch(GameObject guard)//ref bool ë¡œ ì ‘ê·¼
         {
 
-            Debug.Log("Å©¶ó¿ìÄ¡");
-            guard.SetActive(true);//Å©¶ó¿ìÄ¡ Çàµ¿½Ã °¡µå ¿ÀºêÁ§Æ®¸¦ È°¼ºÈ­ ½ÃÅ´
+            Debug.Log("í¬ë¼ìš°ì¹˜");
+            guard.SetActive(true);//í¬ë¼ìš°ì¹˜ í–‰ë™ì‹œ ê°€ë“œ ì˜¤ë¸Œì íŠ¸ë¥¼ í™œì„±í™” ì‹œí‚´
 
 
-        }//´Á´ë¿Í ÀÎ°£ µÑ´Ù ¿õÅ©¸²ÀÌ °°´Ù°í °¡Á¤ÇÏ±â¿¡ ±×³É ÀÏ¹İÇÔ¼ö·Î ±¸Çö
+        }//ëŠ‘ëŒ€ì™€ ì¸ê°„ ë‘˜ë‹¤ ì›…í¬ë¦¼ì´ ê°™ë‹¤ê³  ê°€ì •í•˜ê¸°ì— ê·¸ëƒ¥ ì¼ë°˜í•¨ìˆ˜ë¡œ êµ¬í˜„
 
-        public virtual void Reload() { }
-    }
-    public class WereWolf : Charactor
-    {
-        public int life = 2;//´Á´ëÀÇ »ı¸íÀ» 2·Î ¼³Á¤ÇßÁö¸¸ ½ÇÁ¦·Î´Â 1ÀÌ¶ó¼­ ³ªÁß¿¡ ¼öÁ¤ ÇÊ¿äÇÔ
-        private static WereWolf instance;//½Ì±ÛÅÏÀ» À§ÇÑ º¯¼ö
-        //IEnumerator tTimer;
-        public bool isAttacking = false;//°ø°İ º¸¿©ÁÖ°í ÇÏ´Â ¿ë º¯¼ö °ø°İ½Ã°£ µî Ã¼Å©ÇÒ¶§ »ç¿ëµÇ´ÂÁß
-
-        //private bool showAttack = false;//ÇØ´ç º¯¼ö´Â »ç¿ë ¾È ÇØ¼­ ÁÖ¼®Ã³¸® ÇÔ
-
-        float t = 0;
-
-        public static WereWolf Instance()//´Á´ë ÀÎ½ºÅÏÆ®µî ½±°Ô ±³Ã¼ÇÏ±â À§ÇÔ ¾îÂ÷ÇÇ ´Á´ë¿Í ÀÎ°£Àº ÇÑ¹ø»ı¼ºµÇ¸é ´õ »ı¼ºÀÌ ¾ÈµÉ°ÍÀÌ¶ó°í »ı°¢ÇßÀ½
+        public void Reload()
         {
-            if (instance == null)
+            if (spare_ammo > 0)//ì¸ê°„ ìƒíƒœì´ë©° ì—¬ë¶„ ì´ì•Œì´ 1ë°œ ì´ìƒì´ë¼ë©´ ì¬ì¥ì „ ì‹¤í–‰
             {
-                //Debug.Log("ºñ¾úÀ½ »ı¼º");
-                instance = new WereWolf();
-                //´Á´ë »ı¼º½Ã ºÎÅÍ ±×³É ÄÚ·çÆ¾À» ½ÃÀÛ½ÃÄ×À½ ±×·³À¸·Î ÀÎÇØ °ø°İ»óÅÂ¿¡ ´ëÇÑ isAttackingÀ» ÅëÇØ ÄÚ·çÆ¾ ½ÃÀÛ ¹× Àç½ÃÀÛ? À» Á¶ÀıÇÔ
-                ControllerScript.instance.StartCoroutine(instance.timer());//ÄÚ·çÆ¾ È£Ãâ ºÎºĞÀÌ Á¶±İ ¼öÁ¤ ÇÒ ÇÊ¿äÀÖÀ»°Í °°À½ ÀüÁöÀü´ÉÇÑ Àë¹Ì´Ï¿¡°Ô ¹°¾îº¸¸é StartCorutineÀ» ±×³É °¡»óÇÔ¼ö·Î ¸¸µé¶ó°í ÇÏ±äÇÏ´õ¶ó
-
-            }
-            else
-            {
-                //Debug.Log("¾È ºñ¾ú±â¶§¹®¿¡ ±âÁ¸°Å Àü´Ş");
-            }
-            return instance;
-        }
-
-        private WereWolf()
-        {
-            //if (instance == null) Debug.Log("´Á´ë");
-        }
-
-        public override void Setspeed()
-        {
-            Debug.Log("´Á´ë ¼Óµµ");
-            this.speed = 5.0f;
-        }
-        public override void Setdamage()
-        {
-            Debug.Log("´Á´ë °ø°İ·Â");
-            this.damage = 2 ;
-        }
-        public override void Attack()//´Ù½Ã °ø°İÇÏ´Â°Í¿¡ ´ëÇÑ ±âÁØÀÌ ¾Ö¸ÅÇßÀ½ ÀÏ´ÜÀº ´ëÃæ ³»»ı°¢´ë·Î ¼³Á¤ÇÏ±â´Â Çß´Âµ¥ ¿À·ù°¡ Á¶±İ Á¸ÀçÇÏ±â´ÂÇÔ
-        {
-            Debug.Log("´Á´ë °ø°İ");
-            //float startAttack = Time.time;
-            float startAttack =0;
-            t = 0;
-            ControllerScript.instance.meleeAttack.transform.position = ControllerScript.instance.attackPoint.transform.position;//meleeAttack¿ÀºêÁ§Æ®ÀÇ À§Ä¡¸¦ Ã³À½ ¼³Á¤ÇÑ attackPoint·Î ÀÌµ¿½ÃÅ´
-
-
-            //ControllerScript.instance.meleeAttack.SetActive(true);
-
-            //if (!showAttack)
-            //{
-                if (!isAttacking)//°ø°İÇÑ ÀûÀÌ ¾øÀ»¶§ Áï Ã¹ °ø°İÀÏ°æ¿ì
+                if (ControllerScript.Instance._DrawReload(ref ControllerScript.instance.b_reload))//ì¬ì¥ì „ ì• ë‹ˆë©”ì´ì…˜ ê·¸ë¦¬ê³  í•´ë‹¹ ì• ë‹ˆë©”ì´ì…˜ì´ ì„±ê³µì ìœ¼ë¡œ ê·¸ë ¤ì¡Œë‹¤ë©´ ì•„ë˜ ì‹¤í–‰ ê·¸ë¦¬ê³  _DrawReloadí•¨ìˆ˜ì—ì„œ ì¬ì¥ì „ ì¤‘ì¸ì§€ ì•„ë‹Œì§€ íŒë‹¨í•˜ëŠ” b_reloadë³€ìˆ˜ ì»¨íŠ¸ë¡¤
                 {
+                    this.spare_ammo--;
+                    ammo++;
+                }
+            }
+        }
+        public void GetAmmo()//í•´ë‹¹í•¨ìˆ˜ëŠ” ì¼ë‹¨ ì ‘ê·¼ì´ Human.Instance().GetAmmoë¡œ ë˜ì–´ìˆì§€ë§Œ ë‚˜ì¤‘ì— ê°€ìƒí•¨ìˆ˜ë¡œ ë§Œë“¤ì–´ì„œ ëŠ‘ëŒ€ì—ì„œë„ ì ‘ê·¼ ê°€ëŠ¥í•˜ë„ë¡ í•´ë„ ë˜ì§€ë§Œ êµ³ì´ë¼ëŠ” ëŠë‚Œì´ ì¡´ì¬í•¨
+        {
+            if (ammo < 2)//ì´ì•Œì´ 2ë°œë³´ë‹¤ ì•„ë˜ì¼ë•Œ ì—¬ë¶„ ì´ì•Œì„ ì˜¬ë¦¼
+            {
+                spare_ammo++;
+            }
+        }
+    }
+
+    public class WereWolf : Charactor
+        {
+            public int life = 2;//ëŠ‘ëŒ€ì˜ ìƒëª…ì„ 2ë¡œ ì„¤ì •í–ˆì§€ë§Œ ì‹¤ì œë¡œëŠ” 1ì´ë¼ì„œ ë‚˜ì¤‘ì— ìˆ˜ì • í•„ìš”í•¨
+            private static WereWolf instance;//ì‹±ê¸€í„´ì„ ìœ„í•œ ë³€ìˆ˜
+                                             //IEnumerator tTimer;
+            public bool isAttacking = false;//ê³µê²© ë³´ì—¬ì£¼ê³  í•˜ëŠ” ìš© ë³€ìˆ˜ ê³µê²©ì‹œê°„ ë“± ì²´í¬í• ë•Œ ì‚¬ìš©ë˜ëŠ”ì¤‘
+
+            //private bool showAttack = false;//í•´ë‹¹ ë³€ìˆ˜ëŠ” ì‚¬ìš© ì•ˆ í•´ì„œ ì£¼ì„ì²˜ë¦¬ í•¨
+
+            float t = 0;
+
+            public static WereWolf Instance()//ëŠ‘ëŒ€ ì¸ìŠ¤í„´íŠ¸ë“± ì‰½ê²Œ êµì²´í•˜ê¸° ìœ„í•¨ ì–´ì°¨í”¼ ëŠ‘ëŒ€ì™€ ì¸ê°„ì€ í•œë²ˆìƒì„±ë˜ë©´ ë” ìƒì„±ì´ ì•ˆë ê²ƒì´ë¼ê³  ìƒê°í–ˆìŒ
+            {
+                if (instance == null)
+                {
+                    //Debug.Log("ë¹„ì—ˆìŒ ìƒì„±");
+                    instance = new WereWolf();
+                    //ëŠ‘ëŒ€ ìƒì„±ì‹œ ë¶€í„° ê·¸ëƒ¥ ì½”ë£¨í‹´ì„ ì‹œì‘ì‹œì¼°ìŒ ê·¸ëŸ¼ìœ¼ë¡œ ì¸í•´ ê³µê²©ìƒíƒœì— ëŒ€í•œ isAttackingì„ í†µí•´ ì½”ë£¨í‹´ ì‹œì‘ ë° ì¬ì‹œì‘? ì„ ì¡°ì ˆí•¨
+                    ControllerScript.instance.StartCoroutine(instance.timer());//ì½”ë£¨í‹´ í˜¸ì¶œ ë¶€ë¶„ì´ ì¡°ê¸ˆ ìˆ˜ì • í•  í•„ìš”ìˆì„ê²ƒ ê°™ìŒ ì „ì§€ì „ëŠ¥í•œ ì¼ë¯¸ë‹ˆì—ê²Œ ë¬¼ì–´ë³´ë©´ StartCorutineì„ ê·¸ëƒ¥ ê°€ìƒí•¨ìˆ˜ë¡œ ë§Œë“¤ë¼ê³  í•˜ê¸´í•˜ë”ë¼
+
+                }
+                else
+                {
+                    //Debug.Log("ì•ˆ ë¹„ì—ˆê¸°ë•Œë¬¸ì— ê¸°ì¡´ê±° ì „ë‹¬");
+                }
+                return instance;
+            }
+
+            private WereWolf()
+            {
+                //if (instance == null) Debug.Log("ëŠ‘ëŒ€");
+            }
+
+            public override void Setspeed()
+            {
+                Debug.Log("ëŠ‘ëŒ€ ì†ë„");
+                this.speed = 5.0f;
+            }
+            public override void Setdamage()
+            {
+                Debug.Log("ëŠ‘ëŒ€ ê³µê²©ë ¥");
+                ControllerScript.instance.meleeAttack.SetActive(false);
+                this.damage = 2;
+            }
+            public override void SetReloadTime()
+            {
+                this.reloadTime = 2;
+            }
+            public override void Attack()//ë‹¤ì‹œ ê³µê²©í•˜ëŠ”ê²ƒì— ëŒ€í•œ ê¸°ì¤€ì´ ì• ë§¤í–ˆìŒ ì¼ë‹¨ì€ ëŒ€ì¶© ë‚´ìƒê°ëŒ€ë¡œ ì„¤ì •í•˜ê¸°ëŠ” í–ˆëŠ”ë° ì˜¤ë¥˜ê°€ ì¡°ê¸ˆ ì¡´ì¬í•˜ê¸°ëŠ”í•¨
+            {
+                Debug.Log("ëŠ‘ëŒ€ ê³µê²©");
+                //float startAttack = Time.time;
+                float startAttack = 0;
+                t = 0;
+                ControllerScript.instance.meleeAttack.transform.position = ControllerScript.instance.attackPoint.transform.position;//meleeAttackì˜¤ë¸Œì íŠ¸ì˜ ìœ„ì¹˜ë¥¼ ì²˜ìŒ ì„¤ì •í•œ attackPointë¡œ ì´ë™ì‹œí‚´
+
+
+                //ControllerScript.instance.meleeAttack.SetActive(true);
+
+                //if (!showAttack)
+                //{
+                if (!isAttacking)//ê³µê²©í•œ ì ì´ ì—†ì„ë•Œ ì¦‰ ì²« ê³µê²©ì¼ê²½ìš°
+                {
+                    ControllerScript.instance.rg2d.velocity = Vector2.zero;
                     ControllerScript.instance.meleeAttack.SetActive(true);
                     Vector2 temp = (ControllerScript.instance.ClickPos() - ControllerScript.instance.transform.position).normalized;
-                    temp = temp.normalized;//ÂªÀº °Å¸®µµ 1·Î ¸ÂÃçÁÖ±â ±ÍÇÔ
+                    temp = temp.normalized;//ì§§ì€ ê±°ë¦¬ë„ 1ë¡œ ë§ì¶°ì£¼ê¸° ê·€í•¨
                     Debug.Log(temp);
-                    ControllerScript.instance.rg2d.AddForce(temp * 4, ForceMode2D.Impulse);//°ø°İ½Ã ³¯¾Æ°¡´Â°Í? ÀÌµ¿À» À§ÇÔ, °ø°İÇÑ ¹æÇâÀ¸·Î ¿òÁ÷¿©Çá±â¶§¹®¿¡ yÃàµµ °°ÀÌ ÁÖ¾ú°í ´ëÃæ Å×½ºÆ® ÇßÀ»¶§ °ø°İÀÌ ¿¬ÀÌ¾î¼­ µé¾î°¡¸é ÀÌµ¿ÀÌ •è¶óÁü addForce°¡ ÃÊ±âÈ­°¡ ¾È µÇ¾îÀÖ¾î¼­ ±×·±°Í °°À½
-                    isAttacking = true;//(°ø°İÁßÀÌ¶ó°í ÆÇ´Ü)
+                    ControllerScript.instance.rg2d.AddForce(temp * 4, ForceMode2D.Impulse);//ê³µê²©ì‹œ ë‚ ì•„ê°€ëŠ”ê²ƒ? ì´ë™ì„ ìœ„í•¨, ê³µê²©í•œ ë°©í–¥ìœ¼ë¡œ ì›€ì§ì—¬í–ê¸°ë•Œë¬¸ì— yì¶•ë„ ê°™ì´ ì£¼ì—ˆê³  ëŒ€ì¶© í…ŒìŠ¤íŠ¸ í–ˆì„ë•Œ ê³µê²©ì´ ì—°ì´ì–´ì„œ ë“¤ì–´ê°€ë©´ ì´ë™ì´ ëº ë¼ì§ addForceê°€ ì´ˆê¸°í™”ê°€ ì•ˆ ë˜ì–´ìˆì–´ì„œ ê·¸ëŸ°ê²ƒ ê°™ìŒ
+                    isAttacking = true;//(ê³µê²©ì¤‘ì´ë¼ê³  íŒë‹¨)
                 }
                 //else
                 //{
                 //    temp = new Vector2(temp.x, 0);
                 //    ControllerScript.instance.rg2d.AddForce(temp * 4, ForceMode2D.Impulse);
                 //}
-            //}
-            //isAttacking= true;
-            //showAttack = true;
+                //}
+                //isAttacking= true;
+                //showAttack = true;
 
 
 
-            
-            //ControllerScript.instance.StartCoroutine(tTimer);
 
-            //Debug.Log("³¡");
-            //invoke(eraseMelee,1);//¸¸¾à invoke·Î ¸¸µç´Ù¸é
+                //ControllerScript.instance.StartCoroutine(tTimer);
 
-        }
-        IEnumerator timer()
-        {
-            while (true)
+                //Debug.Log("ë");
+                //invoke(eraseMelee,1);//ë§Œì•½ invokeë¡œ ë§Œë“ ë‹¤ë©´
+
+            }
+            IEnumerator timer()
             {
-                //¸¸¾à ¿¬¼Ó °ø°İÇÏ´Â°Ô ¾î»öÇÏ´Ù¸é ¾Æ·¡ °ø°İ Áö¼Ó½Ã°£À» Âª°Ô ÇÔÀ¸·Î¼­ ÀÌ»óÇÔÀ» ÁÙ¿©º¸°í ±×·¡µµ ÀÌ»óÇÏ´Ù¸é ¼öÁ¤ ÇÊ¿ä
-                if (isAttacking)//if¸¦ Áö¿öµµ µÇÁö ¾ÊÀ»±î ¾îÂ÷ÇÇ Å¬¸¯ÀÚÃ¼°¡ ÀÌº¥Æ®ÀÌÀÚ ifÀÓ , if¸¦ Áö¿ì¸é 1.xÃÊ¿¡¼­ Å¬¸¯ÇÏ¸é Àá±ñ º¸ÀÌ°í ¾ø¾îÁü(ÇØ´ç ¾ÆÀÌµğ¾î´Â ±¦Âú¾ÒÀ¸³ª ÄÚ·çÆ¾ÀÌ °è¼Ó ¿òÁ÷ÀÌ±â¿¡ ÄğÅ¸ÀÓÀÌ Á¤È®ÇÏ°Ô ¿òÁ÷ÀÌ·Á¸é if°¡ ÇÊ¿äÇßÀ½)
+                while (true)
                 {
-                    
-                    //if (t < 1.0f)
-                    //{
-                    //    ControllerScript.instance.meleeAttack.SetActive(true);
-                    //    t += Time.deltaTime;
-                    //
-                    //}
-                    //else
-                    //{
-                    //    ControllerScript.instance.meleeAttack.SetActive(false);
-                    //    showAttack = false;
-                    //    t = 0;
-                    //}
-                    //¸¸¾à °ø°İÀÌ ¿¬¼ÓÇØ¼­ ³ª°¥ ¼ö ¾ø´Ù¸é ¾Æ·¡ ºÎºĞ ±×·¡µµ ¾Æ¸¶ À§¿¡ ºÎºĞ ÀÀ¿ëÇØ¼­ ¸¸µå´Â°Ô ÀÚ¿¬½º·¯¿ïµí
-                    Debug.Log("º¸ÀÓ");
-                    yield return new WaitForSeconds(0.5f);//0.5ÃÊ ÀÌÈÄ °ø°İ ¿ÀºêÁ§Æ®¸¦ ¾È º¸ÀÌ°Ô ÇÔ
-                    
-                    ControllerScript.instance.meleeAttack.SetActive(false);
-                    //showAttack = false;
-                    isAttacking = false;//°ø°İ Á¾·á·Î ÆÇ´Ü
+                    //ë§Œì•½ ì—°ì† ê³µê²©í•˜ëŠ”ê²Œ ì–´ìƒ‰í•˜ë‹¤ë©´ ì•„ë˜ ê³µê²© ì§€ì†ì‹œê°„ì„ ì§§ê²Œ í•¨ìœ¼ë¡œì„œ ì´ìƒí•¨ì„ ì¤„ì—¬ë³´ê³  ê·¸ë˜ë„ ì´ìƒí•˜ë‹¤ë©´ ìˆ˜ì • í•„ìš”
+                    if (isAttacking)//ifë¥¼ ì§€ì›Œë„ ë˜ì§€ ì•Šì„ê¹Œ ì–´ì°¨í”¼ í´ë¦­ìì²´ê°€ ì´ë²¤íŠ¸ì´ì ifì„ , ifë¥¼ ì§€ìš°ë©´ 1.xì´ˆì—ì„œ í´ë¦­í•˜ë©´ ì ê¹ ë³´ì´ê³  ì—†ì–´ì§(í•´ë‹¹ ì•„ì´ë””ì–´ëŠ” ê´œì°®ì•˜ìœ¼ë‚˜ ì½”ë£¨í‹´ì´ ê³„ì† ì›€ì§ì´ê¸°ì— ì¿¨íƒ€ì„ì´ ì •í™•í•˜ê²Œ ì›€ì§ì´ë ¤ë©´ ifê°€ í•„ìš”í–ˆìŒ)
+                    {
 
+                        //if (t < 1.0f)
+                        //{
+                        //    ControllerScript.instance.meleeAttack.SetActive(true);
+                        //    t += Time.deltaTime;
+                        //
+                        //}
+                        //else
+                        //{
+                        //    ControllerScript.instance.meleeAttack.SetActive(false);
+                        //    showAttack = false;
+                        //    t = 0;
+                        //}
+                        //ë§Œì•½ ê³µê²©ì´ ì—°ì†í•´ì„œ ë‚˜ê°ˆ ìˆ˜ ì—†ë‹¤ë©´ ì•„ë˜ ë¶€ë¶„ ê·¸ë˜ë„ ì•„ë§ˆ ìœ„ì— ë¶€ë¶„ ì‘ìš©í•´ì„œ ë§Œë“œëŠ”ê²Œ ìì—°ìŠ¤ëŸ¬ìš¸ë“¯
+                        Debug.Log("ë³´ì„");
+                        yield return new WaitForSeconds(0.5f);//0.5ì´ˆ ì´í›„ ê³µê²© ì˜¤ë¸Œì íŠ¸ë¥¼ ì•ˆ ë³´ì´ê²Œ í•¨
+
+                        ControllerScript.instance.meleeAttack.SetActive(false);
+                        //showAttack = false;
+                        isAttacking = false;//ê³µê²© ì¢…ë£Œë¡œ íŒë‹¨
+
+                    }
+
+                    yield return null;
                 }
 
-                yield return null;
+            }
+            public void SetFalse()//ì´ê±°ëŠ” ì•” ã…ì—†ì–´ë„ ë ë“¯ ìœ„ì—ì„œ ê·¸ëƒ¥ ë¬¸êµ¬ë¡œ ë‹¤ ì²˜ë¦¬í•´ì„œ ê·¸ê±¸ ëŒ€ì²´í•˜ê³ ì í• ë•Œ í•„ìš”í•¨
+            {
+                ControllerScript.instance.meleeAttack.SetActive(false);
+            }
+
+            float Getspeed()//í˜¹ì‹œë‚˜ ì´ë™ì†ë„ ì–»ì„ê²½ìš°ê°€ ìˆì„ê¹Œë´ ë§Œë“  ë¶€ë¶„ í˜„ì¬ ì‚¬ìš©ë˜ì§€ëŠ”ì•ŠìŒ
+            {
+                return this.speed;
             }
 
         }
-        public void SetFalse()//ÀÌ°Å´Â ¾Ï ¤¿¾ø¾îµµ µÉµí À§¿¡¼­ ±×³É ¹®±¸·Î ´Ù Ã³¸®ÇØ¼­ ±×°É ´ëÃ¼ÇÏ°íÀÚ ÇÒ¶§ ÇÊ¿äÇÔ
-        {
-            ControllerScript.instance.meleeAttack.SetActive(false);
-        }
-
-        float Getspeed()//È¤½Ã³ª ÀÌµ¿¼Óµµ ¾òÀ»°æ¿ì°¡ ÀÖÀ»±îºÁ ¸¸µç ºÎºĞ ÇöÀç »ç¿ëµÇÁö´Â¾ÊÀ½
-        {
-            return this.speed;
-        }
-
-    }
 
     public class Human : Charactor
-    {
-        public int ammo = 2;
-        public int spare_ammo = 0;//¿©ºĞ ÅºÈ¯À» ¸¸µé±â À§ÇÔ
-        private static Human instance;//À§¿¡ ´Á´ë¿Í ÀÌÀ¯ µ¿ÀÏ
+        {
+            //public int ammo = 2;
+            //public int spare_ammo = 0;//ì—¬ë¶„ íƒ„í™˜ì„ ë§Œë“¤ê¸° ìœ„í•¨
+            private static Human instance;//ìœ„ì— ëŠ‘ëŒ€ì™€ ì´ìœ  ë™ì¼
 
 
 
-        private Human() { }
-        public static Human Instance()
-        {
-            if (instance == null)
+            private Human() { }
+            public static Human Instance()
             {
-                return instance = new Human();
-            }
-            else
-            {
-                return instance;
-            }
-        }
-        public override void Attack()
-        {
-            if (ammo <= 0)//ÃÑ¾ËÀÌ ¾øÀ»¶§ »ç°İ ºÒ°¡
-            {
-                Debug.Log("ÀåÅº¼ö ºÎÁ·");
-                return;
-            }
-            Debug.Log("»ç¶÷ °ø°İ »§¾ß");
-            Vector3 temp = ControllerScript.instance.ClickPos();//Å¬¸¯À§Ä¡¸¦ ´ã´Â º¯¼ö
-            GameObject _bullet = Instantiate(ControllerScript.instance.bullet, ControllerScript.instance.attackPoint.transform.position, ControllerScript.instance.transform.rotation);//ÃÑ¾ËÀ» °ø°İÆ÷Áö¼Ç¿¡¼­ »ı¼ºÇÔ
-            _bullet.GetComponent<BulletScript>().targetPos = temp;//Å¬¸¯ÇÑ À§Ä¡°¡ Å¸°Ù À§Ä¡ÀÓ
-            _bullet.GetComponent<BulletScript>().shootPos = ControllerScript.instance.transform.position;//³ªÁß¿¡ °Å¸®µû¶ó¼­ ÃÑ¾ËÀ» »èÁ¦ÇÒ¶§ ÇÊ¿äÇÑ°Í °°¾Æ¼­ ¸¸µé¾úÀ½, ¸»°íµµ ÀÌµ¿ ¹æÇâ¼³Á¤À» À§ÇØ ÇÊ¿äÇÑ ºÎºĞ
-
-            //Debug.Log(ControllerScript.instance.worldPosition);
-            ammo--;//»ç°İÀÌ ÀÌ·ç¾îÁ³´Ù¸é ÃÑ¾ËÀ» ÁÙÀÓ
-            Debug.Log($"³²Àº ÀåÅº¼ö{ammo}");
-
-        }
-        public override void Setspeed()
-        {
-            Debug.Log("»ç¶÷ ¼Óµµ");
-            this.speed = 3.0f;
-        }
-        public override void Setdamage()
-        {
-            Debug.Log("»ç¶÷ °ø°İ·Â");
-            this.damage = 2;
-        }
-        public void GetAmmo()//ÇØ´çÇÔ¼ö´Â ÀÏ´Ü Á¢±ÙÀÌ Human.Instance().GetAmmo·Î µÇ¾îÀÖÁö¸¸ ³ªÁß¿¡ °¡»óÇÔ¼ö·Î ¸¸µé¾î¼­ ´Á´ë¿¡¼­µµ Á¢±Ù °¡´ÉÇÏµµ·Ï ÇØµµ µÇÁö¸¸ ±»ÀÌ¶ó´Â ´À³¦ÀÌ Á¸ÀçÇÔ
-        {
-            if (ammo < 2)//ÃÑ¾ËÀÌ 2¹ßº¸´Ù ¾Æ·¡ÀÏ¶§ ¿©ºĞ ÃÑ¾ËÀ» ¿Ã¸²
-            {
-                spare_ammo++;
-            }
-        }
-        public override void Reload()//¸ŞÀÎ¿¡¼­ °è¼Ó µ¹¾Æ°¥ ÇÔ¼ö
-        {
-            if (isHuman && spare_ammo > 0)//ÀÎ°£ »óÅÂÀÌ¸ç ¿©ºĞ ÃÑ¾ËÀÌ 1¹ß ÀÌ»óÀÌ¶ó¸é ÀçÀåÀü ½ÇÇà
-            {
-                if (ControllerScript.Instance._DrawReload(ref ControllerScript.instance.b_reload))//ÀçÀåÀü ¾Ö´Ï¸ŞÀÌ¼Ç ±×¸®°í ÇØ´ç ¾Ö´Ï¸ŞÀÌ¼ÇÀÌ ¼º°øÀûÀ¸·Î ±×·ÁÁ³´Ù¸é ¾Æ·¡ ½ÇÇà ±×¸®°í _DrawReloadÇÔ¼ö¿¡¼­ ÀçÀåÀü ÁßÀÎÁö ¾Æ´ÑÁö ÆÇ´ÜÇÏ´Â b_reloadº¯¼ö ÄÁÆ®·Ñ
+                if (instance == null)
                 {
-                    this.spare_ammo--;
-                    this.ammo++;
+                    return instance = new Human();
                 }
-                //if (!UIController.Instance.startCor)
-                //{
-                //    UIController.Instance.StartCoroutine(UIController.Instance.DrawReload());
-                //}
-                //
-                ////Debug.Log(UIController.Instance.reloadDoon);
-                //if (UIController.Instance.reloadDoon)//1¾È
-                //{
-                //    UIController.Instance.StopCoroutine(UIController.Instance.DrawReload());
-                //    //ControllerScript.Instance._DrawReload();
-                //    //UIController.Instance._DrawReload();
-                //    Debug.Log("ÀÎ°£ »óÅÂ ÀçÀåÀü");
-                //    spare_ammo--;
-                //    ammo++;
-                //    Debug.Log($"³²Àº ÀåÅº¼ö{ammo}");//ÀçÀåÀü ÄğÅ¸ÀÓ ÇÊ¿ä
-                //}
-                //Debug.Log("ÀÎ°£ »óÅÂ ÀçÀåÀü");//2¾È
-                //spare_ammo--;
-                //ammo++;
-                //Debug.Log($"³²Àº ÀåÅº¼ö{ammo}");//ÀçÀåÀü ÄğÅ¸ÀÓ ÇÊ¿ä
-                //UIController.Instance._DrawReload();//ÀçÀåÀü
-                //UIController.Calltest();
+                else
+                {
+                    return instance;
+                }
             }
-            //ammo++;
+            public override void Attack()
+            {
+                if (ammo <= 0)//ì´ì•Œì´ ì—†ì„ë•Œ ì‚¬ê²© ë¶ˆê°€
+                {
+                    Debug.Log("ì¥íƒ„ìˆ˜ ë¶€ì¡±");
+                    return;
+                }
+                Debug.Log("ì‚¬ëŒ ê³µê²© ë¹µì•¼");
+                Vector3 temp = ControllerScript.instance.ClickPos();//í´ë¦­ìœ„ì¹˜ë¥¼ ë‹´ëŠ” ë³€ìˆ˜
+                GameObject _bullet = Instantiate(ControllerScript.instance.bullet, ControllerScript.instance.attackPoint.transform.position, ControllerScript.instance.transform.rotation);//ì´ì•Œì„ ê³µê²©í¬ì§€ì…˜ì—ì„œ ìƒì„±í•¨
+                _bullet.GetComponent<BulletScript>().targetPos = temp;//í´ë¦­í•œ ìœ„ì¹˜ê°€ íƒ€ê²Ÿ ìœ„ì¹˜ì„
+                _bullet.GetComponent<BulletScript>().shootPos = ControllerScript.instance.transform.position;//ë‚˜ì¤‘ì— ê±°ë¦¬ë”°ë¼ì„œ ì´ì•Œì„ ì‚­ì œí• ë•Œ í•„ìš”í•œê²ƒ ê°™ì•„ì„œ ë§Œë“¤ì—ˆìŒ, ë§ê³ ë„ ì´ë™ ë°©í–¥ì„¤ì •ì„ ìœ„í•´ í•„ìš”í•œ ë¶€ë¶„
 
+                //Debug.Log(ControllerScript.instance.worldPosition);
+                ammo--;//ì‚¬ê²©ì´ ì´ë£¨ì–´ì¡Œë‹¤ë©´ ì´ì•Œì„ ì¤„ì„
+                Debug.Log($"ë‚¨ì€ ì¥íƒ„ìˆ˜{ammo}");
+
+            }
+            public override void Setspeed()
+            {
+                Debug.Log("ì‚¬ëŒ ì†ë„");
+                this.speed = 3.0f;
+            }
+            public override void Setdamage()
+            {
+                Debug.Log("ì‚¬ëŒ ê³µê²©ë ¥");
+                this.damage = 2;
+            }
+            public override void SetReloadTime()
+            {
+                this.reloadTime = 1;
+            }
+            //public void GetAmmo()//í•´ë‹¹í•¨ìˆ˜ëŠ” ì¼ë‹¨ ì ‘ê·¼ì´ Human.Instance().GetAmmoë¡œ ë˜ì–´ìˆì§€ë§Œ ë‚˜ì¤‘ì— ê°€ìƒí•¨ìˆ˜ë¡œ ë§Œë“¤ì–´ì„œ ëŠ‘ëŒ€ì—ì„œë„ ì ‘ê·¼ ê°€ëŠ¥í•˜ë„ë¡ í•´ë„ ë˜ì§€ë§Œ êµ³ì´ë¼ëŠ” ëŠë‚Œì´ ì¡´ì¬í•¨
+            //{
+            //    if (ammo < 2)//ì´ì•Œì´ 2ë°œë³´ë‹¤ ì•„ë˜ì¼ë•Œ ì—¬ë¶„ ì´ì•Œì„ ì˜¬ë¦¼
+            //    {
+            //        spare_ammo++;
+            //    }
+            //}
+            //public override void Reload()//ë©”ì¸ì—ì„œ ê³„ì† ëŒì•„ê°ˆ í•¨ìˆ˜
+            //{
+            //    if ( spare_ammo > 0)//ì¸ê°„ ìƒíƒœì´ë©° ì—¬ë¶„ ì´ì•Œì´ 1ë°œ ì´ìƒì´ë¼ë©´ ì¬ì¥ì „ ì‹¤í–‰
+            //    {
+            //        if (ControllerScript.Instance._DrawReload(ref ControllerScript.instance.b_reload))//ì¬ì¥ì „ ì• ë‹ˆë©”ì´ì…˜ ê·¸ë¦¬ê³  í•´ë‹¹ ì• ë‹ˆë©”ì´ì…˜ì´ ì„±ê³µì ìœ¼ë¡œ ê·¸ë ¤ì¡Œë‹¤ë©´ ì•„ë˜ ì‹¤í–‰ ê·¸ë¦¬ê³  _DrawReloadí•¨ìˆ˜ì—ì„œ ì¬ì¥ì „ ì¤‘ì¸ì§€ ì•„ë‹Œì§€ íŒë‹¨í•˜ëŠ” b_reloadë³€ìˆ˜ ì»¨íŠ¸ë¡¤
+            //        {
+            //            this.spare_ammo--;
+            //            this.ammo++;
+            //        }
+            //        //if (!UIController.Instance.startCor)
+            //        //{
+            //        //    UIController.Instance.StartCoroutine(UIController.Instance.DrawReload());
+            //        //}
+            //        //
+            //        ////Debug.Log(UIController.Instance.reloadDoon);
+            //        //if (UIController.Instance.reloadDoon)//1ì•ˆ
+            //        //{
+            //        //    UIController.Instance.StopCoroutine(UIController.Instance.DrawReload());
+            //        //    //ControllerScript.Instance._DrawReload();
+            //        //    //UIController.Instance._DrawReload();
+            //        //    Debug.Log("ì¸ê°„ ìƒíƒœ ì¬ì¥ì „");
+            //        //    spare_ammo--;
+            //        //    ammo++;
+            //        //    Debug.Log($"ë‚¨ì€ ì¥íƒ„ìˆ˜{ammo}");//ì¬ì¥ì „ ì¿¨íƒ€ì„ í•„ìš”
+            //        //}
+            //        //Debug.Log("ì¸ê°„ ìƒíƒœ ì¬ì¥ì „");//2ì•ˆ
+            //        //spare_ammo--;
+            //        //ammo++;
+            //        //Debug.Log($"ë‚¨ì€ ì¥íƒ„ìˆ˜{ammo}");//ì¬ì¥ì „ ì¿¨íƒ€ì„ í•„ìš”
+            //        //UIController.Instance._DrawReload();//ì¬ì¥ì „
+            //        //UIController.Calltest();
+            //    }
+            //    //ammo++;
+            //
+            //}
         }
-    }
 }
+
