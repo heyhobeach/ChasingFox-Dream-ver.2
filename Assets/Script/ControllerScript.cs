@@ -167,7 +167,7 @@ public partial class ControllerScript : MonoBehaviour
     {
         if (collision.gameObject.tag == "ground" || collision.gameObject.tag == "platform")//땅에서 벗어날경우
         {
-            // isGround = false;
+            isGround = false;
             if (collision.gameObject.tag == "platform")
             {
                 currentOneWayPlatform = null;//platform에서 벗어난거라면 플랫폼 변수를 비움
@@ -181,7 +181,7 @@ public partial class ControllerScript : MonoBehaviour
     {
         if (collision.gameObject.tag == "ground" || collision.gameObject.tag == "platform")
         {
-            // isGround = true;
+            isGround = true;
             if (collision.gameObject.tag == "platform")//플랫폼이라면 현재 플렛폼을 담음
             {
                 currentOneWayPlatform = collision.gameObject;

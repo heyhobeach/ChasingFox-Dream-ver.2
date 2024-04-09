@@ -135,14 +135,14 @@ public partial class ControllerScript : MonoBehaviour
             //{
             if (!isAttacking)//공격한 적이 없을때 즉 첫 공격일경우
             {
-                ControllerScript.instance.rg2d.velocity = Vector2.zero;
+                //
                 ControllerScript.instance.meleeAttack.SetActive(true);
                 Vector2 temp = (ControllerScript.instance.ClickPos() - ControllerScript.instance.transform.position).normalized;
                 temp = temp.normalized;//짧은 거리도 1로 맞춰주기 귀함
                 Debug.Log(temp);
                 if (ControllerScript.instance.isGround)
                 {
-
+                    ControllerScript.instance.rg2d.velocity = Vector2.zero;//addforce를 계속하면 남아있는 velocity에 계속 합산이 되어서 초기화 시키고 다시 날리기위함
                     ControllerScript.instance.rg2d.AddForce(temp * 4, ForceMode2D.Impulse);//공격시 날아가는것? 이동을 위함, 공격한 방향으로 움직여햐기때문에 y축도 같이 주었고 대충 테스트 했을때 공격이 연이어서 들어가면 이동이 뺠라짐 addForce가 초기화가 안 되어있어서 그런것 같음
                 }
                 isAttacking = true;//(공격중이라고 판단)
@@ -191,7 +191,7 @@ public partial class ControllerScript : MonoBehaviour
 
                     ControllerScript.instance.meleeAttack.SetActive(false);
                     //showAttack = false;
-                    //isAttacking = false;//공격 종료로 판단
+                    isAttacking = false;//공격 종료로 판단
 
                 }
 
