@@ -118,7 +118,7 @@ public partial class ControllerScript : MonoBehaviour
     {
         if (collision.gameObject.tag == "ground" || collision.gameObject.tag == "platform")//지면 확인 점프용
         {
-            // isGround = true;
+             isGround = true;
             //WereWolf.Instance().isAttacking = false;// 이 부분이 있으면 땅에서 연속 공격 가능 
             if (collision.gameObject.tag == "platform")
             {
