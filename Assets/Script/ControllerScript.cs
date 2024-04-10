@@ -108,6 +108,7 @@ public partial class ControllerScript : MonoBehaviour
     private bool jumpKeyUp;
 
     int check;//방향체크 위한 변수
+    bool test = false;
 
 
     [SerializeField] private GameObject currentOneWayPlatform;//떨어질수 있느 ㄴ바닥관련 오브젝트 담는 변수
@@ -194,6 +195,18 @@ public partial class ControllerScript : MonoBehaviour
 
         }
 
+        if (collision.gameObject.tag == "Wall")
+        {
+            
+            Debug.Log("벽 충돌 위치"+CheckDir(collision.transform.position));
+            transform.position=collision.GetContact(0).point;
+
+            test = false;
+
+            //isGround = true;
+            //WereWolf.Instance().ClimbWall(new Vector2(-1 * CheckDir(collision.transform.position), 1).normalized);
+        }
+
 
 
     }
@@ -212,6 +225,11 @@ public partial class ControllerScript : MonoBehaviour
 
             }
         }
+        if (collision.gameObject.tag == "Wall")
+        {
+            rg2d.gravityScale = 1;
+            test = false;
+        }
     }
     private void OnCollisionStay2D(Collision2D collision)
     {
@@ -225,7 +243,21 @@ public partial class ControllerScript : MonoBehaviour
         }
         if (collision.gameObject.tag == "Wall")//벽에 쭉 붙어있는 지금 모습 수정하기 위해 만들었던 변수
         {
+            //transform.position = collision.GetContact(0).point;
+            Debug.Log("벽 스테이 템플스테이 아님");
+            //isGround = true;
 
+            if (Input.GetKeyDown(KeyCode.W))
+            {
+                WereWolf.Instance().ClimbWall(new Vector2(-1 * CheckDir(collision.transform.position), 1).normalized);
+                test = true;
+            }
+            if(!test)
+            {
+                rg2d.gravityScale = 0.3f;
+                velocity = 0;
+                rg2d.velocity = Vector2.zero;
+            }
         }
 
 
@@ -385,14 +417,18 @@ public partial class ControllerScript : MonoBehaviour
             ReloadCancle();//재장전 중이었다면 장전캔슬
             //currentTime = 0;//해당부분 수정 필요 지금은 즉시 취소 되고 다시 재장전이 되지만 
         }
-        if (Input.GetKey(KeyCode.A))
+        if (!WereWolf.Instance().isAttacking)
         {
-            transform.rotation = Quaternion.Euler(0, 180, 0);
+            if (Input.GetKey(KeyCode.A))
+            {
+                transform.rotation = Quaternion.Euler(0, 180, 0);
+            }
+            else if (Input.GetKey(KeyCode.D))
+            {
+                transform.rotation = Quaternion.Euler(0, 0, 0);
+            }
         }
-        else if (Input.GetKey(KeyCode.D))
-        {
-            transform.rotation = Quaternion.Euler(0, 0, 0);
-        }
+
 
         // if (Input.GetKeyDown(KeyCode.W) && isGround&&!WereWolf.Instance().isAttacking)//점프키 관련 만약 키가 변한다면 keycode만 변경하면 됨
         // {//"W"가 점프라고 생각했을때 구현내용
@@ -411,6 +447,8 @@ public partial class ControllerScript : MonoBehaviour
 
         // }
         jumpKey = Input.GetKey(KeyCode.W);
+
+        jumpKey = test & jumpKey;//안되면 범인
         if (!jumpKeyUp) jumpKeyUp = Input.GetKeyUp(KeyCode.W);
         if (isGround && jumpKeyUp)
         {
@@ -419,6 +457,7 @@ public partial class ControllerScript : MonoBehaviour
         }
         if (isJumpReady && jumpKey)
         {
+            Debug.Log("점프");
             isJumping = true;
             if (jumpKeyUp) isJumpReady = false;
             if (velocity / jumpForce >= 0.9f) isJumpReady = false;

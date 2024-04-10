@@ -78,7 +78,6 @@ public partial class ControllerScript : MonoBehaviour
                                          //IEnumerator tTimer;
         public bool isAttacking = false;//공격 보여주고 하는 용 변수 공격시간 등 체크할때 사용되는중
 
-        //private bool showAttack = false;//해당 변수는 사용 안 해서 주석처리 함
 
         float t = 0;
 
@@ -101,7 +100,7 @@ public partial class ControllerScript : MonoBehaviour
 
         private WereWolf()
         {
-            //if (instance == null) Debug.Log("늑대");
+
         }
 
         public override void Setspeed()
@@ -128,10 +127,6 @@ public partial class ControllerScript : MonoBehaviour
             ControllerScript.instance.meleeAttack.transform.position = ControllerScript.instance.attackPoint.transform.position;//meleeAttack오브젝트의 위치를 처음 설정한 attackPoint로 이동시킴
 
 
-            //ControllerScript.instance.meleeAttack.SetActive(true);
-
-            //if (!showAttack)
-            //{
             if (!isAttacking)//공격한 적이 없을때 즉 첫 공격일경우
             {
                 //
@@ -149,23 +144,6 @@ public partial class ControllerScript : MonoBehaviour
             }
             ControllerScript.instance.ReloadCancle();//재장전 중이었다면 캔슬
 
-            //ControllerScript.instance.currentTime = 0;  
-            //else
-            //{
-            //    temp = new Vector2(temp.x, 0);
-            //    ControllerScript.instance.rg2d.AddForce(temp * 4, ForceMode2D.Impulse);
-            //}
-            //}
-            //isAttacking= true;
-            //showAttack = true;
-
-
-
-
-            //ControllerScript.instance.StartCoroutine(tTimer);
-
-            //Debug.Log("끝");
-            //invoke(eraseMelee,1);//만약 invoke로 만든다면
 
         }
         IEnumerator timer()
@@ -212,12 +190,19 @@ public partial class ControllerScript : MonoBehaviour
             return this.speed;
         }
 
+        public void ClimbWall(Vector2 climb)//늑대 벽타기,collision에서 check로 
+        {
+            Debug.Log("벽타기");
+            ControllerScript.instance.rg2d.AddForce(climb * 6, ForceMode2D.Impulse);
+            //날리는 부분
+            //대각선(1,1).normalized
+            //mathf.sign(move.x *-1 ),1
+        }
+
     }
 
     public class Human : Charactor
     {
-        //public int ammo = 2;
-        //public int spare_ammo = 0;//여분 탄환을 만들기 위함
         private static Human instance;//위에 늑대와 이유 동일
 
 
@@ -270,48 +255,7 @@ public partial class ControllerScript : MonoBehaviour
         {
             this.reloadTime = 1;
         }
-        //public void GetAmmo()//해당함수는 일단 접근이 Human.Instance().GetAmmo로 되어있지만 나중에 가상함수로 만들어서 늑대에서도 접근 가능하도록 해도 되지만 굳이라는 느낌이 존재함
-        //{
-        //    if (ammo < 2)//총알이 2발보다 아래일때 여분 총알을 올림
-        //    {
-        //        spare_ammo++;
-        //    }
-        //}
-        //public override void Reload()//메인에서 계속 돌아갈 함수
-        //{
-        //    if ( spare_ammo > 0)//인간 상태이며 여분 총알이 1발 이상이라면 재장전 실행
-        //    {
-        //        if (ControllerScript.Instance._DrawReload(ref ControllerScript.instance.b_reload))//재장전 애니메이션 그리고 해당 애니메이션이 성공적으로 그려졌다면 아래 실행 그리고 _DrawReload함수에서 재장전 중인지 아닌지 판단하는 b_reload변수 컨트롤
-        //        {
-        //            this.spare_ammo--;
-        //            this.ammo++;
-        //        }
-        //        //if (!UIController.Instance.startCor)
-        //        //{
-        //        //    UIController.Instance.StartCoroutine(UIController.Instance.DrawReload());
-        //        //}
-        //        //
-        //        ////Debug.Log(UIController.Instance.reloadDoon);
-        //        //if (UIController.Instance.reloadDoon)//1안
-        //        //{
-        //        //    UIController.Instance.StopCoroutine(UIController.Instance.DrawReload());
-        //        //    //ControllerScript.Instance._DrawReload();
-        //        //    //UIController.Instance._DrawReload();
-        //        //    Debug.Log("인간 상태 재장전");
-        //        //    spare_ammo--;
-        //        //    ammo++;
-        //        //    Debug.Log($"남은 장탄수{ammo}");//재장전 쿨타임 필요
-        //        //}
-        //        //Debug.Log("인간 상태 재장전");//2안
-        //        //spare_ammo--;
-        //        //ammo++;
-        //        //Debug.Log($"남은 장탄수{ammo}");//재장전 쿨타임 필요
-        //        //UIController.Instance._DrawReload();//재장전
-        //        //UIController.Calltest();
-        //    }
-        //    //ammo++;
-        //
-        //}
+
     }
 }
 
