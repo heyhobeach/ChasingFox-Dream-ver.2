@@ -23,8 +23,11 @@ public class JumpState//굳이 클래스여야할까
 
 public partial class ControllerScript : MonoBehaviour
 {
+    //bool isCancle = false;
+    bool isCancle = false;//캔슬에 들어가는 변수들 캔슬 제어용
+    float t = 0;//캔슬에 들어가는 변수들 캔슬 제어용
 
-    private static ControllerScript instance=null;
+    private static ControllerScript instance = null;
     public static ControllerScript Instance
     {
         get
@@ -36,6 +39,37 @@ public partial class ControllerScript : MonoBehaviour
 
     private ControllerScript() { }
 
+    //IEnumerator pointFiveTimer;
+
+
+    IEnumerator ReloadCancleTimer()
+    {
+        t = 0;
+        while (true)
+        {
+            if (isCancle)
+            {
+                t += Time.deltaTime;
+                if (t < 2)
+                {
+                    UIController.Instance.ImageSetFalse();
+                    ControllerScript.instance.currentTime = 0;
+                }
+                else
+                {
+                    UIController.Instance.ImageSetTrue();
+                }
+                Debug.Log("재장전");
+            }
+            else
+            {
+                isCancle = false;
+                t = 0;
+            }
+            yield return null;
+
+        }
+    }
 
     public bool b_reload = false;//재장전 컨트롤 bool값
     public float currentTime = 0;//재장전관련부분
@@ -64,16 +98,17 @@ public partial class ControllerScript : MonoBehaviour
     [SerializeField] private float speed;
     [SerializeField] private float accelerate;
 
-    
+
     private float moveVec = 0;
     private float velocity = 0;
 
     private float distanceToCheck = 0.5f;
-    // private bool isGrounded;
+
     private bool jumpKey;
     private bool jumpKeyUp;
 
-    int check;
+    int check;//방향체크 위한 변수
+
 
     [SerializeField] private GameObject currentOneWayPlatform;//떨어질수 있느 ㄴ바닥관련 오브젝트 담는 변수
     //[SerializeField] private BoxCollider2D playerCollider;//사용 안함
@@ -102,12 +137,13 @@ public partial class ControllerScript : MonoBehaviour
         }
         instance = this;
         StartCoroutine(DownJump());//아래 점프 코루틴 해당 함
+        StartCoroutine(ReloadCancleTimer());
     }
 
     void Start()
     {
         rg2d = GetComponent<Rigidbody2D>();
-        lm = ~(1<<gameObject.layer);
+        lm = ~(1 << gameObject.layer);
         isJumpReady = true;
         distanceToCheck = gameObject.GetComponent<BoxCollider2D>().size.y * 0.7f;
     }
@@ -118,7 +154,7 @@ public partial class ControllerScript : MonoBehaviour
     {
         if (collision.gameObject.tag == "ground" || collision.gameObject.tag == "platform")//지면 확인 점프용
         {
-             isGround = true;
+            isGround = true;
             //WereWolf.Instance().isAttacking = false;// 이 부분이 있으면 땅에서 연속 공격 가능 
             if (collision.gameObject.tag == "platform")
             {
@@ -202,13 +238,13 @@ public partial class ControllerScript : MonoBehaviour
         if (collision.gameObject.tag == "cover")//엄폐물일때
         {
             Debug.Log($"경계 {collision.bounds.min.x}");
-            charactor.hidePos= HideDir(collision);//HideDir 함수 실행 해당 함수는 숨음 + 방향 고정
+            charactor.hidePos = HideDir(collision);//HideDir 함수 실행 해당 함수는 숨음 + 방향 고정
         }
 
-        if(collision.gameObject.tag=="ammo")//총알이라면
+        if (collision.gameObject.tag == "ammo")//총알이라면
         {
             Debug.Log("총알 획득");
-            if (Charactor.ammo < 2)
+            if (Charactor.spare_ammo+Charactor.ammo < 2)
             {
                 Debug.Log("총알을 획득합니다");
                 charactor.GetAmmo();//GetAmmo의 조건을 없애도 될듯 중복된 조건임
@@ -259,8 +295,8 @@ public partial class ControllerScript : MonoBehaviour
         //     }
 
         // }
-        
-        if (!isCrouching&&!WereWolf.Instance().isAttacking)//조건이 복잡한데 움직임을 입력 받은 상태며 숨지 않았으며 공격중이 아닐때, 즉 그냥 이동 + 점프상태만 받음
+
+        if (!isCrouching && !WereWolf.Instance().isAttacking)//조건이 복잡한데 움직임을 입력 받은 상태며 숨지 않았으며 공격중이 아닐때, 즉 그냥 이동 + 점프상태만 받음
         {
             Move(new Vector3(HorizontalForce(), VerticalForce()) * Time.deltaTime);
         }
@@ -269,11 +305,11 @@ public partial class ControllerScript : MonoBehaviour
     private float VerticalForce()
     {
         velocity += gravity * Time.deltaTime;
-        if(isGround && velocity < 0) velocity = 0;
-        if(isJumping)
+        if (isGround && velocity < 0) velocity = 0;
+        if (isJumping)
         {
-            if(velocity <= 0) velocity = jumpForce/2;
-            velocity = Mathf.Sin(velocity/jumpForce) * jumpForce * 1.2f;
+            if (velocity <= 0) velocity = jumpForce / 2;
+            velocity = Mathf.Sin(velocity / jumpForce) * jumpForce * 1.2f;
         }
         return velocity;
     }
@@ -291,6 +327,16 @@ public partial class ControllerScript : MonoBehaviour
     {
         Debug.Log("Attack");
         charactor.Attack();
+
+    }
+    public void ReloadCancle()//장전 캔슬을 위함
+    {
+        if (b_reload)
+        {
+            Debug.Log("공격 캔슬");
+            isCancle = b_reload;
+            t = 0;
+        }
     }
 
     private void Formchange()//폼체인지시 인스턴스를 넣어서 실행함
@@ -319,27 +365,31 @@ public partial class ControllerScript : MonoBehaviour
         //charactor.Setspeed();
         moveSpeed = charactor.speed;
 
-       
+
         //구르기시 앞으로
         rg2d.AddForce(Vector2.right * 100 * Mathf.Sign(transform.rotation.y));
 
     }
+
     private void InputManager()//말이 InputManager지만 Update에서 혼자 움직임
     {
         if (Input.GetMouseButtonDown(0))//좌클릭 공격시
         {
             _Attack();
-
+            //currentTime = 0;//해당부분 수정 필요 지금은 즉시 취소 되고 다시 재장전이 되지만 
 
         }
-        if (Input.GetMouseButtonDown(1)&&!isCrouching)//우클릭, 크라우치 안 하고있을때 폼체인지
+        if (Input.GetMouseButtonDown(1) && !isCrouching)//우클릭, 크라우치 안 하고있을때 폼체인지
         {
             Formchange();
+            ReloadCancle();//재장전 중이었다면 장전캔슬
+            //currentTime = 0;//해당부분 수정 필요 지금은 즉시 취소 되고 다시 재장전이 되지만 
         }
         if (Input.GetKey(KeyCode.A))
         {
-            transform.rotation =Quaternion.Euler(0, 180, 0);
-        }else if (Input.GetKey(KeyCode.D))
+            transform.rotation = Quaternion.Euler(0, 180, 0);
+        }
+        else if (Input.GetKey(KeyCode.D))
         {
             transform.rotation = Quaternion.Euler(0, 0, 0);
         }
@@ -361,17 +411,17 @@ public partial class ControllerScript : MonoBehaviour
 
         // }
         jumpKey = Input.GetKey(KeyCode.W);
-        if(!jumpKeyUp) jumpKeyUp = Input.GetKeyUp(KeyCode.W);
-        if(isGround && jumpKeyUp)
+        if (!jumpKeyUp) jumpKeyUp = Input.GetKeyUp(KeyCode.W);
+        if (isGround && jumpKeyUp)
         {
             isJumpReady = true;
             jumpKeyUp = false;
         }
-        if(isJumpReady && jumpKey)
+        if (isJumpReady && jumpKey)
         {
             isJumping = true;
-            if(jumpKeyUp) isJumpReady = false;
-            if(velocity/jumpForce >= 0.9f) isJumpReady = false;
+            if (jumpKeyUp) isJumpReady = false;
+            if (velocity / jumpForce >= 0.9f) isJumpReady = false;
         }
         else isJumping = false;
 
@@ -430,9 +480,9 @@ public partial class ControllerScript : MonoBehaviour
         //     //Debug.Log("좌우 입력값 " + InxPos);
         // }
         isGround = Physics2D.Raycast(transform.position, Vector2.down, distanceToCheck, lm);
-        moveVec += (Input.GetAxisRaw("Horizontal")-moveVec) * accelerate;
+        moveVec += (Input.GetAxisRaw("Horizontal") - moveVec) * accelerate;
 
-        if(Input.GetAxisRaw("Horizontal") == 0) moveVec += (Input.GetAxisRaw("Horizontal")-moveVec) * accelerate;
+        if (Input.GetAxisRaw("Horizontal") == 0) moveVec += (Input.GetAxisRaw("Horizontal") - moveVec) * accelerate;
         moveVec = Mathf.Clamp(moveVec, -1, 1);
 
     }
@@ -561,16 +611,15 @@ public partial class ControllerScript : MonoBehaviour
         if (currentTime <= charactor.reloadTime)//1 = duration temp/duration 
         {
             currentTime += Time.deltaTime;
-            Debug.Log("아직"+currentTime);
+            Debug.Log("아직" + currentTime);
             r_bool = true;
-            //_DrawReload();
             return false;
         }
         else
         {
 
             Debug.Log("1초 완");
-            
+
             currentTime = 0;
             r_bool = false;
             return true;
@@ -581,9 +630,10 @@ public partial class ControllerScript : MonoBehaviour
     {
         var screenPoint = Input.mousePosition;//마우스 위치 가져옴
         screenPoint.z = Camera.main.transform.position.z;
-        worldPosition=Camera.main.ScreenToWorldPoint(screenPoint);
+        worldPosition = Camera.main.ScreenToWorldPoint(screenPoint);
         int check = CheckDir(worldPosition);//클릭한 부분과 플레이어의 위치에 대한 값을 전달해줌
-        if (check<0){//일단은 캐릭터가 우츨을 보는것을 기본이라고 생각했는데 나중에 이미지 받아오면 해당 이미지 넣어서 다시 수정해야할수도있음 rotation관련만 
+        if (check < 0)
+        {//일단은 캐릭터가 우츨을 보는것을 기본이라고 생각했는데 나중에 이미지 받아오면 해당 이미지 넣어서 다시 수정해야할수도있음 rotation관련만 
             this.gameObject.transform.rotation = Quaternion.Euler(0, 180, 0);
             //GetComponent<SpriteRenderer>().flipX = true;
         }

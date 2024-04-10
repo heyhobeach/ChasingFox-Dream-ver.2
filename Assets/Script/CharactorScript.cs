@@ -20,8 +20,7 @@ public partial class ControllerScript : MonoBehaviour
         public float reloadTime = 1;
 
         public static int ammo = 2;
-        public int spare_ammo = 0;//여분 탄환을 만들기 위함
-
+        public static int spare_ammo = 0;//여분 탄환을 만들기 위함
 
 
 
@@ -58,14 +57,14 @@ public partial class ControllerScript : MonoBehaviour
             {
                 if (ControllerScript.Instance._DrawReload(ref ControllerScript.instance.b_reload))//재장전 애니메이션 그리고 해당 애니메이션이 성공적으로 그려졌다면 아래 실행 그리고 _DrawReload함수에서 재장전 중인지 아닌지 판단하는 b_reload변수 컨트롤
                 {
-                    this.spare_ammo--;
+                    spare_ammo--;
                     ammo++;
                 }
             }
         }
         public void GetAmmo()//해당함수는 일단 접근이 Human.Instance().GetAmmo로 되어있지만 나중에 가상함수로 만들어서 늑대에서도 접근 가능하도록 해도 되지만 굳이라는 느낌이 존재함
         {
-            if (ammo < 2)//총알이 2발보다 아래일때 여분 총알을 올림
+            if (spare_ammo+ammo < 2)//총알이 2발보다 아래일때 여분 총알을 올림
             {
                 spare_ammo++;
             }
@@ -137,6 +136,7 @@ public partial class ControllerScript : MonoBehaviour
             {
                 //
                 ControllerScript.instance.meleeAttack.SetActive(true);
+                //ControllerScript.instance.isCancle = true;
                 Vector2 temp = (ControllerScript.instance.ClickPos() - ControllerScript.instance.transform.position).normalized;
                 temp = temp.normalized;//짧은 거리도 1로 맞춰주기 귀함
                 Debug.Log(temp);
@@ -147,6 +147,9 @@ public partial class ControllerScript : MonoBehaviour
                 }
                 isAttacking = true;//(공격중이라고 판단)
             }
+            ControllerScript.instance.ReloadCancle();//재장전 중이었다면 캔슬
+
+            //ControllerScript.instance.currentTime = 0;  
             //else
             //{
             //    temp = new Vector2(temp.x, 0);
@@ -238,6 +241,8 @@ public partial class ControllerScript : MonoBehaviour
                 Debug.Log("장탄수 부족");
                 return;
             }
+            //ControllerScript.instance.isCancle = true;
+            //ControllerScript.instance.currentTime = 0;
             Debug.Log("사람 공격 빵야");
             Vector3 temp = ControllerScript.instance.ClickPos();//클릭위치를 담는 변수
             GameObject _bullet = Instantiate(ControllerScript.instance.bullet, ControllerScript.instance.attackPoint.transform.position, ControllerScript.instance.transform.rotation);//총알을 공격포지션에서 생성함
@@ -246,6 +251,8 @@ public partial class ControllerScript : MonoBehaviour
 
             //Debug.Log(ControllerScript.instance.worldPosition);
             ammo--;//사격이 이루어졌다면 총알을 줄임
+            ControllerScript.instance.ReloadCancle();//재장전 중이었다면 장전 캔슬
+            //ControllerScript.instance.isCancle = false;
             Debug.Log($"남은 장탄수{ammo}");
 
         }

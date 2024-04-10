@@ -5,12 +5,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
-public class UIController : MonoBehaviour//ÇØ´ç ½ºÅ©¸³Æ®´Â UI¸¦ ±×¸®´Âµ¥ ÇÊ¿äÇÔ
+public class UIController : MonoBehaviour//í•´ë‹¹ ìŠ¤í¬ë¦½íŠ¸ëŠ” UIë¥¼ ê·¸ë¦¬ëŠ”ë° í•„ìš”í•¨
 {
-    //½Ì±ÛÅæ ±¸Çö? ´Ù¸¥ ui½Ã½ºÅÛ ½ºÅ©¸³Æ®¸¦ ³Ö¾îµÎ°í ¿©±â¼­ °ü¸® È¤Àº staticÀ¸·Î ºÒ·¯¿È ±Ùµ¥ staticÀ¸·Î ºÒ·¯¿À´Â°Íº¸´Ù´Â ½Ì±ÛÅæÀÌ ÁÁ¾Æº¸ÀÓ
-    [SerializeField] private UnityEngine.UI.Image image;//UI±×¸² ÀÌ¹ÌÁö ´ã´Â º¯¼ö
-    public bool reloadDoon = true;//ÀçÀåÀü ¿Ï·á¸¦ ¾Ë·ÁÁÖ´Â º¯¼ö
-    [SerializeField] private float duration = 1f;//±×¸² ±×¸®´Âµ¥ ÇÊ¿äÇÑ ½Ã°£
+    //ì‹±ê¸€í†¤ êµ¬í˜„? ë‹¤ë¥¸ uiì‹œìŠ¤í…œ ìŠ¤í¬ë¦½íŠ¸ë¥¼ ë„£ì–´ë‘ê³  ì—¬ê¸°ì„œ ê´€ë¦¬ í˜¹ì€ staticìœ¼ë¡œ ë¶ˆëŸ¬ì˜´ ê·¼ë° staticìœ¼ë¡œ ë¶ˆëŸ¬ì˜¤ëŠ”ê²ƒë³´ë‹¤ëŠ” ì‹±ê¸€í†¤ì´ ì¢‹ì•„ë³´ì„
+    [SerializeField] private UnityEngine.UI.Image image;//UIê·¸ë¦¼ ì´ë¯¸ì§€ ë‹´ëŠ” ë³€ìˆ˜
+    public bool reloadDoon = true;//ì¬ì¥ì „ ì™„ë£Œë¥¼ ì•Œë ¤ì£¼ëŠ” ë³€ìˆ˜
+    [SerializeField] private float duration = 1f;//ê·¸ë¦¼ ê·¸ë¦¬ëŠ”ë° í•„ìš”í•œ ì‹œê°„
     public bool startCor = false;
     // Start is called before the first frame update
 
@@ -41,14 +41,14 @@ public class UIController : MonoBehaviour//ÇØ´ç ½ºÅ©¸³Æ®´Â UI¸¦ ±×¸®´Âµ¥ ÇÊ¿äÇÔ
     // Update is called once per frame
     void Update()
     {
-        if (ControllerScript.Instance.b_reload)//¸¸¾à ÀçÀåÀü ÁßÀÌ¶ó¸é
+        if (ControllerScript.Instance.b_reload)//ë§Œì•½ ì¬ì¥ì „ ì¤‘ì´ë¼ë©´
         {
-            _DrawReload();//ÀçÀåÀü ±×¸²
-            //Debug.Log("±×¸®´ÂÁß");
+            _DrawReload();//ì¬ì¥ì „ ê·¸ë¦¼
+            //Debug.Log("ê·¸ë¦¬ëŠ”ì¤‘");
         }
         else
         {
-            //Debug.Log("±×¸²¿Ï");
+            //Debug.Log("ê·¸ë¦¼ì™„");
         }
 
         
@@ -57,13 +57,13 @@ public class UIController : MonoBehaviour//ÇØ´ç ½ºÅ©¸³Æ®´Â UI¸¦ ±×¸®´Âµ¥ ÇÊ¿äÇÔ
 
     public IEnumerator DrawReload()
     {
-        Debug.Log("ÄÚ·çÆ¾ ½ÃÀÛ");
+        Debug.Log("ì½”ë£¨í‹´ ì‹œì‘");
         float currentTime = 0.0f;
         float startFillAmout = 0f;
         float endFillAmout = 1.0f;
         startCor = true;
 
-        while (currentTime <= duration)//ÀçÀåÀü È®ÀÎ°ª ´øÁ®ÁÖ´ÂÁö Ã¼Å© ¾Æ¸¶ currentTime<duration&&reloadStart
+        while (currentTime <= duration)//ì¬ì¥ì „ í™•ì¸ê°’ ë˜ì ¸ì£¼ëŠ”ì§€ ì²´í¬ ì•„ë§ˆ currentTime<duration&&reloadStart
         {
             reloadDoon = false;
             float t = currentTime / duration;
@@ -71,30 +71,39 @@ public class UIController : MonoBehaviour//ÇØ´ç ½ºÅ©¸³Æ®´Â UI¸¦ ±×¸®´Âµ¥ ÇÊ¿äÇÔ
             //image.fillAmount = t;
 
             currentTime += Time.deltaTime;
-            //Debug.Log("ÀçÀåÀüÁß" + currentTime);
+            //Debug.Log("ì¬ì¥ì „ì¤‘" + currentTime);
             yield return null;
         }
 
-        if (currentTime >= duration)//¿Ï·á»óÅÂ
+        if (currentTime >= duration)//ì™„ë£Œìƒíƒœ
         {
-            //Debug.Log("¿Ï·á");
+            //Debug.Log("ì™„ë£Œ");
             reloadDoon = true;
             //currentTime = 0.0f; 
-            Debug.Log("1ÃÊ ÈÄ");
+            Debug.Log("1ì´ˆ í›„");
             startCor = false;
             //yield return new WaitForSecondsRealtime(1);
             
         }
         //yield return true;
-        //yield return null;//ÀÌ°Ô ¹Û¿¡ÀÖ¾î¾ßÇÔ ¹«ÇÑ ·çÇÁ±âÁØ
+        //yield return null;//ì´ê²Œ ë°–ì—ìˆì–´ì•¼í•¨ ë¬´í•œ ë£¨í”„ê¸°ì¤€
         
     }
 
-    public void _DrawReload()//ControllerScript ÀÇ temp¸¦ ¹Ş¾Æ¼­ °¡´ÉÇÔ ÀçÀåÀü ±×¸®´Â ¾Ö´Ï¸ŞÀÌ¼Ç
+    public void _DrawReload()//ControllerScript ì˜ tempë¥¼ ë°›ì•„ì„œ ê°€ëŠ¥í•¨ ì¬ì¥ì „ ê·¸ë¦¬ëŠ” ì• ë‹ˆë©”ì´ì…˜
     {
-        //ÀçÀåÀü ¾Ö´Ï¸ŞÀÌ¼Ç ¹× ³»¿ëµé
-        image.fillAmount = ControllerScript.Instance.currentTime / ControllerScript.Instance.duration;//½Ã°£ °ü·Ã º¯¼öµéÀº ContollerScriptÀÇ _DrawReloadÇÔ¼ö¿¡¼­ ÃøÁ¤Áß
+        //ì¬ì¥ì „ ì• ë‹ˆë©”ì´ì…˜ ë° ë‚´ìš©ë“¤
+        image.fillAmount = ControllerScript.Instance.currentTime / ControllerScript.Instance.duration;//ì‹œê°„ ê´€ë ¨ ë³€ìˆ˜ë“¤ì€ ContollerScriptì˜ _DrawReloadí•¨ìˆ˜ì—ì„œ ì¸¡ì •ì¤‘
 
+    }
+
+    public void ImageSetFalse()
+    {
+        image.transform.gameObject.SetActive(false);
+    }
+    public void ImageSetTrue()
+    {
+        image.transform.gameObject.SetActive(true);
     }
 
 
