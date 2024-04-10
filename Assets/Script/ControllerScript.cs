@@ -299,7 +299,7 @@ public partial class ControllerScript : MonoBehaviour
         if (!isCrouching && !WereWolf.Instance().isAttacking)//조건이 복잡한데 움직임을 입력 받은 상태며 숨지 않았으며 공격중이 아닐때, 즉 그냥 이동 + 점프상태만 받음
         {
             Move(new Vector3(HorizontalForce(), VerticalForce()) * Time.deltaTime);
-        // }
+        }
     }
     private float VerticalForce()
     {
