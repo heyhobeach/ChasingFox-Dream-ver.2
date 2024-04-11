@@ -1,11 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 using static PlatformScript;
+using Debug = UnityEngine.Debug;//아까 모호하다고 해서 해둔것
 
 
 
@@ -112,12 +115,9 @@ public partial class ControllerScript : MonoBehaviour
 
 
     [SerializeField] private GameObject currentOneWayPlatform;//떨어질수 있느 ㄴ바닥관련 오브젝트 담는 변수
-    //[SerializeField] private BoxCollider2D playerCollider;//사용 안함
-    //[SerializeField] BoxCollider2D platformCollider;//현재 안씀
 
     public float downTime = 0.4f;//다운 점프하면 오브젝트 충돌 무시하는 시간
     public bool canDown = false;//다운 점프 가능 구간 확인
-    //private bool dJump = false;//다운 점프 현재 안씀
 
 
     public Vector3 worldPosition;//클릭하는 위치를 담기위한 변수
@@ -127,6 +127,10 @@ public partial class ControllerScript : MonoBehaviour
     Vector2 vec;//레이 위한 것
 
     [SerializeField] private GameObject guard;//숨었을때 만는는것
+
+    int test_vec;//해당변수는 벽 점프테스트를 위해 만든 변수로 벽점프가 완전히 구현이 되고나서 사용하지 않는다면 지워도 무방 해당 변수는 collisionEnter시에 캐릭터가 어느편에서 벽에 충돌한지 확인하는 변수임
+
+    bool temp = false;
 
     private void Awake()
     {
@@ -160,7 +164,6 @@ public partial class ControllerScript : MonoBehaviour
             if (collision.gameObject.tag == "platform")
             {
                 currentOneWayPlatform = collision.gameObject;//플랫폼이라면 현재 플렛폼을 담음
-                //platformCollider = currentOneWayPlatform.GetComponent<BoxCollider2D>();
                 Debug.Log(collision.gameObject.GetComponent<PlatformScript>().dObject);//다운 오브젝트 타입확인용 로그
                 switch (collision.gameObject.GetComponent<PlatformScript>().dObject)//대각선 직선 오브젝트 마다 떨어지는 시간이 다를수도 있으니
                 {
@@ -197,14 +200,13 @@ public partial class ControllerScript : MonoBehaviour
 
         if (collision.gameObject.tag == "Wall")
         {
-            
-            Debug.Log("벽 충돌 위치"+CheckDir(collision.transform.position));
-            transform.position=collision.GetContact(0).point;
 
-            test = false;
+            Debug.Log("벽 충돌 위치" + CheckDir(collision.transform.position));
 
-            //isGround = true;
-            //WereWolf.Instance().ClimbWall(new Vector2(-1 * CheckDir(collision.transform.position), 1).normalized);
+            test = true;
+            rg2d.velocity = Vector2.zero;
+            test_vec = CheckDir(collision.transform.position); 
+
         }
 
 
@@ -220,8 +222,6 @@ public partial class ControllerScript : MonoBehaviour
             if (collision.gameObject.tag == "platform")
             {
                 currentOneWayPlatform = null;//platform에서 벗어난거라면 플랫폼 변수를 비움
-                //canDown = false;
-
 
             }
         }
@@ -243,21 +243,19 @@ public partial class ControllerScript : MonoBehaviour
         }
         if (collision.gameObject.tag == "Wall")//벽에 쭉 붙어있는 지금 모습 수정하기 위해 만들었던 변수
         {
-            //transform.position = collision.GetContact(0).point;
-            Debug.Log("벽 스테이 템플스테이 아님");
-            //isGround = true;
 
-            if (Input.GetKeyDown(KeyCode.W))
+            Debug.Log("벽 스테이 템플스테이 아님");
+
+            test = true;
+
+
+            if (test)
             {
-                WereWolf.Instance().ClimbWall(new Vector2(-1 * CheckDir(collision.transform.position), 1).normalized);
-                test = true;
-            }
-            if(!test)
-            {
-                rg2d.gravityScale = 0.3f;
+                rg2d.gravityScale = 0f;
                 velocity = 0;
-                rg2d.velocity = Vector2.zero;
+                //rg2d.velocity = Vector2.zero;
             }
+
         }
 
 
@@ -276,7 +274,7 @@ public partial class ControllerScript : MonoBehaviour
         if (collision.gameObject.tag == "ammo")//총알이라면
         {
             Debug.Log("총알 획득");
-            if (Charactor.spare_ammo+Charactor.ammo < 2)
+            if (Charactor.spare_ammo + Charactor.ammo < 2)
             {
                 Debug.Log("총알을 획득합니다");
                 charactor.GetAmmo();//GetAmmo의 조건을 없애도 될듯 중복된 조건임
@@ -307,30 +305,13 @@ public partial class ControllerScript : MonoBehaviour
     private void FixedUpdate()
     {
 
-        // if (jumpState.isJump)//점프중이라면
-        // {
-        //     switch (jumpState.jumptype)//LONG_JUMP판단을 위한부분임
-        //     {
-        //         case JumpState.State.IDLE:
-        //             //Debug.Log("일반");
-        //             break;
-        //         case JumpState.State.NORMAL_JUMP:
-        //             //Debug.Log("점프");
-        //             //Jump();
-        //             break;
-        //         case JumpState.State.LONG_JUMP:
-        //             //Debug.Log("긴 점프");
-        //             //Debug.Log("슈퍼 점프");
-        //             JumpHigher();//더 높게 점프
-        //             break;
-
-        //     }
-
-        // }
-
         if (!isCrouching && !WereWolf.Instance().isAttacking)//조건이 복잡한데 움직임을 입력 받은 상태며 숨지 않았으며 공격중이 아닐때, 즉 그냥 이동 + 점프상태만 받음
         {
-            Move(new Vector3(HorizontalForce(), VerticalForce()) * Time.deltaTime);
+            if (!test)
+            {
+                Move(new Vector3(HorizontalForce(), VerticalForce()) * Time.deltaTime);
+            }
+            
         }
 
     }
@@ -430,25 +411,10 @@ public partial class ControllerScript : MonoBehaviour
         }
 
 
-        // if (Input.GetKeyDown(KeyCode.W) && isGround&&!WereWolf.Instance().isAttacking)//점프키 관련 만약 키가 변한다면 keycode만 변경하면 됨
-        // {//"W"가 점프라고 생각했을때 구현내용
-        //     // Jump();
-        // }
-        // else if (Input.GetKey(KeyCode.W) && jumpState.isJump && Time.time - jumpState.jumpStartTime < jumpDuration)//점프 중이며 계속 누르고있으면 점프상태를 LONG_JUMP로 수정
-        // {
-        //     //Debug.Log("HOLDDDDDDDDDDDDD");
-        //     jumpState.jumptype = JumpState.State.LONG_JUMP;
-        // }
-        // else//이게 아니라면 그냥 점프중이 아니라고 판단 따라서 isJump를 false로 수정하고 점프 상태를 IDLE로 변경
-        // {
-        //     //Debug.Log("else");
-        //     jumpState.isJump = false;
-        //     jumpState.jumptype = JumpState.State.IDLE;
-
-        // }
         jumpKey = Input.GetKey(KeyCode.W);
 
-        jumpKey = test & jumpKey;//안되면 범인
+
+
         if (!jumpKeyUp) jumpKeyUp = Input.GetKeyUp(KeyCode.W);
         if (isGround && jumpKeyUp)
         {
@@ -464,7 +430,7 @@ public partial class ControllerScript : MonoBehaviour
         }
         else isJumping = false;
 
-        //if (Input.GetKeyDown(KeyCode.S))
+
         if (Input.GetKey(KeyCode.S))//S를 누를때
         {
             if (isHide)//숨는 오브젝트와 상호 작용이 가능하다면
@@ -472,11 +438,9 @@ public partial class ControllerScript : MonoBehaviour
                 if (check < 0)
                 {//일단은 캐릭터가 우츨을 보는것을 기본이라고 생각했는데 나중에 이미지 받아오면 해당 이미지 넣어서 다시 수정해야할수도있음 rotation관련만 
                     this.gameObject.transform.rotation = Quaternion.Euler(0, 180, 0);
-                    //GetComponent<SpriteRenderer>().flipX = true;
                 }
                 else
                 {
-                    //GetComponent<SpriteRenderer>().flipX = false;
                     this.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
                 }
                 guard.transform.position = this.gameObject.transform.GetChild(0).transform.position;//가드 위치를 가드 포인트 위치로 옮김
@@ -490,11 +454,9 @@ public partial class ControllerScript : MonoBehaviour
             if (currentOneWayPlatform != null)//밑 아래 점프 가능한 오브젝트와 닿아있을때 ,우선순위 따라서 위로 올리고 return이 필요할듯 
             {
                 Debug.Log("hello");
+                
                 canDown = true;
-                //Physics2D.IgnoreCollision(playerCollider, platformCollider, true);
-                //Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"),true);
 
-                //StartCoroutine(DownJump());
             }
 
         }
@@ -504,21 +466,35 @@ public partial class ControllerScript : MonoBehaviour
             isCrouching = false;
         }
 
-        // if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))//이동 입력이 들어왔을때
-        // {
-        //     InxPos = Input.GetAxis("Horizontal") * moveSpeed;
-        //     isMoving = true;
+        RaycastHit2D[] hit =Physics2D.RaycastAll(transform.position, Vector2.down, distanceToCheck, lm);
 
-        //     //Debug.Log("좌우");
-        // }
-        // else if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))//이동 입력이 풀렸을때 isMoving을 false상태로 돌림
-        // {
-        //     //InxPos = 0;
-        //     isMoving = false;
+        if(hit != null)
+        {
+            isGround = true;
+            var index = Array.FindIndex(hit, x => x.transform.tag == "ground");//만약 람다를 안 쓰려면 for로 hit만큼 돌ㅡㅜ   아가면서 태그가 맞는지 확인해야함
+            //var index = Array.FindIndex(hit, x => x.transform.tag == "ground");
+            if (index != -1)
+            {
+                Debug.Log("그라운드 찾음");
+                temp = true;
+            }
+            else
+            {
+                Debug.Log("그라운드 못 찾음");
+                temp = false;
+            }
+            
+        }
 
-        //     //Debug.Log("좌우 입력값 " + InxPos);
-        // }
-        isGround = Physics2D.Raycast(transform.position, Vector2.down, distanceToCheck, lm);
+        if (temp)//temp가 true 일때 무시함
+        {
+            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), true);
+        }
+        else if(!canDown)
+        {
+            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), false);
+        }
+
         moveVec += (Input.GetAxisRaw("Horizontal") - moveVec) * accelerate;
 
         if (Input.GetAxisRaw("Horizontal") == 0) moveVec += (Input.GetAxisRaw("Horizontal") - moveVec) * accelerate;
@@ -534,8 +510,7 @@ public partial class ControllerScript : MonoBehaviour
 
         if (charactor.isHuman)//인간상태일때 지속적으로 해야하는 함수들 넣기위함
         {
-            //StartCoroutine(UIController.Instance.DrawReload());
-            //charactor.Reload();//늑대상태도 재장전이 가능하도록 한다면 가상함수로 만들어서 밖으로 빼도 무방하다고 생각함
+
         }
         else//늑대 상태때 지속적으로 체크하거나 수행해야할 부분 넣어야함
         {
@@ -603,9 +578,11 @@ public partial class ControllerScript : MonoBehaviour
             if (canDown)//아래 점프 가능한 오브젝트 만날경우
             {
                 Debug.Log("hi");
+                temp = true;
                 Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), true);//원리는 그냥 설정한 시간동안 해당 플렛폼들을 그냥 무시하는식으로 설정했음 근데 지금 생각해보면 지금 플렛폼을 받아와서 플렛폼의 네임을 무시하는식으로 해도 되지않을까 하는 영감이 떠오름
                 yield return new WaitForSeconds(downTime);//downtime변수는 나중에 중력 설정시 이질감이 든다면 변경필요
-                Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), false);
+                temp = false;
+                //Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), false);
                 canDown = false;
             }
             yield return null;

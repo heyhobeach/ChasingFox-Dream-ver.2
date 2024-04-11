@@ -192,7 +192,7 @@ public partial class ControllerScript : MonoBehaviour
 
         public void ClimbWall(Vector2 climb)//늑대 벽타기,collision에서 check로 
         {
-            Debug.Log("벽타기");
+            Debug.Log("벽타기 w");
             ControllerScript.instance.rg2d.AddForce(climb * 6, ForceMode2D.Impulse);
             //날리는 부분
             //대각선(1,1).normalized
