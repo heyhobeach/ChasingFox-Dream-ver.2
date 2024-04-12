@@ -150,11 +150,11 @@ public partial class ControllerScript : MonoBehaviour
         rg2d = GetComponent<Rigidbody2D>();
         lm = ~(1 << gameObject.layer);
         isJumpReady = true;
-        distanceToCheck = gameObject.GetComponent<BoxCollider2D>().size.y * 0.7f;
+        distanceToCheck = gameObject.GetComponent<BoxCollider2D>().size.y * 0.5f;
     }
 
 
-
+    private Vector2 collisionVec;
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "ground" || collision.gameObject.tag == "platform")//지면 확인 점프용
@@ -198,7 +198,7 @@ public partial class ControllerScript : MonoBehaviour
 
         }
 
-        if (collision.gameObject.tag == "Wall")
+        if (collision.gameObject.tag == "Wall" && !charactor.isHuman)
         {
 
             Debug.Log("벽 충돌 위치" + CheckDir(collision.transform.position));
@@ -206,7 +206,7 @@ public partial class ControllerScript : MonoBehaviour
             test = true;
             rg2d.velocity = Vector2.zero;
             test_vec = CheckDir(collision.transform.position); 
-
+            collisionVec = collision.transform.position;
         }
 
 
@@ -241,7 +241,7 @@ public partial class ControllerScript : MonoBehaviour
                 currentOneWayPlatform = collision.gameObject;
             }
         }
-        if (collision.gameObject.tag == "Wall")//벽에 쭉 붙어있는 지금 모습 수정하기 위해 만들었던 변수
+        if (collision.gameObject.tag == "Wall" && !charactor.isHuman)//벽에 쭉 붙어있는 지금 모습 수정하기 위해 만들었던 변수
         {
 
             Debug.Log("벽 스테이 템플스테이 아님");
@@ -252,7 +252,7 @@ public partial class ControllerScript : MonoBehaviour
             if (test)
             {
                 rg2d.gravityScale = 0f;
-                velocity = 0;
+                if(velocity <= 0) velocity = 0;
                 //rg2d.velocity = Vector2.zero;
             }
 
@@ -514,7 +514,10 @@ public partial class ControllerScript : MonoBehaviour
         }
         else//늑대 상태때 지속적으로 체크하거나 수행해야할 부분 넣어야함
         {
-
+            if(test && Input.GetKeyDown(KeyCode.W))
+            {
+                rg2d.AddForce(new Vector2(-CheckDir(collisionVec), 1) * 1, ForceMode2D.Impulse);
+            }
         }
         charactor.Reload();
         //_Raycast();
