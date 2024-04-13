@@ -131,6 +131,10 @@ public partial class ControllerScript : MonoBehaviour
     int test_vec;//해당변수는 벽 점프테스트를 위해 만든 변수로 벽점프가 완전히 구현이 되고나서 사용하지 않는다면 지워도 무방 해당 변수는 collisionEnter시에 캐릭터가 어느편에서 벽에 충돌한지 확인하는 변수임
 
     bool temp = false;
+    float checkHigh = -100;
+    bool isDown = false;
+
+    public bool findRayPlatform = false;
 
     private void Awake()
     {
@@ -150,7 +154,7 @@ public partial class ControllerScript : MonoBehaviour
         rg2d = GetComponent<Rigidbody2D>();
         lm = ~(1 << gameObject.layer);
         isJumpReady = true;
-        distanceToCheck = gameObject.GetComponent<BoxCollider2D>().size.y * 0.5f;
+        distanceToCheck = gameObject.GetComponent<BoxCollider2D>().size.y/2 * 0.7f;
     }
 
 
@@ -160,6 +164,7 @@ public partial class ControllerScript : MonoBehaviour
         if (collision.gameObject.tag == "ground" || collision.gameObject.tag == "platform")//지면 확인 점프용
         {
             isGround = true;
+            checkHigh= -100;
             //WereWolf.Instance().isAttacking = false;// 이 부분이 있으면 땅에서 연속 공격 가능 
             if (collision.gameObject.tag == "platform")
             {
@@ -221,6 +226,10 @@ public partial class ControllerScript : MonoBehaviour
             isGround = false;
             if (collision.gameObject.tag == "platform")
             {
+                if (isJumping)
+                {
+                    Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), false);
+                }
                 currentOneWayPlatform = null;//platform에서 벗어난거라면 플랫폼 변수를 비움
 
             }
@@ -326,8 +335,22 @@ public partial class ControllerScript : MonoBehaviour
         }
         return velocity;
     }
+
+    private bool CheckHigh()
+    {
+        if (checkHigh <= transform.position.y)
+        {
+            checkHigh = transform.position.y;
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
     private float HorizontalForce()
     {
+        isDown = CheckHigh();
         if (transform.rotation.y != 0)
         {
             return -(moveVec * speed);
@@ -467,11 +490,28 @@ public partial class ControllerScript : MonoBehaviour
         }
 
         RaycastHit2D[] hit =Physics2D.RaycastAll(transform.position, Vector2.down, distanceToCheck, lm);
+        Debug.DrawRay(transform.position, Vector2.down * distanceToCheck, Color.red);
+        BoxCollider2D box = GetComponent<BoxCollider2D>();
+        Vector2 test = new Vector2(transform.position.x + box.size.x/2, transform.position.y - box.size.y/2)  - (Vector2)transform.position;
+        RaycastHit2D dHit = Physics2D.Raycast(transform.position, test,(MathF.Sqrt(box.size.x / 2) + MathF.Sqrt( box.size.y/2))/2,1<<LayerMask.NameToLayer("OneWayPlatform"));//플랫폼감지용 레이,0.75f 하드 코딩때 값
+        Vector2 test2 = new Vector2(transform.position.x - box.size.x / 2, transform.position.y - box.size.y / 2) - (Vector2)transform.position;
+        RaycastHit2D d2Hit = Physics2D.Raycast(transform.position, test2, (MathF.Sqrt(box.size.x / 2) + MathF.Sqrt(box.size.y / 2))/2, 1 << LayerMask.NameToLayer("OneWayPlatform"));//플랫폼감지용 레이
+        Debug.DrawRay(transform.position, test.normalized*0.75f, Color.blue);
 
-        if(hit != null)
+        if (hit != null)
         {
             isGround = true;
             var index = Array.FindIndex(hit, x => x.transform.tag == "ground");//만약 람다를 안 쓰려면 for로 hit만큼 돌ㅡㅜ   아가면서 태그가 맞는지 확인해야함
+            if(Array.FindIndex(hit, x => x.transform.tag == "platform") != -1)
+            {
+                Debug.Log("플랫폼 감지중");
+                findRayPlatform = true;
+            }
+            else
+            {
+                Debug.Log("플랫폼 가지 못 함");
+                findRayPlatform=false;
+            }
             //var index = Array.FindIndex(hit, x => x.transform.tag == "ground");
             if (index != -1)
             {
@@ -486,11 +526,19 @@ public partial class ControllerScript : MonoBehaviour
             
         }
 
+        if (dHit.collider == null)
+        {
+            Debug.Log("dHit null");
+        }
+        else
+        {
+            Debug.Log("find dHit"+dHit.collider.name);
+        }
         if (temp)//temp가 true 일때 무시함
         {
             Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), true);
         }
-        else if(!canDown)
+        else if(!canDown&&(dHit.collider==null&&d2Hit.collider==null))//캐릭터 좌우 대각선 부분에서 플랫폼이 감지가 안될경우
         {
             Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), false);
         }
