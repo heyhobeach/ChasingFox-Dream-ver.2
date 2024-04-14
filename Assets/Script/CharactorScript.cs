@@ -120,6 +120,10 @@ public partial class ControllerScript : MonoBehaviour
         }
         public override void Attack()//다시 공격하는것에 대한 기준이 애매했음 일단은 대충 내생각대로 설정하기는 했는데 오류가 조금 존재하기는함
         {
+            if (ControllerScript.instance.isCrouching)
+            {
+                return;
+            }
             Debug.Log("늑대 공격");
             //float startAttack = Time.time;
             float startAttack = 0;

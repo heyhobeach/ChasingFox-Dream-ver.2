@@ -80,7 +80,7 @@ public partial class ControllerScript : MonoBehaviour
 
     Rigidbody2D rg2d;//이번 프로젝트에서는 rigdbody를 이용해서 움직일것임
 
-    JumpState jumpState = new JumpState();//점프 상태를 위하
+    JumpState jumpState = new JumpState();//점프 상태를 위하 해당 클래스 현재 사용안함
     Charactor charactor = new Charactor();
 
 
@@ -91,7 +91,7 @@ public partial class ControllerScript : MonoBehaviour
     [SerializeField]
     private bool isGround = true;//점프 및 공격한것에 대한 테스트를 위함움직이면서 만약 안 된다면 다시 변수 만들어야함 공격을 했는지 판단하기 위함  
     public bool isHide = false;//크라우치 할 수 있는지 확인 용변수
-    public bool isCrouching = false;//크라우치 중인지 확인뇽
+    public bool isCrouching = false;//크라우치 중인지 확인뇽,나중에 charactor로 들어가도 괜찮을듯
     private bool isJumping;
     private bool isJumpReady;
     private const float gravity = -9.81f;
@@ -136,6 +136,8 @@ public partial class ControllerScript : MonoBehaviour
 
     public bool findRayPlatform = false;
 
+    BoxCollider2D charBoxCollider;
+
     private void Awake()
     {
         vec = Vector2.left;//캐릭터 방향키 입력에 따른 레이 변경을 위해
@@ -147,6 +149,9 @@ public partial class ControllerScript : MonoBehaviour
         instance = this;
         StartCoroutine(DownJump());//아래 점프 코루틴 해당 함
         StartCoroutine(ReloadCancleTimer());
+
+        charactor = Human.Instance();
+        charactor.isHuman = true;
     }
 
     void Start()
@@ -154,7 +159,8 @@ public partial class ControllerScript : MonoBehaviour
         rg2d = GetComponent<Rigidbody2D>();
         lm = ~(1 << gameObject.layer);
         isJumpReady = true;
-        distanceToCheck = gameObject.GetComponent<BoxCollider2D>().size.y/2 * 0.7f;
+        charBoxCollider =this.GetComponent<BoxCollider2D>();
+        distanceToCheck =charBoxCollider.size.y/2 * 0.7f;
     }
 
 
@@ -491,11 +497,11 @@ public partial class ControllerScript : MonoBehaviour
 
         RaycastHit2D[] hit =Physics2D.RaycastAll(transform.position, Vector2.down, distanceToCheck, lm);
         Debug.DrawRay(transform.position, Vector2.down * distanceToCheck, Color.red);
-        BoxCollider2D box = GetComponent<BoxCollider2D>();
-        Vector2 test = new Vector2(transform.position.x + box.size.x/2, transform.position.y - box.size.y/2)  - (Vector2)transform.position;
-        RaycastHit2D dHit = Physics2D.Raycast(transform.position, test,(MathF.Sqrt(box.size.x / 2) + MathF.Sqrt( box.size.y/2)) * 0.45f, 1<<LayerMask.NameToLayer("OneWayPlatform"));//플랫폼감지용 레이,하드 코딩때 값 0.75f,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정 
-        Vector2 test2 = new Vector2(transform.position.x - box.size.x / 2, transform.position.y - box.size.y / 2) - (Vector2)transform.position;
-        RaycastHit2D d2Hit = Physics2D.Raycast(transform.position, test2, (MathF.Sqrt(box.size.x / 2) + MathF.Sqrt(box.size.y / 2))*0.45f, 1 << LayerMask.NameToLayer("OneWayPlatform"));//플랫폼감지용 레이,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정
+        //BoxCollider2D box = GetComponent<BoxCollider2D>();
+        Vector2 test = new Vector2(transform.position.x + charBoxCollider.size.x/2, transform.position.y - charBoxCollider.size.y/2)  - (Vector2)transform.position;
+        RaycastHit2D dHit = Physics2D.Raycast(transform.position, test,(MathF.Sqrt(charBoxCollider.size.x / 2) + MathF.Sqrt(charBoxCollider.size.y/2)) * 0.45f, 1<<LayerMask.NameToLayer("OneWayPlatform"));//플랫폼감지용 레이,하드 코딩때 값 0.75f,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정 
+        Vector2 test2 = new Vector2(transform.position.x - charBoxCollider.size.x / 2, transform.position.y - charBoxCollider.size.y / 2) - (Vector2)transform.position;
+        RaycastHit2D d2Hit = Physics2D.Raycast(transform.position, test2, (MathF.Sqrt(charBoxCollider.size.x / 2) + MathF.Sqrt(charBoxCollider.size.y / 2))*0.45f, 1 << LayerMask.NameToLayer("OneWayPlatform"));//플랫폼감지용 레이,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정
         Debug.DrawRay(transform.position, test.normalized*0.75f, Color.blue);
 
         if (hit != null)
@@ -660,17 +666,20 @@ public partial class ControllerScript : MonoBehaviour
         Debug.Log($"트리거 체크 {Mathf.Sign(check)}");
         isHide = isGround;//땅에 없을때만 true하기 위해 ,isGround&&true와 동일
         Debug.Log("트리거엄페물");
+        //charBoxCollider = this.GetComponent<BoxCollider2D>();
 
         if ((int)Mathf.Sign(check) < 0)//음수 = 유저가 오브젝트에 비해 더 오른쪽에 있다
         {
             //this.gameObject.transform.GetChild(0).transform.localPosition = new Vector3(-0.78f, 0, 0);//0.78이라는 값은 내가 보았을때 적당한값
-            correct_pos = new Vector3(collision.bounds.max.x, transform.position.y, transform.position.z);//숨는 오브젝트의 위치를 따서 숨는것 이거 지금보니까 그냥 겹치도록 되어있음 걸치도록 안 되어있어서 수정필요
+            
+            correct_pos = new Vector3(collision.bounds.max.x+charBoxCollider.size.x/4, transform.position.y, transform.position.z);//숨는 오브젝트의 위치를 따서 숨는것 이거 지금보니까 그냥 겹치도록 되어있음 걸치도록 안 되어있어서 수정필요
         }
         else//양수 유저가 오브젝트에 비해 왼쪽에 있다
         {
             //this.gameObject.transform.GetChild(0).transform.localPosition = new Vector3(0.78f, 0, 0);
-            correct_pos = new Vector3(collision.bounds.min.x, transform.position.y, transform.position.z);//숨는 오브젝트의 위치를 따서 숨는것 이거 지금보니까 그냥 겹치도록 되어있음 걸치도록 안 되어있어서 수정필요
+            correct_pos = new Vector3(collision.bounds.min.x-charBoxCollider.size.x/4, transform.position.y, transform.position.z);//숨는 오브젝트의 위치를 따서 숨는것 이거 지금보니까 그냥 겹치도록 되어있음 걸치도록 안 되어있어서 수정필요
         }
+        
 
         return correct_pos;
     }
