@@ -223,7 +223,7 @@ public partial class ControllerScript : MonoBehaviour
     {
         if (collision.gameObject.tag == "ground" || collision.gameObject.tag == "platform")//땅에서 벗어날경우
         {
-            isGround = false;
+            //isGround = false;
             if (collision.gameObject.tag == "platform")
             {
                 if (isJumping)
@@ -477,8 +477,8 @@ public partial class ControllerScript : MonoBehaviour
             if (currentOneWayPlatform != null)//밑 아래 점프 가능한 오브젝트와 닿아있을때 ,우선순위 따라서 위로 올리고 return이 필요할듯 
             {
                 Debug.Log("hello");
-                
-                canDown = true;
+
+                canDown = !isHide;
 
             }
 
@@ -500,27 +500,35 @@ public partial class ControllerScript : MonoBehaviour
 
         if (hit != null)
         {
-            isGround = true;
+            
             var index = Array.FindIndex(hit, x => x.transform.tag == "ground");//만약 람다를 안 쓰려면 for로 hit만큼 돌ㅡㅜ   아가면서 태그가 맞는지 확인해야함
             if(Array.FindIndex(hit, x => x.transform.tag == "platform") != -1)
             {
                 Debug.Log("플랫폼 감지중");
-                findRayPlatform = true;
+                isGround = true;
+                findRayPlatform = true;//여기는 없어도 무방
             }
             else
             {
                 Debug.Log("플랫폼 가지 못 함");
+                if (index == -1)
+                {
+                    //아무것도 못 찾음
+                    isGround = false;
+                }
                 findRayPlatform=false;
             }
             //var index = Array.FindIndex(hit, x => x.transform.tag == "ground");
             if (index != -1)
             {
                 Debug.Log("그라운드 찾음");
+                isGround = true;
                 temp = true;
             }
             else
             {
                 Debug.Log("그라운드 못 찾음");
+                //isGround = false;
                 temp = false;
             }
             
@@ -534,7 +542,7 @@ public partial class ControllerScript : MonoBehaviour
         {
             Debug.Log("find dHit"+dHit.collider.name);
         }
-        if (temp)//temp가 true 일때 무시함
+        if (temp&&!isHide)//temp가 true 일때 무시함
         {
             Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), true);
         }
@@ -650,7 +658,7 @@ public partial class ControllerScript : MonoBehaviour
         Vector3 correct_pos = Vector3.zero;//새로 수정함 위치를 담기위한 변수
 
         Debug.Log($"트리거 체크 {Mathf.Sign(check)}");
-        isHide = true;//숨음
+        isHide = isGround;//땅에 없을때만 true하기 위해 ,isGround&&true와 동일
         Debug.Log("트리거엄페물");
 
         if ((int)Mathf.Sign(check) < 0)//음수 = 유저가 오브젝트에 비해 더 오른쪽에 있다
