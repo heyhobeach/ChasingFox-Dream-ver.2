@@ -13,13 +13,20 @@ public class Bullet : MonoBehaviour
 
     private Rigidbody2D rg;
     private float startTime;
+    private string ignoreTag;
 
     public void Set(Vector3 shootPos, Vector3 targetPos, int damage, float speed, GameObject gobj, Vector3 addPos = new Vector3())
     {
         Debug.Log(gobj.name);
         if (gobj.tag == "Enemy")
         {
-            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Bullet"), LayerMask.NameToLayer("Enemy"));
+            ignoreTag = gobj.tag;
+            // Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Bullet"), LayerMask.NameToLayer("Enemy"));
+        }
+        else if(gobj.tag == "Player")
+        {
+            ignoreTag = gobj.tag;
+            // Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Bullet"), LayerMask.NameToLayer("Player"));
         }
         transform.position = (Vector2)shootPos + (Vector2)addPos;
         destination = ((Vector2)targetPos - (Vector2)shootPos).normalized;
@@ -51,11 +58,11 @@ public class Bullet : MonoBehaviour
         {
             this.gameObject.GetComponent<Collider2D>().isTrigger = true;
         }
-        if (collision.gameObject.tag == "Player")//레이어 설정한 것 때문에 적군 총알만 플레이어 에게 충돌일어남
+        if (collision.gameObject.tag == "Player" && !collision.gameObject.CompareTag(ignoreTag))//레이어 설정한 것 때문에 적군 총알만 플레이어 에게 충돌일어남
         {
 
         }
-        if(collision.gameObject.tag == "Enemy")//플레이어 총알이 적군에게 충돌시
+        if(collision.gameObject.tag == "Enemy" && !collision.gameObject.CompareTag(ignoreTag))//플레이어 총알이 적군에게 충돌시
         {
             // Debug.Log("적 충돌");
             Destroy(this.gameObject);
@@ -79,7 +86,7 @@ public class Bullet : MonoBehaviour
         {
             this.gameObject.GetComponent<Collider2D>().isTrigger = true;
         }
-        if (collision.gameObject.tag == "Player")//레이어 설정한 것 때문에 적군 총알만 플레이어 에게 충돌일어남
+        if (collision.gameObject.tag == "Player" && !collision.gameObject.CompareTag(ignoreTag))//레이어 설정한 것 때문에 적군 총알만 플레이어 에게 충돌일어남
         {
             // Debug.Log("플레이어 충돌");
             var temp = collision.gameObject.GetComponent<IDamageable>();
@@ -87,7 +94,7 @@ public class Bullet : MonoBehaviour
             if(temp != null) isDamaged = temp.GetDamage(damage);
             if(isDamaged) Destroy(gameObject);
         }
-        if (collision.gameObject.tag == "Enemy")//플레이어 총알이 적군에게 충돌시 적이 trigger로 설정되어있어서 안 쓸것 같음
+        if (collision.gameObject.tag == "Enemy" && !collision.gameObject.CompareTag(ignoreTag))//플레이어 총알이 적군에게 충돌시 적이 trigger로 설정되어있어서 안 쓸것 같음
         {
             //Debug.Log("적 충돌");
             //Destroy(this.gameObject);
@@ -98,7 +105,7 @@ public class Bullet : MonoBehaviour
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if(collision.gameObject.tag == "Player")
+        if(collision.gameObject.tag == "Player" && !collision.gameObject.CompareTag(ignoreTag))
         {
             Destroy(this.gameObject);
         }
