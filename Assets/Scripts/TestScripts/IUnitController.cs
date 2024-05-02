@@ -62,4 +62,15 @@ public interface IUnitController
     /// </summary>
     /// <returns>대시 동작이 성공적으로 수행되었을 시 true를 반환</returns>
     bool Dash();
+
+    ///<summary>
+    ///슬로우 모션
+    /// </summary>
+    //void SlowMotion();
+
+    ///<summary>
+    ///원래대로 복귀
+    /// </summary>
+
+   //void ResetMotion();
 }

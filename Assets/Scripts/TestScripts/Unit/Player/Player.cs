@@ -47,6 +47,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
 
     private void Update()
     {
+        //Camera.main.ScreenToWorldPoint(Input.mousePosition);//현재 마우스 위치
         // 임시
         if(changedForm.UnitState == UnitState.Hide) _invalidation = true;
         else _invalidation = false;

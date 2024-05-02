@@ -14,8 +14,13 @@ public class Bullet : MonoBehaviour
     private Rigidbody2D rg;
     private float startTime;
 
-    public void Set(Vector3 shootPos, Vector3 targetPos, int damage, float speed, Vector3 addPos = new Vector3())
+    public void Set(Vector3 shootPos, Vector3 targetPos, int damage, float speed, GameObject gobj, Vector3 addPos = new Vector3())
     {
+        Debug.Log(gobj.name);
+        if (gobj.tag == "Enemy")
+        {
+            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Bullet"), LayerMask.NameToLayer("Enemy"));
+        }
         transform.position = (Vector2)shootPos + (Vector2)addPos;
         destination = ((Vector2)targetPos - (Vector2)shootPos).normalized;
         this.damage = damage;

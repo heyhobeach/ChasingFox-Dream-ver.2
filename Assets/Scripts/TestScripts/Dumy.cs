@@ -43,7 +43,8 @@ public class Dumy : MonoBehaviour
         // _bullet.GetComponent<BulletScript>().targetPos = playerPos;
         // _bullet.GetComponent<BulletScript>().shootPos = enemypos;
         //enemypos = transform.position;
-        _bullet.GetComponent<Bullet>().Set(transform.position, playerPos, 1, 1, (Vector2)(playerPos-transform.position).normalized);
+        GameObject gObj = this.gameObject;
+        _bullet.GetComponent<Bullet>().Set(transform.position, playerPos, 1, 1, gObj, (Vector2)(playerPos-transform.position).normalized);
         // Debug.Log("shoot"+playerPos+"enemypos"+enemypos);
         //_bullet.transform.position = Vector2.left;
     }

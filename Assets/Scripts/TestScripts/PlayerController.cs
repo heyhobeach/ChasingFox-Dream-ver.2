@@ -23,6 +23,17 @@ public class PlayerController : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Mouse0)) unitController.Attack(ClickPos());
 
         if(Input.GetKeyDown(KeyCode.Mouse1)) unitController.Dash();
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            Time.timeScale = 0.05f;
+            Time.fixedDeltaTime = 0.05f * 0.02f;
+        }
+        if(Input.GetKeyDown(KeyCode.R))
+        {
+            Time.timeScale = 1;
+            Time.fixedDeltaTime = 1 * 0.02f;
+        }
     }
 
     public Vector3 ClickPos()//클릭한 좌료를 보내주며 현재 공격 클릭시 캐릭터의 바라보는 방향도 변해야한다고 생각해서 필요했던 부분

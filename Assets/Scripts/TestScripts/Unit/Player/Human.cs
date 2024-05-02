@@ -35,7 +35,8 @@ public class Human : PlayerUnit
         Vector2 pos = Vector2.zero;
         GetSignedAngle((Vector2) transform.position, clickPos, out pos);
         GameObject _bullet = Instantiate(bullet);//총알을 공격포지션에서 생성함
-        _bullet.GetComponent<Bullet>().Set(transform.position, clickPos, bulletDamage, bulletSpeed, (Vector3)pos);
+        GameObject gObj = this.gameObject;
+        _bullet.GetComponent<Bullet>().Set(transform.position, clickPos, bulletDamage, bulletSpeed, gObj, (Vector3)pos);
         return true;
     }
 
