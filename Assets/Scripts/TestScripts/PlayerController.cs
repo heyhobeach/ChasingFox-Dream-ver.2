@@ -12,24 +12,28 @@ public class PlayerController : MonoBehaviour
     {
         unitController.Move(Input.GetAxisRaw("Horizontal"));
         
-        if(Input.GetKeyDown(KeyCode.Space)) unitController.Jump(KeyState.KeyDown);
-        else if(Input.GetKey(KeyCode.Space)) unitController.Jump(KeyState.KeyStay);
-        else if(Input.GetKeyUp(KeyCode.Space)) unitController.Jump(KeyState.KeyUp);
+        if(Input.GetKeyDown(KeyCode.W)) unitController.Jump(KeyState.KeyDown);
+        else if(Input.GetKey(KeyCode.W)) unitController.Jump(KeyState.KeyStay);
+        else if(Input.GetKeyUp(KeyCode.W)) unitController.Jump(KeyState.KeyUp);
         else unitController.Jump(KeyState.None);
 
         if(Input.GetKey(KeyCode.S)) unitController.Crouch(KeyState.KeyStay);
         else if(Input.GetKeyUp(KeyCode.S)) unitController.Crouch(KeyState.KeyUp);
 
+        if(Input.GetKeyDown(KeyCode.R)) unitController.Reload();
+
+        if(Input.GetKeyDown(KeyCode.Space)) unitController.Dash();
+
         if(Input.GetKeyDown(KeyCode.Mouse0)) unitController.Attack(ClickPos());
 
-        if(Input.GetKeyDown(KeyCode.Mouse1)) unitController.Dash();
+        if(Input.GetKeyDown(KeyCode.Mouse1)) unitController.FormChange();
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
             Time.timeScale = 0.05f;
             Time.fixedDeltaTime = 0.05f * 0.02f;
         }
-        if(Input.GetKeyDown(KeyCode.R))
+        if(Input.GetKeyDown(KeyCode.E))
         {
             Time.timeScale = 1;
             Time.fixedDeltaTime = 1 * 0.02f;

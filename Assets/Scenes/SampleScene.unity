@@ -1614,6 +1614,7 @@ MonoBehaviour:
   - {fileID: 87478938}
   - {fileID: 450397336}
   _maxHealth: 1
+  changeDelay: 1
   changeGage: 0
 --- !u!50 &642844991
 Rigidbody2D:
@@ -2129,6 +2130,7 @@ GameObject:
   - component: {fileID: 1180955063}
   - component: {fileID: 1180955062}
   - component: {fileID: 1180955061}
+  - component: {fileID: 1180955065}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -2219,6 +2221,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1180955065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1180955060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c0d474bf6ea5974e8d8608c33280561, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 1294589085}
+  reloadDoon: 1
+  duration: 1
+  startCor: 0
 --- !u!1 &1294589083
 GameObject:
   m_ObjectHideFlags: 0
@@ -2968,8 +2986,10 @@ MonoBehaviour:
   coverBox: {fileID: 502701309}
   rg: {fileID: 642844991}
   bullet: {fileID: 747550646}
+  reloadTime: 3
   bulletDamage: 1
   bulletSpeed: 25
+  maxAmmo: 5
 --- !u!4 &1915511438
 Transform:
   m_ObjectHideFlags: 0

@@ -17,17 +17,17 @@ public class Bullet : MonoBehaviour
 
     public void Set(Vector3 shootPos, Vector3 targetPos, int damage, float speed, GameObject gobj, Vector3 addPos = new Vector3())
     {
-        Debug.Log(gobj.name);
-        if (gobj.tag == "Enemy")
-        {
-            ignoreTag = gobj.tag;
-            // Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Bullet"), LayerMask.NameToLayer("Enemy"));
-        }
-        else if(gobj.tag == "Player")
-        {
-            ignoreTag = gobj.tag;
-            // Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Bullet"), LayerMask.NameToLayer("Player"));
-        }
+        // if (gobj.tag == "Enemy")
+        // {
+        //     ignoreTag = gobj.tag;
+        //     // Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Bullet"), LayerMask.NameToLayer("Enemy"));
+        // }
+        // else if(gobj.tag == "Player")
+        // {
+        //     ignoreTag = gobj.tag;
+        //     // Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Bullet"), LayerMask.NameToLayer("Player"));
+        // }
+        ignoreTag = gobj.tag;
         transform.position = (Vector2)shootPos + (Vector2)addPos;
         destination = ((Vector2)targetPos - (Vector2)shootPos).normalized;
         this.damage = damage;
@@ -43,7 +43,7 @@ public class Bullet : MonoBehaviour
     }
     private void Update()
     {
-        startTime += Time.deltaTime;
+        startTime += Time.unscaledDeltaTime;
         if(startTime >= lifeTime)
         {
             Destroy(gameObject);
@@ -54,6 +54,7 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if(collision.CompareTag("ground") || collision.CompareTag("Wall")) Destroy(gameObject);
         if (collision.gameObject.tag == "guard")//필요없어보임
         {
             this.gameObject.GetComponent<Collider2D>().isTrigger = true;
@@ -82,6 +83,7 @@ public class Bullet : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if(collision.gameObject.CompareTag("ground") || collision.gameObject.CompareTag("Wall")) Destroy(gameObject);
         if (collision.gameObject.tag == "guard")//가드 만날겨우 trigger를 켜서 collision이 안일어나도록함
         {
             this.gameObject.GetComponent<Collider2D>().isTrigger = true;

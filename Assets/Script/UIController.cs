@@ -35,21 +35,21 @@ public class UIController : MonoBehaviour//해당 스크립트는 UI를 그리�
     }
     void Start()
     {
-        
+        image.fillAmount = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (ControllerScript.Instance.b_reload)//만약 재장전 중이라면
-        {
-            _DrawReload();//재장전 그림
-            //Debug.Log("그리는중");
-        }
-        else
-        {
-            //Debug.Log("그림완");
-        }
+        // if (ControllerScript.Instance.b_reload)//만약 재장전 중이라면
+        // {
+        //     _DrawReload();//재장전 그림
+        //     //Debug.Log("그리는중");
+        // }
+        // else
+        // {
+        //     //Debug.Log("그림완");
+        // }
 
         
         
@@ -59,8 +59,8 @@ public class UIController : MonoBehaviour//해당 스크립트는 UI를 그리�
     {
         Debug.Log("코루틴 시작");
         float currentTime = 0.0f;
-        float startFillAmout = 0f;
-        float endFillAmout = 1.0f;
+        // float startFillAmout = 0f;
+        // float endFillAmout = 1.0f;
         startCor = true;
 
         while (currentTime <= duration)//재장전 확인값 던져주는지 체크 아마 currentTime<duration&&reloadStart
@@ -96,6 +96,8 @@ public class UIController : MonoBehaviour//해당 스크립트는 UI를 그리�
         image.fillAmount = ControllerScript.Instance.currentTime / ControllerScript.Instance.duration;//시간 관련 변수들은 ContollerScript의 _DrawReload함수에서 측정중
 
     }
+
+    public void DrawReload(float fill) => image.fillAmount = fill;
 
     public void ImageSetFalse()
     {

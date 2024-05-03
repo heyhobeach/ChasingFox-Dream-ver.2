@@ -27,14 +27,19 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     public bool invalidation { get => _invalidation; set => _invalidation = value; }
 
     /// <summary>
+    /// 폼 체인지 딜레이 시간
+    /// </summary>
+    public float changeDelay;
+
+    /// <summary>
     /// 늑대인간 폼 유지를 위한 게이지 변수
     /// </summary>
     public float changeGage;
 
     /// <summary>
-    /// 대쉬 방향을 저장할 변수
+    /// 입력 방향을 저장할 변수
     /// </summary>
-    private float dashVel;
+    private float fixedDir;
 
     private void Start()
     {
@@ -45,37 +50,24 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         health = maxHealth; // 체력 초기화
     }
 
-    private void Update()
-    {
-        //Camera.main.ScreenToWorldPoint(Input.mousePosition);//현재 마우스 위치
-        // 임시
-        if(changedForm.UnitState == UnitState.Hide) _invalidation = true;
-        else _invalidation = false;
-    }
-
     public bool Crouch(KeyState crouchKey) => changedForm.Crouch(crouchKey);
 
-    public bool Jump(KeyState jumpKey) => changedForm.Jump(jumpKey);
+    public bool Jump(KeyState jumpKey)
+    {
+        if(changedForm.UnitState == UnitState.FormChange) return false;
+        return changedForm.Jump(jumpKey);
+    }
 
     public bool Move(float dir)
     {
-        dashVel = dir;
+        if(changedForm.UnitState == UnitState.FormChange) return false;
+        fixedDir = dir;
         return changedForm.Move(dir);
     }
 
     public bool Attack(Vector3 clickPos) => changedForm.Attack(clickPos);
 
-    public bool Dash()
-    {
-        if(changedForm.UnitState == UnitState.Dash || PlayerUnit.ControllerChecker(changedForm)) return false; // 대쉬 중이거나 제어가 불가능한 상태일 경우 동작을 수행하지 않음
-        foreach(PlayerUnit form in forms) form.gameObject.SetActive(false);
-        if(changedForm is Human) changedForm = forms[1]; // 인간 상태일 시 늑대인간으로 변경
-        else if(changedForm is Werwolf) changedForm = forms[0]; // 늑대인간 상태일 시 인간으로 변경
-        changedForm.gameObject.SetActive(true);
-        changedForm.SetVel(dashVel); // 자연스러운 대쉬 동작을 위한 부분
-        changedForm.Dash();
-        return true;
-    }
+    public bool Dash() => changedForm.Dash();
 
     /// <summary>
     /// 임시
@@ -95,4 +87,32 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
             changedForm.gameObject.SetActive(true);
         }
     }
+
+    public bool FormChange()
+    {
+        if(changedForm.UnitState == UnitState.FormChange || !changedForm.FormChange()) return false; // 대쉬 중이거나 제어가 불가능한 상태일 경우 동작을 수행하지 않음
+        StartCoroutine(FormChanging());
+        return true;
+    }
+
+    private IEnumerator FormChanging()
+    {
+        changedForm.UnitState = UnitState.FormChange;
+        float t = 0;
+        while(t <= changeDelay)
+        {
+            t += Time.unscaledDeltaTime;
+            changedForm.Move(fixedDir);
+            yield return null;
+        }
+
+        foreach(PlayerUnit form in forms) form.gameObject.SetActive(false);
+        if(changedForm is Human) changedForm = forms[1]; // 인간 상태일 시 늑대인간으로 변경
+        else if(changedForm is Werwolf) changedForm = forms[0]; // 늑대인간 상태일 시 인간으로 변경
+        changedForm.gameObject.SetActive(true);
+        changedForm.SetVel(fixedDir); // 자연스러운 대쉬 동작을 위한 부분
+        changedForm.UnitState = UnitState.Default;
+    }
+
+    public bool Reload() => changedForm.Reload();
 }

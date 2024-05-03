@@ -41,7 +41,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     /// <summary>
     /// 유닛의 현재 상태를 가져옴
     /// </summary>
-    public UnitState UnitState { get; private set; }
+    public UnitState UnitState { get; set; }
 
     /// <summary>
     /// 유닛 콜라이더 가로 크기
@@ -138,4 +138,8 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         dir = (to - from).normalized; // 시작 벡터에서 목표 벡터까지의 방향 계산
         return new Vector3(0, 0, Vector3.SignedAngle(transform.right, dir, transform.forward)); // 유닛 기준 뱡향 벡터의 각도 계산 및 반환
     }
+
+    public abstract bool FormChange();
+
+    public abstract bool Reload();
 }
