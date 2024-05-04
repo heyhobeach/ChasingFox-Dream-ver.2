@@ -11,10 +11,7 @@ public abstract class PlayerUnit : UnitBase
     public GameObject coverBox;
 
     protected bool isGrounded;
-    private bool isJumpReady;
     protected bool isJumping;
-    private bool jumpKey;
-    private bool jumpKeyUp;
 
     protected float hzVel;
 
@@ -26,15 +23,15 @@ public abstract class PlayerUnit : UnitBase
     private bool cTemp;
     // private bool isHide;
     private bool findRayPlatform;
-    private float check;
+    // private float check;
     private float checkHigh;
     private float distanceToCheck;
     private LayerMask lm;
-    private Vector3 hidePos;
+    // private Vector3 hidePos;
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
-        // if(collision.gameObject.CompareTag("ground") || collision.gameObject.CompareTag("platform")) isGrounded = true;
+        if(collision.gameObject.CompareTag("ground") || collision.gameObject.CompareTag("platform")) isGrounded = true;
 
         if (collision.gameObject.tag == "platform")//지면 확인 점프용
         {
@@ -81,7 +78,6 @@ public abstract class PlayerUnit : UnitBase
         base.Start();
         lm = ~(1 << gameObject.layer);
         distanceToCheck = boxSizeY * 1.05f;
-        isJumpReady = true;
         StartCoroutine(DownJump());
     }
 
@@ -89,12 +85,15 @@ public abstract class PlayerUnit : UnitBase
     {
         if(!isGrounded && unitState == UnitState.Default) unitState = UnitState.Air; // 기본 상태에서 공중에 뜰 시 공중 상태로 변경
         else if(isGrounded && unitState == UnitState.Air) unitState = UnitState.Default; // 공중 상태에서 바닥에 닿을 시 기본 상태로 변경
-        Debug.Log(unitState);
-        JumpUpdate();
+        // Debug.Log(unitState);
         CrouchUpdate();
+        base.Update();
+    }
+
+    private void FixedUpdate()
+    {
         AddGravity();
         Movement();
-        base.Update();
     }
 
     protected override void OnDisable()
@@ -105,74 +104,31 @@ public abstract class PlayerUnit : UnitBase
 
     public override bool Jump(KeyState jumpKey)
     {
-        JumpUpdate(jumpKey); // 점프 입력 후처리
-
-        if(!isJumping) return false; // 점프 중이 아닐 시 동작 종료
-        if(ControllerChecker()) // 조작이 가능하지 않은 상태일 때 점프키 리셋 & 동작 종료
-        {
-            JumpReset();
-            return false;
-        }
-
         float temp = 0;
-        if(vcForce <= 0) temp = jumpForce * 0.2f; // 점프 시작 시 힘을 초기화
-        temp += Mathf.Lerp(temp, jumpForce, 0.02f); // 점프가 고점에 다다를수록 적게 힘을 추가
-
-        temp += -gravity * Time.deltaTime; // 중력 무시를 위해 중력 값 만큼 힘 추가
-        return AddVerticalForce(temp);
-    }
-
-    /// <summary>
-    /// 점프 입력과 관련된 변수를 초기화하는 작업을 수행
-    /// </summary>
-    protected void JumpReset()
-    {
-        this.jumpKey = false;
-        jumpKeyUp = false;
-        isJumping = false;
-        isJumpReady = true;
-    }
-
-    
-    /// <summary>
-    /// 점프 입력을 후처리하는 작업을 수행
-    /// <param name="jumpKey">점프 키 입력 상태</param>
-    /// </summary>
-    protected void JumpUpdate(KeyState jumpKey)
-    {
         switch(jumpKey)
         {
             case KeyState.KeyDown:
+                if(unitState != UnitState.Default) return false;
+                isJumping = true;
+                if(temp <= 0) temp = jumpHight * jumpImpulse; // 점프 시작 시 힘을 초기화
+                temp += -gravity * Time.fixedDeltaTime; // 중력 무시를 위해 중력 값 만큼 힘 추가
+
+                return AddVerticalForce(temp);
             case KeyState.KeyStay:
-                this.jumpKey = true;
-            break;
+                temp = jumpHight * jumpForce * Time.fixedDeltaTime; // 점프가 고점에 다다를수록 적게 힘을 추가
+                temp += -gravity * Time.fixedDeltaTime; // 중력 무시를 위해 중력 값 만큼 힘 추가
+                if(!isJumping || vcForce+temp > jumpHight)
+                {
+                    isJumping = false;
+                    return false;
+                }
+
+                return AddVerticalForce(temp);
             case KeyState.KeyUp:
-                if(!jumpKeyUp) jumpKeyUp = true;
-                this.jumpKey = false;
-            break;
-            case KeyState.None:
-            default:
-                this.jumpKey = false;
+                isJumping = false;
             break;
         }
-        JumpUpdate();
-    }
-    /// <summary>
-    /// 점프 입력을 후처리하는 작업을 수행
-    /// </summary>
-    protected void JumpUpdate()
-    {
-        if(isGrounded && jumpKeyUp) // 바닥에 있으면서 점프키를 땠었던 상태일 시 점프 가능
-        {
-            isJumpReady = true;
-            jumpKeyUp = false;
-        }
-        if(isJumpReady && this.jumpKey) // 점프 가능 & 점프 누를 시
-        {
-            isJumping = true; // 점프 중
-            if(jumpKeyUp || vcForce >= jumpForce * 0.8f) isJumpReady = false; // 고점 도달 시 점프 비활성화
-        }
-        else isJumping = false; // 점프 중 아님
+        return false;
     }
 
     public override bool Move(float dir)
@@ -221,51 +177,39 @@ public abstract class PlayerUnit : UnitBase
             var indexG = Array.FindIndex(hit, x => x.transform.tag == "ground");//만약 람다를 안 쓰려면 for로 hit만큼 돌ㅡㅜ   아가면서 태그가 맞는지 확인해야함
             var indexP = Array.FindIndex(hit, x => x.transform.tag == "platform");
 
-            if(indexP >= 0)
+            // isGrounded = indexP >= 0 | indexG >= 0;
+            // findRayPlatform = indexP >= 0;
+            // cTemp = indexG >= 0;
+            
+            if(indexP != -1)
             {
+                // Debug.Log("플랫폼 감지중");
                 isGrounded = true;
-                findRayPlatform = true;
-            }
-            else if(indexG >= 0)
-            {
-                isGrounded = true;
-                findRayPlatform = false;
+                findRayPlatform = true;//여기는 없어도 무방
             }
             else
             {
-                isGrounded = false;
-                findRayPlatform = false;
+                // Debug.Log("플랫폼 가지 못 함");
+                if (indexG == -1)
+                {
+                    //아무것도 못 찾음
+                    isGrounded = false;
+                }
+                findRayPlatform=false;
             }
-            
-            // if(indexP != -1)
-            // {
-            //     // Debug.Log("플랫폼 감지중");
-            //     isGrounded = true;
-            //     findRayPlatform = true;//여기는 없어도 무방
-            // }
-            // else
-            // {
-            //     // Debug.Log("플랫폼 가지 못 함");
-            //     if (indexG == -1)
-            //     {
-            //         //아무것도 못 찾음
-            //         isGrounded = false;
-            //     }
-            //     findRayPlatform=false;
-            // }
-            // //var index = Array.FindIndex(hit, x => x.transform.tag == "ground");
-            // if (indexG != -1)
-            // {
-            //     // Debug.Log("그라운드 찾음");
-            //     isGrounded = true;
-            //     cTemp = true;
-            // }
-            // else
-            // {
-            //     // Debug.Log("그라운드 못 찾음");
-            //     isGrounded = false;
-            //     cTemp = false;
-            // }
+            //var index = Array.FindIndex(hit, x => x.transform.tag == "ground");
+            if (indexG != -1)
+            {
+                // Debug.Log("그라운드 찾음");
+                isGrounded = true;
+                cTemp = true;
+            }
+            else
+            {
+                // Debug.Log("그라운드 못 찾음");
+                isGrounded = false;
+                cTemp = false;
+            }
             
         }
 
@@ -306,39 +250,16 @@ public abstract class PlayerUnit : UnitBase
     }
 
     /// <summary>
-    /// 현재 플레이어 유닛의 제어 가능 여부 확인
-    /// </summary>
-    /// <returns>플레이어 유닛이 제어 불가능한 상태일 시 true를 반환</returns>
-    protected bool ControllerChecker() => ControllerChecker(this);
-
-    /// <summary>
-    /// 주어진 플레이어 유닛의 제어 가능 여부 확인
-    /// </summary>
-    /// <param name="playerUnit">확인할 플레이어 유닛</param>
-    /// <returns>플레이어 유닛이 제어 불가능한 상태일 시 true를 반환</returns>
-    public static bool ControllerChecker(PlayerUnit playerUnit)
-    {
-        var unitState = playerUnit.UnitState;
-        if(unitState == UnitState.KnockBack || unitState == UnitState.Stiffen || 
-            unitState == UnitState.Stiffen_er || unitState == UnitState.Death || 
-            unitState == UnitState.Pause) return true;
-        else return false;
-    }
-
-    /// <summary>
     /// 중력 힘을 추가
     /// </summary>
-    private void AddGravity()
-    {
-        AddVerticalForce(gravity * Time.deltaTime);
-    }
+    private void AddGravity() => AddVerticalForce(gravity * Time.fixedDeltaTime);
 
     /// <summary>
     /// 수직 방향 힘을 추가
     /// </summary>
     protected bool AddVerticalForce(float force)
     {
-        if(isGrounded && vcForce < 0) vcForce = 0; // 바닥에 붙어있을 시 아래 방향의 힘 초기화
+        if(isGrounded && !canDown && vcForce < 0) vcForce = 0; // 바닥에 붙어있을 시 아래 방향의 힘 초기화
         vcForce += force;
         return true;
     }

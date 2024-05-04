@@ -16,6 +16,11 @@ public class Werwolf : PlayerUnit
     public float attackDuration;
 
     /// <summary>
+    /// 공격 추진력
+    /// </summary>
+    public float attackImpulse;
+
+    /// <summary>
     /// 고정된 방향을 저장하기 위한 변수
     /// </summary>
     private int fixedDir;
@@ -53,12 +58,10 @@ public class Werwolf : PlayerUnit
 
     public override bool Attack(Vector3 clickPos)
     {
-        if(ControllerChecker() || unitState == UnitState.HoldingWall) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
-        else if(attackCoroutine == null) // 공격 중이 아닐 경우
-        {
-            MeleeAttack.transform.localPosition = Vector2.right * CheckDir(clickPos); // 클릭 방향으로 공격 위치 설정
-            attackCoroutine = StartCoroutine(Attacking());
-        }
+        if((unitState != UnitState.Default && unitState != UnitState.Air && unitState != UnitState.HoldingWall)
+             || attackCoroutine != null) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
+        MeleeAttack.transform.localPosition = Vector2.right * CheckDir(clickPos); // 클릭 방향으로 공격 위치 설정
+        attackCoroutine = StartCoroutine(Attacking());
         return true;
     }
 
@@ -69,6 +72,7 @@ public class Werwolf : PlayerUnit
     {
         // 지속시간만큼 히트박스를 온오프
         MeleeAttack.SetActive(true);
+        Move(Mathf.Sign(MeleeAttack.transform.localPosition.x)*attackImpulse);
         yield return new WaitForSeconds(attackDuration);
         MeleeAttack.SetActive(false);
         attackCoroutine = null;
@@ -97,12 +101,13 @@ public class Werwolf : PlayerUnit
         float wallJumpDuration = 0.2f;
         float t = 0;
         ResetForce();
-        AddVerticalForce(jumpForce); // 윗 방향 힘 추가
+        AddVerticalForce(-gravity * Time.deltaTime + jumpImpulse); // 윗 방향 힘 추가
         while(t < wallJumpDuration)
         {
             t += Time.deltaTime;
+            AddVerticalForce(-gravity * Time.deltaTime + jumpForce);
             AddHorizontalForce(fixedDir * movementSpeed); // 벽의 반대 방향 힘 추가
-            yield return null;
+            yield return new WaitForFixedUpdate();
         }
         unitState = UnitState.Default;
         SetVel(fixedDir); // 벽의 반대 방향으로 힘 강제 변경, 자연스러운 동작을 위한 부분
