@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour
         else if(Input.GetKeyUp(KeyCode.W)) unitController.Jump(KeyState.KeyUp);
         else unitController.Jump(KeyState.None);
 
-        if(Input.GetKey(KeyCode.S)) unitController.Crouch(KeyState.KeyStay);
+        if(Input.GetKeyDown(KeyCode.S)) unitController.Crouch(KeyState.KeyDown);
         else if(Input.GetKeyUp(KeyCode.S)) unitController.Crouch(KeyState.KeyUp);
 
         if(Input.GetKeyDown(KeyCode.R)) unitController.Reload();

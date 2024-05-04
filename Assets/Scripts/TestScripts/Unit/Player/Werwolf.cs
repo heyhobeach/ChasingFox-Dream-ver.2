@@ -47,13 +47,27 @@ public class Werwolf : PlayerUnit
     protected override void OnCollisionEnter2D(Collision2D collision)
     {
         base.OnCollisionEnter2D(collision);
-        if(collision.gameObject.CompareTag("Wall") && unitState == UnitState.Air) // 공중에서 벽에 붙을 시
+        if(collision.gameObject.CompareTag("Wall") && unitState == UnitState.Air &&
+            Mathf.Abs(Vector2.Angle(Vector2.up, collision.contacts[0].normal)) != 180) // 공중에서 벽에 붙을 시
         {
             unitState = UnitState.HoldingWall; // 벽붙기 상태로 변경
             fixedDir = -CheckDir(collision.transform.position); // 벽의 반대 방향을 저장
             ResetForce();
+            SetVel(0);
         }
         if(collision.gameObject.CompareTag("ground") && unitState == UnitState.HoldingWall) unitState = UnitState.Default;
+    }
+    protected override void OnCollisionStay2D(Collision2D collision)
+    {
+        base.OnCollisionStay2D(collision);
+        
+        if(collision.gameObject.CompareTag("ground") && wallCoroutine != null &&
+            Mathf.Abs(Vector2.Angle(Vector2.up, collision.contacts[0].normal)) == 180)
+            {
+                unitState = UnitState.Default;
+                StopCoroutine(wallCoroutine);
+                wallCoroutine = null;
+            }
     }
 
     public override bool Attack(Vector3 clickPos)
@@ -105,7 +119,7 @@ public class Werwolf : PlayerUnit
         while(t < wallJumpDuration)
         {
             t += Time.deltaTime;
-            AddVerticalForce(-gravity * Time.deltaTime + jumpForce);
+            AddVerticalForce(-gravity * Time.deltaTime + jumpForce * 2);
             AddHorizontalForce(fixedDir * movementSpeed); // 벽의 반대 방향 힘 추가
             yield return new WaitForFixedUpdate();
         }

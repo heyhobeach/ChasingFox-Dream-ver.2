@@ -24,18 +24,17 @@ public abstract class PlayerUnit : UnitBase
     // private bool isHide;
     private bool findRayPlatform;
     // private float check;
-    private float checkHigh;
+    // private float checkHigh;
     private float distanceToCheck;
     private LayerMask lm;
     // private Vector3 hidePos;
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.CompareTag("ground") || collision.gameObject.CompareTag("platform")) isGrounded = true;
-
+        // if(collision.gameObject.CompareTag("ground") || collision.gameObject.CompareTag("platform")) isGrounded = true;
         if (collision.gameObject.tag == "platform")//지면 확인 점프용
         {
-            checkHigh= -100;
+            // checkHigh= -100;
             //WereWolf.Instance().isAttacking = false;// 이 부분이 있으면 땅에서 연속 공격 가능 
             currentOneWayPlatform = collision.gameObject;//플랫폼이라면 현재 플렛폼을 담음
             // Debug.Log(collision.gameObject.GetComponent<PlatformScript>().dObject);//다운 오브젝트 타입확인용 로그
@@ -65,6 +64,12 @@ public abstract class PlayerUnit : UnitBase
     }
     protected virtual void OnCollisionStay2D(Collision2D collision)
     {
+        if((collision.gameObject.CompareTag("Wall") || collision.gameObject.CompareTag("ground")) && 
+            Mathf.Abs(Vector2.Angle(Vector2.up, collision.contacts[0].normal)) == 180)
+        {
+            vcForce = gravity * Time.fixedDeltaTime;
+            isJumping = false;
+        }
         // if(collision.gameObject.CompareTag("ground") || collision.gameObject.CompareTag("platform")) isGrounded = true;
 
         if (collision.gameObject.tag == "platform")//플랫폼이라면 현재 플렛폼을 담음
@@ -85,7 +90,7 @@ public abstract class PlayerUnit : UnitBase
     {
         if(!isGrounded && unitState == UnitState.Default) unitState = UnitState.Air; // 기본 상태에서 공중에 뜰 시 공중 상태로 변경
         else if(isGrounded && unitState == UnitState.Air) unitState = UnitState.Default; // 공중 상태에서 바닥에 닿을 시 기본 상태로 변경
-        // Debug.Log(unitState);
+        // Debug.Log(canDown);
         CrouchUpdate();
         base.Update();
     }
@@ -146,16 +151,17 @@ public abstract class PlayerUnit : UnitBase
         switch(crouchKey)
         {
             case KeyState.KeyDown:
-            case KeyState.KeyStay:
                 if (currentOneWayPlatform != null)//밑 아래 점프 가능한 오브젝트와 닿아있을때 ,우선순위 따라서 위로 올리고 return이 필요할듯 
                 {
                     // Debug.Log("hello");
                     // canDown = !isHide;
                     canDown = true;
+                    AddVerticalForce(gravity * Time.fixedDeltaTime);
                 }
                 return true;
+            case KeyState.KeyStay:
+            break;
             case KeyState.KeyUp:
-                canDown = false;
                 return true;
         }
         return false;
@@ -177,39 +183,39 @@ public abstract class PlayerUnit : UnitBase
             var indexG = Array.FindIndex(hit, x => x.transform.tag == "ground");//만약 람다를 안 쓰려면 for로 hit만큼 돌ㅡㅜ   아가면서 태그가 맞는지 확인해야함
             var indexP = Array.FindIndex(hit, x => x.transform.tag == "platform");
 
-            // isGrounded = indexP >= 0 | indexG >= 0;
-            // findRayPlatform = indexP >= 0;
-            // cTemp = indexG >= 0;
+            isGrounded = indexP >= 0 | indexG >= 0 | dHit | d2Hit;
+            findRayPlatform = indexP >= 0;
+            cTemp = indexG >= 0;
             
-            if(indexP != -1)
-            {
-                // Debug.Log("플랫폼 감지중");
-                isGrounded = true;
-                findRayPlatform = true;//여기는 없어도 무방
-            }
-            else
-            {
-                // Debug.Log("플랫폼 가지 못 함");
-                if (indexG == -1)
-                {
-                    //아무것도 못 찾음
-                    isGrounded = false;
-                }
-                findRayPlatform=false;
-            }
-            //var index = Array.FindIndex(hit, x => x.transform.tag == "ground");
-            if (indexG != -1)
-            {
-                // Debug.Log("그라운드 찾음");
-                isGrounded = true;
-                cTemp = true;
-            }
-            else
-            {
-                // Debug.Log("그라운드 못 찾음");
-                isGrounded = false;
-                cTemp = false;
-            }
+        //     if(indexP != -1)
+        //     {
+        //         // Debug.Log("플랫폼 감지중");
+        //         isGrounded = true;
+        //         findRayPlatform = true;//여기는 없어도 무방
+        //     }
+        //     else
+        //     {
+        //         // Debug.Log("플랫폼 가지 못 함");
+        //         if (indexG == -1)
+        //         {
+        //             //아무것도 못 찾음
+        //             isGrounded = false;
+        //         }
+        //         findRayPlatform=false;
+        //     }
+        //     //var index = Array.FindIndex(hit, x => x.transform.tag == "ground");
+        //     if (indexG != -1)
+        //     {
+        //         // Debug.Log("그라운드 찾음");
+        //         isGrounded = true;
+        //         cTemp = true;
+        //     }
+        //     else
+        //     {
+        //         // Debug.Log("그라운드 못 찾음");
+        //         isGrounded = false;
+        //         cTemp = false;
+        //     }
             
         }
 
