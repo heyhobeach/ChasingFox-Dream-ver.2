@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
 
 /// <summary>
 /// 플레이어 클래스. IUnitController 및 IDamageable 인터페이스를 상속
@@ -47,10 +48,18 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
 
     private void Update()
     {
-        //Camera.main.ScreenToWorldPoint(Input.mousePosition);//현재 마우스 위치
+        Camera.main.ScreenToWorldPoint(Input.mousePosition);//현재 마우스 위치
+        Vector2 pos = Vector2.zero;
+        Vector3 temp = GetSignedAngle(transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition), out pos);
+        Debug.Log("pos" + pos + "angle" + "return value =" + temp);
         // 임시
-        if(changedForm.UnitState == UnitState.Hide) _invalidation = true;
+        if (changedForm.UnitState == UnitState.Hide) _invalidation = true;
         else _invalidation = false;
+    }
+    protected Vector3 GetSignedAngle(Vector2 from, Vector2 to, out Vector2 dir)
+    {
+        dir = (to - from).normalized; // 시작 벡터에서 목표 벡터까지의 방향 계산
+        return new Vector3(0, 0, Vector3.SignedAngle(transform.right, dir, transform.forward)); // 유닛 기준 뱡향 벡터의 각도 계산 및 반환
     }
 
     public bool Crouch(KeyState crouchKey) => changedForm.Crouch(crouchKey);
