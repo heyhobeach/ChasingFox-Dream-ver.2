@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 
-public class Dumy : MonoBehaviour
+public partial class Dumy : MonoBehaviour
 {
     public GameObject bullet;//�Ѿ� ����
     public GameObject[] bullets;//���� ����� �� �ϸ� Ȥ�ó� �ʿ��ұ� ����� �� �κ� ����� �� �ϴ��� 
@@ -12,6 +13,8 @@ public class Dumy : MonoBehaviour
     public Vector3 playerPos;//�÷��̾��� ��ġ�� ��� ����
     public Vector3 enemypos;//������ ��ġ�� ��� ����
     public int a = 3;//�׽�Ʈ�� ���� ���������� �� ���µ� ������ �Ƹ��� ������
+
+    public float maxDistance = 1.06f;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,7 +32,10 @@ public class Dumy : MonoBehaviour
         {
             Shoot();
         }
+        // Debug.DrawRay
+        CircleRay();
 
+        //GetComponent<pathfinding>().test();
 
     }
 
@@ -56,5 +62,24 @@ public class Dumy : MonoBehaviour
         {
             Debug.Log("��@���� ���� ���� ������?");
         }
+    }
+
+    private void CircleRay()//유저 탐색할 레이 관련 함수
+    {
+         maxDistance = 5f;
+        Vector3 myposition = transform.position;
+        float mysize = 5f;//반지름
+        //RaycastHit2D ray2d = Physics2D.Raycast(transform.position, transform.forward, 10f); 
+        int layerMask = 1 << LayerMask.NameToLayer("Player");
+        RaycastHit2D ray2d = Physics2D.CircleCast(myposition, mysize, Vector2.up, maxDistance,layerMask);
+        if (ray2d)
+        {
+            Debug.Log(ray2d.collider.gameObject.name);
+            transform.position = Vector2.MoveTowards(transform.position, new Vector2(1,1), Time.deltaTime);
+            test();
+        }
+
+        
+        //float m
     }
 }

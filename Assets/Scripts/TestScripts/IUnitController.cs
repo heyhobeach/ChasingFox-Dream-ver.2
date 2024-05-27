@@ -7,7 +7,7 @@ public enum UnitState
 {
     Default,        // 기본
     Dash,           // 대시
-    Hide,           // 숨기
+    FormChange,     // 폼체인지
     HoldingWall,    // 벽잡기
     Air,            // 공중
     KnockBack,      // 넉백
@@ -62,6 +62,18 @@ public interface IUnitController
     /// </summary>
     /// <returns>대시 동작이 성공적으로 수행되었을 시 true를 반환</returns>
     bool Dash();
+
+    /// <summary>
+    /// 폼체인지 동작을 수행
+    /// </summary>
+    /// <returns>폼체인지 동작이 성공적으로 수행되었을 시 true를 반환</returns>
+    bool FormChange();
+
+    /// <summary>
+    /// 재장전 동작을 수행
+    /// </summary>
+    /// <returns>재장전 동작이 성공적으로 수행되었을 시 true를 반환</returns>
+    bool Reload();
 
     ///<summary>
     ///슬로우 모션

@@ -56,4 +56,7 @@ public class Berserker : PlayerUnit
         }
         dashCoroutine = null;
     }
+
+    public override bool FormChange() => false;
+    public override bool Reload() => false;
 }

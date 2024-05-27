@@ -29,7 +29,17 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     public float dashDuration;
 
     /// <summary>
-    /// 점프 힘
+    /// 점프력
+    /// </summary>
+    public float jumpHight;
+
+    /// <summary>
+    /// 점프 추진력
+    /// </summary>
+    public float jumpImpulse;
+
+    /// <summary>
+    /// 점프 유지력
     /// </summary>
     public float jumpForce;
 
@@ -41,7 +51,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     /// <summary>
     /// 유닛의 현재 상태를 가져옴
     /// </summary>
-    public UnitState UnitState { get; private set; }
+    public UnitState UnitState { get; set; }
 
     /// <summary>
     /// 유닛 콜라이더 가로 크기
@@ -92,9 +102,10 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     }
     protected virtual void Update()
     {
+        if(ControllerChecker()) return;
         // 힘의 방향에 따라 이미지를 좌우 반전
-        if(Mathf.Sign(hzForce) < 0) spriteRenderer.flipX = true;
-        else if(Mathf.Sign(hzForce) > 0) spriteRenderer.flipX = false;
+        if(hzForce < -0.1f) spriteRenderer.flipX = true;
+        else if(hzForce > 0.1f) spriteRenderer.flipX = false;
     }
 
     /// <summary>
@@ -114,6 +125,30 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     public abstract bool Crouch(KeyState crouchKey);
 
     public abstract bool Move(float dir);
+
+    public abstract bool FormChange();
+
+    public abstract bool Reload();
+
+    /// <summary>
+    /// 현재 플레이어 유닛의 제어 가능 여부 확인
+    /// </summary>
+    /// <returns>플레이어 유닛이 제어 불가능한 상태일 시 true를 반환</returns>
+    protected bool ControllerChecker() => ControllerChecker(this);
+
+    /// <summary>
+    /// 주어진 플레이어 유닛의 제어 가능 여부 확인
+    /// </summary>
+    /// <param name="playerUnit">확인할 플레이어 유닛</param>
+    /// <returns>플레이어 유닛이 제어 불가능한 상태일 시 true를 반환</returns>
+    public static bool ControllerChecker(UnitBase unitBase)
+    {
+        var unitState = unitBase.UnitState;
+        if(unitState == UnitState.KnockBack || unitState == UnitState.Stiffen || 
+            unitState == UnitState.Stiffen_er || unitState == UnitState.Death || 
+            unitState == UnitState.Pause) return true;
+        else return false;
+    }
 
     /// <summary>
     /// 특정 위치로부터 유닛의 방향 계산

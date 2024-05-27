@@ -16,9 +16,9 @@ public class Werwolf : PlayerUnit
     public float attackDuration;
 
     /// <summary>
-    /// 대쉬 공격 여부
+    /// 공격 추진력
     /// </summary>
-    private bool isDashAttack;
+    public float attackImpulse;
 
     /// <summary>
     /// 고정된 방향을 저장하기 위한 변수
@@ -47,28 +47,35 @@ public class Werwolf : PlayerUnit
     protected override void OnCollisionEnter2D(Collision2D collision)
     {
         base.OnCollisionEnter2D(collision);
-        if(collision.gameObject.CompareTag("Wall") && unitState == UnitState.Air) // 공중에서 벽에 붙을 시
+        if(collision.gameObject.CompareTag("Wall") && unitState == UnitState.Air &&
+            Mathf.Abs(Vector2.Angle(Vector2.up, collision.contacts[0].normal)) != 180) // 공중에서 벽에 붙을 시
         {
             unitState = UnitState.HoldingWall; // 벽붙기 상태로 변경
             fixedDir = -CheckDir(collision.transform.position); // 벽의 반대 방향을 저장
+            ResetForce();
+            SetVel(0);
         }
+        if(collision.gameObject.CompareTag("ground") && unitState == UnitState.HoldingWall) unitState = UnitState.Default;
     }
-    protected override void OnCollisionExit2D(Collision2D collision)
+    protected override void OnCollisionStay2D(Collision2D collision)
     {
-        base.OnCollisionExit2D(collision);
-        if(collision.gameObject.CompareTag("Wall") && unitState == UnitState.HoldingWall && isGrounded) unitState = UnitState.Default; // 벽붙기 상태일 시 기본 상태로 변경
+        base.OnCollisionStay2D(collision);
+        
+        if(collision.gameObject.CompareTag("ground") && wallCoroutine != null &&
+            Mathf.Abs(Vector2.Angle(Vector2.up, collision.contacts[0].normal)) == 180)
+            {
+                unitState = UnitState.Default;
+                StopCoroutine(wallCoroutine);
+                wallCoroutine = null;
+            }
     }
 
     public override bool Attack(Vector3 clickPos)
     {
-        if(ControllerChecker() || unitState == UnitState.Hide || 
-            unitState == UnitState.HoldingWall) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
-        else if(unitState == UnitState.Dash) isDashAttack = true; // 대쉬 중 공격 입력 시 대쉬 공격 트리거 On
-        else if(attackCoroutine == null) // 공격 중이 아닐 경우
-        {
-            MeleeAttack.transform.localPosition = Vector2.right * CheckDir(clickPos); // 클릭 방향으로 공격 위치 설정
-            attackCoroutine = StartCoroutine(Attacking());
-        }
+        if((unitState != UnitState.Default && unitState != UnitState.Air && unitState != UnitState.HoldingWall)
+             || attackCoroutine != null) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
+        MeleeAttack.transform.localPosition = Vector2.right * CheckDir(clickPos); // 클릭 방향으로 공격 위치 설정
+        attackCoroutine = StartCoroutine(Attacking());
         return true;
     }
 
@@ -79,6 +86,7 @@ public class Werwolf : PlayerUnit
     {
         // 지속시간만큼 히트박스를 온오프
         MeleeAttack.SetActive(true);
+        Move(Mathf.Sign(MeleeAttack.transform.localPosition.x)*attackImpulse);
         yield return new WaitForSeconds(attackDuration);
         MeleeAttack.SetActive(false);
         attackCoroutine = null;
@@ -104,15 +112,16 @@ public class Werwolf : PlayerUnit
     /// </summary>
     private IEnumerator WallJump()
     {
-        float wallJumpDuration = 0.3f;
+        float wallJumpDuration = 0.2f;
         float t = 0;
         ResetForce();
-        AddVerticalForce(jumpForce); // 윗 방향 힘 추가
+        AddVerticalForce(-gravity * Time.deltaTime + jumpImpulse); // 윗 방향 힘 추가
         while(t < wallJumpDuration)
         {
             t += Time.deltaTime;
+            AddVerticalForce(-gravity * Time.deltaTime + jumpForce * 2);
             AddHorizontalForce(fixedDir * movementSpeed); // 벽의 반대 방향 힘 추가
-            yield return null;
+            yield return new WaitForFixedUpdate();
         }
         unitState = UnitState.Default;
         SetVel(fixedDir); // 벽의 반대 방향으로 힘 강제 변경, 자연스러운 동작을 위한 부분
@@ -122,19 +131,9 @@ public class Werwolf : PlayerUnit
     // 수정 필요함
     public override bool Dash()
     {
-        bool returnVal = false;
-        if(ControllerChecker() || unitState == UnitState.Air) returnVal = false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
-        if(dashCoroutine != null)
-        {
-            isDashAttack = true;
-            returnVal = false;
-        }
-        else
-        {
-            dashCoroutine = StartCoroutine(DashAffterInput());
-            returnVal = true;
-        }
-        return returnVal;
+        if(unitState != UnitState.Default || dashCoroutine != null) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
+        dashCoroutine = StartCoroutine(DashAffterInput());
+        return true;
     }
 
     /// <summary>
@@ -148,44 +147,9 @@ public class Werwolf : PlayerUnit
         {
             t += Time.deltaTime;
             AddHorizontalForce(Mathf.Sign(hzVel) * movementSpeed * 2f); // 수평 방향으로 힘 추가
-            if(isDashAttack) // 대쉬 중 공격 감지 시 대쉬 공격 수행
-            {
-                DashAttack();
-                break;
-            }
             yield return null;
         }
         StopDash();
-    }
-
-    /// <summary>
-    /// 대쉬 중 공격 입력 시 동작을 수행
-    /// </summary>
-    public void DashAttack()
-    {
-        // 대쉬 및 공격을 초기화
-        StopDash();
-        if(attackCoroutine != null) StopCoroutine(attackCoroutine);
-
-        MeleeAttack.transform.localPosition = new Vector3(fixedDir, 0); // 공격 위치 재설정
-        StartCoroutine(DashAttacking());
-    }
-    /// <summary>
-    /// 대쉬공격 중 동작을 수행
-    /// </summary>
-    private IEnumerator DashAttacking()
-    {
-        float t = 0;
-        unitState = UnitState.Pause; // 모든 입력을 제한 시키기 위한 상태 변경
-        AddVerticalForce(jumpForce * 0.5f); // 윗 방향 힘 추가
-        StartCoroutine(Attacking()); // 공격 시작
-        while(t < dashDuration) // 지속시간 동안 수평 힘 추가
-        {
-            AddHorizontalForce(fixedDir * movementSpeed * 2f);
-            yield return null;
-        }
-        isDashAttack = false; // 대쉬 공격 트리거 초기화
-        unitState = UnitState.Default; // 기본 상태로 변경
     }
 
     /// <summary>
@@ -197,4 +161,12 @@ public class Werwolf : PlayerUnit
         dashCoroutine = null;
         unitState = UnitState.Default;
     }
+
+    public override bool FormChange()
+    {
+        if(unitState != UnitState.Default) return false;
+        else return true;
+    }
+
+    public override bool Reload() => false;
 }

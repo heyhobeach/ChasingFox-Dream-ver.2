@@ -126,7 +126,7 @@ public partial class ControllerScript : MonoBehaviour
             }
             Debug.Log("늑대 공격");
             //float startAttack = Time.time;
-            float startAttack = 0;
+            // float startAttack = 0;
             t = 0;
             ControllerScript.instance.meleeAttack.transform.position = ControllerScript.instance.attackPoint.transform.position;//meleeAttack오브젝트의 위치를 처음 설정한 attackPoint로 이동시킴
 
