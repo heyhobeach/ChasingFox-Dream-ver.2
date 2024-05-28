@@ -182,7 +182,7 @@ public partial class ControllerScript : MonoBehaviour
                         downTime = 0.4f;//떨어지는 시간 다르게 하기 위함
                         break;
                     case downJumpObject.DIAGONAL://대각선
-                        downTime = 0.6f;//떨어지는 시간 다르게 하기 위함
+                        downTime = 2f;//떨어지는 시간 다르게 하기 위함
                         break;
                 }
                 //canDown = true;
