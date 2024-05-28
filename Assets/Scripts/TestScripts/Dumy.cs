@@ -34,6 +34,19 @@ public partial class Dumy : MonoBehaviour
         }
         // Debug.DrawRay
         CircleRay();
+        startPos.x = (int)_startPos.position.x;
+        startPos.y = (int)_startPos.position.y-1;
+        targetPos.x = (int)_targetPos.position.x;
+        targetPos.y = Mathf.FloorToInt(_targetPos.position.y)-1;
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            FinalNodeList.Clear();
+
+            PathFinding();
+            Debug.Log("hello");
+
+            //Debug.Log(NodeArray[8 - bottomLeft.x, -2 - bottomLeft.y].ParentNode.x+"," +NodeArray[8 - bottomLeft.x, -2 - bottomLeft.y].ParentNode.y);    
+        }
 
         //GetComponent<pathfinding>().test();
 
@@ -74,9 +87,9 @@ public partial class Dumy : MonoBehaviour
         RaycastHit2D ray2d = Physics2D.CircleCast(myposition, mysize, Vector2.up, maxDistance,layerMask);
         if (ray2d)
         {
-            Debug.Log(ray2d.collider.gameObject.name);
-            transform.position = Vector2.MoveTowards(transform.position, new Vector2(1,1), Time.deltaTime);
-            test();
+            //Debug.Log(ray2d.collider.gameObject.name);
+            //transform.position = Vector2.MoveTowards(transform.position, new Vector2(1,1), Time.deltaTime);
+            //test();
         }
 
         

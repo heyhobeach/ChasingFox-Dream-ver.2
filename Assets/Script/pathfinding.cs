@@ -19,7 +19,18 @@ public class Node
     //public int x, y, G, H;
 
     public int F { get { return G + H; } }
-    public Node(bool _isWall, bool _isRoad, bool _isPoint, bool _isPlatform, int _x, int _y) { isWall = _isWall; isRoad = _isRoad; isPoint = _isPoint; isplatform = _isPlatform; x = _x; y = _y; }
+    public Node(bool _isWall, bool _isRoad, bool _isPoint, bool _isPlatform, int _x, int _y) { 
+        isWall = _isWall; 
+        isRoad = _isRoad; 
+        isPoint = _isPoint; 
+        isplatform = _isPlatform;
+        if (isplatform)
+        {
+            isRoad = true;
+        }
+        x = _x; 
+        y = _y; 
+    }
 }
 public partial class Dumy : MonoBehaviour
 {
@@ -63,9 +74,9 @@ public partial class Dumy : MonoBehaviour
                 foreach (Collider2D col in Physics2D.OverlapCircleAll(new Vector2(i + bottomLeft.x, j + bottomLeft.y), 0.4f))
                 {
                     if (col.gameObject.layer == LayerMask.NameToLayer("Wall")) isWall = true;
-                    if (col.gameObject.layer == LayerMask.NameToLayer("Road")) isRoad = true;
+                    if (col.gameObject.layer == LayerMask.NameToLayer("Ground")) isRoad = true;
                     if (col.gameObject.layer == LayerMask.NameToLayer("Point")) isPoint = true;
-                    if (col.gameObject.layer == LayerMask.NameToLayer("Platform")) isplatform = true;
+                    if (col.gameObject.layer == LayerMask.NameToLayer("OneWayPlatform")) isplatform = true;
                 }
 
                 NodeArray[i, j] = new Node(isWall, isRoad, isPoint, isplatform, i + bottomLeft.x, j + bottomLeft.y);
@@ -87,11 +98,13 @@ public partial class Dumy : MonoBehaviour
         ClosedList = new List<Node>();
         FinalNodeList = new List<Node>();
         NodeDistanceList = new List<string>();
+        
 
 
         while (OpenList.Count > 0)
         {
             // 열린리스트 중 가장 F가 작고 F가 같다면 H가 작은 걸 현재노드로 하고 열린리스트에서 닫힌리스트로 옮기기
+            
             CurNode = OpenList[0];
             string leftright = "";
             for (int i = 1; i < OpenList.Count; i++)
@@ -105,8 +118,9 @@ public partial class Dumy : MonoBehaviour
 
 
             // 마지막
-            if (CurNode == TargetNode)
+            if (CurNode == TargetNode)//여기 못감
             {
+                Debug.Log("마지막 까지 찾음");
                 Node TargetCurNode = TargetNode;
                 int _cnt = 0;
                 while (TargetCurNode != StartNode)//이게 성립하지 않으면 항상 무한 반복중 그렇다면 startnode와 엮어야함
@@ -270,13 +284,17 @@ public partial class Dumy : MonoBehaviour
                     NodeDistanceList.Add(leftright);
                     TargetCurNode = TargetCurNode.ParentNode;//부모 설정부분
                 }
+
                 FinalNodeList.Add(StartNode);
                 FinalNodeList.Reverse();
                 NodeDistanceList.Add("none");
                 NodeDistanceList.Reverse();
                 int cnt = FinalNodeList.Count;
-                
-                    //print(i + "번째는 " + FinalNodeList[i].x + ", " + FinalNodeList[i].y + NodeDistanceList[i]); 
+                for (int i = 0; i < cnt; i++)
+                {
+                    print(i + "번째는 " + FinalNodeList[i].x + ", " + FinalNodeList[i].y + NodeDistanceList[i]); 
+                }
+                    
                 Debug.Log(cnt);
                 return;
             }
@@ -301,6 +319,7 @@ public partial class Dumy : MonoBehaviour
 
     void OpenListAdd(int checkX, int checkY)
     {
+       // Debug.Log("test");
         // 상하좌우 범위를 벗어나지 않고, 벽이 아니면서, 닫힌리스트에 없다면
         if (checkX >= bottomLeft.x && checkX < topRight.x + 1 && checkY >= bottomLeft.y && checkY < topRight.y + 1 && !NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y].isWall && !ClosedList.Contains(NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y]))
         {
