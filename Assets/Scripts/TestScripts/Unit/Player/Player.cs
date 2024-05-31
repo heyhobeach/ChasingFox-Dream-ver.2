@@ -48,6 +48,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         changedForm = forms[0]; 
         changedForm.gameObject.SetActive(true);
         health = maxHealth; // 체력 초기화
+        fixedDir = 1;
     }
 
     public bool Crouch(KeyState crouchKey) => changedForm.Crouch(crouchKey);
@@ -61,7 +62,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     public bool Move(float dir)
     {
         if(changedForm.UnitState == UnitState.FormChange) return false;
-        fixedDir = dir;
+        if(dir != 0)fixedDir = dir;
         return changedForm.Move(dir);
     }
 

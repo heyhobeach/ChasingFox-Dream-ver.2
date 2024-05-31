@@ -51,6 +51,28 @@ public class Human : PlayerUnit
         StopDash();
     }
 
+    protected override void OnCollisionEnter2D(Collision2D collision)
+    {
+        base.OnCollisionEnter2D(collision);
+        switch(CheckMapType(collision))
+        {
+            case MapType.Wall:
+                SetVel(0);
+                break;
+        }
+    }
+
+    protected override void OnCollisionStay2D(Collision2D collision)
+    {
+        base.OnCollisionEnter2D(collision);
+        switch(CheckMapType(collision))
+        {
+            case MapType.Wall:
+                SetVel(0);
+                break;
+        }
+    }
+
     protected override void Start()
     {
         base.Start();

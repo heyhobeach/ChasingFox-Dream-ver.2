@@ -17,11 +17,18 @@ public enum UnitState
     Pause           // 일시정지
 }
 
+
 // 키 입력 상태를 정의하는 열거형
 public enum KeyState
 {
     // 키 입력 없음 | 키 다운 상태 | 키 누르고 있는 상태 | 키 업 상태
     None, KeyDown, KeyStay, KeyUp
+}
+
+/// 맵의 종류를 정의하는 열거형
+public enum MapType
+{
+    None, Ground, Wall, Platform, Ceiling
 }
 
 /// <summary>

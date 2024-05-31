@@ -31,51 +31,55 @@ public abstract class PlayerUnit : UnitBase
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
-        // if(collision.gameObject.CompareTag("ground") || collision.gameObject.CompareTag("platform")) isGrounded = true;
-        if (collision.gameObject.tag == "platform")//지면 확인 점프용
+        switch(CheckMapType(collision))
         {
-            // checkHigh= -100;
-            //WereWolf.Instance().isAttacking = false;// 이 부분이 있으면 땅에서 연속 공격 가능 
-            currentOneWayPlatform = collision.gameObject;//플랫폼이라면 현재 플렛폼을 담음
-            // Debug.Log(collision.gameObject.GetComponent<PlatformScript>().dObject);//다운 오브젝트 타입확인용 로그
-            switch (collision.gameObject.GetComponent<PlatformScript>().dObject)//대각선 직선 오브젝트 마다 떨어지는 시간이 다를수도 있으니
-            {
-                case PlatformScript.downJumpObject.STRAIGHT://직선
-                    downTime = 1f;//떨어지는 시간 다르게 하기 위함
-                    break;
-                case PlatformScript.downJumpObject.DIAGONAL://대각선
-                    downTime = 0.8f;//떨어지는 시간 다르게 하기 위함 , 0.7초까지도 1칸에 대해서는 가능하지만 만약에 쭉 앞으로 가면서 떨어진다고 하면 안전한 시간은 0.75~0.8사이임
-                    break;
-            }
-            //canDown = true;
+            case MapType.Platform:
+                // checkHigh= -100;
+                //WereWolf.Instance().isAttacking = false;// 이 부분이 있으면 땅에서 연속 공격 가능 
+                currentOneWayPlatform = collision.gameObject;//플랫폼이라면 현재 플렛폼을 담음
+                // Debug.Log(collision.gameObject.GetComponent<PlatformScript>().dObject);//다운 오브젝트 타입확인용 로그
+                switch (collision.gameObject.GetComponent<PlatformScript>().dObject)//대각선 직선 오브젝트 마다 떨어지는 시간이 다를수도 있으니
+                {
+                    case PlatformScript.downJumpObject.STRAIGHT://직선
+                        downTime = 1f;//떨어지는 시간 다르게 하기 위함
+                        break;
+                    case PlatformScript.downJumpObject.DIAGONAL://대각선
+                        downTime = 0.8f;//떨어지는 시간 다르게 하기 위함 , 0.7초까지도 1칸에 대해서는 가능하지만 만약에 쭉 앞으로 가면서 떨어진다고 하면 안전한 시간은 0.75~0.8사이임
+                        break;
+                }
+                //canDown = true;
+                break;
         }
     }
+
     protected virtual void OnCollisionExit2D(Collision2D collision)
     {
-        // if(collision.gameObject.CompareTag("ground") || collision.gameObject.CompareTag("platform")) isGrounded = false;
-        if (collision.gameObject.tag == "platform")
+        switch(CheckMapType(collision))
         {
-            if (isJumping)
-            {
-                Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), false);
-            }
-            currentOneWayPlatform = null;//platform에서 벗어난거라면 플랫폼 변수를 비움
+            case MapType.Platform:
+                if (isJumping)
+                {
+                    Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), false);
+                }
+                currentOneWayPlatform = null;//platform에서 벗어난거라면 플랫폼 변수를 비움
+                break;
         }
+        // if(collision.gameObject.CompareTag("ground") || collision.gameObject.CompareTag("platform")) isGrounded = false;
     }
+
     protected virtual void OnCollisionStay2D(Collision2D collision)
     {
-        if((collision.gameObject.CompareTag("Wall") || collision.gameObject.CompareTag("ground")) && 
-            Mathf.Abs(Vector2.Angle(Vector2.up, collision.contacts[0].normal)) == 180)
+        switch(CheckMapType(collision))
         {
-            vcForce = gravity * Time.fixedDeltaTime;
-            isJumping = false;
+            case MapType.Ceiling:
+                isJumping = false;
+                break;
+            case MapType.Platform:
+                currentOneWayPlatform = collision.gameObject;
+                break;
         }
+        if(CheckMapType(collision) == MapType.Ceiling) isJumping = false;
         // if(collision.gameObject.CompareTag("ground") || collision.gameObject.CompareTag("platform")) isGrounded = true;
-
-        if (collision.gameObject.tag == "platform")//플랫폼이라면 현재 플렛폼을 담음
-        {
-            currentOneWayPlatform = collision.gameObject;
-        }
     }
 
     protected override void Start()
@@ -90,7 +94,7 @@ public abstract class PlayerUnit : UnitBase
     {
         if(!isGrounded && unitState == UnitState.Default) unitState = UnitState.Air; // 기본 상태에서 공중에 뜰 시 공중 상태로 변경
         else if(isGrounded && unitState == UnitState.Air) unitState = UnitState.Default; // 공중 상태에서 바닥에 닿을 시 기본 상태로 변경
-        // Debug.Log(canDown);
+        // Debug.Log(unitState);
         CrouchUpdate();
         base.Update();
     }
@@ -260,7 +264,7 @@ public abstract class PlayerUnit : UnitBase
     /// <summary>
     /// 중력 힘을 추가
     /// </summary>
-    private void AddGravity() => AddVerticalForce(gravity * Time.fixedDeltaTime);
+    private void AddGravity() => AddVerticalForce(unitState == UnitState.HoldingWall ? gravity * Time.fixedDeltaTime * 0.2f : gravity * Time.fixedDeltaTime);
 
     /// <summary>
     /// 수직 방향 힘을 추가
@@ -301,4 +305,30 @@ public abstract class PlayerUnit : UnitBase
     /// </summary>
     /// <param name="vel">설정할 수평 속도</param>
     public void SetVel(float vel) => hzVel = vel;
+
+    /// <summary>
+    /// 충돌면의 MapType을 반환
+    /// </summary>
+    /// <param name="collision">충돌체</param>
+    /// <returns>충돌면의 MapType</returns>
+    protected MapType CheckMapType(Collision2D collision)
+    {
+        float angle = 0;
+        return CheckMapType(collision, ref angle);
+    }
+    /// <summary>
+    /// 충돌면의 MapType을 반환
+    /// </summary>
+    /// <param name="collision">충돌체</param>
+    /// <param name="ref angle">충돌각 반환 (0 ~ 180)</param>
+    /// <returns>충돌면의 MapType</returns>
+    protected MapType CheckMapType(Collision2D collision, ref float angle)
+    {
+        if(!(collision.gameObject.CompareTag("Map") || collision.gameObject.CompareTag("platform")) || collision.contactCount <= 0) return MapType.None;
+        if(collision.gameObject.CompareTag("platform")) return MapType.Ground;
+        angle = Mathf.Abs(Vector2.Angle(Vector2.up, collision.contacts[0].normal));
+        if(angle <= 45) return MapType.Ground;
+        else if(angle >= 135) return MapType.Ceiling;
+        else return MapType.Wall;
+    }
 }

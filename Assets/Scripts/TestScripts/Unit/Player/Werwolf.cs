@@ -47,27 +47,35 @@ public class Werwolf : PlayerUnit
     protected override void OnCollisionEnter2D(Collision2D collision)
     {
         base.OnCollisionEnter2D(collision);
-        if(collision.gameObject.CompareTag("Wall") && unitState == UnitState.Air &&
-            Mathf.Abs(Vector2.Angle(Vector2.up, collision.contacts[0].normal)) != 180) // 공중에서 벽에 붙을 시
+        switch(CheckMapType(collision))
         {
-            unitState = UnitState.HoldingWall; // 벽붙기 상태로 변경
-            fixedDir = -CheckDir(collision.transform.position); // 벽의 반대 방향을 저장
-            ResetForce();
-            SetVel(0);
+            case MapType.Wall:
+                if(unitState == UnitState.Air)
+                {
+                    unitState = UnitState.HoldingWall; // 벽붙기 상태로 변경
+                    fixedDir = -CheckDir(collision.contacts[0].point); // 벽의 반대 방향을 저장
+                    ResetForce();
+                }
+                break;
+            case MapType.Ground:
+                if(unitState == UnitState.HoldingWall) unitState = UnitState.Default;
+                break;
         }
-        if(collision.gameObject.CompareTag("ground") && unitState == UnitState.HoldingWall) unitState = UnitState.Default;
     }
     protected override void OnCollisionStay2D(Collision2D collision)
     {
         base.OnCollisionStay2D(collision);
-        
-        if(collision.gameObject.CompareTag("ground") && wallCoroutine != null &&
-            Mathf.Abs(Vector2.Angle(Vector2.up, collision.contacts[0].normal)) == 180)
+        switch(CheckMapType(collision))
+        {
+            case MapType.Ground:
+            if(wallCoroutine != null)
             {
                 unitState = UnitState.Default;
                 StopCoroutine(wallCoroutine);
                 wallCoroutine = null;
             }
+            break;
+        }
     }
 
     public override bool Attack(Vector3 clickPos)
@@ -113,17 +121,12 @@ public class Werwolf : PlayerUnit
     private IEnumerator WallJump()
     {
         float wallJumpDuration = 0.2f;
-        float t = 0;
         ResetForce();
-        AddVerticalForce(-gravity * Time.deltaTime + jumpImpulse); // 윗 방향 힘 추가
-        while(t < wallJumpDuration)
-        {
-            t += Time.deltaTime;
-            AddVerticalForce(-gravity * Time.deltaTime + jumpForce * 2);
-            AddHorizontalForce(fixedDir * movementSpeed); // 벽의 반대 방향 힘 추가
-            yield return new WaitForFixedUpdate();
-        }
+        AddVerticalForce(-gravity * Time.deltaTime + jumpImpulse * 80); // 윗 방향 힘 추가
+        AddHorizontalForce(fixedDir * movementSpeed); // 벽의 반대 방향 힘 추가
+        yield return new WaitForSeconds(wallJumpDuration);
         unitState = UnitState.Default;
+        AddVerticalForce(gravity * Time.deltaTime - jumpImpulse * 30); // 윗 방향 힘 추가
         SetVel(fixedDir); // 벽의 반대 방향으로 힘 강제 변경, 자연스러운 동작을 위한 부분
         wallCoroutine = null;
     }
