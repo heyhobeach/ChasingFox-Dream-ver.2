@@ -41,10 +41,10 @@ public abstract class PlayerUnit : UnitBase
             switch (collision.gameObject.GetComponent<PlatformScript>().dObject)//대각선 직선 오브젝트 마다 떨어지는 시간이 다를수도 있으니
             {
                 case PlatformScript.downJumpObject.STRAIGHT://직선
-                    downTime = 0.4f;//떨어지는 시간 다르게 하기 위함
+                    downTime = 1f;//떨어지는 시간 다르게 하기 위함
                     break;
                 case PlatformScript.downJumpObject.DIAGONAL://대각선
-                    downTime = 0.6f;//떨어지는 시간 다르게 하기 위함
+                    downTime = 0.8f;//떨어지는 시간 다르게 하기 위함 , 0.7초까지도 1칸에 대해서는 가능하지만 만약에 쭉 앞으로 가면서 떨어진다고 하면 안전한 시간은 0.75~0.8사이임
                     break;
             }
             //canDown = true;
@@ -153,7 +153,7 @@ public abstract class PlayerUnit : UnitBase
             case KeyState.KeyDown:
                 if (currentOneWayPlatform != null)//밑 아래 점프 가능한 오브젝트와 닿아있을때 ,우선순위 따라서 위로 올리고 return이 필요할듯 
                 {
-                    // Debug.Log("hello");
+                    Debug.Log("hello");
                     // canDown = !isHide;
                     canDown = true;
                     AddVerticalForce(gravity * Time.fixedDeltaTime);
@@ -246,7 +246,9 @@ public abstract class PlayerUnit : UnitBase
                 // Debug.Log("hi");
                 cTemp = true;
                 Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), true);//원리는 그냥 설정한 시간동안 해당 플렛폼들을 그냥 무시하는식으로 설정했음 근데 지금 생각해보면 지금 플렛폼을 받아와서 플렛폼의 네임을 무시하는식으로 해도 되지않을까 하는 영감이 떠오름
+                Debug.Log("무시중");
                 yield return new WaitForSeconds(downTime);//downtime변수는 나중에 중력 설정시 이질감이 든다면 변경필요
+                Debug.Log("무시 끝");
                 cTemp = false;
                 //Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), false);
                 canDown = false;
