@@ -26,6 +26,8 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     private bool _invalidation;
     public bool invalidation { get => _invalidation; set => _invalidation = value; }
 
+    public int transformNum = 2;
+
     /// <summary>
     /// 폼 체인지 딜레이 시간
     /// </summary>
@@ -40,6 +42,11 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     /// 입력 방향을 저장할 변수
     /// </summary>
     private float fixedDir;
+
+    /// <summary>
+    /// 불릿타임 시간
+    /// </summary>
+    public float bulletTime;
 
     private void Start()
     {
@@ -99,6 +106,29 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     {
         changedForm.UnitState = UnitState.FormChange;
         float t = 0;
+        if(changedForm is Human)
+        {
+            transformNum--;
+        }
+        
+
+        while (t <= bulletTime&&changedForm is Human&&transformNum>=0)
+        {
+            t += Time.unscaledDeltaTime;
+            Debug.Log("불릿 타임 시작");
+            #region 불릿타임
+            Time.timeScale = 0.05f;
+            Time.fixedDeltaTime = 0.05f * 0.02f;
+            #endregion  
+            yield return null;
+            Debug.Log("불릿 타임 종료");
+        }
+        #region 불릿타임 해제
+        Time.timeScale = 1;
+        Time.fixedDeltaTime = 1 * 0.02f;
+        #endregion
+        t = 0;
+        
         while(t <= changeDelay)
         {
             t += Time.unscaledDeltaTime;

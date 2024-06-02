@@ -15,6 +15,8 @@ public partial class Dumy : MonoBehaviour
     public int a = 3;//�׽�Ʈ�� ���� ���������� �� ���µ� ������ �Ƹ��� ������
 
     public float maxDistance = 1.06f;
+
+    private bool follow = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -34,10 +36,8 @@ public partial class Dumy : MonoBehaviour
         }
         // Debug.DrawRay
         CircleRay();
-        startPos.x = (int)_startPos.position.x;
-        startPos.y = (int)_startPos.position.y-1;
-        targetPos.x = (int)_targetPos.position.x;
-        targetPos.y = Mathf.FloorToInt(_targetPos.position.y)-1;
+
+        //PathFinding();
         if (Input.GetKeyDown(KeyCode.F))
         {
             FinalNodeList.Clear();
@@ -46,6 +46,10 @@ public partial class Dumy : MonoBehaviour
             Debug.Log("hello");
 
             //Debug.Log(NodeArray[8 - bottomLeft.x, -2 - bottomLeft.y].ParentNode.x+"," +NodeArray[8 - bottomLeft.x, -2 - bottomLeft.y].ParentNode.y);    
+        }
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            StartCoroutine(cMove());
         }
 
         //GetComponent<pathfinding>().test();
@@ -85,14 +89,38 @@ public partial class Dumy : MonoBehaviour
         //RaycastHit2D ray2d = Physics2D.Raycast(transform.position, transform.forward, 10f); 
         int layerMask = 1 << LayerMask.NameToLayer("Player");
         RaycastHit2D ray2d = Physics2D.CircleCast(myposition, mysize, Vector2.up, maxDistance,layerMask);
-        if (ray2d)
+        if (ray2d&&!follow)//이미 레이 = 시야에 감지 되었기에 계속 추격해야함
         {
-            //Debug.Log(ray2d.collider.gameObject.name);
+            //1초마다 갱신하게 코루틴 필요    
+            Debug.Log(ray2d.collider.gameObject.name);
+            StartCoroutine(timer());
+            //FinalNodeList.Clear();
+            //PathFinding();
+            //follow
             //transform.position = Vector2.MoveTowards(transform.position, new Vector2(1,1), Time.deltaTime);
             //test();
         }
 
         
         //float m
+    }
+
+    IEnumerator timer()
+    {
+        Debug.Log("코루틴 시작");
+        follow = true;
+        while (true)
+        {
+            yield return new WaitForSeconds(1);
+            startPos.x = (int)_startPos.position.x;
+            startPos.y = (int)_startPos.position.y - 1;
+            targetPos.x = (int)_targetPos.position.x;
+            targetPos.y = Mathf.FloorToInt(_targetPos.position.y) - 1;
+
+            PathFinding();
+            Debug.Log("경로 갱신");
+            
+        }
+        
     }
 }

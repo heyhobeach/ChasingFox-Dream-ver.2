@@ -120,33 +120,28 @@ public partial class Dumy : MonoBehaviour
             // 마지막
             if (CurNode == TargetNode)//여기 못감
             {
-                Debug.Log("마지막 까지 찾음");
                 Node TargetCurNode = TargetNode;
                 int _cnt = 0;
                 while (TargetCurNode != StartNode)//이게 성립하지 않으면 항상 무한 반복중 그렇다면 startnode와 엮어야함
                 {
                     _cnt++;
-                    if (_cnt > 2000)
+                    if (_cnt > 2000)//혹시나 무한 반복할 경우 예외 
                     {
                         Debug.Log("무한 반복");
                         return;
                     }
-                    Debug.Log(string.Format("{0},{1}//{2},{3}", TargetCurNode.x, TargetCurNode.y, NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x, TargetCurNode.ParentNode.y - bottomLeft.y].x, NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x, TargetCurNode.ParentNode.y - bottomLeft.y].y));
 
                     //target.parentnode.isplatform추가
                     if (TargetCurNode.isplatform||TargetCurNode.ParentNode.isplatform)
                     {
                         if (targetPos.y > startPos.y)//위로
                         {
-                            if ((//NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].isplatform && NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].isPoint||//우
-
+                            if ((//Debug.Log("좌측 상단 포인트");
                                 NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x - 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].isplatform
                                 && NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x - 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].isPoint
                                 && !TargetCurNode.isPoint))
                             {//좌
-                                Debug.Log("좌측 상단 포인트");
-                                Debug.Log(NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x - 1, TargetCurNode.ParentNode.y - bottomLeft.y].x + "," + NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x - 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].y);
-
+                                
                                 Node temp;
                                 temp = TargetCurNode.ParentNode;
                                 NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y].ParentNode = temp;
@@ -158,8 +153,7 @@ public partial class Dumy : MonoBehaviour
                                 && NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].isPoint
                                 && !TargetCurNode.isPoint))
                             {//좌
-                                Debug.Log(NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x - 1, TargetCurNode.ParentNode.y - bottomLeft.y].x + "," + NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x - 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].y);
-                                Debug.Log("우측 상단 포인트");
+                                //Debug.Log("우측 상단 포인트");
                                 Node temp;
                                 temp = TargetCurNode.ParentNode;
                                 NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y].ParentNode = temp;
@@ -171,10 +165,8 @@ public partial class Dumy : MonoBehaviour
                                && !TargetCurNode.ParentNode.isPoint)
 
                             {
-                                Debug.Log(string.Format("{0}x좌표 {1}y좌표// 현재좌표 {2} x {3} y//부모좌표 {4}x {5}y//{6},{7}", NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y].x, NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y - 1].y,
-                                    TargetCurNode.x, TargetCurNode.y, TargetCurNode.ParentNode.x, TargetCurNode.ParentNode.y, TargetCurNode.ParentNode.ParentNode.x, TargetCurNode.ParentNode.ParentNode.y));
                                 //
-                                Debug.Log("우측하단 포인트");
+                                //Debug.Log("우측하단 포인트");
                                 Node temp;
                                 temp = TargetCurNode.ParentNode;
                                 NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y - 1].ParentNode = temp;
@@ -186,9 +178,7 @@ public partial class Dumy : MonoBehaviour
        && !TargetCurNode.ParentNode.isPoint)
 
                             {
-                                Debug.Log("좌측하단 포인트");
-                                Debug.Log(string.Format("{0}x좌표 {1}y좌표// 현재좌표 {2} x {3} y//부모좌표 {4}x {5}y//{6},{7}", NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x - 1, TargetCurNode.ParentNode.y - bottomLeft.y].x, NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x - 1, TargetCurNode.ParentNode.y - bottomLeft.y - 1].y,
-                                    TargetCurNode.x, TargetCurNode.y, TargetCurNode.ParentNode.x, TargetCurNode.ParentNode.y, TargetCurNode.ParentNode.ParentNode.x, TargetCurNode.ParentNode.ParentNode.y));
+                                //Debug.Log("좌측하단 포인트");
                                 Node temp;
                                 temp = TargetCurNode.ParentNode;
                                 NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y - 1].ParentNode = temp;
@@ -207,7 +197,7 @@ public partial class Dumy : MonoBehaviour
                                 && NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y + 1].isPoint
                                 && !TargetCurNode.ParentNode.isPoint))
                             {//좌
-                                Debug.Log("좌측 상단 포인트");
+                               // Debug.Log("좌측 상단 포인트");
                                 int sub = TargetCurNode.ParentNode.x-NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y + 1].x ;
                                 TargetCurNode.ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y + 1];
 
@@ -215,7 +205,6 @@ public partial class Dumy : MonoBehaviour
                                 {
                                     NodeArray[TargetCurNode.x - bottomLeft.x - 1 + i, TargetCurNode.y - bottomLeft.y + 1].ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x + i, TargetCurNode.y - bottomLeft.y + 1];
                                 }
-                                Debug.Log(sub);
                             }
 
                             if ((//NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].isplatform && NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].isPoint||//우
@@ -225,13 +214,11 @@ public partial class Dumy : MonoBehaviour
                                 && !TargetCurNode.ParentNode.isPoint))
                             {//좌
                                 //Debug.Log(NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y].x + "," + NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y + 1].y);
-                                Debug.Log("여기");
                                 Debug.Log("우측 상단 포인트");
                                 int sub = NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y + 1].x - TargetCurNode.ParentNode.x;
                                 TargetCurNode.ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y + 1];
                                 
 
-                                Debug.Log(sub);
                                 for(int i = 0; i < sub; i++)
                                 {
                                     NodeArray[TargetCurNode.x - bottomLeft.x + 1-i, TargetCurNode.y - bottomLeft.y + 1].ParentNode= NodeArray[TargetCurNode.x - bottomLeft.x -i, TargetCurNode.y - bottomLeft.y + 1];
@@ -243,12 +230,8 @@ public partial class Dumy : MonoBehaviour
                                && !TargetCurNode.isPoint)
 
                             {
-                                Debug.Log(string.Format("{0}x좌표 {1}y좌표// 현재좌표 {2} x {3} y//부모좌표 {4}x {5}y//{6},{7}", NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y].x, NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y - 1].y,
-                                    TargetCurNode.x, TargetCurNode.y, TargetCurNode.ParentNode.x, TargetCurNode.ParentNode.y, TargetCurNode.ParentNode.ParentNode.x, TargetCurNode.ParentNode.ParentNode.y));
                                 //
-                                Debug.Log("좌측하단 포인트");
-                                Node temp;
-                                temp = TargetCurNode.ParentNode;
+                                //Debug.Log("좌측하단 포인트");
                                 TargetCurNode.ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y];
                                 //NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x-1, TargetCurNode.ParentNode.y - bottomLeft.y-1 ].ParentNode = NodeArray;
                                 Debug.Log(FinalNodeList.Contains(NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y - 1]));
@@ -267,10 +250,6 @@ public partial class Dumy : MonoBehaviour
 
                             {
                                 Debug.Log("우측 하단 포인트");
-                                Debug.Log(string.Format("{0}x좌표 {1}y좌표// 현재좌표 {2} x {3} y//부모좌표 {4}x {5}y//{6},{7}", NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x - 1, TargetCurNode.ParentNode.y - bottomLeft.y].x, NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x - 1, TargetCurNode.ParentNode.y - bottomLeft.y - 1].y,
-                                    TargetCurNode.x, TargetCurNode.y, TargetCurNode.ParentNode.x, TargetCurNode.ParentNode.y, TargetCurNode.ParentNode.ParentNode.x, TargetCurNode.ParentNode.ParentNode.y));
-                                Node temp;
-                                temp = TargetCurNode.ParentNode;
 
                                 TargetCurNode.ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y];                                               
                             }
@@ -281,21 +260,21 @@ public partial class Dumy : MonoBehaviour
                         }
                     }
                     FinalNodeList.Add(TargetCurNode);
-                    NodeDistanceList.Add(leftright);
+                    //NodeDistanceList.Add(leftright);
                     TargetCurNode = TargetCurNode.ParentNode;//부모 설정부분
                 }
 
                 FinalNodeList.Add(StartNode);
                 FinalNodeList.Reverse();
-                NodeDistanceList.Add("none");
-                NodeDistanceList.Reverse();
-                int cnt = FinalNodeList.Count;
-                for (int i = 0; i < cnt; i++)
-                {
-                    print(i + "번째는 " + FinalNodeList[i].x + ", " + FinalNodeList[i].y + NodeDistanceList[i]); 
-                }
-                    
-                Debug.Log(cnt);
+                //NodeDistanceList.Add("none");
+                //NodeDistanceList.Reverse();
+                //int cnt = FinalNodeList.Count;
+                //for (int i = 0; i < cnt; i++)
+                //{
+                //    print(i + "번째는 " + FinalNodeList[i].x + ", " + FinalNodeList[i].y + NodeDistanceList[i]); 
+                //}
+                //    
+                //Debug.Log(cnt);
                 return;
             }
 
@@ -360,7 +339,7 @@ public partial class Dumy : MonoBehaviour
 
     IEnumerator cMove()
     {
-        for (int i = 0; i < FinalNodeList.Count; )
+        for (int i = 1; i < FinalNodeList.Count; )
         {
             Debug.Log("이동중");
             transform.position = Vector2.MoveTowards(transform.position, new Vector2(FinalNodeList[i].x, FinalNodeList[i].y + 1), Time.deltaTime);
