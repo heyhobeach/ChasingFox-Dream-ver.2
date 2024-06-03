@@ -84,9 +84,22 @@ public partial class Dumy : MonoBehaviour
         }
 
 
+
         // 시작과 끝 노드, 열린리스트와 닫힌리스트, 마지막리스트 초기화
         StartNode = NodeArray[startPos.x - bottomLeft.x, startPos.y - bottomLeft.y];
         TargetNode = NodeArray[targetPos.x - bottomLeft.x, targetPos.y - bottomLeft.y];
+        //if (!NodeArray[TargetNode.x - bottomLeft.x, TargetNode.y - bottomLeft.y].isRoad)
+        //{
+        //    Debug.Log("어캐 찾누 으하하하");
+        //}
+        int tempNum = 0;
+        while(!NodeArray[TargetNode.x - bottomLeft.x, TargetNode.y - bottomLeft.y+tempNum].isRoad)
+        {
+            tempNum--;
+            Debug.Log(string.Format("{0}칸 ",tempNum));
+        }
+        TargetNode = NodeArray[TargetNode.x - bottomLeft.x, TargetNode.y - bottomLeft.y + tempNum];
+
         //Debug.Log((int)_startPos.position.x + ":" + (int)_startPos.position.y);
         //Debug.Log((int)_targetPos.position.x + ":" + (int)_targetPos.position.y);
         //StartNode = NodeArray[(int)_startPos.position.x,(int)_startPos.position.y];
@@ -98,19 +111,35 @@ public partial class Dumy : MonoBehaviour
         ClosedList = new List<Node>();
         FinalNodeList = new List<Node>();
         NodeDistanceList = new List<string>();
-        
 
+        int check = 0;
 
         while (OpenList.Count > 0)
         {
-            // 열린리스트 중 가장 F가 작고 F가 같다면 H가 작은 걸 현재노드로 하고 열린리스트에서 닫힌리스트로 옮기기
             
+            //Debug.Log("while" + check);
+            //check++;
+            // 열린리스트 중 가장 F가 작고 F가 같다면 H가 작은 걸 현재노드로 하고 열린리스트에서 닫힌리스트로 옮기기
+            if (TargetNode.isRoad)
+            {
+                Debug.Log("어캐 찾았누 으하하하");
+                //Debug.Log(string.Format("X {0} Y{1}", TargetNode.x, TargetNode.y));
+            }
+            else
+            {
+                Debug.Log("땅");
+                //while (!NodeArray[TargetNode.x - bottomLeft.x, TargetNode.y - bottomLeft.y].isRoad)
+                //{
+                //    TargetNode.y--;
+                //}
+            }
             CurNode = OpenList[0];
             string leftright = "";
             for (int i = 1; i < OpenList.Count; i++)
                 if (OpenList[i].F <= CurNode.F && OpenList[i].H < CurNode.H)
                 {//가중치 계산해서 넣는 실질적인 부분
                     CurNode = OpenList[i];
+                    
                 }
 
             OpenList.Remove(CurNode);
@@ -122,8 +151,10 @@ public partial class Dumy : MonoBehaviour
             {
                 Node TargetCurNode = TargetNode;
                 int _cnt = 0;
+                Debug.Log("끝부분");
                 while (TargetCurNode != StartNode)//이게 성립하지 않으면 항상 무한 반복중 그렇다면 startnode와 엮어야함
                 {
+                    
                     _cnt++;
                     if (_cnt > 2000)//혹시나 무한 반복할 경우 예외 
                     {
@@ -293,6 +324,16 @@ public partial class Dumy : MonoBehaviour
             OpenListAdd(CurNode.x + 1, CurNode.y);
             OpenListAdd(CurNode.x, CurNode.y - 1);
             OpenListAdd(CurNode.x - 1, CurNode.y);
+        }
+        Debug.Log("끝날 때 목표 노드 위치" + (TargetNode.y));
+        if (OpenList.Count == 0)
+        {
+
+            //Debug.Log(CurNode.x-bottomLeft.x);
+            if (CurNode == TargetNode)
+            {
+                Debug.Log("체크");
+            }
         }
     }
 

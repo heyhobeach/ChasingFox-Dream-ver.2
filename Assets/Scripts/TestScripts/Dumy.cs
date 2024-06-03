@@ -117,6 +117,7 @@ public partial class Dumy : MonoBehaviour
             targetPos.x = (int)_targetPos.position.x;
             targetPos.y = Mathf.FloorToInt(_targetPos.position.y) - 1;
 
+
             PathFinding();
             Debug.Log("경로 갱신");
             

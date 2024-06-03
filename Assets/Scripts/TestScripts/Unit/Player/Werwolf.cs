@@ -74,19 +74,34 @@ public class Werwolf : PlayerUnit
     {
         if((unitState != UnitState.Default && unitState != UnitState.Air && unitState != UnitState.HoldingWall)
              || attackCoroutine != null) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
-        MeleeAttack.transform.localPosition = Vector2.right * CheckDir(clickPos); // 클릭 방향으로 공격 위치 설정
-        attackCoroutine = StartCoroutine(Attacking());
+        //Vector2 testvec = new Vector2(1 * CheckDir(clickPos), clickPos.y - transform.position.y);//이렇게 되면 대각선으로 갈 수록 좁아짐
+        //Vector2 testvec = (Vector2.up * (clickPos.y - transform.position.y)).normalized;
+        //MeleeAttack.transform.localPosition = testvec;
+        //MeleeAttack.transform.localPosition = (Vector2.right * CheckDir(clickPos))+testvec; // 클릭 방향으로 공격 위치 설정
+        Vector2 subvec = clickPos - transform.position;
+        float deg = Mathf.Atan2(subvec.y, subvec.x) ;//mathf.de
+        //deg*=Mathf.Deg2Rad;//라디안으로 바꿔주기는 하는데 이렇게 하면 좀 문제생김
+        Debug.Log(deg);
+        MeleeAttack.transform.localPosition = new Vector3(Mathf.Cos(deg), Mathf.Sin(deg)*2,transform.localPosition.z);
+
+        attackCoroutine = StartCoroutine(Attacking(deg));
         return true;
     }
 
     /// <summary>
     /// 공격 중의 동작을 수행
     /// </summary>
-    private IEnumerator Attacking()
+    private IEnumerator Attacking(float deg)
     {
         // 지속시간만큼 히트박스를 온오프
         MeleeAttack.SetActive(true);
         Move(Mathf.Sign(MeleeAttack.transform.localPosition.x)*attackImpulse);
+        float high = Mathf.Sin(deg) * 10;
+        if (high > 3)
+        {
+            high = 3;
+        }
+        AddVerticalForce(high);
         yield return new WaitForSeconds(attackDuration);
         MeleeAttack.SetActive(false);
         attackCoroutine = null;
