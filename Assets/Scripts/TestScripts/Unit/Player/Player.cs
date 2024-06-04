@@ -19,7 +19,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     /// </summary>
     private PlayerUnit changedForm;
 
-    public int _maxHealth;    
+    public int _maxHealth;    //?private아닌가
     public int maxHealth { get => _maxHealth; set => _maxHealth = value; }
     private int _health;    
     public int health { get => _health; set => _health = value; }
@@ -86,12 +86,18 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
 
     public void Death()
     {
+        Debug.Log("유저 사망");
         if(changedForm is not Berserker) // 버서커 상태가 아닐 시
         {
             foreach(PlayerUnit form in forms) form.gameObject.SetActive(false);
             health = maxHealth; // 체력 초기화
             changedForm = forms[2]; // 상태를 버서커 상태로 변경
             changedForm.gameObject.SetActive(true);
+        }
+        else
+        {
+            Debug.Log("진짜 죽음");
+            changedForm.gameObject.SetActive(false);
         }
     }
 

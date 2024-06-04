@@ -3,8 +3,18 @@ using System.Collections.Generic;
 using Unity.Burst.CompilerServices;
 using UnityEngine;
 
-public partial class Dumy : MonoBehaviour
+public partial class Dumy : MonoBehaviour, IDamageable
 {
+    public int _maxHealth;
+    public int maxHealth { get { return _maxHealth; } set { _maxHealth = value; } }
+
+    private int _health;
+    public int health { get { return _health; }set { _health = value; } }
+
+    private bool _invalidation;
+    public bool invalidation { get { return _invalidation; }set { _invalidation = value; } }
+
+
     public GameObject bullet;//�Ѿ� ����
     public GameObject[] bullets;//���� ����� �� �ϸ� Ȥ�ó� �ʿ��ұ� ����� �� �κ� ����� �� �ϴ��� 
 
@@ -20,6 +30,7 @@ public partial class Dumy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        health = maxHealth;
         //Debug.Log(this.transform.parent);
         // player = GameObject.FindWithTag("Player");//�÷��̾ ã�Ƽ� ����, �̷��� �� ������ ó������ �� �����صΰ� ������ �����ϸ� ������ ���� �������� ������ �����ؾ��Ұ�츦 ���� ���� �κ�
         
@@ -63,9 +74,6 @@ public partial class Dumy : MonoBehaviour
 
         //_bullet.transform.SetParent(this.transform);
         playerPos = player.gameObject.transform.position;
-        // _bullet.GetComponent<BulletScript>().targetPos = playerPos;
-        // _bullet.GetComponent<BulletScript>().shootPos = enemypos;
-        //enemypos = transform.position;
         GameObject gObj = this.gameObject;
         _bullet.GetComponent<Bullet>().Set(transform.position, playerPos, 1, 1, gObj, (Vector2)(playerPos-transform.position).normalized);
         // Debug.Log("shoot"+playerPos+"enemypos"+enemypos);
@@ -77,7 +85,7 @@ public partial class Dumy : MonoBehaviour
     {
         if (collision.gameObject.name == "MeleeAttack")
         {
-            Debug.Log("��@���� ���� ���� ������?");
+
         }
     }
 
@@ -94,11 +102,6 @@ public partial class Dumy : MonoBehaviour
             //1초마다 갱신하게 코루틴 필요    
             Debug.Log(ray2d.collider.gameObject.name);
             StartCoroutine(timer());
-            //FinalNodeList.Clear();
-            //PathFinding();
-            //follow
-            //transform.position = Vector2.MoveTowards(transform.position, new Vector2(1,1), Time.deltaTime);
-            //test();
         }
 
         
@@ -123,5 +126,11 @@ public partial class Dumy : MonoBehaviour
             
         }
         
+    }
+    public void Death()
+    {
+        //여기 사망 관련 처리
+        Destroy(this.gameObject);
+        Debug.Log("적군 사망");
     }
 }

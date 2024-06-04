@@ -86,7 +86,7 @@ public partial class Dumy : MonoBehaviour
 
 
         // 시작과 끝 노드, 열린리스트와 닫힌리스트, 마지막리스트 초기화
-        StartNode = NodeArray[startPos.x - bottomLeft.x, startPos.y - bottomLeft.y];
+        StartNode = NodeArray[startPos.x - bottomLeft.x, startPos.y - bottomLeft.y];//지금 이 부분 빨간색 뜨긴함 작동에는 문제는 없음
         TargetNode = NodeArray[targetPos.x - bottomLeft.x, targetPos.y - bottomLeft.y];
         //if (!NodeArray[TargetNode.x - bottomLeft.x, TargetNode.y - bottomLeft.y].isRoad)
         //{
@@ -120,19 +120,6 @@ public partial class Dumy : MonoBehaviour
             //Debug.Log("while" + check);
             //check++;
             // 열린리스트 중 가장 F가 작고 F가 같다면 H가 작은 걸 현재노드로 하고 열린리스트에서 닫힌리스트로 옮기기
-            if (TargetNode.isRoad)
-            {
-                Debug.Log("어캐 찾았누 으하하하");
-                //Debug.Log(string.Format("X {0} Y{1}", TargetNode.x, TargetNode.y));
-            }
-            else
-            {
-                Debug.Log("땅");
-                //while (!NodeArray[TargetNode.x - bottomLeft.x, TargetNode.y - bottomLeft.y].isRoad)
-                //{
-                //    TargetNode.y--;
-                //}
-            }
             CurNode = OpenList[0];
             string leftright = "";
             for (int i = 1; i < OpenList.Count; i++)
