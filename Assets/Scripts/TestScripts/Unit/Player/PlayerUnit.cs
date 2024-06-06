@@ -27,6 +27,7 @@ public abstract class PlayerUnit : UnitBase
     // private float checkHigh;
     private float distanceToCheck;
     private LayerMask lm;
+
     // private Vector3 hidePos;
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)
@@ -143,6 +144,7 @@ public abstract class PlayerUnit : UnitBase
     public override bool Move(float dir)
     {
         if(ControllerChecker()) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
+        base.Move(dir);
         hzVel += (dir-hzVel) * accelerate; // 가속도만큼 입력 방향에 힘을 추가
         if(dir == 0) hzVel += -hzVel * accelerate; // 입력이 없을 시 수평힘을 줄임
         hzVel = Mathf.Clamp(hzVel, -1, 1); // 움직임 가속 제한
