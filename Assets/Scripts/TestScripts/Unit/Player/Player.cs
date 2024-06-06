@@ -14,22 +14,17 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     /// </summary>
     public PlayerUnit[] forms;
 
-
     /// <summary>
     /// 현재 폼을 담는 변수
     /// </summary>
     private PlayerUnit changedForm;
 
-    public int _maxHealth;    //?private아닌가
+    public int _maxHealth;    
     public int maxHealth { get => _maxHealth; set => _maxHealth = value; }
     private int _health;    
     public int health { get => _health; set => _health = value; }
     private bool _invalidation;
     public bool invalidation { get => _invalidation; set => _invalidation = value; }
-
-    public int transformNum = 2;
-
-    public static GameObject pObject;
 
     /// <summary>
     /// 폼 체인지 딜레이 시간
@@ -45,11 +40,6 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     /// 입력 방향을 저장할 변수
     /// </summary>
     private float fixedDir;
-
-    /// <summary>
-    /// 불릿타임 시간
-    /// </summary>
-    public float bulletTime;
 
     private void Start()
     {
@@ -90,22 +80,12 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
 
     public void Death()
     {
-        Debug.Log("유저 사망");
         if(changedForm is not Berserker) // 버서커 상태가 아닐 시
         {
             foreach(PlayerUnit form in forms) form.gameObject.SetActive(false);
             health = maxHealth; // 체력 초기화
             changedForm = forms[2]; // 상태를 버서커 상태로 변경
             changedForm.gameObject.SetActive(true);
-        }
-        else
-        {
-            Debug.Log("진짜 죽음");
-            
-            changedForm.gameObject.SetActive(false);
-            PopupManager.Instance.DeathPop();
-
-            //PageManger.Instance.RoadRetry();
         }
     }
 
@@ -120,29 +100,6 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     {
         changedForm.UnitState = UnitState.FormChange;
         float t = 0;
-        if(changedForm is Human)
-        {
-            transformNum--;
-        }
-        
-
-        while (t <= bulletTime&&changedForm is Human&&transformNum>=0)
-        {
-            t += Time.unscaledDeltaTime;
-            Debug.Log("불릿 타임 시작");
-            #region 불릿타임
-            Time.timeScale = 0.05f;
-            Time.fixedDeltaTime = 0.05f * 0.02f;
-            #endregion  
-            yield return null;
-            Debug.Log("불릿 타임 종료");
-        }
-        #region 불릿타임 해제
-        Time.timeScale = 1;
-        Time.fixedDeltaTime = 1 * 0.02f;
-        #endregion
-        t = 0;
-        
         while(t <= changeDelay)
         {
             t += Time.unscaledDeltaTime;
@@ -158,16 +115,5 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         changedForm.UnitState = UnitState.Default;
     }
 
-    public bool Reload() => changedForm.Reload(); 
-
-    void Awake()
-    {
-        pObject = this.gameObject; 
-    }
-
-    void Update()
-    {
-        pObject = this.gameObject;
-        Debug.Log(pObject.transform);
-    }
+    public bool Reload() => changedForm.Reload();
 }

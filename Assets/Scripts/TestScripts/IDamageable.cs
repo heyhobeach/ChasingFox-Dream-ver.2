@@ -33,10 +33,7 @@ public interface IDamageable
     /// <returns>데미지가 성공적으로 적용되었는지 여부를 반환</returns>
     bool GetDamage(int dmg, Action action = null)
     {
-        if (health <= 0 || invalidation) { 
-            Debug.Log(health+","+invalidation);
-            return false; 
-        }
+        if (health <= 0 || invalidation) return false;
         if(action != null) action();
         health -= dmg;
         if (health <= 0) Death();

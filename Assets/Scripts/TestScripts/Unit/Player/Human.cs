@@ -94,7 +94,6 @@ public class Human : PlayerUnit
     public override bool Move(float dir)
     {
         if(ControllerChecker() || unitState == UnitState.Dash) return false; // 조작이 불가능한 상태일 경우 동작을 수행하지 않음
-        //Anim
         return base.Move(dir);
     }
 

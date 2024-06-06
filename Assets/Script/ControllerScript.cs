@@ -6,7 +6,6 @@ using System.Diagnostics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using static PlatformScript;
 using Debug = UnityEngine.Debug;//아까 모호하다고 해서 해둔것
@@ -22,15 +21,12 @@ public class JumpState//굳이 클래스여야할까
     public float jumpHight;
     public State jumptype;
 
-    
-
     public enum State { IDLE, NORMAL_JUMP, LONG_JUMP };//점프 상태에따라서 다른점프를 만들기 위해 만든 enum이었음
 }
 
 public partial class ControllerScript : MonoBehaviour
 {
     //bool isCancle = false;
-    
     bool isCancle = false;//캔슬에 들어가는 변수들 캔슬 제어용
     float t = 0;//캔슬에 들어가는 변수들 캔슬 제어용
 
