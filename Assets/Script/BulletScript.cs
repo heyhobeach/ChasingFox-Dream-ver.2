@@ -29,21 +29,22 @@ public class BulletScript : MonoBehaviour
     }
     void Start()
     {
+        Debug.Log("ì´ì•Œ ìƒì„±");
         startTime = 0;
-        if (this.gameObject.tag != "bullet")//Àû±ºÃÑ¾ËÀÌ¶ó¸é
+        if (this.gameObject.tag != "bullet")//ì êµ°ì´ì•Œì´ë¼ë©´
         {
-            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("EnemyBullet"), LayerMask.NameToLayer("OneWayPlatform"), true);//ÃÑ¾Ë ·¹ÀÌ¾î ¼³Á¤
+            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("EnemyBullet"), LayerMask.NameToLayer("OneWayPlatform"), true);//ì´ì•Œ ë ˆì´ì–´ ì„¤ì •
             Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("EnemyBullet"), LayerMask.NameToLayer("Ground"), true);
             Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("EnemyBullet"), LayerMask.NameToLayer("Enemy"), true);
-            destination = targetPos - transform.position;//Å¸°Ù ¸ñÀûÁö ¼³Á¤
+            destination = targetPos - transform.position;//íƒ€ê²Ÿ ëª©ì ì§€ ì„¤ì •
         }
-        else//ÇÃ·¹ÀÌ¾î ÃÑ¾ËÀÌ¶ó¸é
+        else//í”Œë ˆì´ì–´ ì´ì•Œì´ë¼ë©´
         {
-            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Bullet"), LayerMask.NameToLayer("OneWayPlatform"), true);//ÃÑ¾Ë ·¹ÀÌ¾î ¼³Á¤
+            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Bullet"), LayerMask.NameToLayer("OneWayPlatform"), true);//ì´ì•Œ ë ˆì´ì–´ ì„¤ì •
             Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Bullet"), LayerMask.NameToLayer("Ground"), true);
             Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Bullet"), LayerMask.NameToLayer("Player"), true);
             //this.gameObject.GetComponent<CapsuleCollider2D>().isTrigger = true;
-            destination = targetPos - transform.position;//Å¸°Ù ¸ñÀûÁö ¼³Á¤
+            destination = targetPos - transform.position;//íƒ€ê²Ÿ ëª©ì ì§€ ì„¤ì •
         }
 
 
@@ -56,13 +57,13 @@ public class BulletScript : MonoBehaviour
     void FixedUpdate()
     {
         //Debug.Log("player pos"+ targetPos + "enemy pos" + shootPos);
-        nowpos = transform.position;//¸ñÀûÁö µµÂø½Ã ¿ÀºêÁ§Æ® ÆÄ±«¸¦ À§ÇÔ
+        nowpos = transform.position;//ëª©ì ì§€ ë„ì°©ì‹œ ì˜¤ë¸Œì íŠ¸ íŒŒê´´ë¥¼ ìœ„í•¨
         bullet_rg.velocity = new Vector2(destination.x, destination.y).normalized*bullet_speed;
         //nowpos = Vector2.MoveTowards(transform.position, destination, Time.deltaTime * 10);
         
         if (nowpos == destination)
         {
-            Debug.Log("µµÂø");
+            Debug.Log("ë„ì°©");
             //Destroy(this.gameObject) ;
         }
 
@@ -74,30 +75,30 @@ public class BulletScript : MonoBehaviour
     private void Update()
     {
         startTime+= Time.deltaTime;
-        if (startTime > 4)//±×³É ÃÑ¾ËÀÌ 4ÃÊ ³Ñ¾î°¡¸é ÆÄ±«ÇÏ±â À§ÇÔ
+        if (startTime > 4)//ê·¸ëƒ¥ ì´ì•Œì´ 4ì´ˆ ë„˜ì–´ê°€ë©´ íŒŒê´´í•˜ê¸° ìœ„í•¨
         {
             Destroy(this.gameObject);
             
         }
 
-        if (!ControllerScript.Instance.isCrouching)//¾öÆóÁßÀÌ¶ó¸é ÇØ´ç ¿ÀºêÁ§Æ®¸¦ trigger¸¦ ²¨¼­ Ãæµ¹ °¡´ÉÇÏµµ·Ï ¸¸µê. (ÀÌ ºÎºĞÀº Àû±ºÃÑ¾Ë°ú ¾Æ±ºÃÑ¾Ë °°ÀÌ ¾²±â¶§¹®¿¡ ¿À·ù ÀÏÀ¸Å³ °¡´É¼ºÀÌ º¸ÀÓ µû¶ó¼­ this.gameObject·Î Á¢±ÙÇÏ´Â°Ô ¾Æ´Ñ Àû ÃÑ¾Ë ÇÁ¸®ÆéÀ» ¹Ş¾Æ¼­ ±× ¿ÀºêÁ§Æ®¸¦ ¼öÁ¤ÇØ¾ßÇÒ°ÍÀ¸·Î º¸ÀÓ
-        {//´ëÃæ Å×½ºÆ® ÇßÀ»¶§´Â ¹®Á¦°¡ ¾ø¾úÀ½
+        if (!ControllerScript.Instance.isCrouching)//ì—„íì¤‘ì´ë¼ë©´ í•´ë‹¹ ì˜¤ë¸Œì íŠ¸ë¥¼ triggerë¥¼ êº¼ì„œ ì¶©ëŒ ê°€ëŠ¥í•˜ë„ë¡ ë§Œë“¦. (ì´ ë¶€ë¶„ì€ ì êµ°ì´ì•Œê³¼ ì•„êµ°ì´ì•Œ ê°™ì´ ì“°ê¸°ë•Œë¬¸ì— ì˜¤ë¥˜ ì¼ìœ¼í‚¬ ê°€ëŠ¥ì„±ì´ ë³´ì„ ë”°ë¼ì„œ this.gameObjectë¡œ ì ‘ê·¼í•˜ëŠ”ê²Œ ì•„ë‹Œ ì  ì´ì•Œ í”„ë¦¬í©ì„ ë°›ì•„ì„œ ê·¸ ì˜¤ë¸Œì íŠ¸ë¥¼ ìˆ˜ì •í•´ì•¼í• ê²ƒìœ¼ë¡œ ë³´ì„
+        {//ëŒ€ì¶© í…ŒìŠ¤íŠ¸ í–ˆì„ë•ŒëŠ” ë¬¸ì œê°€ ì—†ì—ˆìŒ
             this.gameObject.GetComponent<CapsuleCollider2D>().isTrigger = false;
         }
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.name == "guard")//ÇÊ¿ä¾ø¾îº¸ÀÓ
+        if (collision.gameObject.name == "guard")//í•„ìš”ì—†ì–´ë³´ì„
         {
             this.gameObject.GetComponent<CapsuleCollider2D>().isTrigger = true;
         }
-        if (collision.gameObject.tag == "Player")//·¹ÀÌ¾î ¼³Á¤ÇÑ °Í ¶§¹®¿¡ Àû±º ÃÑ¾Ë¸¸ ÇÃ·¹ÀÌ¾î ¿¡°Ô Ãæµ¹ÀÏ¾î³²
+        if (collision.gameObject.tag == "Player")//ë ˆì´ì–´ ì„¤ì •í•œ ê²ƒ ë•Œë¬¸ì— ì êµ° ì´ì•Œë§Œ í”Œë ˆì´ì–´ ì—ê²Œ ì¶©ëŒì¼ì–´ë‚¨
         {
 
         }
-        if(collision.gameObject.tag == "Enemy")//ÇÃ·¹ÀÌ¾î ÃÑ¾ËÀÌ Àû±º¿¡°Ô Ãæµ¹½Ã
+        if(collision.gameObject.tag == "Enemy")//í”Œë ˆì´ì–´ ì´ì•Œì´ ì êµ°ì—ê²Œ ì¶©ëŒì‹œ
         {
-            Debug.Log("Àû Ãæµ¹");
+            Debug.Log("ì  ì¶©ëŒ");
             Destroy(this.gameObject);
         }
     }
@@ -111,18 +112,18 @@ public class BulletScript : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.name == "guard")//°¡µå ¸¸³¯°Ü¿ì trigger¸¦ ÄÑ¼­ collisionÀÌ ¾ÈÀÏ¾î³ªµµ·ÏÇÔ
+        if (collision.gameObject.name == "guard")//ê°€ë“œ ë§Œë‚ ê²¨ìš° triggerë¥¼ ì¼œì„œ collisionì´ ì•ˆì¼ì–´ë‚˜ë„ë¡í•¨
         {
             this.gameObject.GetComponent<CapsuleCollider2D>().isTrigger = true;
         }
-        if (collision.gameObject.tag == "Player")//·¹ÀÌ¾î ¼³Á¤ÇÑ °Í ¶§¹®¿¡ Àû±º ÃÑ¾Ë¸¸ ÇÃ·¹ÀÌ¾î ¿¡°Ô Ãæµ¹ÀÏ¾î³²
+        if (collision.gameObject.tag == "Player")//ë ˆì´ì–´ ì„¤ì •í•œ ê²ƒ ë•Œë¬¸ì— ì êµ° ì´ì•Œë§Œ í”Œë ˆì´ì–´ ì—ê²Œ ì¶©ëŒì¼ì–´ë‚¨
         {
-            Debug.Log("ÇÃ·¹ÀÌ¾î Ãæµ¹");
+            Debug.Log("í”Œë ˆì´ì–´ ì¶©ëŒ");
             Destroy(this.gameObject);
         }
-        if (collision.gameObject.tag == "Enemy")//ÇÃ·¹ÀÌ¾î ÃÑ¾ËÀÌ Àû±º¿¡°Ô Ãæµ¹½Ã ÀûÀÌ trigger·Î ¼³Á¤µÇ¾îÀÖ¾î¼­ ¾È ¾µ°Í °°À½
+        if (collision.gameObject.tag == "Enemy")//í”Œë ˆì´ì–´ ì´ì•Œì´ ì êµ°ì—ê²Œ ì¶©ëŒì‹œ ì ì´ triggerë¡œ ì„¤ì •ë˜ì–´ìˆì–´ì„œ ì•ˆ ì“¸ê²ƒ ê°™ìŒ
         {
-            //Debug.Log("Àû Ãæµ¹");
+            //Debug.Log("ì  ì¶©ëŒ");
             //Destroy(this.gameObject);
         }
 
@@ -138,9 +139,9 @@ public class BulletScript : MonoBehaviour
     }
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.name == "guard")//°¡µå ¹ş¾î³ª¸é tigger¸¦ falseÇØ¼­ collisionÀ» ÇÒ ¼ö ÀÖµµ·Ï ¸¸µç´Ù
+        if (collision.gameObject.name == "guard")//ê°€ë“œ ë²—ì–´ë‚˜ë©´ tiggerë¥¼ falseí•´ì„œ collisionì„ í•  ìˆ˜ ìˆë„ë¡ ë§Œë“ ë‹¤
         {
-            Debug.Log("¹ş¾î³²");
+            Debug.Log("ë²—ì–´ë‚¨");
             this.gameObject.GetComponent<CapsuleCollider2D>().isTrigger = false;
         }
     }

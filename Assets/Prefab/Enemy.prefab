@@ -13,10 +13,10 @@ GameObject:
   - component: {fileID: 3711931746197435537}
   - component: {fileID: 7946148392278828887}
   - component: {fileID: 1624576510112168582}
-  - component: {fileID: 6784727455340940705}
-  m_Layer: 0
+  - component: {fileID: 8703484348319653607}
+  m_Layer: 10
   m_Name: Cube
-  m_TagString: bullet
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -158,7 +158,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 6
---- !u!114 &6784727455340940705
+--- !u!114 &8703484348319653607
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -167,15 +167,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 524268112508585254}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08133775b4e737f40aeda9144e1ad99c, type: 3}
+  m_Script: {fileID: 11500000, guid: 8327801c826b57f438d8b5fd06f456ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bullet: {fileID: 5432336088398224372, guid: 1e7389674e2b3df4c9e860eb740eb05b, type: 3}
+  rg2d: {fileID: 1624576510112168582}
+  bottomLeft: {x: -100, y: -100}
+  topRight: {x: 100, y: 100}
+  startPos: {x: 0, y: 0}
+  targetPos: {x: 0, y: 0}
+  FinalNodeList: []
+  allowDiagonal: 1
+  dontCrossCorner: 0
+  _startPos: {fileID: 7804490509057038769}
+  _targetPos: {fileID: 2934632044409167404, guid: 1dab2d0ac4d5d79458836612e6785675, type: 3}
+  _maxHealth: 1
+  bullet: {fileID: 5133008688607087787, guid: a51d151da05f693469ae9254bb341cde, type: 3}
   bullets: []
-  player: {fileID: 0}
+  player: {fileID: 9111010698811468003, guid: 1dab2d0ac4d5d79458836612e6785675, type: 3}
   playerPos: {x: 0, y: 0, z: 0}
   enemypos: {x: 0, y: 0, z: 0}
   a: 3
+  maxDistance: 1.06
 --- !u!1 &6719177720116189485
 GameObject:
   m_ObjectHideFlags: 0
