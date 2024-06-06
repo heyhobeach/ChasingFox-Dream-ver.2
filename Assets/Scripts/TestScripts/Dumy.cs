@@ -31,8 +31,12 @@ public partial class Dumy : MonoBehaviour, IDamageable
     void Start()
     {
         health = maxHealth;
+
         //Debug.Log(this.transform.parent);
         // player = GameObject.FindWithTag("Player");//�÷��̾ ã�Ƽ� ����, �̷��� �� ������ ó������ �� �����صΰ� ������ �����ϸ� ������ ���� �������� ������ �����ؾ��Ұ�츦 ���� ���� �κ�
+        player = Player.pObject;
+        Debug.Log(player.transform);
+        
         
     }
 
@@ -41,6 +45,8 @@ public partial class Dumy : MonoBehaviour, IDamageable
     {
         //Debug.Log(playerPos);
         enemypos = transform.position;//������ ��ġ�� ��� �ʱ�ȭ
+        //targetPos = new Vector2Int((int)player.transform.position.x, (int)  player.transform.position.y);
+        _targetPos = player.transform;
         if (Input.GetKeyDown(KeyCode.X))//�ش� �κ��� ���� �׽�Ʈ�� ���ظ��� �κ��̾��� �׳� ���� x�� ������ ������ �����ϴ°� �ϱ�����
         {
             Shoot();
@@ -73,10 +79,11 @@ public partial class Dumy : MonoBehaviour, IDamageable
         GameObject _bullet = Instantiate(bullet, enemypos, transform.rotation);
 
         //_bullet.transform.SetParent(this.transform);
-        playerPos = player.gameObject.transform.position;
+        playerPos = player.transform.position;
+
         GameObject gObj = this.gameObject;
         _bullet.GetComponent<Bullet>().Set(transform.position, playerPos, 1, 1, gObj, (Vector2)(playerPos-transform.position).normalized);
-        // Debug.Log("shoot"+playerPos+"enemypos"+enemypos);
+         Debug.Log("shoot"+playerPos+"enemypos"+enemypos);    
         //_bullet.transform.position = Vector2.left;
     }
 
@@ -118,7 +125,7 @@ public partial class Dumy : MonoBehaviour, IDamageable
             startPos.x = (int)_startPos.position.x;
             startPos.y = (int)_startPos.position.y - 1;
             targetPos.x = (int)_targetPos.position.x;
-            targetPos.y = Mathf.FloorToInt(_targetPos.position.y) - 1;
+            targetPos.y = Mathf.FloorToInt(_targetPos.position.y);
 
 
             PathFinding();

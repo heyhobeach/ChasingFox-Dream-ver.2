@@ -90,10 +90,12 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
 
     private SpriteRenderer spriteRenderer;
 
+    public Animator anim;
+
     protected virtual void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-
+        anim = GetComponent<Animator>();
         // 콜라이더 크기(절반) 계산
         boxSizeX = gameObject.GetComponent<Collider2D>().bounds.extents.x;
         boxSizeY = gameObject.GetComponent<Collider2D>().bounds.extents.y;
@@ -124,7 +126,18 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
 
     public abstract bool Crouch(KeyState crouchKey);
 
-    public abstract bool Move(float dir);
+    public virtual bool Move(float dir)
+    {
+        if (dir == 0)
+        {
+            anim.SetBool("isRun", false);
+        }
+        else
+        {
+            anim.SetBool("isRun", true);
+        }
+        return true;
+    }
 
     public abstract bool FormChange();
 

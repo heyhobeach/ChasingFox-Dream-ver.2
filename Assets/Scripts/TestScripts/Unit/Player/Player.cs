@@ -14,6 +14,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     /// </summary>
     public PlayerUnit[] forms;
 
+
     /// <summary>
     /// 현재 폼을 담는 변수
     /// </summary>
@@ -27,6 +28,8 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     public bool invalidation { get => _invalidation; set => _invalidation = value; }
 
     public int transformNum = 2;
+
+    public static GameObject pObject;
 
     /// <summary>
     /// 폼 체인지 딜레이 시간
@@ -97,7 +100,11 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         else
         {
             Debug.Log("진짜 죽음");
+            
             changedForm.gameObject.SetActive(false);
+            PopupManager.Instance.DeathPop();
+
+            //PageManger.Instance.RoadRetry();
         }
     }
 
@@ -150,5 +157,16 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         changedForm.UnitState = UnitState.Default;
     }
 
-    public bool Reload() => changedForm.Reload();
+    public bool Reload() => changedForm.Reload(); 
+
+    void Awake()
+    {
+        pObject = this.gameObject; 
+    }
+
+    void Update()
+    {
+        pObject = this.gameObject;
+        Debug.Log(pObject.transform);
+    }
 }
