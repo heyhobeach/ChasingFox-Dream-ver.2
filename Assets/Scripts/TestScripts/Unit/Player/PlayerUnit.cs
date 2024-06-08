@@ -96,7 +96,7 @@ public abstract class PlayerUnit : UnitBase
     {
         if(!isGrounded && unitState == UnitState.Default) unitState = UnitState.Air; // 기본 상태에서 공중에 뜰 시 공중 상태로 변경
         else if(isGrounded && unitState == UnitState.Air) unitState = UnitState.Default; // 공중 상태에서 바닥에 닿을 시 기본 상태로 변경
-        // Debug.Log(vcForce);
+        Debug.Log(vcForce);
         CrouchUpdate();
         base.Update();
     }
@@ -125,12 +125,12 @@ public abstract class PlayerUnit : UnitBase
             case KeyState.KeyDown:
                 if(isJumping) return false;
                 isJumping = true;
-                temp += jumpHight * Mathf.Cos(0); // 점프 시작 시 힘을 초기화
+                temp += jumpImpulse * Mathf.Cos(0); // 점프 시작 시 힘을 초기화
 
                 return SetVerticalForce(temp);
             case KeyState.KeyStay:
                 jumpingHight += Time.deltaTime / jumpTime;
-                temp += jumpHight * Mathf.Cos(jumpingHight); // 점프가 고점에 다다를수록 적게 힘을 추가
+                temp += Mathf.Lerp(jumpImpulse, jumpForce, jumpingHight) * Mathf.Cos(jumpingHight); // 점프가 고점에 다다를수록 적게 힘을 추가
                 if(!isJumping || jumpingHight >= 1)
                 {
                     isJumping = false;

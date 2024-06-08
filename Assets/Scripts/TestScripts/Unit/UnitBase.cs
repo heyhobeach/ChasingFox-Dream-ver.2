@@ -29,9 +29,14 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     public float dashDuration;
 
     /// <summary>
-    /// 점프력
+    /// 점프 유지력
     /// </summary>
-    public float jumpHight;
+    public float jumpForce;
+
+    /// <summary>
+    /// 점프 추진력
+    /// </summary>
+    public float jumpImpulse;
 
     /// <summary>
     /// 점프 유지 시간

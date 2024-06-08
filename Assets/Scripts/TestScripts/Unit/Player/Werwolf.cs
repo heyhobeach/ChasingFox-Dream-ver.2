@@ -138,11 +138,11 @@ public class Werwolf : PlayerUnit
         float wallJumpDuration = 0.2f;
         ResetForce();
         SetHorizontalVelocity(0);
-        AddVerticalForce(-gravity * Time.deltaTime + jumpHight * 80); // 윗 방향 힘 추가
+        AddVerticalForce(-gravity * Time.deltaTime + jumpForce * 80); // 윗 방향 힘 추가
         SetHorizontalForce(fixedDir * movementSpeed); // 벽의 반대 방향 힘 추가
         yield return new WaitForSeconds(wallJumpDuration);
         unitState = UnitState.Default;
-        AddVerticalForce(gravity * Time.deltaTime - jumpHight * 30); // 윗 방향 힘 추가
+        AddVerticalForce(gravity * Time.deltaTime - jumpForce * 30); // 윗 방향 힘 추가
         SetHorizontalVelocity(fixedDir);
         wallCoroutine = null;
     }
