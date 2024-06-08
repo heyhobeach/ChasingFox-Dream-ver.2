@@ -93,6 +93,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         Debug.Log("유저 사망");
         if(changedForm is not Berserker) // 버서커 상태가 아닐 시
         {
+            changedForm.Death();
             foreach(PlayerUnit form in forms) form.gameObject.SetActive(false);
             health = maxHealth; // 체력 초기화
             changedForm = forms[2]; // 상태를 버서커 상태로 변경

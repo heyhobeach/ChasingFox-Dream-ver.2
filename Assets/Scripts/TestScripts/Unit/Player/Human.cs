@@ -44,6 +44,7 @@ public class Human : PlayerUnit
     /// </summary>
     private Coroutine dashCoroutine;
     private Coroutine reloadCoroutine;
+    private Coroutine attackCoroutine;
 
     protected override void OnDisable()
     {
@@ -81,6 +82,7 @@ public class Human : PlayerUnit
 
     public override bool Attack(Vector3 clickPos)
     {
+        if(attackCoroutine == null) attackCoroutine = StartCoroutine(Attacking());
         if(residualAmmo <= 0) return false;
         Vector2 pos = Vector2.zero;
         GetSignedAngle((Vector2) transform.position, clickPos, out pos);
@@ -89,6 +91,14 @@ public class Human : PlayerUnit
         _bullet.GetComponent<Bullet>().Set(transform.position, clickPos, bulletDamage, bulletSpeed, gObj, (Vector3)pos);
         residualAmmo--;
         return true;
+    }
+
+    private IEnumerator Attacking()
+    {
+        anim.SetBool("isAttacking", true);
+        yield return new WaitForSeconds(2f);
+        anim.SetBool("isAttacking", false);
+        attackCoroutine = null;
     }
 
     public override bool Move(float dir)
@@ -152,7 +162,7 @@ public class Human : PlayerUnit
     public override bool FormChange()
     {
         if(unitState != UnitState.Default) return false;
-        else return true;
+        else return base.FormChange();
     }
 
     public override bool Reload()

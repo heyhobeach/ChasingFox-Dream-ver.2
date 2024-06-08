@@ -88,6 +88,11 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     /// </summary>
     public Vector2 Force { get { return new Vector2(hzForce, vcForce); } private set {  } }
 
+    /// <summary>
+    /// 바닥 체크
+    /// </summary>
+    protected bool isGrounded;
+
     private SpriteRenderer spriteRenderer;
 
     public Animator anim;
@@ -108,6 +113,10 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         // 힘의 방향에 따라 이미지를 좌우 반전
         if(hzForce < -0.1f) spriteRenderer.flipX = true;
         else if(hzForce > 0.1f) spriteRenderer.flipX = false;
+        if(!isGrounded) anim.SetBool("isAir", true);
+        else anim.SetBool("isAir", false);
+        if(Mathf.Abs(vcForce) > 0.2f) anim.SetFloat("vcForce", vcForce);
+        else anim.SetFloat("vcForce", 0);
     }
 
     /// <summary>
@@ -116,6 +125,8 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     protected virtual void OnDisable()
     {
         unitState = UnitState.Default;
+        anim.SetBool("isFormChange", false);
+        anim.SetBool("isDeath", false);
     }
 
     public abstract bool Attack(Vector3 clickPos);
@@ -136,12 +147,20 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         {
             anim.SetBool("isRun", true);
         }
+        if(Mathf.Abs(hzForce) >= 0.1f) anim.SetFloat("hzForce", Mathf.Sign(hzForce) * (Mathf.Clamp(hzForce / movementSpeed, -1, 1) - dir));
+        else anim.SetFloat("hzForce", 0);
         return true;
     }
 
-    public abstract bool FormChange();
+    public virtual bool FormChange()
+    {
+        anim.SetBool("isFormChange", true);
+        return true;
+    }
 
     public abstract bool Reload();
+    
+    public void Death() => anim.SetBool("isDeath", true);
 
     /// <summary>
     /// 현재 플레이어 유닛의 제어 가능 여부 확인
