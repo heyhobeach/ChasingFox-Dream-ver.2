@@ -65,12 +65,21 @@ public class Bullet : MonoBehaviour
         }
         if(collision.gameObject.tag == "Enemy" && !collision.gameObject.CompareTag(ignoreTag))//플레이어 총알이 적군에게 충돌시
         {
-            // Debug.Log("적 충돌");
-            Destroy(this.gameObject);
+            Debug.Log("적 충돌");
+            //Destroy(this.gameObject);
             var temp = collision.gameObject.GetComponent<IDamageable>();
+            Debug.Log(temp.health);
             bool isDamaged = false;
-            if(temp != null) isDamaged = temp.GetDamage(damage);
-            if(isDamaged) Destroy(gameObject);
+            if(temp != null) isDamaged = temp.GetDamage(damage);//이거 작동안함
+            if (isDamaged)
+            {
+                Debug.Log("데미지 받음");
+                Destroy(gameObject);
+            }
+            else
+            {
+                Debug.Log("작동안함");
+            }
         }
     }
 
@@ -94,7 +103,12 @@ public class Bullet : MonoBehaviour
             var temp = collision.gameObject.GetComponent<IDamageable>();
             bool isDamaged = false;
             if(temp != null) isDamaged = temp.GetDamage(damage);
-            if(isDamaged) Destroy(gameObject);
+            if (isDamaged)
+            {
+                Destroy(this.gameObject);
+                //Destroy(gameObject);
+            }
+
         }
         if (collision.gameObject.tag == "Enemy" && !collision.gameObject.CompareTag(ignoreTag))//플레이어 총알이 적군에게 충돌시 적이 trigger로 설정되어있어서 안 쓸것 같음
         {
@@ -109,7 +123,7 @@ public class Bullet : MonoBehaviour
     {
         if(collision.gameObject.tag == "Player" && !collision.gameObject.CompareTag(ignoreTag))
         {
-            Destroy(this.gameObject);
+            //Destroy(this.gameObject);
         }
     }
     private void OnCollisionExit2D(Collision2D collision)

@@ -17,11 +17,11 @@ public class PlayerController : MonoBehaviour
         else if(Input.GetKeyUp(KeyCode.W)) unitController.Jump(KeyState.KeyUp);
         else unitController.Jump(KeyState.None);
 
-        if(Input.GetKey(KeyCode.S)) unitController.Crouch(KeyState.KeyDown);//GetKeyDown -> GetKey
+        if (Input.GetKey(KeyCode.S)) {  unitController.Crouch(KeyState.KeyDown); }//GetKeyDown -> GetKey
         else if(Input.GetKeyUp(KeyCode.S)) unitController.Crouch(KeyState.KeyUp);
 
         if(Input.GetKeyDown(KeyCode.R)) unitController.Reload();
-
+            
         if(Input.GetKeyDown(KeyCode.Space)) unitController.Dash();
 
         if(Input.GetKeyDown(KeyCode.Mouse0)) unitController.Attack(ClickPos());

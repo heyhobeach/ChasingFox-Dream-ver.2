@@ -27,6 +27,7 @@ public abstract class PlayerUnit : UnitBase
     // private float checkHigh;
     private float distanceToCheck;
     private LayerMask lm;
+
     // private Vector3 hidePos;
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)
@@ -143,6 +144,7 @@ public abstract class PlayerUnit : UnitBase
     public override bool Move(float dir)
     {
         if(ControllerChecker()) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
+        base.Move(dir);
         hzVel += (dir-hzVel) * accelerate; // 가속도만큼 입력 방향에 힘을 추가
         if(dir == 0) hzVel += -hzVel * accelerate; // 입력이 없을 시 수평힘을 줄임
         hzVel = Mathf.Clamp(hzVel, -1, 1); // 움직임 가속 제한
@@ -155,6 +157,7 @@ public abstract class PlayerUnit : UnitBase
         switch(crouchKey)
         {
             case KeyState.KeyDown:
+                Debug.Log("하향점프");
                 if (currentOneWayPlatform != null)//밑 아래 점프 가능한 오브젝트와 닿아있을때 ,우선순위 따라서 위로 올리고 return이 필요할듯 
                 {
                     Debug.Log("hello");
@@ -234,6 +237,7 @@ public abstract class PlayerUnit : UnitBase
 
         if (cTemp)//temp가 true 일때 무시함
         {
+            Debug.Log("무시");
             Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), true);
         }
         else if(!canDown&&(dHit.collider==null&&d2Hit.collider==null))//캐릭터 좌우 대각선 부분에서 플랫폼이 감지가 안될경우
