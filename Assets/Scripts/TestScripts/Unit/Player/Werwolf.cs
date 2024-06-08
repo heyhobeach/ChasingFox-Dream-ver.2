@@ -137,12 +137,13 @@ public class Werwolf : PlayerUnit
     {
         float wallJumpDuration = 0.2f;
         ResetForce();
-        AddVerticalForce(-gravity * Time.deltaTime + jumpImpulse * 80); // 윗 방향 힘 추가
-        AddHorizontalForce(fixedDir * movementSpeed); // 벽의 반대 방향 힘 추가
+        SetHorizontalVelocity(0);
+        AddVerticalForce(-gravity * Time.deltaTime + jumpHight * 80); // 윗 방향 힘 추가
+        SetHorizontalForce(fixedDir * movementSpeed); // 벽의 반대 방향 힘 추가
         yield return new WaitForSeconds(wallJumpDuration);
         unitState = UnitState.Default;
-        AddVerticalForce(gravity * Time.deltaTime - jumpImpulse * 30); // 윗 방향 힘 추가
-        SetVel(fixedDir); // 벽의 반대 방향으로 힘 강제 변경, 자연스러운 동작을 위한 부분
+        AddVerticalForce(gravity * Time.deltaTime - jumpHight * 30); // 윗 방향 힘 추가
+        SetHorizontalVelocity(fixedDir);
         wallCoroutine = null;
     }
 
@@ -164,7 +165,7 @@ public class Werwolf : PlayerUnit
         while(t < dashDuration) // 대쉬 지속시간만큼 동작
         {
             t += Time.deltaTime;
-            AddHorizontalForce(Mathf.Sign(hzVel) * movementSpeed * 2f); // 수평 방향으로 힘 추가
+            SetHorizontalForce(Mathf.Sign(hzVel) * movementSpeed * 2f); // 수평 방향으로 힘 추가
             yield return null;
         }
         StopDash();

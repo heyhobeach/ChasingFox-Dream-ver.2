@@ -70,6 +70,7 @@ public abstract class PlayerUnit : UnitBase
 
     protected virtual void OnCollisionStay2D(Collision2D collision)
     {
+        Debug.Log(CheckMapType(collision));
         switch(CheckMapType(collision))
         {
             case MapType.Ceiling:
@@ -95,7 +96,7 @@ public abstract class PlayerUnit : UnitBase
     {
         if(!isGrounded && unitState == UnitState.Default) unitState = UnitState.Air; // 기본 상태에서 공중에 뜰 시 공중 상태로 변경
         else if(isGrounded && unitState == UnitState.Air) unitState = UnitState.Default; // 공중 상태에서 바닥에 닿을 시 기본 상태로 변경
-        // Debug.Log(unitState);
+        // Debug.Log(vcForce);
         CrouchUpdate();
         base.Update();
     }
@@ -103,6 +104,9 @@ public abstract class PlayerUnit : UnitBase
     private void FixedUpdate()
     {
         AddGravity();
+        // AddFrictional();
+        var hit = Physics2D.Raycast(transform.position, Vector2.right*Mathf.Sign(hzForce), boxSizeX*1.1f, 1<<LayerMask.NameToLayer("Map"));
+        if(hit) SetHorizontalForce(0);
         Movement();
     }
 
@@ -112,30 +116,31 @@ public abstract class PlayerUnit : UnitBase
         ResetForce();
     }
 
+    private float jumpingHight;
     public override bool Jump(KeyState jumpKey)
     {
-        float temp = 0;
+        float temp = -gravity * Time.deltaTime; // 중력 무시를 위해 중력 값 만큼 힘 추가
         switch(jumpKey)
         {
             case KeyState.KeyDown:
-                if(unitState != UnitState.Default) return false;
+                if(isJumping) return false;
                 isJumping = true;
-                if(temp <= 0) temp = jumpHight * jumpImpulse; // 점프 시작 시 힘을 초기화
-                temp += -gravity * Time.fixedDeltaTime; // 중력 무시를 위해 중력 값 만큼 힘 추가
+                temp += jumpHight * Mathf.Cos(0); // 점프 시작 시 힘을 초기화
 
-                return AddVerticalForce(temp);
+                return SetVerticalForce(temp);
             case KeyState.KeyStay:
-                temp = jumpHight * jumpForce * Time.fixedDeltaTime; // 점프가 고점에 다다를수록 적게 힘을 추가
-                temp += -gravity * Time.fixedDeltaTime; // 중력 무시를 위해 중력 값 만큼 힘 추가
-                if(!isJumping || vcForce+temp > jumpHight)
+                jumpingHight += Time.deltaTime / jumpTime;
+                temp += jumpHight * Mathf.Cos(jumpingHight); // 점프가 고점에 다다를수록 적게 힘을 추가
+                if(!isJumping || jumpingHight >= 1)
                 {
                     isJumping = false;
+                    jumpingHight = 0;
                     return false;
                 }
-
-                return AddVerticalForce(temp);
+                return SetVerticalForce(temp);
             case KeyState.KeyUp:
                 isJumping = false;
+                jumpingHight = 0;
             break;
         }
         return false;
@@ -143,12 +148,12 @@ public abstract class PlayerUnit : UnitBase
 
     public override bool Move(float dir)
     {
+        if(dir == 0 || ControllerChecker()) hzVel += -hzVel * accelerate * Time.deltaTime;
         if(ControllerChecker()) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
         base.Move(dir);
-        hzVel += (dir-hzVel) * accelerate; // 가속도만큼 입력 방향에 힘을 추가
-        if(dir == 0) hzVel += -hzVel * accelerate; // 입력이 없을 시 수평힘을 줄임
+        hzVel += (dir-hzVel) * accelerate * Time.deltaTime; // 가속도만큼 입력 방향에 힘을 추가
         hzVel = Mathf.Clamp(hzVel, -1, 1); // 움직임 가속 제한
-        return AddHorizontalForce(hzVel * movementSpeed);
+        return SetHorizontalForce(hzVel * movementSpeed);
     }
 
     // 수정 필요함
@@ -162,7 +167,7 @@ public abstract class PlayerUnit : UnitBase
                     Debug.Log("hello");
                     // canDown = !isHide;
                     canDown = true;
-                    AddVerticalForce(gravity * Time.fixedDeltaTime);
+                    AddVerticalForce(gravity * Time.deltaTime);
                 }
                 return true;
             case KeyState.KeyStay:
@@ -264,9 +269,18 @@ public abstract class PlayerUnit : UnitBase
     }
 
     /// <summary>
-    /// 중력 힘을 추가
+    /// 중력을 추가
     /// </summary>
     private void AddGravity() => AddVerticalForce(unitState == UnitState.HoldingWall ? gravity * Time.fixedDeltaTime * 0.2f : gravity * Time.fixedDeltaTime);
+
+    /// <summary>
+    /// 마찰력을 추가
+    /// </summary>
+    private void AddFrictional()
+    {
+        if(Mathf.Abs(hzForce) > accelerate) AddHorizontalForce(-hzForce * accelerate * Time.deltaTime); // 수평힘에 마찰력 추가
+        else SetHorizontalForce(0);
+    }
 
     /// <summary>
     /// 수직 방향 힘을 추가
@@ -282,31 +296,41 @@ public abstract class PlayerUnit : UnitBase
     /// </summary>
     protected bool AddHorizontalForce(float force)
     {
-        hzForce = force;
-        var hit = Physics2D.Raycast(transform.position, Vector2.right*Mathf.Sign(hzForce), boxSizeX*1.1f, 1<<LayerMask.NameToLayer("ground")|1<<LayerMask.NameToLayer("Wall"));
-        if(hit) hzForce = 0;
+        hzForce += force;
         return true;
     }
+    /// <summary>
+    /// 수직 방향 힘을 설정
+    /// </summary>
+    public bool SetVerticalForce(float force)
+    {
+        vcForce = force;
+        return true;
+    }
+    /// <summary>
+    /// 수평 방향 힘을 설정
+    /// </summary>
+    public bool SetHorizontalForce(float force)
+    {
+        hzForce = force;
+        return true;
+    }
+
+    public void SetHorizontalVelocity(float vel) => hzVel = vel;
 
     /// <summary>
     /// 플레이어 유닛 힘을 리지드바디로 전달
     /// </summary>
-    private void Movement() => rg.MovePosition(transform.position + (new Vector3(hzForce, vcForce) * Time.fixedDeltaTime));
+    private void Movement() => rg.MovePosition(transform.position + (new Vector3(hzForce, vcForce) * Time.deltaTime));
 
     /// <summary>
     /// 현재 플레이어 유닛의 모든 힘을 초기화
     /// </summary>
     public void ResetForce()
     {
-        hzForce = 0;
-        vcForce = 0;
+        SetHorizontalForce(0);
+        SetVerticalForce(0);
     }
-
-    /// <summary>
-    /// 수평 속도 설정
-    /// </summary>
-    /// <param name="vel">설정할 수평 속도</param>
-    public void SetVel(float vel) => hzVel = vel;
 
     /// <summary>
     /// 충돌면의 MapType을 반환
