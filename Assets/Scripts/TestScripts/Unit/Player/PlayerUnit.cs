@@ -130,7 +130,7 @@ public abstract class PlayerUnit : UnitBase
                 return SetVerticalForce(temp);
             case KeyState.KeyStay:
                 jumpingHight += Time.deltaTime / jumpTime;
-                temp += Mathf.Lerp(jumpImpulse, jumpForce, jumpingHight) * Mathf.Cos(jumpingHight); // 점프가 고점에 다다를수록 적게 힘을 추가
+                temp += Mathf.Lerp(jumpImpulse, jumpForce, jumpingHight) * Mathf.Cos(jumpingHight + -((jumpImpulse - jumpForce) / jumpImpulse)); // 점프가 고점에 다다를수록 적게 힘을 추가
                 if(!isJumping || jumpingHight >= 1)
                 {
                     isJumping = false;
