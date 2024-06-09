@@ -60,7 +60,7 @@ public partial class ControllerScript : MonoBehaviour
                 if (t < 2)
                 {
                     UIController.Instance.ImageSetFalse();
-                    ControllerScript.instance.currentTime = 0;
+                    ControllerScript.instance.currentTime = 0;//?
                 }
                 else
                 {
