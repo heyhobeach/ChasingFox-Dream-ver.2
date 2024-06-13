@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -113,6 +114,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         // 힘의 방향에 따라 이미지를 좌우 반전
         if(hzForce < -0.1f) spriteRenderer.flipX = true;
         else if(hzForce > 0.1f) spriteRenderer.flipX = false;
+        if(anim.runtimeAnimatorController == null) return;
         if(!isGrounded) anim.SetBool("isAir", true);
         else anim.SetBool("isAir", false);
         if(Mathf.Abs(vcForce) > 0.2f) anim.SetFloat("vcForce", vcForce);
@@ -125,6 +127,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     protected virtual void OnDisable()
     {
         unitState = UnitState.Default;
+        if(anim.runtimeAnimatorController.IsUnityNull()) return;
         anim.SetBool("isFormChange", false);
         anim.SetBool("isDeath", false);
     }
@@ -139,6 +142,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
 
     public virtual bool Move(float dir)
     {
+        if(anim.runtimeAnimatorController == null) return false;
         if (dir == 0)
         {
             anim.SetBool("isRun", false);
@@ -147,7 +151,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         {
             anim.SetBool("isRun", true);
         }
-        if(Mathf.Abs(hzForce) >= 0.1f) anim.SetFloat("hzForce", Mathf.Sign(hzForce) * (Mathf.Clamp(hzForce / movementSpeed, -1, 1) - dir));
+        if(Mathf.Abs(hzForce) >= 0.1f) anim.SetFloat("hzForce", Mathf.Sign(hzForce) * (Mathf.Clamp(hzForce / movementSpeed, -1, 1) - dir * 1.5f));
         else anim.SetFloat("hzForce", 0);
         return true;
     }
