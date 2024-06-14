@@ -98,6 +98,9 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
 
     public Animator anim;
 
+    private bool longRangeUnit;
+    protected ShootingAnimationController shootingAnimationController;
+
     protected virtual void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -107,6 +110,10 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         boxSizeY = gameObject.GetComponent<Collider2D>().bounds.extents.y;
         
         unitState = UnitState.Default;
+
+        shootingAnimationController = GetComponent<ShootingAnimationController>();
+        if(shootingAnimationController != null) longRangeUnit = true;
+        Debug.Log(longRangeUnit);
     }
     protected virtual void Update()
     {
@@ -114,7 +121,6 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         // 힘의 방향에 따라 이미지를 좌우 반전
         if(hzForce < -0.1f) spriteRenderer.flipX = true;
         else if(hzForce > 0.1f) spriteRenderer.flipX = false;
-        if(anim.runtimeAnimatorController == null) return;
         if(!isGrounded) anim.SetBool("isAir", true);
         else anim.SetBool("isAir", false);
         if(Mathf.Abs(vcForce) > 0.2f) anim.SetFloat("vcForce", vcForce);
@@ -127,12 +133,16 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     protected virtual void OnDisable()
     {
         unitState = UnitState.Default;
-        if(anim.runtimeAnimatorController.IsUnityNull()) return;
         anim.SetBool("isFormChange", false);
         anim.SetBool("isDeath", false);
     }
 
-    public abstract bool Attack(Vector3 clickPos);
+    public virtual bool Attack(Vector3 clickPos)
+    {
+        if(!longRangeUnit) return false;
+        shootingAnimationController.AttackAni();
+        return true;
+    }
 
     public abstract bool Dash();
 
@@ -142,7 +152,6 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
 
     public virtual bool Move(float dir)
     {
-        if(anim.runtimeAnimatorController == null) return false;
         if (dir == 0)
         {
             anim.SetBool("isRun", false);
