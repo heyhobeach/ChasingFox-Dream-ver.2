@@ -195,6 +195,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         else return false;
     }
 
+    public abstract bool Reload();
     /// <summary>
     /// 특정 위치로부터 유닛의 방향 계산
     /// </summary>
@@ -218,4 +219,5 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         dir = (to - from).normalized; // 시작 벡터에서 목표 벡터까지의 방향 계산
         return new Vector3(0, 0, Vector3.SignedAngle(transform.right, dir, transform.forward)); // 유닛 기준 뱡향 벡터의 각도 계산 및 반환
     }
+
 }

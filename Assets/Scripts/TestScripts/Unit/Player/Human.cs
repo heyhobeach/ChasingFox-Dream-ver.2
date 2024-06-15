@@ -23,6 +23,15 @@ public class Human : PlayerUnit
     /// 총알 속도
     /// </summary>
     public float bulletSpeed;
+    /// <summary>
+    /// 장탄 수
+    /// </summary>
+    public float magazine;
+
+    /// <summary>
+    /// 잔여 탄약 수
+    /// </summary>
+    public float residualAmmo;
 
     /// <summary>
     /// 최대 탄약 수

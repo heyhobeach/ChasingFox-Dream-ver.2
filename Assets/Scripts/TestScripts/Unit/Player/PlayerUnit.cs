@@ -168,6 +168,7 @@ public abstract class PlayerUnit : UnitBase
         {
             case KeyState.KeyDown:
                 Debug.Log("하향점프");
+            case KeyState.KeyStay:
                 if (currentOneWayPlatform != null)//밑 아래 점프 가능한 오브젝트와 닿아있을때 ,우선순위 따라서 위로 올리고 return이 필요할듯 
                 {
                     Debug.Log("hello");
@@ -220,7 +221,36 @@ public abstract class PlayerUnit : UnitBase
             cTemp = indexG >= 0;
             Debug.Log(string.Format("{0}", findRayPlatform));
             
-        
+            // var index = Array.FindIndex(hit, x => x.transform.tag == "ground");//만약 람다를 안 쓰려면 for로 hit만큼 돌ㅡㅜ   아가면서 태그가 맞는지 확인해야함
+            // if(Array.FindIndex(hit, x => x.transform.tag == "platform") != -1)
+            // {
+            //     // Debug.Log("플랫폼 감지중");
+            //     isGrounded = true;
+            //     findRayPlatform = true;//여기는 없어도 무방
+            // }
+            // else
+            // {
+            //     // Debug.Log("플랫폼 가지 못 함");
+            //     // if (index == -1)
+            //     // {
+            //     //     //아무것도 못 찾음
+            //     //     isGrounded = false;
+            //     // }
+            //     findRayPlatform=false;
+            // }
+            // //var index = Array.FindIndex(hit, x => x.transform.tag == "ground");
+            // if (index != -1)
+            // {
+            //     // Debug.Log("그라운드 찾음");
+            //     isGrounded = true;
+            //     cTemp = true;
+            // }
+            // else
+            // {
+            //     // Debug.Log("그라운드 못 찾음");
+            //     isGrounded = false;
+            //     cTemp = false;
+            // }
             
         }
 
@@ -276,16 +306,15 @@ public abstract class PlayerUnit : UnitBase
     /// <summary>
     /// 수직 방향 힘을 추가
     /// </summary>
-    protected bool AddVerticalForce(float force)
+    protected void AddVerticalForce(float force)
     {
         if(isGrounded && !canDown && vcForce < 0) vcForce = 0; // 바닥에 붙어있을 시 아래 방향의 힘 초기화
         vcForce += force;
-        return true;
     }
     /// <summary>
     /// 수평 방향 힘을 추가
     /// </summary>
-    protected bool AddHorizontalForce(float force)
+    protected void AddHorizontalForce(float force)
     {
         hzForce += force;
         return true;
@@ -304,7 +333,6 @@ public abstract class PlayerUnit : UnitBase
     public bool SetHorizontalForce(float force)
     {
         hzForce = force;
-        return true;
     }
 
     public void SetHorizontalVelocity(float vel) => hzVel = vel;
@@ -349,3 +377,32 @@ public abstract class PlayerUnit : UnitBase
         else return MapType.Wall;
     }
 }
+
+/* Hiding On */
+
+                // if (isHide && unitState != UnitState.Air)//숨는 오브젝트와 상호 작용이 가능하다면
+                // {
+                //     unitState = UnitState.Hide;
+                //     // if (check < 0)
+                //     // {//일단은 캐릭터가 우츨을 보는것을 기본이라고 생각했는데 나중에 이미지 받아오면 해당 이미지 넣어서 다시 수정해야할수도있음 rotation관련만 
+                //     //     this.gameObject.transform.rotation = Quaternion.Euler(0, 180, 0);
+                //     // }
+                //     // else
+                //     // {
+                //     //     this.gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
+                //     // }
+                //     coverBox.SetActive(true);
+                //     // coverBox.transform.position = this.gameObject.transform.GetChild(0).transform.position;//가드 위치를 가드 포인트 위치로 옮김
+                //     transform.position = hidePos;
+                //     rg.velocity = Vector2.zero;//만약 점프가 되려고하면 x만 0으로 초기화
+                //     rg.position = transform.position;
+                //     SetVel(0);
+                //     // charactor.Crouch(guard);
+                //     // isCrouching = true;
+                //     // isMoving = false;
+                // }
+/* Hiding Off */
+
+                // if(unitState == UnitState.Hide) unitState = UnitState.Default;
+                // coverBox.SetActive(false);//s를 누르지 않았으므로 가드를 푼다
+                // isCrouching = false;
