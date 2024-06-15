@@ -84,8 +84,8 @@ public partial class Dumy : MonoBehaviour
         }
 
 
-        Debug.Log(string.Format("{0},{1}", startPos.x - bottomLeft.x, startPos.y - bottomLeft.y));//-bottomleft.x,bottomleft.y의 계산이 한번만 이뤄지고 안 이뤄지는것 같음
-        Debug.Log(string.Format("{0},{1}", targetPos.x - bottomLeft.x, targetPos.y - bottomLeft.y));//여기도 마친가지
+        //Debug.Log(string.Format("{0},{1}", startPos.x - bottomLeft.x, startPos.y - bottomLeft.y));//-bottomleft.x,bottomleft.y의 계산이 한번만 이뤄지고 안 이뤄지는것 같음
+        //Debug.Log(string.Format("{0},{1}", targetPos.x - bottomLeft.x, targetPos.y - bottomLeft.y));//여기도 마친가지
         // 시작과 끝 노드, 열린리스트와 닫힌리스트, 마지막리스트 초기화
         StartNode = NodeArray[startPos.x - bottomLeft.x, startPos.y - bottomLeft.y];//지금 이 부분 빨간색 뜨긴함 작동에는 문제는 없음
         
@@ -372,6 +372,10 @@ public partial class Dumy : MonoBehaviour
         for (int i = 1; i < FinalNodeList.Count; )
         {
             Debug.Log("이동중");
+            if (attacking)
+            {
+                break;
+            }
             transform.position = Vector2.MoveTowards(transform.position, new Vector2(FinalNodeList[i].x, FinalNodeList[i].y + 1), Time.deltaTime);
             if(transform.position== new Vector3(FinalNodeList[i].x, FinalNodeList[i].y + 1, transform.position.z))
             {

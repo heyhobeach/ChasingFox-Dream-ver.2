@@ -169,6 +169,5 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     void Update()
     {
         pObject = this.gameObject;
-        // Debug.Log(pObject.transform);
     }
 }

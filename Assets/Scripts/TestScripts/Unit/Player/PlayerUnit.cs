@@ -31,14 +31,15 @@ public abstract class PlayerUnit : UnitBase
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
-        switch(CheckMapType(collision))
+        //Debug.Log(CheckMapType(collision));
+        Debug.Log(collision.gameObject.tag);
+        switch (CheckMapType(collision))
         {
             case MapType.Platform:
-                // checkHigh= -100;
-                //WereWolf.Instance().isAttacking = false;// 이 부분이 있으면 땅에서 연속 공격 가능 
+
                 currentOneWayPlatform = collision.gameObject;//플랫폼이라면 현재 플렛폼을 담음
                 // Debug.Log(collision.gameObject.GetComponent<PlatformScript>().dObject);//다운 오브젝트 타입확인용 로그
-                switch (collision.gameObject.GetComponent<PlatformScript>().dObject)//대각선 직선 오브젝트 마다 떨어지는 시간이 다를수도 있으니
+                switch (collision.gameObject.GetComponent<PlatformScript>().dObject)//대각선 직선 오브젝트 마다 떨어지는 시간이 다를수도 있으니  
                 {
                     case PlatformScript.downJumpObject.STRAIGHT://직선
                         downTime = 1f;//떨어지는 시간 다르게 하기 위함
@@ -49,6 +50,9 @@ public abstract class PlayerUnit : UnitBase
                 }
                 //canDown = true;
                 break;
+            //default:
+            //    
+            //    break;
         }
     }
 
@@ -57,9 +61,11 @@ public abstract class PlayerUnit : UnitBase
         switch(CheckMapType(collision))
         {
             case MapType.Platform:
+                Debug.Log("플랫폼 벗어남");
                 if (isJumping)
                 {
                     Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), false);
+                    Debug.Log("점프");
                 }
                 currentOneWayPlatform = null;//platform에서 벗어난거라면 플랫폼 변수를 비움
                 break;
@@ -95,7 +101,7 @@ public abstract class PlayerUnit : UnitBase
     {
         if(!isGrounded && unitState == UnitState.Default) unitState = UnitState.Air; // 기본 상태에서 공중에 뜰 시 공중 상태로 변경
         else if(isGrounded && unitState == UnitState.Air) unitState = UnitState.Default; // 공중 상태에서 바닥에 닿을 시 기본 상태로 변경
-        // Debug.Log(vcForce);
+        Debug.Log(string.Format("{0}은 현재 오브젝트", currentOneWayPlatform));
         CrouchUpdate();
         base.Update();
     }
@@ -161,12 +167,17 @@ public abstract class PlayerUnit : UnitBase
         switch(crouchKey)
         {
             case KeyState.KeyDown:
+                Debug.Log("하향점프");
                 if (currentOneWayPlatform != null)//밑 아래 점프 가능한 오브젝트와 닿아있을때 ,우선순위 따라서 위로 올리고 return이 필요할듯 
                 {
                     Debug.Log("hello");
                     // canDown = !isHide;
                     canDown = true;
                     AddVerticalForce(gravity * Time.deltaTime);
+                }
+                else
+                {
+                    Debug.Log("여기에 걸림");
                 }
                 return true;
             case KeyState.KeyStay:
@@ -183,10 +194,21 @@ public abstract class PlayerUnit : UnitBase
         Debug.DrawRay(transform.position, Vector2.down * distanceToCheck, Color.red);
         //BoxCollider2D box = GetComponent<BoxCollider2D>();
         Vector2 test = new Vector2(transform.position.x + charBoxCollider.size.x/2, transform.position.y - charBoxCollider.size.y/2)  - (Vector2)transform.position;
-        RaycastHit2D dHit = Physics2D.Raycast(transform.position, test,(MathF.Sqrt(charBoxCollider.size.x / 2) + MathF.Sqrt(charBoxCollider.size.y/2)) * 0.45f, 1<<LayerMask.NameToLayer("OneWayPlatform"));//플랫폼감지용 레이,하드 코딩때 값 0.75f,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정 
+        RaycastHit2D dHit = Physics2D.Raycast(transform.position, test,(MathF.Sqrt(charBoxCollider.size.x / 2) + MathF.Sqrt(charBoxCollider.size.y/2)) * 0.6f, 1<<LayerMask.NameToLayer("OneWayPlatform"));//플랫폼감지용 레이,하드 코딩때 값 0.75f,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정 
+        
+
+        Debug.DrawRay(transform.position,test, Color.green);
         Vector2 test2 = new Vector2(transform.position.x - charBoxCollider.size.x / 2, transform.position.y - charBoxCollider.size.y / 2) - (Vector2)transform.position;
-        RaycastHit2D d2Hit = Physics2D.Raycast(transform.position, test2, (MathF.Sqrt(charBoxCollider.size.x / 2) + MathF.Sqrt(charBoxCollider.size.y / 2))*0.45f, 1 << LayerMask.NameToLayer("OneWayPlatform"));//플랫폼감지용 레이,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정
-        Debug.DrawRay(transform.position, test.normalized*0.75f, Color.blue);
+        RaycastHit2D d2Hit = Physics2D.Raycast(transform.position, test2, (MathF.Sqrt(charBoxCollider.size.x / 2) + MathF.Sqrt(charBoxCollider.size.y / 2))*0.6f, 1 << LayerMask.NameToLayer("OneWayPlatform"));//플랫폼감지용 레이,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정
+        Debug.DrawRay(transform.position, test2, Color.blue);
+        if(dHit.collider == null)
+        {
+            Debug.Log("dHit null");
+        }
+        if (d2Hit.collider == null)
+        {
+            Debug.Log("d2Hit null");
+        }
         
         if (hit != null)
         {
@@ -196,54 +218,22 @@ public abstract class PlayerUnit : UnitBase
             isGrounded = indexP >= 0 | indexG >= 0 | dHit | d2Hit;
             findRayPlatform = indexP >= 0;
             cTemp = indexG >= 0;
+            Debug.Log(string.Format("{0}", findRayPlatform));
             
-        //     if(indexP != -1)
-        //     {
-        //         // Debug.Log("플랫폼 감지중");
-        //         isGrounded = true;
-        //         findRayPlatform = true;//여기는 없어도 무방
-        //     }
-        //     else
-        //     {
-        //         // Debug.Log("플랫폼 가지 못 함");
-        //         if (indexG == -1)
-        //         {
-        //             //아무것도 못 찾음
-        //             isGrounded = false;
-        //         }
-        //         findRayPlatform=false;
-        //     }
-        //     //var index = Array.FindIndex(hit, x => x.transform.tag == "ground");
-        //     if (indexG != -1)
-        //     {
-        //         // Debug.Log("그라운드 찾음");
-        //         isGrounded = true;
-        //         cTemp = true;
-        //     }
-        //     else
-        //     {
-        //         // Debug.Log("그라운드 못 찾음");
-        //         isGrounded = false;
-        //         cTemp = false;
-        //     }
+        
             
         }
 
-        // if (dHit.collider == null)
-        // {
-        //     // Debug.Log("dHit null");
-        // }
-        // else
-        // {
-        //     // Debug.Log("find dHit"+dHit.collider.name);
-        // }
-
-        if (cTemp)//temp가 true 일때 무시함
+        //if (findRayPlatform)//temp가 true 일때 무시함
+        //{
+        //    Debug.Log("무시");
+        //    //Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), true);
+        //}
+        //else 
+        if(!canDown&&(dHit.collider==null&&d2Hit.collider==null))//캐릭터 좌우 대각선 부분에서 플랫폼이 감지가 안될경우
         {
-            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), true);
-        }
-        else if(!canDown&&(dHit.collider==null&&d2Hit.collider==null))//캐릭터 좌우 대각선 부분에서 플랫폼이 감지가 안될경우
-        {
+            Debug.Log("예외부분");
+            Debug.Log(string.Format("{0}", canDown));
             Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), false);
         }
     }
@@ -254,12 +244,14 @@ public abstract class PlayerUnit : UnitBase
             if (canDown)//아래 점프 가능한 오브젝트 만날경우
             {
                 // Debug.Log("hi");
-                cTemp = true;
+                findRayPlatform = true;
                 Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), true);//원리는 그냥 설정한 시간동안 해당 플렛폼들을 그냥 무시하는식으로 설정했음 근데 지금 생각해보면 지금 플렛폼을 받아와서 플렛폼의 네임을 무시하는식으로 해도 되지않을까 하는 영감이 떠오름
                 Debug.Log("무시중");
+                currentOneWayPlatform.GetComponent<PlatformEffector2D>().useColliderMask = false;
                 yield return new WaitForSeconds(downTime);//downtime변수는 나중에 중력 설정시 이질감이 든다면 변경필요
                 Debug.Log("무시 끝");
-                cTemp = false;
+                findRayPlatform = false;
+                currentOneWayPlatform.GetComponent<PlatformEffector2D>().useColliderMask = true;
                 //Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), false);
                 canDown = false;
             }
@@ -350,7 +342,7 @@ public abstract class PlayerUnit : UnitBase
     protected MapType CheckMapType(Collision2D collision, ref float angle)
     {
         if(!(collision.gameObject.CompareTag("Map") || collision.gameObject.CompareTag("platform")) || collision.contactCount <= 0) return MapType.None;
-        if(collision.gameObject.CompareTag("platform")) return MapType.Ground;
+        if(collision.gameObject.CompareTag("platform")) return MapType.Platform;
         angle = Mathf.Abs(Vector2.Angle(Vector2.up, collision.contacts[0].normal));
         if(angle <= 45) return MapType.Ground;
         else if(angle >= 135) return MapType.Ceiling;

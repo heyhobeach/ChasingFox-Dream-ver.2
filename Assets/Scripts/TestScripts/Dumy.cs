@@ -27,6 +27,15 @@ public partial class Dumy : MonoBehaviour, IDamageable
     public float maxDistance = 1.06f;
 
     private bool follow = false;
+
+    private Vector2 subvec;//ai거리관련
+    /// <summary>
+    /// 공격범위 관련
+    /// </summary>
+    [SerializeField]
+    private float attackRange;
+
+    private bool attacking = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -104,12 +113,34 @@ public partial class Dumy : MonoBehaviour, IDamageable
         //RaycastHit2D ray2d = Physics2D.Raycast(transform.position, transform.forward, 10f); 
         int layerMask = 1 << LayerMask.NameToLayer("Player");
         RaycastHit2D ray2d = Physics2D.CircleCast(myposition, mysize, Vector2.up, maxDistance,layerMask);
-        if (ray2d&&!follow)//이미 레이 = 시야에 감지 되었기에 계속 추격해야함
+        if (ray2d)
         {
-            //1초마다 갱신하게 코루틴 필요    
-            Debug.Log(ray2d.collider.gameObject.name);
-            StartCoroutine(timer());
+            subvec = (Vector2)ray2d.transform.position - (Vector2)transform.position;
+            float deg = Mathf.Atan2(subvec.y, subvec.x);//mathf.de
+            deg *= Mathf.Rad2Deg;
+            //a *= Mathf.Deg2Rad;
+            //float dis = ray2d.distance;
+            if (mysize <= subvec.magnitude)
+            {
+                Debug.Log("범위 넘어감");
+                //ray2d = null; 
+            }
+            else//범위 안에 들어왔을때
+            {
+                Debug.Log(string.Format("{0}||{1}||{2}||", deg, mysize, subvec.magnitude));
+                if (!follow)//이미 레이 = 시야에 감지 되었기에 계속 추격해야함
+                {
+                    //1초마다 갱신하게 코루틴 필요    
+                    Debug.Log(ray2d.collider.gameObject.name);
+                    StartCoroutine(timer());
+                }
+                
+            }
+            
+            
         }
+
+
 
         
         //float m
@@ -122,14 +153,26 @@ public partial class Dumy : MonoBehaviour, IDamageable
         while (true)
         {
             yield return new WaitForSeconds(1);
-            startPos.x = (int)_startPos.position.x;
-            startPos.y = (int)_startPos.position.y - 1;
-            targetPos.x = (int)_targetPos.position.x;
-            targetPos.y = Mathf.FloorToInt(_targetPos.position.y);
+            if (subvec.magnitude <= attackRange)
+            {
+                //attack();
+                //StopCoroutine(cMove());
+                attacking = true;
+                Shoot();
+                Debug.Log("공격");
+            }
+            else
+            {
+                startPos.x = (int)_startPos.position.x;
+                startPos.y = (int)_startPos.position.y;
+                targetPos.x = (int)_targetPos.position.x;
+                targetPos.y = Mathf.FloorToInt(_targetPos.position.y);
 
 
-            PathFinding();
-            Debug.Log("경로 갱신");
+                PathFinding();
+                Debug.Log("경로 갱신");
+            }
+
             
         }
         
