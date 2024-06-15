@@ -32,11 +32,10 @@ public abstract class PlayerUnit : UnitBase
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
         //Debug.Log(CheckMapType(collision));
-        Debug.Log(collision.gameObject.tag);
+        // Debug.Log(collision.gameObject.tag);
         switch (CheckMapType(collision))
         {
             case MapType.Platform:
-
                 currentOneWayPlatform = collision.gameObject;//플랫폼이라면 현재 플렛폼을 담음
                 // Debug.Log(collision.gameObject.GetComponent<PlatformScript>().dObject);//다운 오브젝트 타입확인용 로그
                 switch (collision.gameObject.GetComponent<PlatformScript>().dObject)//대각선 직선 오브젝트 마다 떨어지는 시간이 다를수도 있으니  
@@ -49,6 +48,10 @@ public abstract class PlayerUnit : UnitBase
                         break;
                 }
                 //canDown = true;
+                break;
+                case MapType.Ceiling:
+                    isJumping = false;
+                    SetVerticalForce(gravity * Time.fixedDeltaTime);
                 break;
             //default:
             //    
@@ -80,6 +83,7 @@ public abstract class PlayerUnit : UnitBase
         {
             case MapType.Ceiling:
                 isJumping = false;
+                SetVerticalForce(gravity * Time.fixedDeltaTime);
                 break;
             case MapType.Platform:
                 currentOneWayPlatform = collision.gameObject;
@@ -101,7 +105,7 @@ public abstract class PlayerUnit : UnitBase
     {
         if(!isGrounded && unitState == UnitState.Default) unitState = UnitState.Air; // 기본 상태에서 공중에 뜰 시 공중 상태로 변경
         else if(isGrounded && unitState == UnitState.Air) unitState = UnitState.Default; // 공중 상태에서 바닥에 닿을 시 기본 상태로 변경
-        Debug.Log(string.Format("{0}은 현재 오브젝트", currentOneWayPlatform));
+        // Debug.Log(string.Format("{0}은 현재 오브젝트", currentOneWayPlatform));
         CrouchUpdate();
         base.Update();
     }
@@ -167,22 +171,18 @@ public abstract class PlayerUnit : UnitBase
         switch(crouchKey)
         {
             case KeyState.KeyDown:
-                Debug.Log("하향점프");
             case KeyState.KeyStay:
                 if (currentOneWayPlatform != null)//밑 아래 점프 가능한 오브젝트와 닿아있을때 ,우선순위 따라서 위로 올리고 return이 필요할듯 
                 {
                     Debug.Log("hello");
                     // canDown = !isHide;
                     canDown = true;
-                    AddVerticalForce(gravity * Time.deltaTime);
                 }
                 else
                 {
                     Debug.Log("여기에 걸림");
                 }
                 return true;
-            case KeyState.KeyStay:
-            break;
             case KeyState.KeyUp:
                 return true;
         }
@@ -204,11 +204,11 @@ public abstract class PlayerUnit : UnitBase
         Debug.DrawRay(transform.position, test2, Color.blue);
         if(dHit.collider == null)
         {
-            Debug.Log("dHit null");
+            // Debug.Log("dHit null");
         }
         if (d2Hit.collider == null)
         {
-            Debug.Log("d2Hit null");
+            // Debug.Log("d2Hit null");
         }
         
         if (hit != null)
@@ -219,7 +219,7 @@ public abstract class PlayerUnit : UnitBase
             isGrounded = indexP >= 0 | indexG >= 0 | dHit | d2Hit;
             findRayPlatform = indexP >= 0;
             cTemp = indexG >= 0;
-            Debug.Log(string.Format("{0}", findRayPlatform));
+            // Debug.Log(string.Format("{0}", findRayPlatform));
             
             // var index = Array.FindIndex(hit, x => x.transform.tag == "ground");//만약 람다를 안 쓰려면 for로 hit만큼 돌ㅡㅜ   아가면서 태그가 맞는지 확인해야함
             // if(Array.FindIndex(hit, x => x.transform.tag == "platform") != -1)
@@ -262,8 +262,8 @@ public abstract class PlayerUnit : UnitBase
         //else 
         if(!canDown&&(dHit.collider==null&&d2Hit.collider==null))//캐릭터 좌우 대각선 부분에서 플랫폼이 감지가 안될경우
         {
-            Debug.Log("예외부분");
-            Debug.Log(string.Format("{0}", canDown));
+            // Debug.Log("예외부분");
+            // Debug.Log(string.Format("{0}", canDown));
             Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), false);
         }
     }
@@ -276,6 +276,7 @@ public abstract class PlayerUnit : UnitBase
                 // Debug.Log("hi");
                 findRayPlatform = true;
                 Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), true);//원리는 그냥 설정한 시간동안 해당 플렛폼들을 그냥 무시하는식으로 설정했음 근데 지금 생각해보면 지금 플렛폼을 받아와서 플렛폼의 네임을 무시하는식으로 해도 되지않을까 하는 영감이 떠오름
+                SetVerticalForce(gravity * Time.deltaTime);
                 Debug.Log("무시중");
                 currentOneWayPlatform.GetComponent<PlatformEffector2D>().useColliderMask = false;
                 yield return new WaitForSeconds(downTime);//downtime변수는 나중에 중력 설정시 이질감이 든다면 변경필요
@@ -285,7 +286,9 @@ public abstract class PlayerUnit : UnitBase
                 //Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), false);
                 canDown = false;
             }
-            yield return null;
+            Debug.Log("A");
+            yield return new WaitForEndOfFrame();
+            Debug.Log("B");
         }
     }
 
@@ -309,6 +312,7 @@ public abstract class PlayerUnit : UnitBase
     protected void AddVerticalForce(float force)
     {
         if(isGrounded && !canDown && vcForce < 0) vcForce = 0; // 바닥에 붙어있을 시 아래 방향의 힘 초기화
+        // Debug.Log(isGrounded + ", " + !canDown);
         vcForce += force;
     }
     /// <summary>
@@ -317,7 +321,7 @@ public abstract class PlayerUnit : UnitBase
     protected void AddHorizontalForce(float force)
     {
         hzForce += force;
-        return true;
+        if(Physics2D.Raycast(transform.position, Vector2.right * hzForce, boxSizeX * 0.5f, LayerMask.NameToLayer("Map"))) hzForce = 0;
     }
     /// <summary>
     /// 수직 방향 힘을 설정
@@ -333,6 +337,8 @@ public abstract class PlayerUnit : UnitBase
     public bool SetHorizontalForce(float force)
     {
         hzForce = force;
+        if(Physics2D.Raycast(transform.position, Vector2.right * hzForce, boxSizeX * 0.5f, LayerMask.NameToLayer("Map"))) hzForce = 0;
+        return true;
     }
 
     public void SetHorizontalVelocity(float vel) => hzVel = vel;

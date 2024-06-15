@@ -133,12 +133,12 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     protected virtual void OnDisable()
     {
         unitState = UnitState.Default;
-        anim.SetBool("isFormChange", false);
         anim.SetBool("isDeath", false);
     }
 
     public virtual bool Attack(Vector3 clickPos)
     {
+        anim.SetTrigger("attack");
         if(!longRangeUnit) return false;
         shootingAnimationController.AttackAni();
         return true;
@@ -167,13 +167,17 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
 
     public virtual bool FormChange()
     {
-        anim.SetBool("isFormChange", true);
+        anim.SetBool("formChange", true);
         return true;
     }
 
     public abstract bool Reload();
     
-    public void Death() => anim.SetBool("isDeath", true);
+    public void Death()
+    {
+        anim.SetTrigger("death");
+        anim.SetBool("isDeath", true);
+    }
 
     /// <summary>
     /// 현재 플레이어 유닛의 제어 가능 여부 확인
@@ -195,7 +199,6 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         else return false;
     }
 
-    public abstract bool Reload();
     /// <summary>
     /// 특정 위치로부터 유닛의 방향 계산
     /// </summary>

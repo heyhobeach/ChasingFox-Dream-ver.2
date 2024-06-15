@@ -38,10 +38,6 @@ public class Human : PlayerUnit
     /// </summary>
     public float maxAmmo;
 
-    /// <summary>
-    /// 현재 잔탄 수
-    /// </summary>
-    private float residualAmmo;
 
     /// <summary>
     /// 재장전 진행도

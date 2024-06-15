@@ -93,6 +93,7 @@ public class Werwolf : PlayerUnit
         MeleeAttack.transform.localPosition = new Vector3(Mathf.Cos(deg), Mathf.Sin(deg)*2,transform.localPosition.z);
 
         attackCoroutine = StartCoroutine(Attacking(deg));
+        base.Attack(clickPos);
         return true;
     }
 
