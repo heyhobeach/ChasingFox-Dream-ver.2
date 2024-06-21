@@ -105,19 +105,7 @@ public class Human : PlayerUnit
         return base.Move(dir);
     }
 
-    public override bool Jump(KeyState jumpKey)
-    {
-        switch(jumpKey)
-        {
-            case KeyState.KeyDown:
-                if(unitState != UnitState.Default) return false;
-                return base.Jump(jumpKey);
-            case KeyState.KeyStay:
-            case KeyState.KeyUp:
-                return base.Jump(jumpKey);
-        }
-        return false;
-    }
+    public override bool Jump(KeyState jumpKey) => base.Jump(jumpKey);
 
     public override bool Dash()
     {

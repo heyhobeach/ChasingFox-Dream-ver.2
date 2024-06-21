@@ -155,7 +155,8 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         if(changedForm is Human) changedForm = forms[1]; // 인간 상태일 시 늑대인간으로 변경
         else if(changedForm is Werwolf) changedForm = forms[0]; // 늑대인간 상태일 시 인간으로 변경
         changedForm.gameObject.SetActive(true);
-        changedForm.SetHorizontalForce(fixedDir); // 자연스러운 대쉬 동작을 위한 부분
+        changedForm.SetHorizontalForce(fixedDir * changedForm.movementSpeed); // 자연스러운 대쉬 동작을 위한 부분
+        changedForm.SetHorizontalVelocity(fixedDir * Time.deltaTime * changedForm.movementSpeed);
         changedForm.UnitState = UnitState.Default;
     }
 

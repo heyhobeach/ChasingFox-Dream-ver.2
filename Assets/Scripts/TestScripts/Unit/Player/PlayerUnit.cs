@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 /// <summary>
@@ -78,7 +79,6 @@ public abstract class PlayerUnit : UnitBase
 
     protected virtual void OnCollisionStay2D(Collision2D collision)
     {
-        Debug.Log(CheckMapType(collision));
         switch(CheckMapType(collision))
         {
             case MapType.Ceiling:
@@ -113,9 +113,13 @@ public abstract class PlayerUnit : UnitBase
     private void FixedUpdate()
     {
         AddGravity();
-        // AddFrictional();
-        var hit = Physics2D.Raycast(transform.position, Vector2.right*Mathf.Sign(hzForce), boxSizeX*1.1f, 1<<LayerMask.NameToLayer("Map"));
-        if(hit) SetHorizontalForce(0);
+        AddFrictional();
+        var hit = Physics2D.BoxCast(transform.position, new Vector2(boxSizeX*2, boxSizeY*2), 0, Vector2.right*Mathf.Sign(hzForce), 0.02f, 1<<LayerMask.NameToLayer("Map"));
+        if(hit)
+        {
+            SetHorizontalForce(0);
+            SetHorizontalVelocity(0);
+        }
         Movement();
     }
 
@@ -123,6 +127,7 @@ public abstract class PlayerUnit : UnitBase
     {
         base.OnDisable();
         ResetForce();
+        SetHorizontalVelocity(0);
     }
 
     private float jumpingHight;
@@ -132,8 +137,9 @@ public abstract class PlayerUnit : UnitBase
         switch(jumpKey)
         {
             case KeyState.KeyDown:
-                if(isJumping) return false;
+                if(isJumping || !isGrounded) return false;
                 isJumping = true;
+                jumpingHight = 0;
                 temp += jumpImpulse * Mathf.Cos(0); // 점프 시작 시 힘을 초기화
 
                 return SetVerticalForce(temp);
@@ -143,13 +149,11 @@ public abstract class PlayerUnit : UnitBase
                 if(!isJumping || jumpingHight >= 1)
                 {
                     isJumping = false;
-                    jumpingHight = 0;
                     return false;
                 }
                 return SetVerticalForce(temp);
             case KeyState.KeyUp:
                 isJumping = false;
-                jumpingHight = 0;
             break;
         }
         return false;
@@ -157,12 +161,16 @@ public abstract class PlayerUnit : UnitBase
 
     public override bool Move(float dir)
     {
-        if(dir == 0 || ControllerChecker()) hzVel += -hzVel * accelerate * Time.deltaTime;
-        if(ControllerChecker()) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
-        base.Move(dir);
-        hzVel += (dir-hzVel) * accelerate * Time.deltaTime; // 가속도만큼 입력 방향에 힘을 추가
-        hzVel = Mathf.Clamp(hzVel, -1, 1); // 움직임 가속 제한
+        hzVel += (dir-hzForce/movementSpeed) * accelerate * Time.deltaTime; // 가속도만큼 입력 방향에 힘을 추가
+        if(ControllerChecker() || dir == 0) // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
+        {
+            base.Move(0);
+            return false;
+        }
+        else base.Move(dir);
         return SetHorizontalForce(hzVel * movementSpeed);
+        // if(Mathf.Abs(hzForce) >= Mathf.Abs(hzVel * movementSpeed) && MathF.Sign(hzForce) == Mathf.Sign(hzVel)) return false;
+        // else return SetHorizontalForce(hzVel * movementSpeed);
     }
 
     // 수정 필요함
@@ -286,9 +294,7 @@ public abstract class PlayerUnit : UnitBase
                 //Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), false);
                 canDown = false;
             }
-            Debug.Log("A");
             yield return new WaitForEndOfFrame();
-            Debug.Log("B");
         }
     }
 
@@ -300,10 +306,10 @@ public abstract class PlayerUnit : UnitBase
     /// <summary>
     /// 마찰력을 추가
     /// </summary>
-    private void AddFrictional()
+    private void AddFrictional() // 수평힘에 마찰력 추가
     {
-        if(Mathf.Abs(hzForce) > accelerate) AddHorizontalForce(-hzForce * accelerate * Time.deltaTime); // 수평힘에 마찰력 추가
-        else SetHorizontalForce(0);
+        if(Mathf.Abs(hzForce) > 1) AddHorizontalForce(-hzForce * accelerate * Time.fixedDeltaTime);
+        else if(Mathf.Abs(hzForce) > 0) AddHorizontalForce(-Mathf.Sign(hzForce) * accelerate * Time.fixedDeltaTime);
     }
 
     /// <summary>
@@ -318,11 +324,7 @@ public abstract class PlayerUnit : UnitBase
     /// <summary>
     /// 수평 방향 힘을 추가
     /// </summary>
-    protected void AddHorizontalForce(float force)
-    {
-        hzForce += force;
-        if(Physics2D.Raycast(transform.position, Vector2.right * hzForce, boxSizeX * 0.5f, LayerMask.NameToLayer("Map"))) hzForce = 0;
-    }
+    protected void AddHorizontalForce(float force) => hzForce += force;
     /// <summary>
     /// 수직 방향 힘을 설정
     /// </summary>
@@ -337,7 +339,6 @@ public abstract class PlayerUnit : UnitBase
     public bool SetHorizontalForce(float force)
     {
         hzForce = force;
-        if(Physics2D.Raycast(transform.position, Vector2.right * hzForce, boxSizeX * 0.5f, LayerMask.NameToLayer("Map"))) hzForce = 0;
         return true;
     }
 

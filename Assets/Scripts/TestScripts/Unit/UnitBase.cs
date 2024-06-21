@@ -152,7 +152,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
 
     public virtual bool Move(float dir)
     {
-        if (dir == 0)
+        if (dir == 0 || Mathf.Abs(hzForce) <= 0.1f || Physics2D.Raycast(transform.position, Vector2.right*Mathf.Sign(hzForce), boxSizeX*1.1f, 1<<LayerMask.NameToLayer("Map")))
         {
             anim.SetBool("isRun", false);
         }
