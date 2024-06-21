@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
 
@@ -55,12 +56,20 @@ public class ShootingAnimationController : MonoBehaviour
     public void AttackAni()
     {
         if(attackCoroutine == null) attackCoroutine = StartCoroutine(Attacking());
+        else waitTime = 0;
     }
 
+    float waitTime;
     private IEnumerator Attacking()
     {
+        waitTime = 0;
         SpriteAssetChange(1);
-        yield return new WaitForSeconds(10000000f);
+        Time.timeScale = 0.3f;
+        while(waitTime < 3)
+        {
+            waitTime += Time.deltaTime;
+            yield return null;
+        }
         SpriteAssetChange(0);
         attackCoroutine = null;
     }

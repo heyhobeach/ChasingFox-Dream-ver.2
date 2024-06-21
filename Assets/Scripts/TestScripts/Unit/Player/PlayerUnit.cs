@@ -212,11 +212,11 @@ public abstract class PlayerUnit : UnitBase
         Debug.DrawRay(transform.position, test2, Color.blue);
         if(dHit.collider == null)
         {
-            // Debug.Log("dHit null");
+            Debug.Log("dHit null");
         }
         if (d2Hit.collider == null)
         {
-            // Debug.Log("d2Hit null");
+            Debug.Log("d2Hit null");
         }
         
         if (hit != null)
@@ -227,38 +227,9 @@ public abstract class PlayerUnit : UnitBase
             isGrounded = indexP >= 0 | indexG >= 0 | dHit | d2Hit;
             findRayPlatform = indexP >= 0;
             cTemp = indexG >= 0;
-            // Debug.Log(string.Format("{0}", findRayPlatform));
+            Debug.Log(string.Format("{0}", findRayPlatform));
             
-            // var index = Array.FindIndex(hit, x => x.transform.tag == "ground");//만약 람다를 안 쓰려면 for로 hit만큼 돌ㅡㅜ   아가면서 태그가 맞는지 확인해야함
-            // if(Array.FindIndex(hit, x => x.transform.tag == "platform") != -1)
-            // {
-            //     // Debug.Log("플랫폼 감지중");
-            //     isGrounded = true;
-            //     findRayPlatform = true;//여기는 없어도 무방
-            // }
-            // else
-            // {
-            //     // Debug.Log("플랫폼 가지 못 함");
-            //     // if (index == -1)
-            //     // {
-            //     //     //아무것도 못 찾음
-            //     //     isGrounded = false;
-            //     // }
-            //     findRayPlatform=false;
-            // }
-            // //var index = Array.FindIndex(hit, x => x.transform.tag == "ground");
-            // if (index != -1)
-            // {
-            //     // Debug.Log("그라운드 찾음");
-            //     isGrounded = true;
-            //     cTemp = true;
-            // }
-            // else
-            // {
-            //     // Debug.Log("그라운드 못 찾음");
-            //     isGrounded = false;
-            //     cTemp = false;
-            // }
+        
             
         }
 
@@ -270,8 +241,8 @@ public abstract class PlayerUnit : UnitBase
         //else 
         if(!canDown&&(dHit.collider==null&&d2Hit.collider==null))//캐릭터 좌우 대각선 부분에서 플랫폼이 감지가 안될경우
         {
-            // Debug.Log("예외부분");
-            // Debug.Log(string.Format("{0}", canDown));
+            Debug.Log("예외부분");
+            Debug.Log(string.Format("{0}", canDown));
             Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), false);
         }
     }
