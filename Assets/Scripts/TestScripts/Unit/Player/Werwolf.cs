@@ -66,6 +66,22 @@ public class Werwolf : PlayerUnit
         }
     }
 
+    protected override void OnCollisionExit2D(collision2D collision)
+    {
+        base.OnExitCollisionExit2D(collision);
+        switch(CheckMapType(collision))
+        {
+            case MapType.Wall:
+                if(unitState == UnitState.HoldingWall)
+                {
+                    anim.SetBool("isHoldingWall", false);
+                    unitState = UnitState.Default;
+                }
+                break;
+        }
+    }
+    
+
     public override bool Attack(Vector3 clickPos)
     {
         if((unitState != UnitState.Default && unitState != UnitState.Air && unitState != UnitState.HoldingWall)
