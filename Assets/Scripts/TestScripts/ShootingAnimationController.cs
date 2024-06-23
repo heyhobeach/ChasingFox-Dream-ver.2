@@ -18,6 +18,8 @@ public class ShootingAnimationController : MonoBehaviour
     private SpriteRenderer head;
     private SpriteRenderer arm;
 
+    private void OnDisable() => attackCoroutine = null;
+
     private void Start()
     {
         body = GetComponent<SpriteRenderer>();
@@ -27,7 +29,7 @@ public class ShootingAnimationController : MonoBehaviour
 
     private void Update()
     {
-        if(!bodys[0].activeSelf) return;
+        if(!body.gameObject.activeSelf) return;
         var thisPoint = transform.position;
         thisPoint.z = 0;
         var screenPoint = Input.mousePosition;
@@ -55,6 +57,7 @@ public class ShootingAnimationController : MonoBehaviour
 
     public void AttackAni()
     {
+        Debug.Log(attackCoroutine);
         if(attackCoroutine == null) attackCoroutine = StartCoroutine(Attacking());
         else waitTime = 0;
     }
@@ -64,7 +67,6 @@ public class ShootingAnimationController : MonoBehaviour
     {
         waitTime = 0;
         SpriteAssetChange(1);
-        Time.timeScale = 0.3f;
         while(waitTime < 3)
         {
             waitTime += Time.deltaTime;
