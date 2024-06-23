@@ -27,6 +27,7 @@ public abstract class PlayerUnit : UnitBase
     // private float checkHigh;
     private float distanceToCheck;
     private LayerMask lm;
+    private Coroutine coroutine;
 
     // private Vector3 hidePos;
 
@@ -98,7 +99,6 @@ public abstract class PlayerUnit : UnitBase
         base.Start();
         lm = ~(1 << gameObject.layer);
         distanceToCheck = boxSizeY * 1.05f;
-        StartCoroutine(DownJump());
     }
 
     protected override void Update()
@@ -123,9 +123,12 @@ public abstract class PlayerUnit : UnitBase
         Movement();
     }
 
+    protected override void OnEnable() => coroutine = StartCoroutine(DownJump());
     protected override void OnDisable()
     {
         base.OnDisable();
+        StopCoroutine(coroutine);
+        coroutine = null;
         ResetForce();
         SetHorizontalVelocity(0);
     }
@@ -212,11 +215,11 @@ public abstract class PlayerUnit : UnitBase
         Debug.DrawRay(transform.position, test2, Color.blue);
         if(dHit.collider == null)
         {
-            Debug.Log("dHit null");
+            // Debug.Log("dHit null");
         }
         if (d2Hit.collider == null)
         {
-            Debug.Log("d2Hit null");
+            // Debug.Log("d2Hit null");
         }
         
         if (hit != null)
@@ -227,7 +230,7 @@ public abstract class PlayerUnit : UnitBase
             isGrounded = indexP >= 0 | indexG >= 0 | dHit | d2Hit;
             findRayPlatform = indexP >= 0;
             cTemp = indexG >= 0;
-            Debug.Log(string.Format("{0}", findRayPlatform));
+            // Debug.Log(string.Format("{0}", findRayPlatform));
             
         
             
@@ -252,7 +255,7 @@ public abstract class PlayerUnit : UnitBase
         {
             if (canDown)//아래 점프 가능한 오브젝트 만날경우
             {
-                // Debug.Log("hi");
+                Debug.Log("hi");
                 findRayPlatform = true;
                 Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), true);//원리는 그냥 설정한 시간동안 해당 플렛폼들을 그냥 무시하는식으로 설정했음 근데 지금 생각해보면 지금 플렛폼을 받아와서 플렛폼의 네임을 무시하는식으로 해도 되지않을까 하는 영감이 떠오름
                 SetVerticalForce(gravity * Time.deltaTime);

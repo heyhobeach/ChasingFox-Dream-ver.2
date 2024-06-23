@@ -113,7 +113,6 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
 
         shootingAnimationController = GetComponent<ShootingAnimationController>();
         if(shootingAnimationController != null) longRangeUnit = true;
-        Debug.Log(longRangeUnit);
     }
     protected virtual void Update()
     {
@@ -126,6 +125,8 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         if(Mathf.Abs(vcForce) > 0.2f) anim.SetFloat("vcForce", vcForce);
         else anim.SetFloat("vcForce", 0);
     }
+    
+    protected abstract void OnEnable();
 
     /// <summary>
     /// 폼체인지 시 초기화 해야할 작업을 수행

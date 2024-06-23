@@ -66,9 +66,9 @@ public class Werwolf : PlayerUnit
         }
     }
 
-    protected override void OnCollisionExit2D(collision2D collision)
+    protected override void OnCollisionExit2D(Collision2D collision)
     {
-        base.OnExitCollisionExit2D(collision);
+        base.OnCollisionExit2D(collision);
         switch(CheckMapType(collision))
         {
             case MapType.Wall:
