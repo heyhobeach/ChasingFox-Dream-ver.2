@@ -23,16 +23,21 @@ public class Human : PlayerUnit
     /// 총알 속도
     /// </summary>
     public float bulletSpeed;
+    /// <summary>
+    /// 장탄 수
+    /// </summary>
+    public float magazine;
+
+    /// <summary>
+    /// 잔여 탄약 수
+    /// </summary>
+    public float residualAmmo;
 
     /// <summary>
     /// 최대 탄약 수
     /// </summary>
     public float maxAmmo;
 
-    /// <summary>
-    /// 현재 잔탄 수
-    /// </summary>
-    private float residualAmmo;
 
     /// <summary>
     /// 재장전 진행도
@@ -57,7 +62,7 @@ public class Human : PlayerUnit
         switch(CheckMapType(collision))
         {
             case MapType.Wall:
-                SetVel(0);
+                SetHorizontalForce(0);
                 break;
         }
     }
@@ -68,7 +73,7 @@ public class Human : PlayerUnit
         switch(CheckMapType(collision))
         {
             case MapType.Wall:
-                SetVel(0);
+                SetHorizontalForce(0);
                 break;
         }
     }
@@ -81,7 +86,9 @@ public class Human : PlayerUnit
 
     public override bool Attack(Vector3 clickPos)
     {
+        base.Attack(clickPos);
         if(residualAmmo <= 0) return false;
+        shootingAnimationController.Shoot();
         Vector2 pos = Vector2.zero;
         GetSignedAngle((Vector2) transform.position, clickPos, out pos);
         GameObject _bullet = Instantiate(bullet);//총알을 공격포지션에서 생성함
@@ -97,6 +104,8 @@ public class Human : PlayerUnit
         //Anim
         return base.Move(dir);
     }
+
+    public override bool Jump(KeyState jumpKey) => base.Jump(jumpKey);
 
     public override bool Dash()
     {
@@ -129,7 +138,7 @@ public class Human : PlayerUnit
         while(t < dashDuration) // 대쉬 지속 시간 동안
         {
             t += Time.deltaTime;
-            AddHorizontalForce(Mathf.Sign(hzVel) * movementSpeed * 2f);
+            SetHorizontalForce(Mathf.Sign(hzVel) * movementSpeed * 2f);
             yield return null;
         }
         StopDash();
@@ -138,7 +147,7 @@ public class Human : PlayerUnit
     public override bool FormChange()
     {
         if(unitState != UnitState.Default) return false;
-        else return true;
+        else return base.FormChange();
     }
 
     public override bool Reload()

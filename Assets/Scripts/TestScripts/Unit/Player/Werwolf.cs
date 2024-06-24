@@ -33,10 +33,6 @@ public class Werwolf : PlayerUnit
     /// 대쉬 코루틴을 저장하는 변수, 대쉬 중 여부 겸용
     /// </summary>
     private Coroutine dashCoroutine;
-    /// <summary>
-    /// 벽점프 코루틴을 저장하는 변수, 벽점프 중 여부 겸용
-    /// </summary>
-    private Coroutine wallCoroutine;
 
     protected override void OnDisable()
     {
@@ -52,31 +48,39 @@ public class Werwolf : PlayerUnit
             case MapType.Wall:
                 if(unitState == UnitState.Air)
                 {
+                    anim.SetBool("isHoldingWall", true);
                     unitState = UnitState.HoldingWall; // 벽붙기 상태로 변경
                     fixedDir = -CheckDir(collision.contacts[0].point); // 벽의 반대 방향을 저장
                     ResetForce();
+                    SetHorizontalVelocity(0);
+                    SetHorizontalForce(fixedDir * 0.11f);
                 }
                 break;
             case MapType.Ground:
-                if(unitState == UnitState.HoldingWall) unitState = UnitState.Default;
-                break;
-        }
-    }
-    protected override void OnCollisionStay2D(Collision2D collision)
-    {
-        base.OnCollisionStay2D(collision);
-        switch(CheckMapType(collision))
-        {
-            case MapType.Ground:
-            if(wallCoroutine != null)
-            {
-                unitState = UnitState.Default;
-                StopCoroutine(wallCoroutine);
-                wallCoroutine = null;
-            }
+                if(unitState == UnitState.HoldingWall)
+                {
+                    anim.SetBool("isHoldingWall", false);
+                    unitState = UnitState.Default;
+                }
             break;
         }
     }
+
+    protected override void OnCollisionExit2D(Collision2D collision)
+    {
+        base.OnCollisionExit2D(collision);
+        switch(CheckMapType(collision))
+        {
+            case MapType.Wall:
+                if(unitState == UnitState.HoldingWall)
+                {
+                    anim.SetBool("isHoldingWall", false);
+                    unitState = UnitState.Default;
+                }
+                break;
+        }
+    }
+    
 
     public override bool Attack(Vector3 clickPos)
     {
@@ -93,6 +97,7 @@ public class Werwolf : PlayerUnit
         MeleeAttack.transform.localPosition = new Vector3(Mathf.Cos(deg), Mathf.Sin(deg)*2,transform.localPosition.z);
 
         attackCoroutine = StartCoroutine(Attacking(deg));
+        base.Attack(clickPos);
         return true;
     }
 
@@ -109,7 +114,7 @@ public class Werwolf : PlayerUnit
         {
             high = 3;
         }
-        AddVerticalForce(high);
+        SetVerticalForce(high);
         yield return new WaitForSeconds(attackDuration);
         MeleeAttack.SetActive(false);
         attackCoroutine = null;
@@ -124,26 +129,27 @@ public class Werwolf : PlayerUnit
     }
     public override bool Jump(KeyState jumpKey)
     {
-        if(unitState == UnitState.HoldingWall && jumpKey == KeyState.KeyDown &&
-            wallCoroutine == null) wallCoroutine = StartCoroutine(WallJump()); // 벽에 붙은 상태일 경우 벽점프 실행
-        else if(ControllerChecker() || unitState == UnitState.HoldingWall) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
-        return base.Jump(jumpKey);
-    }
-
-    /// <summary>
-    /// 벽점프 중의 동작을 수행
-    /// </summary>
-    private IEnumerator WallJump()
-    {
-        float wallJumpDuration = 0.2f;
-        ResetForce();
-        AddVerticalForce(-gravity * Time.deltaTime + jumpImpulse * 80); // 윗 방향 힘 추가
-        AddHorizontalForce(fixedDir * movementSpeed); // 벽의 반대 방향 힘 추가
-        yield return new WaitForSeconds(wallJumpDuration);
-        unitState = UnitState.Default;
-        AddVerticalForce(gravity * Time.deltaTime - jumpImpulse * 30); // 윗 방향 힘 추가
-        SetVel(fixedDir); // 벽의 반대 방향으로 힘 강제 변경, 자연스러운 동작을 위한 부분
-        wallCoroutine = null;
+        if(ControllerChecker()) return false;
+        switch(jumpKey)
+        {
+            case KeyState.KeyDown:
+            if(unitState == UnitState.HoldingWall)
+            {
+                unitState = UnitState.Default;
+                isJumping = false;
+                SetVerticalForce(jumpImpulse); // 윗 방향 힘 추가
+                base.Move(fixedDir * movementSpeed * 3);
+                anim.SetBool("isHoldingWall", false);
+                return true;
+            }
+            else return base.Jump(jumpKey);
+            case KeyState.KeyStay:
+            if(unitState == UnitState.HoldingWall) return false;
+            return base.Jump(jumpKey);
+            case KeyState.KeyUp:
+            return base.Jump(jumpKey);
+        }
+        return false;
     }
 
     // 수정 필요함
@@ -164,7 +170,7 @@ public class Werwolf : PlayerUnit
         while(t < dashDuration) // 대쉬 지속시간만큼 동작
         {
             t += Time.deltaTime;
-            AddHorizontalForce(Mathf.Sign(hzVel) * movementSpeed * 2f); // 수평 방향으로 힘 추가
+            SetHorizontalForce(Mathf.Sign(hzVel) * movementSpeed * 2f); // 수평 방향으로 힘 추가
             yield return null;
         }
         StopDash();

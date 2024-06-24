@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -29,9 +30,9 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     public float dashDuration;
 
     /// <summary>
-    /// 점프력
+    /// 점프 유지력
     /// </summary>
-    public float jumpHight;
+    public float jumpForce;
 
     /// <summary>
     /// 점프 추진력
@@ -39,9 +40,9 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     public float jumpImpulse;
 
     /// <summary>
-    /// 점프 유지력
+    /// 점프 유지 시간
     /// </summary>
-    public float jumpForce;
+    public float jumpTime;
 
     /// <summary>
     /// 유닛상태 열거형
@@ -88,9 +89,17 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     /// </summary>
     public Vector2 Force { get { return new Vector2(hzForce, vcForce); } private set {  } }
 
+    /// <summary>
+    /// 바닥 체크
+    /// </summary>
+    protected bool isGrounded;
+
     private SpriteRenderer spriteRenderer;
 
     public Animator anim;
+
+    private bool longRangeUnit;
+    protected ShootingAnimationController shootingAnimationController;
 
     protected virtual void Start()
     {
@@ -101,6 +110,9 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         boxSizeY = gameObject.GetComponent<Collider2D>().bounds.extents.y;
         
         unitState = UnitState.Default;
+
+        shootingAnimationController = GetComponent<ShootingAnimationController>();
+        if(shootingAnimationController != null) longRangeUnit = true;
     }
     protected virtual void Update()
     {
@@ -108,7 +120,13 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         // 힘의 방향에 따라 이미지를 좌우 반전
         if(hzForce < -0.1f) spriteRenderer.flipX = true;
         else if(hzForce > 0.1f) spriteRenderer.flipX = false;
+        if(!isGrounded) anim.SetBool("isAir", true);
+        else anim.SetBool("isAir", false);
+        if(Mathf.Abs(vcForce) > 0.2f) anim.SetFloat("vcForce", vcForce);
+        else anim.SetFloat("vcForce", 0);
     }
+    
+    protected abstract void OnEnable();
 
     /// <summary>
     /// 폼체인지 시 초기화 해야할 작업을 수행
@@ -116,9 +134,16 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     protected virtual void OnDisable()
     {
         unitState = UnitState.Default;
+        anim.SetBool("isDeath", false);
     }
 
-    public abstract bool Attack(Vector3 clickPos);
+    public virtual bool Attack(Vector3 clickPos)
+    {
+        anim.SetTrigger("attack");
+        if(!longRangeUnit) return false;
+        shootingAnimationController.AttackAni();
+        return true;
+    }
 
     public abstract bool Dash();
 
@@ -128,7 +153,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
 
     public virtual bool Move(float dir)
     {
-        if (dir == 0)
+        if (dir == 0 || Mathf.Abs(hzForce) <= 0.1f || Physics2D.Raycast(transform.position, Vector2.right*Mathf.Sign(hzForce), boxSizeX*1.1f, 1<<LayerMask.NameToLayer("Map")))
         {
             anim.SetBool("isRun", false);
         }
@@ -136,12 +161,24 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         {
             anim.SetBool("isRun", true);
         }
+        if(Mathf.Abs(hzForce) >= 0.1f) anim.SetFloat("hzForce", Mathf.Sign(hzForce) * (Mathf.Clamp(hzForce / movementSpeed, -1, 1) - dir * 1.5f));
+        else anim.SetFloat("hzForce", 0);
         return true;
     }
 
-    public abstract bool FormChange();
+    public virtual bool FormChange()
+    {
+        anim.SetBool("formChange", true);
+        return true;
+    }
 
     public abstract bool Reload();
+    
+    public void Death()
+    {
+        anim.SetTrigger("death");
+        anim.SetBool("isDeath", true);
+    }
 
     /// <summary>
     /// 현재 플레이어 유닛의 제어 가능 여부 확인
@@ -186,4 +223,5 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         dir = (to - from).normalized; // 시작 벡터에서 목표 벡터까지의 방향 계산
         return new Vector3(0, 0, Vector3.SignedAngle(transform.right, dir, transform.forward)); // 유닛 기준 뱡향 벡터의 각도 계산 및 반환
     }
+
 }

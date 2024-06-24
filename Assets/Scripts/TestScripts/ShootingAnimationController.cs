@@ -57,7 +57,6 @@ public class ShootingAnimationController : MonoBehaviour
 
     public void AttackAni()
     {
-        Debug.Log(attackCoroutine);
         if(attackCoroutine == null) attackCoroutine = StartCoroutine(Attacking());
         else waitTime = 0;
     }

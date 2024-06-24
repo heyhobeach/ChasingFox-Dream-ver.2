@@ -93,6 +93,7 @@ public class Bullet : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if(collision.gameObject.CompareTag("ground") || collision.gameObject.CompareTag("Wall")) Destroy(gameObject);
+
         if (collision.gameObject.tag == "guard")//가드 만날겨우 trigger를 켜서 collision이 안일어나도록함
         {
             this.gameObject.GetComponent<Collider2D>().isTrigger = true;

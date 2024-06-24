@@ -122,12 +122,12 @@ public partial class Dumy : MonoBehaviour, IDamageable
             //float dis = ray2d.distance;
             if (mysize <= subvec.magnitude)
             {
-                Debug.Log("범위 넘어감");
+                // Debug.Log("범위 넘어감");
                 //ray2d = null; 
             }
             else//범위 안에 들어왔을때
             {
-                Debug.Log(string.Format("{0}||{1}||{2}||", deg, mysize, subvec.magnitude));
+                // Debug.Log(string.Format("{0}||{1}||{2}||", deg, mysize, subvec.magnitude));
                 if (!follow)//이미 레이 = 시야에 감지 되었기에 계속 추격해야함
                 {
                     //1초마다 갱신하게 코루틴 필요    
