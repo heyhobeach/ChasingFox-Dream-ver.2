@@ -301,8 +301,11 @@ public abstract class PlayerUnit : UnitBase
     /// <summary>
     /// 중력을 추가
     /// </summary>
-    private void AddGravity() => AddVerticalForce(unitState == UnitState.HoldingWall ? gravity * Time.fixedDeltaTime * 0.2f : gravity * Time.fixedDeltaTime);
-
+    private void AddGravity()
+    {
+        if(isGrounded && !canDown) AddVerticalForce(0);
+        else AddVerticalForce(unitState == UnitState.HoldingWall ? gravity * Time.fixedDeltaTime * 0.2f : gravity * Time.fixedDeltaTime);
+    }
     /// <summary>
     /// 마찰력을 추가
     /// </summary>
@@ -318,8 +321,8 @@ public abstract class PlayerUnit : UnitBase
     protected void AddVerticalForce(float force)
     {
         if(isGrounded && !canDown && vcForce < 0) vcForce = 0; // 바닥에 붙어있을 시 아래 방향의 힘 초기화
-        // Debug.Log(isGrounded + ", " + !canDown);
         vcForce += force;
+        // Debug.Log(isGrounded + ", " + !canDown);
     }
     /// <summary>
     /// 수평 방향 힘을 추가
@@ -349,18 +352,15 @@ public abstract class PlayerUnit : UnitBase
     /// </summary>
     private void Movement()
     {
-        rg.MovePosition(new Vector3(hzForce, vcForce) * Time.deltaTime);
-        // if(!isGrounded) rg.MovePosition(new Vector3(hzForce, vcForce) * Time.deltaTime);
-        // else
-        // {
-        //     var hit = Physics2D.BoxCastAll(transform.position, new Vector2(boxSizeX*2, boxSizeY*2), 0, Vector2.down, Mathf.Sign(hzForce), 1<<LayerMask.NameToLayer("OneWayPlatform") | 1<<LayerMask.NameToLayer("Ground"));
-        //     if(hit.Length > 0)
-        //     {
-        //         Debug.Log("position : " + Vector3.ProjectOnPlane(new Vector3(hzForce, 0), hit[0].normal) * Time.deltaTime);
-        //         rg.MovePosition(transform.position + Vector3.ProjectOnPlane(new Vector3(hzForce, 0), hit[0].normal).normalized * hzForce * Time.deltaTime);
-        //     }
-        //     else rg.MovePosition(transform.position + (new Vector3(hzForce, vcForce) * Time.deltaTime));
-        // }
+        // rg.MovePosition(transform.position + new Vector3(hzForce, vcForce) * Time.deltaTime);
+        var hit = Physics2D.BoxCastAll(transform.position-new Vector3(0, boxSizeY), new Vector2(boxSizeX, 0.1f), 0, Vector2.down, boxSizeX, 1<<LayerMask.NameToLayer("OneWayPlatform") | 1<<LayerMask.NameToLayer("Ground"));
+        if(hit.Length > 0 && !canDown && Mathf.Abs(hit[0].normal.x) < 1)
+        {
+            // Debug.Log("Posistion : " + hit[0].normal);
+            var temp = Vector3.ProjectOnPlane(new Vector3(hzForce, 0), hit[0].normal);
+            rg.MovePosition(transform.position + new Vector3(temp.x, temp.y + vcForce) * Time.deltaTime * 1.41f);
+        }
+        else rg.MovePosition(transform.position + (new Vector3(hzForce, vcForce) * Time.deltaTime));
     }
 
     /// <summary>
