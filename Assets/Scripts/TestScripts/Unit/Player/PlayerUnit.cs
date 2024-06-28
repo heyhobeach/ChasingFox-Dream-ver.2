@@ -107,7 +107,7 @@ public abstract class PlayerUnit : UnitBase
         else if(isGrounded && unitState == UnitState.Air) unitState = UnitState.Default; // 공중 상태에서 바닥에 닿을 시 기본 상태로 변경
         // Debug.Log(string.Format("{0}은 현재 오브젝트", currentOneWayPlatform));
         CrouchUpdate();
-        Debug.Log("유닛 상태"+unitState);
+        // Debug.Log("유닛 상태"+unitState);
         base.Update();
     }
 
@@ -137,6 +137,7 @@ public abstract class PlayerUnit : UnitBase
     private float jumpingHight;
     public override bool Jump(KeyState jumpKey)
     {
+        if(ControllerChecker() || unitState == UnitState.Dash) return false;
         float temp = -gravity * Time.deltaTime; // 중력 무시를 위해 중력 값 만큼 힘 추가
         switch(jumpKey)
         {
@@ -165,7 +166,7 @@ public abstract class PlayerUnit : UnitBase
 
     public override bool Move(float dir)
     {
-        hzVel += (dir-hzForce/movementSpeed) * accelerate * Time.deltaTime; // 가속도만큼 입력 방향에 힘을 추가
+        hzVel += dir == 0 ? -hzVel * accelerate * Time.deltaTime : (dir-hzForce/movementSpeed) * accelerate * Time.deltaTime; // 가속도만큼 입력 방향에 힘을 추가
         if(ControllerChecker() || dir == 0) // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
         {
             base.Move(0);
@@ -180,6 +181,7 @@ public abstract class PlayerUnit : UnitBase
     // 수정 필요함
     public override bool Crouch(KeyState crouchKey)
     {
+        if(ControllerChecker() || unitState == UnitState.Air) return false;
         switch(crouchKey)
         {
             case KeyState.KeyDown:
@@ -207,15 +209,6 @@ public abstract class PlayerUnit : UnitBase
         RaycastHit2D[] hit =Physics2D.RaycastAll(transform.parent.position, Vector2.down, distanceToCheck, lm);
         Debug.DrawRay(transform.position, Vector2.down * distanceToCheck, Color.red);
         //BoxCollider2D box = GetComponent<BoxCollider2D>();
-<<<<<<< HEAD
-        Vector2 test = new Vector2(transform.position.x + charBoxCollider.size.x/2, transform.position.y - charBoxCollider.size.y/2)  - (Vector2)transform.position;
-        RaycastHit2D dHit = Physics2D.Raycast(transform.position, test,(MathF.Sqrt(charBoxCollider.size.x / 2) + MathF.Sqrt(charBoxCollider.size.y/2)) * 0.6f, 1<<LayerMask.NameToLayer("OneWayPlatform"));//플랫폼감지용 레이,하드 코딩때 값 0.75f,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정 
-        
-
-        Debug.DrawRay(transform.position,test, Color.green);
-        Vector2 test2 = new Vector2(transform.position.x - charBoxCollider.size.x / 2, transform.position.y - charBoxCollider.size.y / 2) - (Vector2)transform.position;
-        RaycastHit2D d2Hit = Physics2D.Raycast(transform.position, test2, (MathF.Sqrt(charBoxCollider.size.x / 2) + MathF.Sqrt(charBoxCollider.size.y / 2))*0.6f, 1 << LayerMask.NameToLayer("OneWayPlatform"));//플랫폼감지용 레이,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정
-=======
         Vector2 test = new Vector2(transform.position.x + charBoxCollider.size.x/2, transform.position.y - charBoxCollider.size.y/2)  - (Vector2)transform.position;//우측대각선
         //RaycastHit2D dHit = Physics2D.Raycast(transform.position, test,(MathF.Sqrt(charBoxCollider.size.x / 2) + MathF.Sqrt(charBoxCollider.size.y/2)) * 0.65f, 1<<LayerMask.NameToLayer("OneWayPlatform"));//플랫폼감지용 레이,하드 코딩때 값 0.75f,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정 
         RaycastHit2D dHit = Physics2D.Raycast(transform.position, test, player_dialog*1.05f, 1 << LayerMask.NameToLayer("OneWayPlatform"));//플랫폼감지용 레이,하드 코딩때 값 0.75f,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정 
@@ -229,7 +222,6 @@ public abstract class PlayerUnit : UnitBase
         RaycastHit2D []d2Hitarr = Physics2D.RaycastAll(transform.position, test2, player_dialog * 1.05f, 1 << LayerMask.NameToLayer("OneWayPlatform"));//플랫폼감지용 레이,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정
 
 
->>>>>>> origin/jumgmuBranch
         Debug.DrawRay(transform.position, test2, Color.blue);
         if(dHit.collider == null)
         {
@@ -239,10 +231,7 @@ public abstract class PlayerUnit : UnitBase
         {
             // Debug.Log("d2Hit null");
         }
-<<<<<<< HEAD
-=======
         Debug.Log("hit=>"+hit.Length);
->>>>>>> origin/jumgmuBranch
         
         if (hit != null)
         {
@@ -358,7 +347,21 @@ public abstract class PlayerUnit : UnitBase
     /// <summary>
     /// 플레이어 유닛 힘을 리지드바디로 전달
     /// </summary>
-    private void Movement() => rg.MovePosition(transform.position + (new Vector3(hzForce, vcForce) * Time.deltaTime));
+    private void Movement()
+    {
+        rg.MovePosition(new Vector3(hzForce, vcForce) * Time.deltaTime);
+        // if(!isGrounded) rg.MovePosition(new Vector3(hzForce, vcForce) * Time.deltaTime);
+        // else
+        // {
+        //     var hit = Physics2D.BoxCastAll(transform.position, new Vector2(boxSizeX*2, boxSizeY*2), 0, Vector2.down, Mathf.Sign(hzForce), 1<<LayerMask.NameToLayer("OneWayPlatform") | 1<<LayerMask.NameToLayer("Ground"));
+        //     if(hit.Length > 0)
+        //     {
+        //         Debug.Log("position : " + Vector3.ProjectOnPlane(new Vector3(hzForce, 0), hit[0].normal) * Time.deltaTime);
+        //         rg.MovePosition(transform.position + Vector3.ProjectOnPlane(new Vector3(hzForce, 0), hit[0].normal).normalized * hzForce * Time.deltaTime);
+        //     }
+        //     else rg.MovePosition(transform.position + (new Vector3(hzForce, vcForce) * Time.deltaTime));
+        // }
+    }
 
     /// <summary>
     /// 현재 플레이어 유닛의 모든 힘을 초기화

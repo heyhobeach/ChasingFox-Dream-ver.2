@@ -50,6 +50,8 @@ public class Human : PlayerUnit
     private Coroutine dashCoroutine;
     private Coroutine reloadCoroutine;
 
+    private float fixedDir;
+
     protected override void OnDisable()
     {
         base.OnDisable();
@@ -86,6 +88,7 @@ public class Human : PlayerUnit
 
     public override bool Attack(Vector3 clickPos)
     {
+        if(ControllerChecker() || unitState == UnitState.Dash) return false;
         base.Attack(clickPos);
         if(residualAmmo <= 0) return false;
         shootingAnimationController.Shoot();
@@ -101,11 +104,18 @@ public class Human : PlayerUnit
     public override bool Move(float dir)
     {
         if(ControllerChecker() || unitState == UnitState.Dash) return false; // 조작이 불가능한 상태일 경우 동작을 수행하지 않음
+        fixedDir = (int)dir; // 대쉬 방향을 저장
         //Anim
         return base.Move(dir);
     }
 
     public override bool Jump(KeyState jumpKey) => base.Jump(jumpKey);
+
+    public override bool Crouch(KeyState crouchKey)
+    {
+        if(ControllerChecker() || unitState == UnitState.Dash) return false;
+        return base.Crouch(crouchKey);
+    }
 
     public override bool Dash()
     {
@@ -135,10 +145,12 @@ public class Human : PlayerUnit
     {
         float t = 0;
         unitState = UnitState.Dash;
+        var tempVel = Mathf.Sign(fixedDir);
+        SetHorizontalVelocity(tempVel);
         while(t < dashDuration) // 대쉬 지속 시간 동안
         {
             t += Time.deltaTime;
-            SetHorizontalForce(Mathf.Sign(hzVel) * movementSpeed * 2f);
+            SetHorizontalForce(tempVel * movementSpeed * 2f);
             yield return null;
         }
         StopDash();

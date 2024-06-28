@@ -29,7 +29,7 @@ public class ShootingAnimationController : MonoBehaviour
 
     private void Update()
     {
-        if(!body.gameObject.activeSelf) return;
+        if(!bodys[0].gameObject.activeSelf) return;
         var thisPoint = transform.position;
         thisPoint.z = 0;
         var screenPoint = Input.mousePosition;
