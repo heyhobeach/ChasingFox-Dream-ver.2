@@ -52,7 +52,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     /// <summary>
     /// 유닛의 현재 상태를 가져옴
     /// </summary>
-    public UnitState UnitState { get; set; }
+    public UnitState UnitState { get => unitState; set => unitState = value; }
 
     /// <summary>
     /// 유닛 콜라이더 가로 크기
@@ -169,6 +169,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     public virtual bool FormChange()
     {
         anim.SetBool("formChange", true);
+        unitState = UnitState.FormChange;
         return true;
     }
 
@@ -178,6 +179,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     {
         anim.SetTrigger("death");
         anim.SetBool("isDeath", true);
+        unitState = UnitState.Death;
     }
 
     /// <summary>
@@ -194,6 +196,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     public static bool ControllerChecker(UnitBase unitBase)
     {
         var unitState = unitBase.UnitState;
+        Debug.Log("controll : " + unitState);
         if(unitState == UnitState.KnockBack || unitState == UnitState.Stiffen || 
             unitState == UnitState.Stiffen_er || unitState == UnitState.Death || 
             unitState == UnitState.Pause) return true;

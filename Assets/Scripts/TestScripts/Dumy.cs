@@ -44,7 +44,7 @@ public partial class Dumy : MonoBehaviour, IDamageable
         //Debug.Log(this.transform.parent);
         // player = GameObject.FindWithTag("Player");//�÷��̾ ã�Ƽ� ����, �̷��� �� ������ ó������ �� �����صΰ� ������ �����ϸ� ������ ���� �������� ������ �����ؾ��Ұ�츦 ���� ���� �κ�
         player = Player.pObject;
-        Debug.Log(player.transform);
+        // Debug.Log(player.transform);
         
         
     }

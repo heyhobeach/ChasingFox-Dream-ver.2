@@ -34,6 +34,14 @@ public class Werwolf : PlayerUnit
     /// </summary>
     private Coroutine dashCoroutine;
 
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        var pi = GameManager.Instance.proCamera2DPointerInfluence;
+        pi.MaxHorizontalInfluence = 2.5f;
+        pi.MaxVerticalInfluence = 1.5f;
+        pi.InfluenceSmoothness = 0.0f;
+    }
     protected override void OnDisable()
     {
         base.OnDisable();
@@ -199,7 +207,7 @@ public class Werwolf : PlayerUnit
     public override bool FormChange()
     {
         if(unitState != UnitState.Default) return false;
-        else return true;
+        else return base.FormChange();
     }
 
     public override bool Reload() => false;

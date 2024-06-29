@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Com.LuisPedroFonseca.ProCamera2D;
 using UnityEngine;
 
 /// <summary>
@@ -20,12 +21,10 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     /// </summary>
     private PlayerUnit changedForm;
 
-    public int _maxHealth;    //?private아닌가
+    [SerializeField] private int _maxHealth;    //?private아닌가 A : 맞음
     public int maxHealth { get => _maxHealth; set => _maxHealth = value; }
-    private int _health;    
-    public int health { get => _health; set => _health = value; }
-    private bool _invalidation;
-    public bool invalidation { get => _invalidation; set => _invalidation = value; }
+    public int health { get; set; }
+    public bool invalidation { get; set; }
 
     public int transformNum = 2;
 
@@ -63,15 +62,10 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
 
     public bool Crouch(KeyState crouchKey) => changedForm.Crouch(crouchKey);
 
-    public bool Jump(KeyState jumpKey)
-    {
-        if(changedForm.UnitState == UnitState.FormChange) return false;
-        return changedForm.Jump(jumpKey);
-    }
+    public bool Jump(KeyState jumpKey) => changedForm.Jump(jumpKey);
 
     public bool Move(float dir)
     {
-        if(changedForm.UnitState == UnitState.FormChange) return false;
         if(dir != 0)fixedDir = dir;
         return changedForm.Move(dir);
     }
@@ -91,35 +85,48 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     public void Death()
     {
         Debug.Log("유저 사망");
+        ProCamera2DShake.Instance.Shake("Hit ShakePreset");
+        invalidation = true;
         if(changedForm is not Berserker) // 버서커 상태가 아닐 시
         {
+            Debug.Log("버서커");
             changedForm.Death();
-            foreach(PlayerUnit form in forms) form.gameObject.SetActive(false);
-            health = maxHealth; // 체력 초기화
-            changedForm = forms[2]; // 상태를 버서커 상태로 변경
-            changedForm.gameObject.SetActive(true);
+            StartCoroutine(Test());
         }
         else
         {
             Debug.Log("진짜 죽음");
-            
-            changedForm.gameObject.SetActive(false);
-            PopupManager.Instance.DeathPop();
-
+            StartCoroutine(Test2());
             //PageManger.Instance.RoadRetry();
         }
     }
+    
+    IEnumerator Test()
+    {
+        yield return new WaitForSeconds(3f);
+        foreach(PlayerUnit form in forms) form.gameObject.SetActive(false);
+        health = maxHealth; // 체력 초기화
+        changedForm = forms[2]; // 상태를 버서커 상태로 변경
+        changedForm.gameObject.SetActive(true);
+        invalidation = false;
+    }
+    IEnumerator Test2()
+    {
+        yield return new WaitForSeconds(3f);
+        // changedForm.gameObject.SetActive(false);
+        PopupManager.Instance.DeathPop();
 
+    }
     public bool FormChange()
     {
-        if(changedForm.UnitState == UnitState.FormChange || !changedForm.FormChange()) return false; // 대쉬 중이거나 제어가 불가능한 상태일 경우 동작을 수행하지 않음
+        if(!changedForm.FormChange()) return false; // 대쉬 중이거나 제어가 불가능한 상태일 경우 동작을 수행하지 않음
         StartCoroutine(FormChanging());
         return true;
     }
 
     private IEnumerator FormChanging()
     {
-        changedForm.UnitState = UnitState.FormChange;
+        // changedForm.UnitState = UnitState.FormChange;
         float t = 0;
         if(changedForm is Human)
         {
@@ -143,11 +150,11 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         Time.fixedDeltaTime = 1 * 0.02f;
         #endregion
         t = 0;
-        
+        var tempDir = fixedDir;
         while(t <= changeDelay)
         {
             t += Time.unscaledDeltaTime;
-            changedForm.Move(fixedDir);
+            changedForm.SetHorizontalForce(tempDir);
             yield return null;
         }
 

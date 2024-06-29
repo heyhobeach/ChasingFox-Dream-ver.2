@@ -137,7 +137,7 @@ public abstract class PlayerUnit : UnitBase
     private float jumpingHight;
     public override bool Jump(KeyState jumpKey)
     {
-        if(ControllerChecker() || unitState == UnitState.Dash) return false;
+        if(ControllerChecker() || unitState == UnitState.FormChange || unitState == UnitState.Dash) return false;
         float temp = -gravity * Time.deltaTime; // 중력 무시를 위해 중력 값 만큼 힘 추가
         switch(jumpKey)
         {
@@ -166,8 +166,9 @@ public abstract class PlayerUnit : UnitBase
 
     public override bool Move(float dir)
     {
+        if(ControllerChecker()) return false;
         hzVel += dir == 0 ? -hzVel * accelerate * Time.deltaTime : (dir-hzForce/movementSpeed) * accelerate * Time.deltaTime; // 가속도만큼 입력 방향에 힘을 추가
-        if(ControllerChecker() || dir == 0) // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
+        if(unitState == UnitState.FormChange || dir == 0) // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
         {
             base.Move(0);
             return false;
@@ -181,7 +182,7 @@ public abstract class PlayerUnit : UnitBase
     // 수정 필요함
     public override bool Crouch(KeyState crouchKey)
     {
-        if(ControllerChecker() || unitState == UnitState.Air) return false;
+        if(ControllerChecker() || unitState == UnitState.FormChange || unitState == UnitState.Air || !findRayPlatform) return false;
         switch(crouchKey)
         {
             case KeyState.KeyDown:
@@ -221,7 +222,6 @@ public abstract class PlayerUnit : UnitBase
         RaycastHit2D d2Hit = Physics2D.Raycast(transform.position, test2, player_dialog*1.05f , 1 << LayerMask.NameToLayer("OneWayPlatform"));//플랫폼감지용 레이,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정
         RaycastHit2D []d2Hitarr = Physics2D.RaycastAll(transform.position, test2, player_dialog * 1.05f, 1 << LayerMask.NameToLayer("OneWayPlatform"));//플랫폼감지용 레이,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정
 
-
         Debug.DrawRay(transform.position, test2, Color.blue);
         if(dHit.collider == null)
         {
@@ -231,22 +231,22 @@ public abstract class PlayerUnit : UnitBase
         {
             // Debug.Log("d2Hit null");
         }
-        Debug.Log("hit=>"+hit.Length);
+        // Debug.Log("hit=>"+hit.Length);
         
         if (hit != null)
         {
             var indexG = Array.FindIndex(hit, x => x.transform.tag == "ground"&&x.distance>charBoxCollider.size.y/2);//만약 람다를 안 쓰려면 for로 hit만큼 돌ㅡㅜ   아가면서 태그가 맞는지 확인해야함
             
             var indexP = Array.FindIndex(hit, x => x.transform.tag == "platform" && x.distance > charBoxCollider.size.y / 2);
-            Debug.Log(string.Format("indexG=>{0}  indexP=>{1}", indexG,indexP));
+            // Debug.Log(string.Format("indexG=>{0}  indexP=>{1}", indexG,indexP));
 
 
             //isGrounded = indexP >= 0 | indexG >= 0 | dHit | d2Hit;    
             isGrounded = indexP >= 0 | indexG >= 0 | (dHit.distance>player_dialog|dHitarr.Length>1) | (d2Hit.distance>player_dialog|d2Hitarr.Length>1);
 
-            Debug.Log(string.Format("dhit length=>{0} d2hit length=>{1}", dHitarr.Length, d2Hitarr.Length));
+            // Debug.Log(string.Format("dhit length=>{0} d2hit length=>{1}", dHitarr.Length, d2Hitarr.Length));
             //isGrounded = indexP >= 0 | indexG >= 0 ;
-            Debug.Log(string.Format("isGrounded => {0} indexP=>{1} indexG=>{2} dhit=>{3} d2hit=>{4}",isGrounded,indexP,indexG,dHit.collider,d2Hit.collider));
+            // Debug.Log(string.Format("isGrounded => {0} indexP=>{1} indexG=>{2} dhit=>{3} d2hit=>{4}",isGrounded,indexP,indexG,(bool)dHit,(bool)d2Hit));
             findRayPlatform = indexP >= 0;
             cTemp = indexG >= 0;
             // Debug.Log(string.Format("{0}", findRayPlatform));
@@ -254,7 +254,7 @@ public abstract class PlayerUnit : UnitBase
         
             
         }
-        Debug.Log(string.Format("Attack test isGrounded ={0} dhit = {1} canDown={2}", isGrounded,dHit|d2Hit,canDown));
+        // Debug.Log(string.Format("Attack test isGrounded ={0} dhit = {1} canDown={2}", isGrounded,dHit|d2Hit,canDown));
         
 
         //if (findRayPlatform)//temp가 true 일때 무시함
@@ -265,8 +265,8 @@ public abstract class PlayerUnit : UnitBase
         //else 
         if(!canDown&&(dHit.collider==null&&d2Hit.collider==null))//캐릭터 좌우 대각선 부분에서 플랫폼이 감지가 안될경우
         {
-            Debug.Log("예외부분");
-            Debug.Log(string.Format("{0}", canDown));
+            // Debug.Log("예외부분");
+            // Debug.Log(string.Format("{0}", canDown));
             Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), false);
         }
         //else if(!canDown&&(dHit.collider == true && d2Hit.collider == true))

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Com.LuisPedroFonseca.ProCamera2D;
 using UnityEngine;
 
 /// <summary>
@@ -52,6 +53,14 @@ public class Human : PlayerUnit
 
     private float fixedDir;
 
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        var pi = GameManager.Instance.proCamera2DPointerInfluence;
+        pi.MaxHorizontalInfluence = 2.2f;
+        pi.MaxVerticalInfluence = 1.2f;
+        pi.InfluenceSmoothness = 0.2f;
+    }
     protected override void OnDisable()
     {
         base.OnDisable();
@@ -92,6 +101,7 @@ public class Human : PlayerUnit
         base.Attack(clickPos);
         if(residualAmmo <= 0) return false;
         shootingAnimationController.Shoot();
+        ProCamera2DShake.Instance.Shake("GunShot ShakePreset");
         Vector2 pos = Vector2.zero;
         GetSignedAngle((Vector2) transform.position, clickPos, out pos);
         GameObject _bullet = Instantiate(bullet);//총알을 공격포지션에서 생성함
