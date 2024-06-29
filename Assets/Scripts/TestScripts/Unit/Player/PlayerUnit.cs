@@ -51,7 +51,7 @@ public abstract class PlayerUnit : UnitBase
                 }
                 //canDown = true;
                 break;
-                case MapType.Ceiling:
+                case MapType.Floor:
                     isJumping = false;
                     SetVerticalForce(gravity * Time.fixedDeltaTime);
                 break;
@@ -82,7 +82,7 @@ public abstract class PlayerUnit : UnitBase
     {
         switch(CheckMapType(collision))
         {
-            case MapType.Ceiling:
+            case MapType.Floor:
                 isJumping = false;
                 SetVerticalForce(gravity * Time.fixedDeltaTime);
                 break;
@@ -90,7 +90,7 @@ public abstract class PlayerUnit : UnitBase
                 currentOneWayPlatform = collision.gameObject;
                 break;
         }
-        if(CheckMapType(collision) == MapType.Ceiling) isJumping = false;
+        if(CheckMapType(collision) == MapType.Floor) isJumping = false;
         // if(collision.gameObject.CompareTag("ground") || collision.gameObject.CompareTag("platform")) isGrounded = true;
     }
 
@@ -151,7 +151,7 @@ public abstract class PlayerUnit : UnitBase
             case KeyState.KeyStay:
                 jumpingHight += Time.deltaTime / jumpTime;
                 temp += Mathf.Lerp(jumpImpulse, jumpForce, jumpingHight) * Mathf.Cos(jumpingHight + -((jumpImpulse - jumpForce) / jumpImpulse)); // 점프가 고점에 다다를수록 적게 힘을 추가
-                if(!isJumping || jumpingHight >= 1)
+                if(!isJumping || jumpingHight >= 1 || isGrounded)
                 {
                     isJumping = false;
                     return false;
@@ -353,12 +353,12 @@ public abstract class PlayerUnit : UnitBase
     private void Movement()
     {
         // rg.MovePosition(transform.position + new Vector3(hzForce, vcForce) * Time.deltaTime);
-        var hit = Physics2D.BoxCastAll(transform.position-new Vector3(0, boxSizeY), new Vector2(boxSizeX, 0.1f), 0, Vector2.down, boxSizeX, 1<<LayerMask.NameToLayer("OneWayPlatform") | 1<<LayerMask.NameToLayer("Ground"));
+        var hit = Physics2D.BoxCastAll(transform.position-new Vector3(0, boxSizeY), new Vector2(boxSizeX, 0.05f), 0, Vector2.down, boxSizeX, 1<<LayerMask.NameToLayer("OneWayPlatform") | 1<<LayerMask.NameToLayer("Ground"));
         if(hit.Length > 0 && !canDown && Mathf.Abs(hit[0].normal.x) < 1)
         {
             // Debug.Log("Posistion : " + hit[0].normal);
             var temp = Vector3.ProjectOnPlane(new Vector3(hzForce, 0), hit[0].normal);
-            rg.MovePosition(transform.position + new Vector3(temp.x, temp.y + vcForce) * Time.deltaTime * 1.41f);
+            rg.MovePosition(transform.position + new Vector3(temp.x, temp.y + vcForce) * Time.deltaTime * (Mathf.Abs(temp.x) < 1 ? 1.41f : 1));
         }
         else rg.MovePosition(transform.position + (new Vector3(hzForce, vcForce) * Time.deltaTime));
     }
@@ -394,7 +394,7 @@ public abstract class PlayerUnit : UnitBase
         if(collision.gameObject.CompareTag("platform")) return MapType.Platform;
         angle = Mathf.Abs(Vector2.Angle(Vector2.up, collision.contacts[0].normal));
         if(angle <= 45) return MapType.Ground;
-        else if(angle >= 135) return MapType.Ceiling;
+        else if(angle >= 135) return MapType.Floor;
         else return MapType.Wall;
     }
 }

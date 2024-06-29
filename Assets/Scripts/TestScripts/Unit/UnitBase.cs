@@ -196,7 +196,6 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     public static bool ControllerChecker(UnitBase unitBase)
     {
         var unitState = unitBase.UnitState;
-        Debug.Log("controll : " + unitState);
         if(unitState == UnitState.KnockBack || unitState == UnitState.Stiffen || 
             unitState == UnitState.Stiffen_er || unitState == UnitState.Death || 
             unitState == UnitState.Pause) return true;

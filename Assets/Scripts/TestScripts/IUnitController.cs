@@ -28,7 +28,7 @@ public enum KeyState
 /// 맵의 종류를 정의하는 열거형
 public enum MapType
 {
-    None, Ground, Wall, Platform, Ceiling
+    None, Ground, Wall, Platform, Floor
 }
 
 /// <summary>
