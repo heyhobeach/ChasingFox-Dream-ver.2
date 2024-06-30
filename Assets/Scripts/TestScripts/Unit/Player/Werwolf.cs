@@ -182,6 +182,7 @@ public class Werwolf : PlayerUnit
     private IEnumerator DashAffterInput()
     {
         float t = 0;
+        if(unitState == UnitState.HoldingWall) anim.SetBool("isHoldingWall", false);
         unitState = UnitState.Dash; // 대쉬 상태로 변경
         var tempVel = Mathf.Sign(fixedDir);
         SetHorizontalVelocity(tempVel);
