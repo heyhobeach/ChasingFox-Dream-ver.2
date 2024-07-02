@@ -46,6 +46,7 @@ public class Werwolf : PlayerUnit
     {
         base.OnDisable();
         StopDash();
+        StopAttack();
     }
 
     protected override void OnCollisionEnter2D(Collision2D collision)
@@ -93,9 +94,14 @@ public class Werwolf : PlayerUnit
 
     public override bool Attack(Vector3 clickPos)
     {
-        if((unitState != UnitState.Default && unitState != UnitState.Air && unitState != UnitState.HoldingWall && unitState != UnitState.Dash)
-             || attackCoroutine != null) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
+        if((unitState != UnitState.Default && unitState != UnitState.Air && unitState != UnitState.HoldingWall && unitState != UnitState.Dash) || unitState == UnitState.FormChange
+             || attackCoroutine != null || anim.GetCurrentAnimatorStateInfo(0).IsName("Attack")) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
         if(dashCoroutine != null) StopDash();
+        if(unitState == UnitState.HoldingWall)
+        {
+            anim.SetBool("isHoldingWall", false);
+            unitState = UnitState.Air;
+        }
         //Vector2 testvec = new Vector2(1 * CheckDir(clickPos), clickPos.y - transform.position.y);//이렇게 되면 대각선으로 갈 수록 좁아짐
         //Vector2 testvec = (Vector2.up * (clickPos.y - transform.position.y)).normalized;
         //MeleeAttack.transform.localPosition = testvec;
@@ -116,9 +122,10 @@ public class Werwolf : PlayerUnit
     /// </summary>
     private IEnumerator Attacking(float deg)
     {
+        unitState = UnitState.Attack;
         // 지속시간만큼 히트박스를 온오프
         MeleeAttack.SetActive(true);
-        Move(Mathf.Sign(MeleeAttack.transform.localPosition.x)*attackImpulse);
+        SetHorizontalForce(Mathf.Sign(MeleeAttack.transform.localPosition.x)*attackImpulse);
         float high = Mathf.Sin(deg) * 10;
         if (high > 3)
         {
@@ -126,6 +133,12 @@ public class Werwolf : PlayerUnit
         }
         SetVerticalForce(high);
         yield return new WaitForSeconds(attackDuration);
+        StopAttack();
+    }
+
+    private void StopAttack()
+    {
+        unitState = UnitState.Default;
         MeleeAttack.SetActive(false);
         attackCoroutine = null;
     }
@@ -133,7 +146,7 @@ public class Werwolf : PlayerUnit
     public override bool Move(float dir)
     {
         if(ControllerChecker() || unitState == UnitState.HoldingWall || 
-            unitState == UnitState.Dash) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
+            unitState == UnitState.Dash || unitState == UnitState.Attack) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
         fixedDir = (int)dir; // 대쉬 방향을 저장
         return base.Move(dir);
     }
@@ -164,14 +177,15 @@ public class Werwolf : PlayerUnit
 
     public override bool Crouch(KeyState crouchKey)
     {
-        if(ControllerChecker() || unitState == UnitState.Dash || unitState == UnitState.HoldingWall) return false;
+        if(ControllerChecker() || unitState == UnitState.Dash || unitState == UnitState.HoldingWall || unitState == UnitState.Attack) return false;
         return base.Crouch(crouchKey);
     }
 
     // 수정 필요함
     public override bool Dash()
     {
-        if(ControllerChecker() || dashCoroutine != null) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
+        if(ControllerChecker() || unitState == UnitState.HoldingWall || dashCoroutine != null) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
+        if(attackCoroutine != null) StopAttack();
         dashCoroutine = StartCoroutine(DashAffterInput());
         return true;
     }

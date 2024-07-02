@@ -142,6 +142,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         anim.SetTrigger("attack");
         if(!longRangeUnit) return false;
         shootingAnimationController.AttackAni();
+        shootingAnimationController.Shoot();
         return true;
     }
 
@@ -173,7 +174,15 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         return true;
     }
 
-    public abstract bool Reload();
+    public virtual bool Reload()
+    {
+        if(!longRangeUnit) return false;
+        Debug.Log("Reload");
+        anim.SetTrigger("reload");
+        shootingAnimationController.AttackAni();
+        shootingAnimationController.Reload();
+        return true;
+    }
     
     public void Death()
     {
