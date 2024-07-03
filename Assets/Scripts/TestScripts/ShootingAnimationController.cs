@@ -19,6 +19,7 @@ public class ShootingAnimationController : MonoBehaviour
     private SpriteRenderer arm;
 
     public bool isAttackAni { get => armAnim.GetCurrentAnimatorStateInfo(0).IsName("Attack"); }
+    public bool isReloadAni { get => armAnim.GetCurrentAnimatorStateInfo(0).IsName("Reload"); }
 
     private void OnDisable() => attackCoroutine = null;
 
@@ -48,8 +49,10 @@ public class ShootingAnimationController : MonoBehaviour
         if(armAnim.GetCurrentAnimatorStateInfo(0).IsName("Reload"))
         {
             arm.flipY = false;
+            arm.flipX = body.flipX;
             bodys[0].transform.localEulerAngles = Vector2.zero;
         }
+        else arm.flipX = false;
     }
 
     private void LateUpdate()

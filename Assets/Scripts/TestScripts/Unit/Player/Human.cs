@@ -98,7 +98,7 @@ public class Human : PlayerUnit
     public override bool Attack(Vector3 clickPos)
     {
         shootingAnimationController.AttackAni();
-        if(ControllerChecker() || unitState == UnitState.Dash || unitState == UnitState.Reload || shootingAnimationController.isAttackAni || residualAmmo <= 0) return false;
+        if(ControllerChecker() || unitState == UnitState.Dash || unitState == UnitState.Reload || residualAmmo <= 0) return false;
         base.Attack(clickPos);
         ProCamera2DShake.Instance.Shake("GunShot ShakePreset");
         Vector2 pos = Vector2.zero;
@@ -174,21 +174,16 @@ public class Human : PlayerUnit
     public override bool Reload()
     {
         if(reloadCoroutine != null) return false;
-        reloadCoroutine = StartCoroutine(Reloading());
         base.Reload();
+        reloadCoroutine = StartCoroutine(Reloading());
         return true;
     }
 
     private IEnumerator Reloading()
     {
-        float t = 0;
         unitState = UnitState.Reload;
-        while(t <= reloadTime)//1 = duration temp/duration 
-        {
-            t += Time.deltaTime;
-            UIController.Instance.DrawReload(t / reloadTime);
-            yield return null;
-        }
+        yield return null;
+        yield return new WaitUntil(() => !shootingAnimationController.isReloadAni);
         unitState = UnitState.Default;
         UIController.Instance.DrawReload(0);
         residualAmmo = maxAmmo;

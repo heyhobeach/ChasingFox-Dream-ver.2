@@ -177,7 +177,6 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     public virtual bool Reload()
     {
         if(!longRangeUnit) return false;
-        Debug.Log("Reload");
         anim.SetTrigger("reload");
         shootingAnimationController.AttackAni();
         shootingAnimationController.Reload();

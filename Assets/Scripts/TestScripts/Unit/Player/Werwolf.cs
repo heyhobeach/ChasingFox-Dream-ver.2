@@ -58,20 +58,11 @@ public class Werwolf : PlayerUnit
                 if(unitState == UnitState.Air)
                 {
                     foreach(var hit in Physics2D.BoxCastAll(transform.position, new Vector2(boxSizeX, boxSizeY * 2.1f), 0, Vector2.right * (transform.position.x - collision.contacts[0].point.x))) if(hit.transform.CompareTag("ground")) return;
-                    anim.SetBool("isHoldingWall", true);
-                    unitState = UnitState.HoldingWall; // 벽붙기 상태로 변경
-                    fixedDir = -CheckDir(collision.contacts[0].point); // 벽의 반대 방향을 저장
-                    ResetForce();
-                    SetHorizontalVelocity(0);
-                    SetHorizontalForce(fixedDir * 0.11f);
+                    HoldingWall(collision);
                 }
                 break;
             case MapType.Ground:
-                if(unitState == UnitState.HoldingWall)
-                {
-                    anim.SetBool("isHoldingWall", false);
-                    unitState = UnitState.Air;
-                }
+                if(unitState == UnitState.HoldingWall) StopHoldingWall();
             break;
         }
     }
@@ -82,11 +73,7 @@ public class Werwolf : PlayerUnit
         switch(CheckMapType(collision))
         {
             case MapType.Wall:
-                if(unitState == UnitState.HoldingWall)
-                {
-                    anim.SetBool("isHoldingWall", false);
-                    unitState = UnitState.Air;
-                }
+                if(unitState == UnitState.HoldingWall) StopHoldingWall();
                 break;
         }
     }
@@ -97,11 +84,7 @@ public class Werwolf : PlayerUnit
         if((unitState != UnitState.Default && unitState != UnitState.Air && unitState != UnitState.HoldingWall && unitState != UnitState.Dash) || unitState == UnitState.FormChange
              || attackCoroutine != null || anim.GetCurrentAnimatorStateInfo(0).IsName("Attack")) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
         if(dashCoroutine != null) StopDash();
-        if(unitState == UnitState.HoldingWall)
-        {
-            anim.SetBool("isHoldingWall", false);
-            unitState = UnitState.Air;
-        }
+        if(unitState == UnitState.HoldingWall) StopHoldingWall();
         //Vector2 testvec = new Vector2(1 * CheckDir(clickPos), clickPos.y - transform.position.y);//이렇게 되면 대각선으로 갈 수록 좁아짐
         //Vector2 testvec = (Vector2.up * (clickPos.y - transform.position.y)).normalized;
         //MeleeAttack.transform.localPosition = testvec;
@@ -158,11 +141,10 @@ public class Werwolf : PlayerUnit
             if(dashCoroutine != null) StopDash();
             if(unitState == UnitState.HoldingWall)
             {
-                unitState = UnitState.Air;
+                StopHoldingWall();
                 isJumping = false;
                 SetVerticalForce(jumpImpulse); // 윗 방향 힘 추가
                 base.Move(fixedDir * movementSpeed * 3);
-                anim.SetBool("isHoldingWall", false);
                 return true;
             }
             else return base.Jump(jumpKey);
@@ -173,6 +155,34 @@ public class Werwolf : PlayerUnit
             return base.Jump(jumpKey);
         }
         return false;
+    }
+
+    Coroutine holdingCoroutine;
+    private void HoldingWall(Collision2D collision)
+    {
+        anim.SetBool("isHoldingWall", true);
+        unitState = UnitState.HoldingWall; // 벽붙기 상태로 변경
+        fixedDir = -CheckDir(collision.contacts[0].point); // 벽의 반대 방향을 저장
+        ResetForce();
+        SetHorizontalVelocity(0);
+        SetHorizontalForce(fixedDir * 0.11f);
+        holdingCoroutine = StartCoroutine(Holding(-fixedDir));
+    }
+    private void StopHoldingWall()
+    {
+        anim.SetBool("isHoldingWall", false);
+        unitState = UnitState.Air;
+        StopCoroutine(holdingCoroutine);
+        holdingCoroutine = null;
+    }
+
+    private IEnumerator Holding(float dir)
+    {
+        yield return new WaitUntil(() => 
+            !Physics2D.Raycast(transform.position, Vector2.right*dir, boxSizeX*1.05f, 1<<LayerMask.NameToLayer("Map")) ||
+            Physics2D.Raycast(transform.position, Vector2.down, boxSizeY*1.05f, 1<<LayerMask.NameToLayer("Map"))
+        );
+        StopHoldingWall();
     }
 
     public override bool Crouch(KeyState crouchKey)
