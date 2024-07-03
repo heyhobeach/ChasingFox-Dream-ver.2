@@ -23,7 +23,7 @@ public class Werwolf : PlayerUnit
     /// <summary>
     /// 고정된 방향을 저장하기 위한 변수
     /// </summary>
-    private int fixedDir;
+    private int fixedDir = 0;
 
     /// <summary>
     /// 공격 코루틴을 저장하는 변수, 공격 중 여부 겸용
@@ -196,6 +196,7 @@ public class Werwolf : PlayerUnit
     {
         if(ControllerChecker() || unitState == UnitState.HoldingWall || dashCoroutine != null) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
         if(attackCoroutine != null) StopAttack();
+        base.Dash();
         dashCoroutine = StartCoroutine(DashAffterInput());
         return true;
     }
@@ -205,15 +206,15 @@ public class Werwolf : PlayerUnit
     /// </summary>
     private IEnumerator DashAffterInput()
     {
-        float t = 0;
-        if(unitState == UnitState.HoldingWall) anim.SetBool("isHoldingWall", false);
+        if(unitState == UnitState.HoldingWall) StopHoldingWall();
         unitState = UnitState.Dash; // 대쉬 상태로 변경
-        var tempVel = Mathf.Sign(fixedDir);
+        var tempVel = fixedDir == 0 ? spriteRenderer.flipX ? -1 : 1 : Mathf.Sign(fixedDir);
         SetHorizontalVelocity(tempVel);
-        while(t < dashDuration) // 대쉬 지속시간만큼 동작
+        yield return new WaitUntil(() => anim.GetCurrentAnimatorStateInfo(0).IsName("Dash"));
+        while(anim.GetCurrentAnimatorStateInfo(0).IsName("Dash")) // 대쉬 지속 시간 동안
         {
-            t += Time.deltaTime;
-            SetHorizontalForce(tempVel * movementSpeed * 2f); // 수평 방향으로 힘 추가
+            SetHorizontalForce(tempVel * movementSpeed * 2f);
+            anim.SetFloat("hzForce", -0.5f);
             yield return null;
         }
         StopDash();

@@ -71,6 +71,15 @@ public class ShootingAnimationController : MonoBehaviour
         else waitTime = 0;
     }
 
+    public void NomalAni()
+    {
+        if(attackCoroutine != null)
+        {
+            StopCoroutine(attackCoroutine);
+            attackCoroutine = null;
+        }
+        SpriteAssetChange(0);
+    }
     float waitTime;
     private IEnumerator Attacking()
     {

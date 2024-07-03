@@ -51,7 +51,7 @@ public class Human : PlayerUnit
     private Coroutine dashCoroutine;
     private Coroutine reloadCoroutine;
 
-    private float fixedDir;
+    private float fixedDir = 0;
 
     protected override void OnEnable()
     {
@@ -97,9 +97,9 @@ public class Human : PlayerUnit
 
     public override bool Attack(Vector3 clickPos)
     {
-        shootingAnimationController.AttackAni();
-        if(ControllerChecker() || unitState == UnitState.Dash || unitState == UnitState.Reload || residualAmmo <= 0) return false;
+        if(ControllerChecker() || unitState == UnitState.Dash || unitState == UnitState.Reload) return false;
         base.Attack(clickPos);
+        if(residualAmmo <= 0) return false;
         ProCamera2DShake.Instance.Shake("GunShot ShakePreset");
         Vector2 pos = Vector2.zero;
         GetSignedAngle((Vector2) transform.position, clickPos, out pos);
@@ -128,13 +128,10 @@ public class Human : PlayerUnit
 
     public override bool Dash()
     {
-        if(unitState != UnitState.Default) return false; // 조작이 불가능한 상태일 경우 동작을 수행하지 않음
-        if(dashCoroutine == null)
-        {
-            dashCoroutine = StartCoroutine(DashAffterInput());
-            return true;
-        }
-        else return false;
+        if(unitState != UnitState.Default || dashCoroutine != null) return false; // 조작이 불가능한 상태일 경우 동작을 수행하지 않음
+        base.Dash();
+        dashCoroutine = StartCoroutine(DashAffterInput());
+        return true;
     }
 
     /// <summary>
@@ -152,14 +149,14 @@ public class Human : PlayerUnit
     /// </summary>
     private IEnumerator DashAffterInput()
     {
-        float t = 0;
         unitState = UnitState.Dash;
-        var tempVel = Mathf.Sign(fixedDir);
+        var tempVel = fixedDir == 0 ? spriteRenderer.flipX ? -1 : 1 : Mathf.Sign(fixedDir);
         SetHorizontalVelocity(tempVel);
-        while(t < dashDuration) // 대쉬 지속 시간 동안
+        yield return new WaitUntil(() => anim.GetCurrentAnimatorStateInfo(0).IsName("Dash"));
+        while(anim.GetCurrentAnimatorStateInfo(0).IsName("Dash")) // 대쉬 지속 시간 동안
         {
-            t += Time.deltaTime;
             SetHorizontalForce(tempVel * movementSpeed * 2f);
+            anim.SetFloat("hzForce", -0.5f);
             yield return null;
         }
         StopDash();

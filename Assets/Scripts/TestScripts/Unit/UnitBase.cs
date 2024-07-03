@@ -94,7 +94,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     /// </summary>
     protected bool isGrounded;
 
-    private SpriteRenderer spriteRenderer;
+    protected SpriteRenderer spriteRenderer;
 
     public Animator anim;
 
@@ -146,7 +146,12 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         return true;
     }
 
-    public abstract bool Dash();
+    public virtual bool Dash()
+    {
+        if(longRangeUnit) shootingAnimationController.NomalAni();
+        anim.SetTrigger("dash");
+        return true;
+    }
 
     public abstract bool Jump(KeyState jumpKey);
 
