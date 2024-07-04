@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Com.LuisPedroFonseca.ProCamera2D;
 using UnityEngine;
 
 /// <summary>
@@ -50,6 +51,16 @@ public class Human : PlayerUnit
     private Coroutine dashCoroutine;
     private Coroutine reloadCoroutine;
 
+    private float fixedDir;
+
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        //var pi = GameManager.Instance.proCamera2DPointerInfluence;
+        //pi.MaxHorizontalInfluence = 2.2f;
+        //pi.MaxVerticalInfluence = 1.2f;
+        //pi.InfluenceSmoothness = 0.2f;
+    }
     protected override void OnDisable()
     {
         base.OnDisable();
@@ -86,9 +97,10 @@ public class Human : PlayerUnit
 
     public override bool Attack(Vector3 clickPos)
     {
+        shootingAnimationController.AttackAni();
+        if(ControllerChecker() || unitState == UnitState.Dash || unitState == UnitState.Reload || shootingAnimationController.isAttackAni || residualAmmo <= 0) return false;
         base.Attack(clickPos);
-        if(residualAmmo <= 0) return false;
-        shootingAnimationController.Shoot();
+        ProCamera2DShake.Instance.Shake("GunShot ShakePreset");
         Vector2 pos = Vector2.zero;
         GetSignedAngle((Vector2) transform.position, clickPos, out pos);
         GameObject _bullet = Instantiate(bullet);//총알을 공격포지션에서 생성함
@@ -101,11 +113,18 @@ public class Human : PlayerUnit
     public override bool Move(float dir)
     {
         if(ControllerChecker() || unitState == UnitState.Dash) return false; // 조작이 불가능한 상태일 경우 동작을 수행하지 않음
+        fixedDir = (int)dir; // 대쉬 방향을 저장
         //Anim
         return base.Move(dir);
     }
 
     public override bool Jump(KeyState jumpKey) => base.Jump(jumpKey);
+
+    public override bool Crouch(KeyState crouchKey)
+    {
+        if(ControllerChecker() || unitState == UnitState.Dash) return false;
+        return base.Crouch(crouchKey);
+    }
 
     public override bool Dash()
     {
@@ -135,10 +154,12 @@ public class Human : PlayerUnit
     {
         float t = 0;
         unitState = UnitState.Dash;
+        var tempVel = Mathf.Sign(fixedDir);
+        SetHorizontalVelocity(tempVel);
         while(t < dashDuration) // 대쉬 지속 시간 동안
         {
             t += Time.deltaTime;
-            SetHorizontalForce(Mathf.Sign(hzVel) * movementSpeed * 2f);
+            SetHorizontalForce(tempVel * movementSpeed * 2f);
             yield return null;
         }
         StopDash();
@@ -154,18 +175,21 @@ public class Human : PlayerUnit
     {
         if(reloadCoroutine != null) return false;
         reloadCoroutine = StartCoroutine(Reloading());
+        base.Reload();
         return true;
     }
 
     private IEnumerator Reloading()
     {
         float t = 0;
+        unitState = UnitState.Reload;
         while(t <= reloadTime)//1 = duration temp/duration 
         {
             t += Time.deltaTime;
             UIController.Instance.DrawReload(t / reloadTime);
             yield return null;
         }
+        unitState = UnitState.Default;
         UIController.Instance.DrawReload(0);
         residualAmmo = maxAmmo;
         reloadCoroutine = null;

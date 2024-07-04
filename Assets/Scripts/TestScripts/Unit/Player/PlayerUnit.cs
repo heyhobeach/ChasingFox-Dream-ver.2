@@ -51,7 +51,7 @@ public abstract class PlayerUnit : UnitBase
                 }
                 //canDown = true;
                 break;
-                case MapType.Ceiling:
+                case MapType.Floor:
                     isJumping = false;
                     SetVerticalForce(gravity * Time.fixedDeltaTime);
                 break;
@@ -82,7 +82,7 @@ public abstract class PlayerUnit : UnitBase
     {
         switch(CheckMapType(collision))
         {
-            case MapType.Ceiling:
+            case MapType.Floor:
                 isJumping = false;
                 SetVerticalForce(gravity * Time.fixedDeltaTime);
                 break;
@@ -90,7 +90,7 @@ public abstract class PlayerUnit : UnitBase
                 currentOneWayPlatform = collision.gameObject;
                 break;
         }
-        if(CheckMapType(collision) == MapType.Ceiling) isJumping = false;
+        if(CheckMapType(collision) == MapType.Floor) isJumping = false;
         // if(collision.gameObject.CompareTag("ground") || collision.gameObject.CompareTag("platform")) isGrounded = true;
     }
 
@@ -107,7 +107,7 @@ public abstract class PlayerUnit : UnitBase
         else if(isGrounded && unitState == UnitState.Air) unitState = UnitState.Default; // 공중 상태에서 바닥에 닿을 시 기본 상태로 변경
         // Debug.Log(string.Format("{0}은 현재 오브젝트", currentOneWayPlatform));
         CrouchUpdate();
-        Debug.Log("유닛 상태"+unitState);
+        // Debug.Log("유닛 상태"+unitState);
         base.Update();
     }
 
@@ -121,6 +121,7 @@ public abstract class PlayerUnit : UnitBase
             SetHorizontalForce(0);
             SetHorizontalVelocity(0);
         }
+        if(Mathf.Abs(hzForce) <= 0.01f * movementSpeed) hzForce = 0;
         Movement();
     }
 
@@ -137,6 +138,7 @@ public abstract class PlayerUnit : UnitBase
     private float jumpingHight;
     public override bool Jump(KeyState jumpKey)
     {
+        if(ControllerChecker() || unitState == UnitState.FormChange || unitState == UnitState.Dash) return false;
         float temp = -gravity * Time.deltaTime; // 중력 무시를 위해 중력 값 만큼 힘 추가
         switch(jumpKey)
         {
@@ -150,7 +152,7 @@ public abstract class PlayerUnit : UnitBase
             case KeyState.KeyStay:
                 jumpingHight += Time.deltaTime / jumpTime;
                 temp += Mathf.Lerp(jumpImpulse, jumpForce, jumpingHight) * Mathf.Cos(jumpingHight + -((jumpImpulse - jumpForce) / jumpImpulse)); // 점프가 고점에 다다를수록 적게 힘을 추가
-                if(!isJumping || jumpingHight >= 1)
+                if(!isJumping || jumpingHight >= 1 || isGrounded)
                 {
                     isJumping = false;
                     return false;
@@ -165,8 +167,10 @@ public abstract class PlayerUnit : UnitBase
 
     public override bool Move(float dir)
     {
-        hzVel += (dir-hzForce/movementSpeed) * accelerate * Time.deltaTime; // 가속도만큼 입력 방향에 힘을 추가
-        if(ControllerChecker() || dir == 0) // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
+        if(ControllerChecker()) return false;
+        hzVel += dir == 0 ? -hzVel * accelerate * Time.deltaTime : (dir-hzForce/movementSpeed) * accelerate * Time.deltaTime; // 가속도만큼 입력 방향에 힘을 추가
+        if(dir == 0 && hzVel < 0.01f) hzVel = 0;
+        if(unitState == UnitState.FormChange || dir == 0) // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
         {
             base.Move(0);
             return false;
@@ -180,6 +184,7 @@ public abstract class PlayerUnit : UnitBase
     // 수정 필요함
     public override bool Crouch(KeyState crouchKey)
     {
+        if(ControllerChecker() || unitState == UnitState.FormChange || unitState == UnitState.Air || !findRayPlatform) return false;
         switch(crouchKey)
         {
             case KeyState.KeyDown:
@@ -203,22 +208,21 @@ public abstract class PlayerUnit : UnitBase
     private void CrouchUpdate()
     {
         var charBoxCollider = GetComponent<BoxCollider2D>();
-        float player_dialog = Mathf.Sqrt(MathF.Pow(charBoxCollider.size.x / 2, 2) + MathF.Pow(charBoxCollider.size.y / 2, 2));
+        float player_dialog = Mathf.Sqrt(MathF.Pow(boxSizeX, 2) + MathF.Pow(boxSizeY, 2));
         RaycastHit2D[] hit =Physics2D.RaycastAll(transform.parent.position, Vector2.down, distanceToCheck, lm);
         Debug.DrawRay(transform.position, Vector2.down * distanceToCheck, Color.red);
         //BoxCollider2D box = GetComponent<BoxCollider2D>();
-        Vector2 test = new Vector2(transform.position.x + charBoxCollider.size.x/2, transform.position.y - charBoxCollider.size.y/2)  - (Vector2)transform.position;//우측대각선
+        Vector2 test = new Vector2(transform.position.x + boxSizeX, transform.position.y - boxSizeY)  - (Vector2)transform.position;//우측대각선
         //RaycastHit2D dHit = Physics2D.Raycast(transform.position, test,(MathF.Sqrt(charBoxCollider.size.x / 2) + MathF.Sqrt(charBoxCollider.size.y/2)) * 0.65f, 1<<LayerMask.NameToLayer("OneWayPlatform"));//플랫폼감지용 레이,하드 코딩때 값 0.75f,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정 
-        RaycastHit2D dHit = Physics2D.Raycast(transform.position, test, player_dialog*1.05f, 1 << LayerMask.NameToLayer("OneWayPlatform"));//플랫폼감지용 레이,하드 코딩때 값 0.75f,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정 
-        RaycastHit2D []dHitarr = Physics2D.RaycastAll(transform.position, test, player_dialog * 1.05f, 1 << LayerMask.NameToLayer("OneWayPlatform"));//플랫폼감지용 레이,하드 코딩때 값 0.75f,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정 
+        RaycastHit2D dHit = Physics2D.Raycast(transform.position, test, player_dialog*1.05f, 1 << LayerMask.NameToLayer("OneWayPlatform") | 1 << LayerMask.NameToLayer("Ground"));//플랫폼감지용 레이,하드 코딩때 값 0.75f,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정 
+        RaycastHit2D []dHitarr = Physics2D.RaycastAll(transform.position, test, player_dialog * 1.05f, 1 << LayerMask.NameToLayer("OneWayPlatform") | 1 << LayerMask.NameToLayer("Ground"));//플랫폼감지용 레이,하드 코딩때 값 0.75f,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정 
 
 
         Debug.DrawRay(transform.position,test, Color.green);
         Vector2 test2 = new Vector2(transform.position.x - charBoxCollider.size.x / 2, transform.position.y - charBoxCollider.size.y / 2) - (Vector2)transform.position;//좌측 대각선
         //RaycastHit2D d2Hit = Physics2D.Raycast(transform.position, test2, (MathF.Sqrt(charBoxCollider.size.x / 2) + MathF.Sqrt(charBoxCollider.size.y / 2))*0.65f, 1 << LayerMask.NameToLayer("OneWayPlatform"));//플랫폼감지용 레이,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정
-        RaycastHit2D d2Hit = Physics2D.Raycast(transform.position, test2, player_dialog*1.05f , 1 << LayerMask.NameToLayer("OneWayPlatform"));//플랫폼감지용 레이,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정
-        RaycastHit2D []d2Hitarr = Physics2D.RaycastAll(transform.position, test2, player_dialog * 1.05f, 1 << LayerMask.NameToLayer("OneWayPlatform"));//플랫폼감지용 레이,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정
-
+        RaycastHit2D d2Hit = Physics2D.Raycast(transform.position, test2, player_dialog*1.05f , 1 << LayerMask.NameToLayer("OneWayPlatform") | 1 << LayerMask.NameToLayer("Ground"));//플랫폼감지용 레이,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정
+        RaycastHit2D []d2Hitarr = Physics2D.RaycastAll(transform.position, test2, player_dialog * 1.05f, 1 << LayerMask.NameToLayer("OneWayPlatform") | 1 << LayerMask.NameToLayer("Ground"));//플랫폼감지용 레이,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정
 
         Debug.DrawRay(transform.position, test2, Color.blue);
         if(dHit.collider == null)
@@ -229,22 +233,22 @@ public abstract class PlayerUnit : UnitBase
         {
             // Debug.Log("d2Hit null");
         }
-        Debug.Log("hit=>"+hit.Length);
+        // Debug.Log("hit=>"+hit.Length);
         
         if (hit != null)
         {
             var indexG = Array.FindIndex(hit, x => x.transform.tag == "ground"&&x.distance>charBoxCollider.size.y/2);//만약 람다를 안 쓰려면 for로 hit만큼 돌ㅡㅜ   아가면서 태그가 맞는지 확인해야함
             
             var indexP = Array.FindIndex(hit, x => x.transform.tag == "platform" && x.distance > charBoxCollider.size.y / 2);
-            Debug.Log(string.Format("indexG=>{0}  indexP=>{1}", indexG,indexP));
+            // Debug.Log(string.Format("indexG=>{0}  indexP=>{1}", indexG,indexP));
 
 
             //isGrounded = indexP >= 0 | indexG >= 0 | dHit | d2Hit;    
             isGrounded = indexP >= 0 | indexG >= 0 | (dHit.distance>player_dialog|dHitarr.Length>1) | (d2Hit.distance>player_dialog|d2Hitarr.Length>1);
 
-            Debug.Log(string.Format("dhit length=>{0} d2hit length=>{1}", dHitarr.Length, d2Hitarr.Length));
+            // Debug.Log(string.Format("dhit length=>{0} d2hit length=>{1}", dHitarr.Length, d2Hitarr.Length));
             //isGrounded = indexP >= 0 | indexG >= 0 ;
-            Debug.Log(string.Format("isGrounded => {0} indexP=>{1} indexG=>{2} dhit=>{3} d2hit=>{4}",isGrounded,indexP,indexG,dHit.collider,d2Hit.collider));
+            // Debug.Log(string.Format("isGrounded => {0} indexP=>{1} indexG=>{2} dhit=>{3} d2hit=>{4}",isGrounded,indexP,indexG,(bool)dHit,(bool)d2Hit));
             findRayPlatform = indexP >= 0;
             cTemp = indexG >= 0;
             // Debug.Log(string.Format("{0}", findRayPlatform));
@@ -252,7 +256,7 @@ public abstract class PlayerUnit : UnitBase
         
             
         }
-        Debug.Log(string.Format("Attack test isGrounded ={0} dhit = {1} canDown={2}", isGrounded,dHit|d2Hit,canDown));
+        // Debug.Log(string.Format("Attack test isGrounded ={0} dhit = {1} canDown={2}", isGrounded,dHit|d2Hit,canDown));
         
 
         //if (findRayPlatform)//temp가 true 일때 무시함
@@ -263,8 +267,8 @@ public abstract class PlayerUnit : UnitBase
         //else 
         if(!canDown&&(dHit.collider==null&&d2Hit.collider==null))//캐릭터 좌우 대각선 부분에서 플랫폼이 감지가 안될경우
         {
-            Debug.Log("예외부분");
-            Debug.Log(string.Format("{0}", canDown));
+            // Debug.Log("예외부분");
+            // Debug.Log(string.Format("{0}", canDown));
             Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), false);
         }
         //else if(!canDown&&(dHit.collider == true && d2Hit.collider == true))
@@ -299,15 +303,19 @@ public abstract class PlayerUnit : UnitBase
     /// <summary>
     /// 중력을 추가
     /// </summary>
-    private void AddGravity() => AddVerticalForce(unitState == UnitState.HoldingWall ? gravity * Time.fixedDeltaTime * 0.2f : gravity * Time.fixedDeltaTime);
-
+    private void AddGravity()
+    {
+        if(isGrounded && !canDown) AddVerticalForce(0);
+        else AddVerticalForce(unitState == UnitState.HoldingWall ? gravity * Time.fixedDeltaTime * 0.2f : gravity * Time.fixedDeltaTime);
+    }
     /// <summary>
     /// 마찰력을 추가
     /// </summary>
     private void AddFrictional() // 수평힘에 마찰력 추가
     {
         if(Mathf.Abs(hzForce) > 1) AddHorizontalForce(-hzForce * accelerate * Time.fixedDeltaTime);
-        else if(Mathf.Abs(hzForce) > 0) AddHorizontalForce(-Mathf.Sign(hzForce) * accelerate * Time.fixedDeltaTime);
+        else if(Mathf.Abs(hzForce) > 0.01f) AddHorizontalForce(-Mathf.Sign(hzForce) * accelerate * Time.fixedDeltaTime);
+        else AddHorizontalForce(0);
     }
 
     /// <summary>
@@ -316,8 +324,8 @@ public abstract class PlayerUnit : UnitBase
     protected void AddVerticalForce(float force)
     {
         if(isGrounded && !canDown && vcForce < 0) vcForce = 0; // 바닥에 붙어있을 시 아래 방향의 힘 초기화
-        // Debug.Log(isGrounded + ", " + !canDown);
         vcForce += force;
+        // Debug.Log(isGrounded + ", " + !canDown);
     }
     /// <summary>
     /// 수평 방향 힘을 추가
@@ -345,7 +353,18 @@ public abstract class PlayerUnit : UnitBase
     /// <summary>
     /// 플레이어 유닛 힘을 리지드바디로 전달
     /// </summary>
-    private void Movement() => rg.MovePosition(transform.position + (new Vector3(hzForce, vcForce) * Time.deltaTime));
+    private void Movement()
+    {
+        // rg.MovePosition(transform.position + new Vector3(hzForce, vcForce) * Time.deltaTime);
+        var hit = Physics2D.BoxCastAll(transform.position-new Vector3(0, boxSizeY), new Vector2(boxSizeX, 0.05f), 0, Vector2.down, boxSizeX, 1<<LayerMask.NameToLayer("OneWayPlatform") | 1<<LayerMask.NameToLayer("Ground"));
+        if(hit.Length > 0 && !canDown && Mathf.Abs(hit[0].normal.x) < 1)
+        {
+            // Debug.Log("Posistion : " + hit[0].normal);
+            var temp = Vector3.ProjectOnPlane(new Vector3(hzForce, 0), hit[0].normal);
+            rg.MovePosition(transform.position + new Vector3(temp.x, temp.y + vcForce) * Time.deltaTime * (Mathf.Abs(temp.x) < 1 ? 1.41f : 1));
+        }
+        else rg.MovePosition(transform.position + (new Vector3(hzForce, vcForce) * Time.deltaTime));
+    }
 
     /// <summary>
     /// 현재 플레이어 유닛의 모든 힘을 초기화
@@ -378,7 +397,7 @@ public abstract class PlayerUnit : UnitBase
         if(collision.gameObject.CompareTag("platform")) return MapType.Platform;
         angle = Mathf.Abs(Vector2.Angle(Vector2.up, collision.contacts[0].normal));
         if(angle <= 45) return MapType.Ground;
-        else if(angle >= 135) return MapType.Ceiling;
+        else if(angle >= 135) return MapType.Floor;
         else return MapType.Wall;
     }
 }

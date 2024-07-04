@@ -74,7 +74,7 @@ public class Bullet : MonoBehaviour
             if (isDamaged)
             {
                 Debug.Log("데미지 받음");
-                Destroy(gameObject);
+                // Destroy(gameObject);
             }
             else
             {
@@ -109,7 +109,7 @@ public class Bullet : MonoBehaviour
                 Destroy(this.gameObject);
                 //Destroy(gameObject);
             }
-
+            else Debug.Log("Not Work");
         }
         if (collision.gameObject.tag == "Enemy" && !collision.gameObject.CompareTag(ignoreTag))//플레이어 총알이 적군에게 충돌시 적이 trigger로 설정되어있어서 안 쓸것 같음
         {

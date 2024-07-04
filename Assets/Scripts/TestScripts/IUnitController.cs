@@ -7,6 +7,8 @@ public enum UnitState
 {
     Default,        // 기본
     Dash,           // 대시
+    Reload,         // 재장전
+    Attack,         // 공격
     FormChange,     // 폼체인지
     HoldingWall,    // 벽잡기
     Air,            // 공중
@@ -28,7 +30,7 @@ public enum KeyState
 /// 맵의 종류를 정의하는 열거형
 public enum MapType
 {
-    None, Ground, Wall, Platform, Ceiling
+    None, Ground, Wall, Platform, Floor
 }
 
 /// <summary>

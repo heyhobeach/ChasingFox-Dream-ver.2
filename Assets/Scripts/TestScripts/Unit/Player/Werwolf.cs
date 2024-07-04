@@ -34,10 +34,19 @@ public class Werwolf : PlayerUnit
     /// </summary>
     private Coroutine dashCoroutine;
 
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        var pi = GameManager.Instance.proCamera2DPointerInfluence;
+        pi.MaxHorizontalInfluence = 2.5f;
+        pi.MaxVerticalInfluence = 1.5f;
+        pi.InfluenceSmoothness = 0.0f;
+    }
     protected override void OnDisable()
     {
         base.OnDisable();
         StopDash();
+        StopAttack();
     }
 
     protected override void OnCollisionEnter2D(Collision2D collision)
@@ -48,6 +57,7 @@ public class Werwolf : PlayerUnit
             case MapType.Wall:
                 if(unitState == UnitState.Air)
                 {
+                    foreach(var hit in Physics2D.BoxCastAll(transform.position, new Vector2(boxSizeX, boxSizeY * 2.1f), 0, Vector2.right * (transform.position.x - collision.contacts[0].point.x))) if(hit.transform.CompareTag("ground")) return;
                     anim.SetBool("isHoldingWall", true);
                     unitState = UnitState.HoldingWall; // 벽붙기 상태로 변경
                     fixedDir = -CheckDir(collision.contacts[0].point); // 벽의 반대 방향을 저장
@@ -60,7 +70,7 @@ public class Werwolf : PlayerUnit
                 if(unitState == UnitState.HoldingWall)
                 {
                     anim.SetBool("isHoldingWall", false);
-                    unitState = UnitState.Default;
+                    unitState = UnitState.Air;
                 }
             break;
         }
@@ -75,7 +85,7 @@ public class Werwolf : PlayerUnit
                 if(unitState == UnitState.HoldingWall)
                 {
                     anim.SetBool("isHoldingWall", false);
-                    unitState = UnitState.Default;
+                    unitState = UnitState.Air;
                 }
                 break;
         }
@@ -84,8 +94,14 @@ public class Werwolf : PlayerUnit
 
     public override bool Attack(Vector3 clickPos)
     {
-        if((unitState != UnitState.Default && unitState != UnitState.Air && unitState != UnitState.HoldingWall)
-             || attackCoroutine != null) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
+        if((unitState != UnitState.Default && unitState != UnitState.Air && unitState != UnitState.HoldingWall && unitState != UnitState.Dash) || unitState == UnitState.FormChange
+             || attackCoroutine != null || anim.GetCurrentAnimatorStateInfo(0).IsName("Attack")) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
+        if(dashCoroutine != null) StopDash();
+        if(unitState == UnitState.HoldingWall)
+        {
+            anim.SetBool("isHoldingWall", false);
+            unitState = UnitState.Air;
+        }
         //Vector2 testvec = new Vector2(1 * CheckDir(clickPos), clickPos.y - transform.position.y);//이렇게 되면 대각선으로 갈 수록 좁아짐
         //Vector2 testvec = (Vector2.up * (clickPos.y - transform.position.y)).normalized;
         //MeleeAttack.transform.localPosition = testvec;
@@ -106,9 +122,10 @@ public class Werwolf : PlayerUnit
     /// </summary>
     private IEnumerator Attacking(float deg)
     {
+        unitState = UnitState.Attack;
         // 지속시간만큼 히트박스를 온오프
         MeleeAttack.SetActive(true);
-        Move(Mathf.Sign(MeleeAttack.transform.localPosition.x)*attackImpulse);
+        SetHorizontalForce(Mathf.Sign(MeleeAttack.transform.localPosition.x)*attackImpulse);
         float high = Mathf.Sin(deg) * 10;
         if (high > 3)
         {
@@ -116,6 +133,12 @@ public class Werwolf : PlayerUnit
         }
         SetVerticalForce(high);
         yield return new WaitForSeconds(attackDuration);
+        StopAttack();
+    }
+
+    private void StopAttack()
+    {
+        unitState = UnitState.Default;
         MeleeAttack.SetActive(false);
         attackCoroutine = null;
     }
@@ -123,19 +146,19 @@ public class Werwolf : PlayerUnit
     public override bool Move(float dir)
     {
         if(ControllerChecker() || unitState == UnitState.HoldingWall || 
-            unitState == UnitState.Dash) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
+            unitState == UnitState.Dash || unitState == UnitState.Attack) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
         fixedDir = (int)dir; // 대쉬 방향을 저장
         return base.Move(dir);
     }
     public override bool Jump(KeyState jumpKey)
     {
-        if(ControllerChecker()) return false;
         switch(jumpKey)
         {
             case KeyState.KeyDown:
+            if(dashCoroutine != null) StopDash();
             if(unitState == UnitState.HoldingWall)
             {
-                unitState = UnitState.Default;
+                unitState = UnitState.Air;
                 isJumping = false;
                 SetVerticalForce(jumpImpulse); // 윗 방향 힘 추가
                 base.Move(fixedDir * movementSpeed * 3);
@@ -152,10 +175,17 @@ public class Werwolf : PlayerUnit
         return false;
     }
 
+    public override bool Crouch(KeyState crouchKey)
+    {
+        if(ControllerChecker() || unitState == UnitState.Dash || unitState == UnitState.HoldingWall || unitState == UnitState.Attack) return false;
+        return base.Crouch(crouchKey);
+    }
+
     // 수정 필요함
     public override bool Dash()
     {
-        if(unitState != UnitState.Default || dashCoroutine != null) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
+        if(ControllerChecker() || unitState == UnitState.HoldingWall || dashCoroutine != null) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
+        if(attackCoroutine != null) StopAttack();
         dashCoroutine = StartCoroutine(DashAffterInput());
         return true;
     }
@@ -166,11 +196,14 @@ public class Werwolf : PlayerUnit
     private IEnumerator DashAffterInput()
     {
         float t = 0;
+        if(unitState == UnitState.HoldingWall) anim.SetBool("isHoldingWall", false);
         unitState = UnitState.Dash; // 대쉬 상태로 변경
+        var tempVel = Mathf.Sign(fixedDir);
+        SetHorizontalVelocity(tempVel);
         while(t < dashDuration) // 대쉬 지속시간만큼 동작
         {
             t += Time.deltaTime;
-            SetHorizontalForce(Mathf.Sign(hzVel) * movementSpeed * 2f); // 수평 방향으로 힘 추가
+            SetHorizontalForce(tempVel * movementSpeed * 2f); // 수평 방향으로 힘 추가
             yield return null;
         }
         StopDash();
@@ -189,7 +222,7 @@ public class Werwolf : PlayerUnit
     public override bool FormChange()
     {
         if(unitState != UnitState.Default) return false;
-        else return true;
+        else return base.FormChange();
     }
 
     public override bool Reload() => false;

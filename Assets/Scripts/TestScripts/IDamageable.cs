@@ -13,17 +13,17 @@ public interface IDamageable
     /// 대상의 무적 여부를 나타내는 속성
     /// true인 경우, 데미지를 받지 않음
     /// </summary>
-    bool invalidation { get; set; }
+    public bool invalidation { get; set; }
 
     /// <summary>
     /// 대상의 최대 체력을 나타내는 속성
     /// </summary>
-    int maxHealth { get; set; }
+    public int maxHealth { get; set; }
 
     /// <summary>
     /// 대상의 현재 체력을 나타내는 속성
     /// </summary>
-    int health { get; set; }
+    public int health { get; set; }
 
     /// <summary>
     /// 대상에게 지정된 데미지를 가함
@@ -33,10 +33,7 @@ public interface IDamageable
     /// <returns>데미지가 성공적으로 적용되었는지 여부를 반환</returns>
     bool GetDamage(int dmg, Action action = null)
     {
-        if (health <= 0 || invalidation) { 
-            Debug.Log(health+","+invalidation);
-            return false; 
-        }
+        if (health <= 0 || invalidation) return false; 
         if(action != null) action();
         health -= dmg;
         if (health <= 0) Death();

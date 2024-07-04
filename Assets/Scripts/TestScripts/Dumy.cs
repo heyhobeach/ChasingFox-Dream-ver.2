@@ -1,7 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Burst.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public partial class Dumy : MonoBehaviour, IDamageable
 {
@@ -22,7 +25,8 @@ public partial class Dumy : MonoBehaviour, IDamageable
 
     public Vector3 playerPos;//�÷��̾��� ��ġ�� ��� ����
     public Vector3 enemypos;//������ ��ġ�� ��� ����
-    public int a = 3;//�׽�Ʈ�� ���� ���������� �� ���µ� ������ �Ƹ��� ������
+    //public int a = 3;//�׽�Ʈ�� ���� ���������� �� ���µ� ������ �Ƹ��� ������
+    public int index_player = 0;
 
     public float maxDistance = 1.06f;
 
@@ -36,6 +40,7 @@ public partial class Dumy : MonoBehaviour, IDamageable
     private float attackRange;
 
     private bool attacking = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -44,7 +49,7 @@ public partial class Dumy : MonoBehaviour, IDamageable
         //Debug.Log(this.transform.parent);
         // player = GameObject.FindWithTag("Player");//�÷��̾ ã�Ƽ� ����, �̷��� �� ������ ó������ �� �����صΰ� ������ �����ϸ� ������ ���� �������� ������ �����ؾ��Ұ�츦 ���� ���� �κ�
         player = Player.pObject;
-        Debug.Log(player.transform);
+        // Debug.Log(player.transform);
         
         
     }
@@ -112,9 +117,19 @@ public partial class Dumy : MonoBehaviour, IDamageable
         float mysize = 5f;//반지름
         //RaycastHit2D ray2d = Physics2D.Raycast(transform.position, transform.forward, 10f); 
         int layerMask = 1 << LayerMask.NameToLayer("Player");
+        int linelayerMask = 1 << LayerMask.NameToLayer("Player")|1<<LayerMask.NameToLayer("Ground");
         RaycastHit2D ray2d = Physics2D.CircleCast(myposition, mysize, Vector2.up, maxDistance,layerMask);
+
+        //var index_player = Array.FindIndex(ray2d, x => x.transform.tag == "Player");
+        Vector2 subpos = _targetPos.position - transform.position;
+        Debug.Log(subpos);
+        Debug.DrawRay(transform.position, subpos);
+        RaycastHit2D[] target_ray2d = Physics2D.RaycastAll(myposition, subpos, attackRange, linelayerMask);
+        index_player = Array.FindIndex(target_ray2d, x => x.transform.tag == "Player");
+        
         if (ray2d)
         {
+            Debug.Log(string.Format("타겟{0} index{1}", target_ray2d[index_player].transform.name,index_player));
             subvec = (Vector2)ray2d.transform.position - (Vector2)transform.position;
             float deg = Mathf.Atan2(subvec.y, subvec.x);//mathf.de
             deg *= Mathf.Rad2Deg;
@@ -148,12 +163,14 @@ public partial class Dumy : MonoBehaviour, IDamageable
 
     IEnumerator timer()
     {
-        Debug.Log("코루틴 시작");
+        Debug.Log("코루틴 시작");    
         follow = true;
         while (true)
         {
             yield return new WaitForSeconds(1);
-            if (subvec.magnitude <= attackRange)
+            Debug.Log(string.Format("index_player {0}", index_player));
+            Debug.Log(string.Format("조건 거리{0} 인덱스{1}", subvec.magnitude <= attackRange, index_player == 0));
+            if ((subvec.magnitude <= attackRange)&(index_player==0))//만약 벽이 2개 겹처있다면
             {
                 //attack();
                 //StopCoroutine(cMove());

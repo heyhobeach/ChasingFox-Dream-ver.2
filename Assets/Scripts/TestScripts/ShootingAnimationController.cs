@@ -18,6 +18,8 @@ public class ShootingAnimationController : MonoBehaviour
     private SpriteRenderer head;
     private SpriteRenderer arm;
 
+    public bool isAttackAni { get => armAnim.GetCurrentAnimatorStateInfo(0).IsName("Attack"); }
+
     private void OnDisable() => attackCoroutine = null;
 
     private void Start()
@@ -29,7 +31,7 @@ public class ShootingAnimationController : MonoBehaviour
 
     private void Update()
     {
-        if(!body.gameObject.activeSelf) return;
+        if(!bodys[0].gameObject.activeSelf) return;
         var thisPoint = transform.position;
         thisPoint.z = 0;
         var screenPoint = Input.mousePosition;
@@ -43,6 +45,11 @@ public class ShootingAnimationController : MonoBehaviour
         arm.flipY = flip;
         head.flipX = flip;
         bodys[0].transform.localEulerAngles = new Vector3(0, 0, angle - 90);
+        if(armAnim.GetCurrentAnimatorStateInfo(0).IsName("Reload"))
+        {
+            arm.flipY = false;
+            bodys[0].transform.localEulerAngles = Vector2.zero;
+        }
     }
 
     private void LateUpdate()
@@ -76,6 +83,7 @@ public class ShootingAnimationController : MonoBehaviour
     }
 
     public void Shoot() => armAnim.SetTrigger("attack");
+    public void Reload() => armAnim.SetTrigger("reload");
 
     public void SpriteAssetChange(int i)
     {
