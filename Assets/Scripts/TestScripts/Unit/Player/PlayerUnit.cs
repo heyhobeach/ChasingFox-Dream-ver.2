@@ -169,7 +169,7 @@ public abstract class PlayerUnit : UnitBase
     {
         if(ControllerChecker()) return false;
         hzVel += dir == 0 ? -hzVel * accelerate * Time.deltaTime : (dir-hzForce/movementSpeed) * accelerate * Time.deltaTime; // 가속도만큼 입력 방향에 힘을 추가
-        if(dir == 0 && hzVel < 0.01f) hzVel = 0;
+        if(dir == 0 && Mathf.Abs(hzVel) < 0.01f) hzVel = 0;
         if(unitState == UnitState.FormChange || dir == 0) // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
         {
             base.Move(0);

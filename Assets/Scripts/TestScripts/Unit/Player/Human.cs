@@ -98,8 +98,9 @@ public class Human : PlayerUnit
     public override bool Attack(Vector3 clickPos)
     {
         if(ControllerChecker() || unitState == UnitState.Dash || unitState == UnitState.Reload) return false;
-        base.Attack(clickPos);
+        shootingAnimationController.AttackAni();
         if(residualAmmo <= 0) return false;
+        base.Attack(clickPos);
         ProCamera2DShake.Instance.Shake("GunShot ShakePreset");
         Vector2 pos = Vector2.zero;
         GetSignedAngle((Vector2) transform.position, clickPos, out pos);
