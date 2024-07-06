@@ -192,6 +192,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     {
         anim.SetTrigger("death");
         anim.SetBool("isDeath", true);
+        shootingAnimationController.NomalAni();
         unitState = UnitState.Death;
     }
 

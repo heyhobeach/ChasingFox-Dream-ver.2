@@ -227,14 +227,19 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         });
         if(changedForm is Human && bulletTimeCount-- > 0)
         {
-            Time.timeScale = 0.05f;
-            Time.fixedDeltaTime = 0.05f * 0.02f;
+            Time.timeScale = 0.5f;
+            Time.fixedDeltaTime = 0.5f * 0.02f;
             changedForm.anim.speed = 0;
-            yield return new WaitForSecondsRealtime(bulletTime);
+            float t = 0;
+            while((t += Time.unscaledDeltaTime) < bulletTime)
+            {
+                FixMove();
+                yield return null;
+            }
             changedForm.anim.speed = 1;
+            Time.timeScale = 1;
+            Time.fixedDeltaTime = 1 * 0.02f;
         }
-        Time.timeScale = 1;
-        Time.fixedDeltaTime = 1 * 0.02f;
         yield return new WaitUntil(() => {
             FixMove();
             return !(changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("FormChange") && changedForm.anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.95f);
