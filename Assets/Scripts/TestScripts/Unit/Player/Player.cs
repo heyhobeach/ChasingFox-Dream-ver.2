@@ -27,7 +27,8 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     public int health { get; set; }
     public bool invalidation { get; set; }
 
-    public int transformNum = 2;
+    private int bulletTimeCount;
+    private GameManager.BrutalData brutalData;
 
     public static GameObject pObject;
 
@@ -59,6 +60,9 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         changedForm.gameObject.SetActive(true);
         health = maxHealth; // 체력 초기화
         fixedDir = 1;
+        bulletTimeCount = GameManager.Instance.GetHumanData();
+        brutalData = GameManager.Instance.GetBrutalData();
+        changeGage = brutalData.maxGage;
     }
 
     public bool Crouch(KeyState crouchKey) => changedForm.Crouch(crouchKey);
@@ -71,7 +75,11 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         return changedForm.Move(dir);
     }
 
-    public bool Attack(Vector3 clickPos) => changedForm.Attack(clickPos);
+    public bool Attack(Vector3 clickPos)
+    {
+        if(changedForm is Werwolf) changeGage -= brutalData.atk;
+        return changedForm.Attack(clickPos);
+    }
 
     public bool Dash() => changedForm.Dash();
 
@@ -118,54 +126,107 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         PopupManager.Instance.DeathPop();
 
     }
+    private Coroutine changing;
     public bool FormChange()
     {
-        if(!changedForm.FormChange()) return false; // 대쉬 중이거나 제어가 불가능한 상태일 경우 동작을 수행하지 않음
-        StartCoroutine(FormChanging());
-        return true;
+        if(changedForm is Berserker || changing != null) return false; // 대쉬 중이거나 제어가 불가능한 상태일 경우 동작을 수행하지 않음
+        bool b = false;
+        if(changedForm is Human && changeGage > 0 && changedForm.FormChange())
+        {
+            changing = StartCoroutine(ChangeWerewolf());
+            b = true;
+        }
+        else if(changedForm is Werwolf && changedForm.FormChange())
+        {
+            changing = StartCoroutine(ChangeHuman());
+            b = true;
+        }
+        return b;
     }
 
-    private IEnumerator FormChanging()
+    private IEnumerator ChangeWerewolf()
     {
         // changedForm.UnitState = UnitState.FormChange;
-        float t = 0;
-        if(changedForm is Human)
+        // float t = 0;
+        // while (t <= bulletTime&&changedForm is Human&&bulletTimeCount>=0)
+        // while()
+        // {
+        //     t += Time.unscaledDeltaTime;
+        //     Debug.Log("불릿 타임 시작");
+        //     #region 불릿타임
+        //     Time.timeScale = 0.05f;
+        //     Time.fixedDeltaTime = 0.05f * 0.02f;
+        //     #endregion  
+        //     yield return null;
+        // }
+        // Debug.Log("불릿 타임 종료");
+        // #region 불릿타임 해제
+        // #endregion
+        // t = 0;
+        // var tempDir = fixedDir;
+        // while(t <= changeDelay)
+        // {
+        //     t += Time.unscaledDeltaTime;
+        //     changedForm.SetHorizontalForce(tempDir);
+        //     yield return null;
+        // }
+        var tempDir = fixedDir;
+        yield return new WaitUntil(() => changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("FormChange"));
+        yield return new WaitUntil(() => {
+            FixMove();
+            return !(changedForm is Human && changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("FormChange") && changedForm.anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.2f);
+        });
+        if(changedForm is Human && bulletTimeCount-- > 0)
         {
-            transformNum--;
-        }
-        
-
-        while (t <= bulletTime&&changedForm is Human&&transformNum>=0)
-        {
-            t += Time.unscaledDeltaTime;
-            Debug.Log("불릿 타임 시작");
-            #region 불릿타임
             Time.timeScale = 0.05f;
             Time.fixedDeltaTime = 0.05f * 0.02f;
-            #endregion  
-            yield return null;
-            Debug.Log("불릿 타임 종료");
+            changedForm.anim.speed = 0;
+            yield return new WaitForSecondsRealtime(bulletTime);
+            changedForm.anim.speed = 1;
         }
-        #region 불릿타임 해제
         Time.timeScale = 1;
         Time.fixedDeltaTime = 1 * 0.02f;
-        #endregion
-        t = 0;
-        var tempDir = fixedDir;
-        while(t <= changeDelay)
-        {
-            t += Time.unscaledDeltaTime;
-            changedForm.SetHorizontalForce(tempDir);
-            yield return null;
-        }
+        yield return new WaitUntil(() => {
+            FixMove();
+            return !(changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("FormChange") && changedForm.anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.95f);
+        });
 
         foreach(PlayerUnit form in forms) form.gameObject.SetActive(false);
-        if(changedForm is Human) changedForm = forms[1]; // 인간 상태일 시 늑대인간으로 변경
-        else if(changedForm is Werwolf) changedForm = forms[0]; // 늑대인간 상태일 시 인간으로 변경
+        changedForm = forms[1]; // 인간 상태일 시 늑대인간으로 변경
         changedForm.gameObject.SetActive(true);
-        changedForm.SetHorizontalForce(fixedDir * changedForm.movementSpeed); // 자연스러운 대쉬 동작을 위한 부분
-        changedForm.SetHorizontalVelocity(fixedDir * Time.deltaTime * changedForm.movementSpeed);
+        FixMove();
         changedForm.UnitState = UnitState.Default;
+
+        changing = null;
+
+        void FixMove()
+        {
+            changedForm.SetHorizontalForce(tempDir * changedForm.movementSpeed); // 자연스러운 대쉬 동작을 위한 부분
+            changedForm.SetHorizontalVelocity(tempDir * Time.deltaTime * changedForm.movementSpeed);
+        }
+    }
+    private IEnumerator ChangeHuman()
+    {
+        var tempDir = fixedDir;
+        yield return new WaitUntil(() => changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("FormChange"));
+        yield return new WaitUntil(() => {
+            FixMove();
+            return !(changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("FormChange") && changedForm.anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.95f);
+        });
+        changeGage -= brutalData.frm;
+        foreach(PlayerUnit form in forms) form.gameObject.SetActive(false);
+        changedForm = forms[0]; // 늑대인간 상태일 시 인간으로 변경
+        changedForm.gameObject.SetActive(true);
+        FixMove();
+        changedForm.UnitState = UnitState.Default;
+
+        changing = null;
+
+        void FixMove()
+        {
+            changedForm.SetHorizontalForce(tempDir * changedForm.movementSpeed); // 자연스러운 대쉬 동작을 위한 부분
+            changedForm.SetHorizontalVelocity(tempDir * Time.deltaTime * changedForm.movementSpeed);
+        }
     }
 
     public bool Reload() => changedForm.Reload(); 
@@ -178,6 +239,11 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     void Update()
     {
         pObject = this.gameObject;
+        if(changedForm is Werwolf)
+        {
+            if(changeGage >= 0) changeGage -= brutalData.sec * Time.deltaTime;
+            else FormChange();
+        }
     }
 
     // public bool FormChange()

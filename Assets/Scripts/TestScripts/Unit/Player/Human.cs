@@ -56,7 +56,7 @@ public class Human : PlayerUnit
     protected override void OnEnable()
     {
         base.OnEnable();
-        var pi = GameManager.Instance.proCamera2DPointerInfluence;
+        var pi = CameraManager.Instance.proCamera2DPointerInfluence;
         pi.MaxHorizontalInfluence = 2.2f;
         pi.MaxVerticalInfluence = 1.2f;
         pi.InfluenceSmoothness = 0.2f;
@@ -97,7 +97,7 @@ public class Human : PlayerUnit
 
     public override bool Attack(Vector3 clickPos)
     {
-        if(ControllerChecker() || unitState == UnitState.Dash || unitState == UnitState.Reload) return false;
+        if(ControllerChecker() || unitState == UnitState.Dash || unitState == UnitState.Reload || unitState == UnitState.FormChange) return false;
         shootingAnimationController.AttackAni();
         if(residualAmmo <= 0) return false;
         base.Attack(clickPos);

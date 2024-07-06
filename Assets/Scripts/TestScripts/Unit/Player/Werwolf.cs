@@ -37,7 +37,7 @@ public class Werwolf : PlayerUnit
     protected override void OnEnable()
     {
         base.OnEnable();
-        var pi = GameManager.Instance.proCamera2DPointerInfluence;
+        var pi = CameraManager.Instance.proCamera2DPointerInfluence;
         pi.MaxHorizontalInfluence = 2.5f;
         pi.MaxVerticalInfluence = 1.5f;
         pi.InfluenceSmoothness = 0.0f;
@@ -194,7 +194,7 @@ public class Werwolf : PlayerUnit
     // 수정 필요함
     public override bool Dash()
     {
-        if(ControllerChecker() || unitState == UnitState.HoldingWall || dashCoroutine != null) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
+        if(ControllerChecker() || unitState == UnitState.HoldingWall || unitState == UnitState.FormChange || dashCoroutine != null) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
         if(attackCoroutine != null) StopAttack();
         base.Dash();
         dashCoroutine = StartCoroutine(DashAffterInput());
