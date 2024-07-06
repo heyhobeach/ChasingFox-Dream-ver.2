@@ -52,6 +52,15 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     /// </summary>
     public float bulletTime;
 
+    private void OnEnable()
+    {
+        if(changing != null)
+        {
+            StopCoroutine(changing);
+            changing = null;
+        }
+    }
+
     private void Start()
     {
         foreach(PlayerUnit form in forms) form.gameObject.SetActive(false);
@@ -131,10 +140,19 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     {
         if(changedForm is Berserker || changing != null) return false; // 대쉬 중이거나 제어가 불가능한 상태일 경우 동작을 수행하지 않음
         bool b = false;
-        if(changedForm is Human && changeGage > 0 && changedForm.FormChange())
+        if(changedForm is Human)
         {
-            changing = StartCoroutine(ChangeWerewolf());
-            b = true;
+            if(changeGage > 0 && changedForm.FormChange())
+            {
+                changing = StartCoroutine(ChangeWerewolf());
+                b = true;
+            }
+            else if(changeGage <= 0 && bulletTimeCount > 0)
+            {
+                changedForm.UnitState = UnitState.Default;
+                Dash();
+                changing = StartCoroutine(BulletTime());
+            }
         }
         else if(changedForm is Werwolf && changedForm.FormChange())
         {
@@ -144,6 +162,37 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         return b;
     }
 
+    private IEnumerator BulletTime()
+    {
+        var tempDir = fixedDir;
+        yield return new WaitUntil(() => changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("Dash"));
+        yield return new WaitUntil(() => {
+            FixMove();
+            return !(changedForm is Human && changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("Dash") && changedForm.anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.3f);
+        });
+        if(changedForm is Human && bulletTimeCount-- > 0)
+        {
+            Time.timeScale = 0.05f;
+            Time.fixedDeltaTime = 0.05f * 0.02f;
+            changedForm.anim.speed = 0;
+            yield return new WaitForSecondsRealtime(bulletTime);
+            changedForm.anim.speed = 1;
+        }
+        Time.timeScale = 1;
+        Time.fixedDeltaTime = 1 * 0.02f;
+        yield return new WaitUntil(() => {
+            FixMove();
+            return !(changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("Dash") && changedForm.anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.95f);
+        });
+
+        changing = null;
+
+        void FixMove()
+        {
+            changedForm.SetHorizontalForce(tempDir * changedForm.movementSpeed); // 자연스러운 대쉬 동작을 위한 부분
+            changedForm.SetHorizontalVelocity(tempDir * Time.deltaTime * changedForm.movementSpeed);
+        }
+    }
     private IEnumerator ChangeWerewolf()
     {
         // changedForm.UnitState = UnitState.FormChange;
