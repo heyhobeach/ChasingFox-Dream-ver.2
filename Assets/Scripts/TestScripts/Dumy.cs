@@ -91,7 +91,7 @@ public partial class Dumy : MonoBehaviour, IDamageable
         playerPos = player.transform.position;
 
         GameObject gObj = this.gameObject;
-        _bullet.GetComponent<Bullet>().Set(transform.position, playerPos, 1, 1, gObj, (Vector2)(playerPos-transform.position).normalized);
+        _bullet.GetComponent<Bullet>().Set(transform.position, playerPos, Vector3.zero, 1, 1, gObj, (Vector2)(playerPos-transform.position).normalized);
          Debug.Log("shoot"+playerPos+"enemypos"+enemypos);    
         //_bullet.transform.position = Vector2.left;
     }

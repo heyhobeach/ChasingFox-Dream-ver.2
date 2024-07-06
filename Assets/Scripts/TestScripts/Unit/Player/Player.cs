@@ -35,12 +35,12 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     /// <summary>
     /// 폼 체인지 딜레이 시간
     /// </summary>
-    public float changeDelay;
+    // public float changeDelay;
 
     /// <summary>
     /// 늑대인간 폼 유지를 위한 게이지 변수
     /// </summary>
-    public float changeGage;
+    private float changeGage;
 
     /// <summary>
     /// 입력 방향을 저장할 변수
@@ -50,7 +50,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     /// <summary>
     /// 불릿타임 시간
     /// </summary>
-    public float bulletTime;
+    [SerializeField] private float bulletTime;
 
     private void OnEnable()
     {

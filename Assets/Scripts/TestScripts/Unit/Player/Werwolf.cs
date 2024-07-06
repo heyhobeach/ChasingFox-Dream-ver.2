@@ -94,6 +94,7 @@ public class Werwolf : PlayerUnit
         //deg*=Mathf.Deg2Rad;//라디안으로 바꿔주기는 하는데 이렇게 하면 좀 문제생김
         Debug.Log(deg);
         MeleeAttack.transform.localPosition = new Vector3(Mathf.Cos(deg), Mathf.Sin(deg)*2,transform.localPosition.z);
+        MeleeAttack.transform.localEulerAngles = new Vector3(0, 0, Quaternion.FromToRotation(Vector2.up, transform.position - MeleeAttack.transform.position).eulerAngles.z - 90);
 
         attackCoroutine = StartCoroutine(Attacking(deg));
         base.Attack(clickPos);

@@ -97,16 +97,14 @@ public class Human : PlayerUnit
 
     public override bool Attack(Vector3 clickPos)
     {
-        if(ControllerChecker() || unitState == UnitState.Dash || unitState == UnitState.Reload || unitState == UnitState.FormChange) return false;
+        if(ControllerChecker() || unitState == UnitState.Dash || unitState == UnitState.Reload || unitState == UnitState.FormChange || shootingAnimationController.isAttackAni) return false;
         shootingAnimationController.AttackAni();
-        if(residualAmmo <= 0) return false;
+        if(residualAmmo <= 0 || (shootingAnimationController.GetShootPosition()-(Vector2)transform.position).magnitude > ((Vector2)(clickPos-transform.position)).magnitude) return false;
         base.Attack(clickPos);
         ProCamera2DShake.Instance.Shake("GunShot ShakePreset");
-        Vector2 pos = Vector2.zero;
-        GetSignedAngle((Vector2) transform.position, clickPos, out pos);
         GameObject _bullet = Instantiate(bullet);//총알을 공격포지션에서 생성함
         GameObject gObj = this.gameObject;
-        _bullet.GetComponent<Bullet>().Set(transform.position, clickPos, bulletDamage, bulletSpeed, gObj, (Vector3)pos);
+        _bullet.GetComponent<Bullet>().Set(shootingAnimationController.GetShootPosition(), clickPos, shootingAnimationController.GetShootRotation(), bulletDamage, bulletSpeed, gObj);
         residualAmmo--;
         return true;
     }

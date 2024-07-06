@@ -15,7 +15,7 @@ public class Bullet : MonoBehaviour
     private float startTime;
     private string ignoreTag;
 
-    public void Set(Vector3 shootPos, Vector3 targetPos, int damage, float speed, GameObject gobj, Vector3 addPos = new Vector3())
+    public void Set(Vector3 shootPos, Vector3 targetPos, Vector3 rotation, int damage, float speed, GameObject gobj, Vector3 addPos = new Vector3())
     {
         // if (gobj.tag == "Enemy")
         // {
@@ -30,6 +30,7 @@ public class Bullet : MonoBehaviour
         ignoreTag = gobj.tag;
         transform.position = (Vector2)shootPos + (Vector2)addPos;
         destination = ((Vector2)targetPos - (Vector2)shootPos).normalized;
+        transform.GetChild(0).transform.localEulerAngles = rotation;
         this.damage = damage;
         this.speed = speed;
         gameObject.SetActive(true);
@@ -92,7 +93,7 @@ public class Bullet : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.CompareTag("ground") || collision.gameObject.CompareTag("Wall")) Destroy(gameObject);
+        if(collision.gameObject.CompareTag("Map") || collision.gameObject.CompareTag("ground") || collision.gameObject.CompareTag("Wall")) Destroy(gameObject);
 
         if (collision.gameObject.tag == "guard")//가드 만날겨우 trigger를 켜서 collision이 안일어나도록함
         {

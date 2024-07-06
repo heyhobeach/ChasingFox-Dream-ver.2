@@ -11,6 +11,7 @@ public class ShootingAnimationController : MonoBehaviour
     public SpriteLibrary spriteLibrary;
     public SpriteLibraryAsset[] spriteLibraryAssets;
     public GameObject[] bodys;
+    public GameObject shootPostion;
 
     private Coroutine attackCoroutine;
     private float angle;
@@ -21,6 +22,8 @@ public class ShootingAnimationController : MonoBehaviour
     public bool isAttackAni { get => armAnim.GetCurrentAnimatorStateInfo(0).IsName("Attack"); }
     public bool isReloadAni { get => armAnim.GetCurrentAnimatorStateInfo(0).IsName("Reload"); }
 
+    public float errorRange;
+
     private void OnDisable() => attackCoroutine = null;
 
     private void Start()
@@ -30,11 +33,20 @@ public class ShootingAnimationController : MonoBehaviour
         head = bodys[1].GetComponent<SpriteRenderer>();
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         if(!bodys[0].gameObject.activeSelf) return;
-        var thisPoint = transform.position;
+        if(body.flipX) foreach(var body in bodys)
+        {
+            var temp = body.transform.localPosition;
+            temp.x = -temp.x;
+            body.transform.localPosition = temp;
+        }
+        var thisPoint = bodys[0].transform.position;
+        var tempPositon = (bodys[0].transform.position - transform.position).normalized * errorRange;
+        thisPoint -= new Vector3(tempPositon.y, tempPositon.x);
         thisPoint.z = 0;
+        shootPostion.transform.localPosition = new Vector3(shootPostion.transform.localPosition.x, arm.flipY ? -errorRange : errorRange);
         var screenPoint = Input.mousePosition;
         screenPoint.z = Camera.main.transform.position.z;
         screenPoint = Camera.main.ScreenToWorldPoint(screenPoint);
@@ -53,16 +65,6 @@ public class ShootingAnimationController : MonoBehaviour
             bodys[0].transform.localEulerAngles = Vector2.zero;
         }
         else arm.flipX = false;
-    }
-
-    private void LateUpdate()
-    {
-        if(body.flipX) foreach(var body in bodys)
-        {
-            var temp = body.transform.localPosition;
-            temp.x = -temp.x;
-            body.transform.localPosition = temp;
-        }
     }
 
     public void AttackAni()
@@ -103,4 +105,6 @@ public class ShootingAnimationController : MonoBehaviour
         foreach(var go in bodys) go.SetActive(i == 0 ? false : true);
     }
     
+    public Vector2 GetShootPosition() => (Vector2)shootPostion.transform.position;
+    public Vector3 GetShootRotation() => shootPostion.transform.rotation.eulerAngles;
 } 
