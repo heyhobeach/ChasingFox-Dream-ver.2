@@ -131,6 +131,7 @@ public class Human : PlayerUnit
         if(unitState != UnitState.Default) return false; // 조작이 불가능한 상태일 경우 동작을 수행하지 않음
         if(dashCoroutine == null)
         {
+            invalidation = true;
             dashCoroutine = StartCoroutine(DashAffterInput());
             return true;
         }
@@ -143,8 +144,10 @@ public class Human : PlayerUnit
     public void StopDash()
     {
         if(dashCoroutine != null) StopCoroutine(dashCoroutine);
+        invalidation = false;
         dashCoroutine = null;
         unitState = UnitState.Default;
+        //여기 false
     }
 
     /// <summary>
@@ -154,10 +157,13 @@ public class Human : PlayerUnit
     {
         float t = 0;
         unitState = UnitState.Dash;
+        invalidation = true;
         var tempVel = Mathf.Sign(fixedDir);
         SetHorizontalVelocity(tempVel);
+        Debug.Log("구르기중");
         while(t < dashDuration) // 대쉬 지속 시간 동안
         {
+            
             t += Time.deltaTime;
             SetHorizontalForce(tempVel * movementSpeed * 2f);
             yield return null;

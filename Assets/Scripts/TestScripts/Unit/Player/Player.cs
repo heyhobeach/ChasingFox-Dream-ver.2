@@ -7,7 +7,7 @@ using UnityEngine;
 /// <summary>
 /// 플레이어 클래스. IUnitController 및 IDamageable 인터페이스를 상속
 /// </summary>
-public class Player : MonoBehaviour, IUnitController, IDamageable
+public class Player : MonoBehaviour, IUnitController,IDamageable
 {
     /// <summary>
     /// 폼을 저장하는 배열
@@ -21,14 +21,18 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     /// </summary>
     private PlayerUnit changedForm;
 
+
+    public int transformNum = 2;
+
+    public static GameObject pObject;
+
+
+
     [SerializeField] private int _maxHealth;    //?private아닌가 A : 맞음
     public int maxHealth { get => _maxHealth; set => _maxHealth = value; }
     public int health { get; set; }
     public bool invalidation { get; set; }
 
-    public int transformNum = 2;
-
-    public static GameObject pObject;
 
     /// <summary>
     /// 폼 체인지 딜레이 시간
@@ -49,6 +53,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     /// 불릿타임 시간
     /// </summary>
     public float bulletTime;
+
 
     private void Start()
     {
@@ -72,7 +77,11 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
 
     public bool Attack(Vector3 clickPos) => changedForm.Attack(clickPos);
 
-    public bool Dash() => changedForm.Dash();
+    public bool Dash() {
+        changedForm.Dash();
+        return true;
+    }
+
 
     /// <summary>
     /// 임시
@@ -177,6 +186,16 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     void Update()
     {
         pObject = this.gameObject;
+        if (changedForm.UnitState == UnitState.Dash)
+        {
+            invalidation = true;
+            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Bullet"), true);
+        }
+        else
+        {
+            invalidation = false;
+            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Bullet"), false);
+        }
     }
 
     // public bool FormChange()

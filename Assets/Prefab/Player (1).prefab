@@ -47,12 +47,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 299e458c57be4094ea38037b97c92b8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _maxHealth: 0
   movementSpeed: 8
   accelerate: 0.03
   dashDuration: 0.2
-  jumpHight: 7
-  jumpImpulse: 0.1
   jumpForce: 0.2
+  jumpImpulse: 0.1
+  jumpTime: 0
+  anim: {fileID: 0}
   coverBox: {fileID: 5144232418160233723}
   rg: {fileID: 3534181740294454947}
 --- !u!212 &77445037438631745
@@ -199,12 +201,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 700302fee283dd841808bef0e3be6208, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _maxHealth: 0
   movementSpeed: 8
   accelerate: 0.03
   dashDuration: 1
-  jumpHight: 7
-  jumpImpulse: 0.1
   jumpForce: 0.2
+  jumpImpulse: 0.1
+  jumpTime: 0
+  anim: {fileID: 0}
   coverBox: {fileID: 5144232418160233723}
   rg: {fileID: 3534181740294454947}
   MeleeAttack: {fileID: 9087094098230676894}
@@ -354,18 +358,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72563116e1533314c83fb6189af9ad74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _maxHealth: 0
   movementSpeed: 6
   accelerate: 0.03
   dashDuration: 1
-  jumpHight: 5
-  jumpImpulse: 0.5
   jumpForce: 0.2
+  jumpImpulse: 0.5
+  jumpTime: 0
+  anim: {fileID: 0}
   coverBox: {fileID: 5144232418160233723}
   rg: {fileID: 3534181740294454947}
   bullet: {fileID: 4987150748679622039}
   reloadTime: 3
   bulletDamage: 1
   bulletSpeed: 25
+  magazine: 0
+  residualAmmo: 0
   maxAmmo: 5
 --- !u!212 &4695761668031984094
 SpriteRenderer:
@@ -779,8 +787,8 @@ MonoBehaviour:
   - {fileID: 1198308647996976051}
   - {fileID: 2704614994100507617}
   - {fileID: 5849452244821606975}
-  _maxHealth: 1
   transformNum: 2
+  _maxHealth: 1
   changeDelay: 1
   changeGage: 0
   bulletTime: 1
@@ -807,6 +815,10 @@ PrefabInstance:
     - target: {fileID: 5133008688607087787, guid: a51d151da05f693469ae9254bb341cde, type: 3}
       propertyPath: m_Name
       value: Bullet
+      objectReference: {fileID: 0}
+    - target: {fileID: 5133008688607087787, guid: a51d151da05f693469ae9254bb341cde, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 5371417433383774187, guid: a51d151da05f693469ae9254bb341cde, type: 3}
       propertyPath: m_LocalPosition.x

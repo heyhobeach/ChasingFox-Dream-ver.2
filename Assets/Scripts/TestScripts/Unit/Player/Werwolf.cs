@@ -33,7 +33,7 @@ public class Werwolf : PlayerUnit
     /// 대쉬 코루틴을 저장하는 변수, 대쉬 중 여부 겸용
     /// </summary>
     private Coroutine dashCoroutine;
-
+    public int air_attack_count = 1;
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -47,6 +47,11 @@ public class Werwolf : PlayerUnit
         base.OnDisable();
         StopDash();
         StopAttack();
+    }
+    protected override void Update()
+    {
+        Debug.Log("유닛상태"+unitState);
+        base.Update();
     }
 
     protected override void OnCollisionEnter2D(Collision2D collision)
@@ -67,11 +72,15 @@ public class Werwolf : PlayerUnit
                 }
                 break;
             case MapType.Ground:
+                air_attack_count = 1;
                 if(unitState == UnitState.HoldingWall)
                 {
                     anim.SetBool("isHoldingWall", false);
                     unitState = UnitState.Air;
                 }
+                break;
+            case MapType.Platform:
+                air_attack_count = 1;
             break;
         }
     }
@@ -94,6 +103,8 @@ public class Werwolf : PlayerUnit
 
     public override bool Attack(Vector3 clickPos)
     {
+
+
         if((unitState != UnitState.Default && unitState != UnitState.Air && unitState != UnitState.HoldingWall && unitState != UnitState.Dash) || unitState == UnitState.FormChange
              || attackCoroutine != null || anim.GetCurrentAnimatorStateInfo(0).IsName("Attack")) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
         if(dashCoroutine != null) StopDash();
@@ -106,10 +117,23 @@ public class Werwolf : PlayerUnit
         //Vector2 testvec = (Vector2.up * (clickPos.y - transform.position.y)).normalized;
         //MeleeAttack.transform.localPosition = testvec;
         //MeleeAttack.transform.localPosition = (Vector2.right * CheckDir(clickPos))+testvec; // 클릭 방향으로 공격 위치 설정
+        if (unitState == UnitState.Air)
+        {
+            if (air_attack_count < 1)
+            {
+                return false;
+            }
+            else
+            {
+                air_attack_count--;
+            }
+        }
+        Debug.Log("공격횟수" + air_attack_count);
+        
         Vector2 subvec = clickPos - transform.position;
         float deg = Mathf.Atan2(subvec.y, subvec.x) ;//mathf.de
         //deg*=Mathf.Deg2Rad;//라디안으로 바꿔주기는 하는데 이렇게 하면 좀 문제생김
-        Debug.Log(deg);
+        //Debug.Log(deg);
         MeleeAttack.transform.localPosition = new Vector3(Mathf.Cos(deg), Mathf.Sin(deg)*2,transform.localPosition.z);
 
         attackCoroutine = StartCoroutine(Attacking(deg));
@@ -198,6 +222,7 @@ public class Werwolf : PlayerUnit
         float t = 0;
         if(unitState == UnitState.HoldingWall) anim.SetBool("isHoldingWall", false);
         unitState = UnitState.Dash; // 대쉬 상태로 변경
+        invalidation = true;
         var tempVel = Mathf.Sign(fixedDir);
         SetHorizontalVelocity(tempVel);
         while(t < dashDuration) // 대쉬 지속시간만큼 동작
@@ -216,6 +241,7 @@ public class Werwolf : PlayerUnit
     {
         if(dashCoroutine != null) StopCoroutine(dashCoroutine);
         dashCoroutine = null;
+        invalidation=false;
         unitState = UnitState.Default;
     }
 

@@ -88,6 +88,7 @@ public class BulletScript : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        Debug.Log(collision.gameObject.tag);
         if (collision.gameObject.name == "guard")//필요없어보임
         {
             this.gameObject.GetComponent<CapsuleCollider2D>().isTrigger = true;
@@ -112,13 +113,19 @@ public class BulletScript : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        Debug.Log(collision.gameObject.tag);
+        if (collision.gameObject.tag == "Map")
+        {
+            Destroy(this.gameObject);
+        }
         if (collision.gameObject.name == "guard")//가드 만날겨우 trigger를 켜서 collision이 안일어나도록함
         {
             this.gameObject.GetComponent<CapsuleCollider2D>().isTrigger = true;
         }
         if (collision.gameObject.tag == "Player")//레이어 설정한 것 때문에 적군 총알만 플레이어 에게 충돌일어남
         {
-            Debug.Log("플레이어 충돌");
+            Debug.Log("플레이어 충돌"+collision.gameObject.name);
+
             Destroy(this.gameObject);
         }
         if (collision.gameObject.tag == "Enemy")//플레이어 총알이 적군에게 충돌시 적이 trigger로 설정되어있어서 안 쓸것 같음
@@ -132,7 +139,8 @@ public class BulletScript : MonoBehaviour
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if(collision.gameObject.name == "Player")
+        Debug.Log(collision.gameObject.tag);
+        if (collision.gameObject.name == "Player")
         {
             Destroy(this.gameObject);
         }

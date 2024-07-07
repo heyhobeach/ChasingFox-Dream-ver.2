@@ -92,7 +92,12 @@ public class Bullet : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.CompareTag("ground") || collision.gameObject.CompareTag("Wall")) Destroy(gameObject);
+        Debug.Log(collision.gameObject.name);
+        if (collision.gameObject.tag == "Map")
+        {
+            Destroy(this.gameObject);
+        }
+        if (collision.gameObject.CompareTag("ground") || collision.gameObject.CompareTag("Wall")) Destroy(gameObject);
 
         if (collision.gameObject.tag == "guard")//가드 만날겨우 trigger를 켜서 collision이 안일어나도록함
         {
@@ -103,6 +108,7 @@ public class Bullet : MonoBehaviour
             // Debug.Log("플레이어 충돌");
             var temp = collision.gameObject.GetComponent<IDamageable>();
             bool isDamaged = false;
+            Debug.Log(collision.gameObject.name);
             if(temp != null) isDamaged = temp.GetDamage(damage);
             if (isDamaged)
             {
@@ -122,7 +128,12 @@ public class Bullet : MonoBehaviour
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if(collision.gameObject.tag == "Player" && !collision.gameObject.CompareTag(ignoreTag))
+        Debug.Log(collision.gameObject.tag);
+        if (collision.gameObject.tag == "Map")
+        {
+            Destroy(this.gameObject);
+        }
+        if (collision.gameObject.tag == "Player" && !collision.gameObject.CompareTag(ignoreTag))
         {
             //Destroy(this.gameObject);
         }

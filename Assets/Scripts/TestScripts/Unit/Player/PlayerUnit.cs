@@ -106,6 +106,14 @@ public abstract class PlayerUnit : UnitBase
         if(!isGrounded && unitState == UnitState.Default) unitState = UnitState.Air; // 기본 상태에서 공중에 뜰 시 공중 상태로 변경
         else if(isGrounded && unitState == UnitState.Air) unitState = UnitState.Default; // 공중 상태에서 바닥에 닿을 시 기본 상태로 변경
         // Debug.Log(string.Format("{0}은 현재 오브젝트", currentOneWayPlatform));
+        if (invalidation == true)
+        {
+            Debug.Log("무적");
+        }
+        else
+        {
+            Debug.Log("무적아님");
+        }
         CrouchUpdate();
         // Debug.Log("유닛 상태"+unitState);
         base.Update();
