@@ -37,6 +37,7 @@ public class Werwolf : PlayerUnit
     protected override void OnEnable()
     {
         base.OnEnable();
+        attackCount = 1;
         var pi = CameraManager.Instance.proCamera2DPointerInfluence;
         pi.MaxHorizontalInfluence = 2.5f;
         pi.MaxVerticalInfluence = 1.5f;
@@ -63,6 +64,7 @@ public class Werwolf : PlayerUnit
                 break;
             case MapType.Ground:
                 if(unitState == UnitState.HoldingWall) StopHoldingWall();
+                attackCount = 1;
             break;
         }
     }
@@ -79,20 +81,21 @@ public class Werwolf : PlayerUnit
     }
     
 
+    private int attackCount;
     public override bool Attack(Vector3 clickPos)
     {
-        if((unitState != UnitState.Default && unitState != UnitState.Air && unitState != UnitState.HoldingWall && unitState != UnitState.Dash) || unitState == UnitState.FormChange
-             || attackCoroutine != null || anim.GetCurrentAnimatorStateInfo(0).IsName("Attack")) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
+        if((unitState != UnitState.Default && unitState != UnitState.Air && unitState != UnitState.HoldingWall && unitState != UnitState.Dash) || unitState == UnitState.FormChange ||
+            attackCoroutine != null || anim.GetCurrentAnimatorStateInfo(0).IsName("Attack")) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
         if(dashCoroutine != null) StopDash();
         if(unitState == UnitState.HoldingWall) StopHoldingWall();
         //Vector2 testvec = new Vector2(1 * CheckDir(clickPos), clickPos.y - transform.position.y);//이렇게 되면 대각선으로 갈 수록 좁아짐
         //Vector2 testvec = (Vector2.up * (clickPos.y - transform.position.y)).normalized;
         //MeleeAttack.transform.localPosition = testvec;
         //MeleeAttack.transform.localPosition = (Vector2.right * CheckDir(clickPos))+testvec; // 클릭 방향으로 공격 위치 설정
-        Vector2 subvec = clickPos - transform.position;
-        float deg = Mathf.Atan2(subvec.y, subvec.x) ;//mathf.de
         //deg*=Mathf.Deg2Rad;//라디안으로 바꿔주기는 하는데 이렇게 하면 좀 문제생김
-        Debug.Log(deg);
+        attackCount--;
+        Vector2 subvec = clickPos - transform.position;
+        float deg = Mathf.Atan2(subvec.y, subvec.x); //mathf.de
         MeleeAttack.transform.localPosition = new Vector3(Mathf.Cos(deg), Mathf.Sin(deg)*2,transform.localPosition.z);
         MeleeAttack.transform.localEulerAngles = new Vector3(0, 0, Quaternion.FromToRotation(Vector2.up, transform.position - MeleeAttack.transform.position).eulerAngles.z - 90);
 
@@ -109,13 +112,20 @@ public class Werwolf : PlayerUnit
         unitState = UnitState.Attack;
         // 지속시간만큼 히트박스를 온오프
         MeleeAttack.SetActive(true);
-        SetHorizontalForce(Mathf.Sign(MeleeAttack.transform.localPosition.x)*attackImpulse);
-        float high = Mathf.Sin(deg) * 10;
-        if (high > 3)
+        if(attackCount >= 0)
         {
-            high = 3;
+            var tempDir = MeleeAttack.transform.localPosition.normalized;
+            SetHorizontalVelocity(tempDir.x);
+            SetHorizontalForce(tempDir.x * attackImpulse);
+            SetVerticalForce(tempDir.y * attackImpulse * 0.25f);
         }
-        SetVerticalForce(high);
+        // SetHorizontalForce(Mathf.Sign(MeleeAttack.transform.localPosition.x)*attackImpulse);
+        // float high = Mathf.Sin(deg) * 10;
+        // if (high > 3)
+        // {
+        //     high = 3;
+        // }
+        // SetVerticalForce(high);
         yield return new WaitForSeconds(attackDuration);
         StopAttack();
     }
