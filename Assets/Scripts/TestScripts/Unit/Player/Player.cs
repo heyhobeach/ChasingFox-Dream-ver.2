@@ -147,13 +147,15 @@ public class Player : MonoBehaviour, IUnitController,IDamageable
         {
             t += Time.unscaledDeltaTime;
             Debug.Log("불릿 타임 시작");
+            invalidation = true;
             #region 불릿타임
             Time.timeScale = 0.05f;
             Time.fixedDeltaTime = 0.05f * 0.02f;
             #endregion  
             yield return null;
-            Debug.Log("불릿 타임 종료");
+            
         }
+        
         #region 불릿타임 해제
         Time.timeScale = 1;
         Time.fixedDeltaTime = 1 * 0.02f;
@@ -166,8 +168,9 @@ public class Player : MonoBehaviour, IUnitController,IDamageable
             changedForm.SetHorizontalForce(tempDir);
             yield return null;
         }
-
-        foreach(PlayerUnit form in forms) form.gameObject.SetActive(false);
+        invalidation= false;
+        Debug.Log("불릿 타임 종료");
+        foreach (PlayerUnit form in forms) form.gameObject.SetActive(false);
         if(changedForm is Human) changedForm = forms[1]; // 인간 상태일 시 늑대인간으로 변경
         else if(changedForm is Werwolf) changedForm = forms[0]; // 늑대인간 상태일 시 인간으로 변경
         changedForm.gameObject.SetActive(true);
