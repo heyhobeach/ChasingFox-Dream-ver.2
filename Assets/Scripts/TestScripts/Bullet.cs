@@ -104,6 +104,7 @@ public class Bullet : MonoBehaviour
             // Debug.Log("플레이어 충돌");
             var temp = collision.gameObject.GetComponent<IDamageable>();
             bool isDamaged = false;
+            Debug.Log(collision.gameObject.name);
             if(temp != null) isDamaged = temp.GetDamage(damage);
             if (isDamaged)
             {
@@ -123,7 +124,12 @@ public class Bullet : MonoBehaviour
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if(collision.gameObject.tag == "Player" && !collision.gameObject.CompareTag(ignoreTag))
+        Debug.Log(collision.gameObject.tag);
+        if (collision.gameObject.tag == "Map")
+        {
+            Destroy(this.gameObject);
+        }
+        if (collision.gameObject.tag == "Player" && !collision.gameObject.CompareTag(ignoreTag))
         {
             //Destroy(this.gameObject);
         }

@@ -377,8 +377,10 @@ public partial class Dumy : MonoBehaviour
                 break;
             }
             transform.position = Vector2.MoveTowards(transform.position, new Vector2(FinalNodeList[i].x, FinalNodeList[i].y + 1), Time.deltaTime);
+            Debug.Log("이동했음");
             if(transform.position== new Vector3(FinalNodeList[i].x, FinalNodeList[i].y + 1, transform.position.z))
             {
+                Debug.Log("다음");
                 i++;
             }
             //transform.position = new Vector2(FinalNodeList[i].x, FinalNodeList[i].y + 1);

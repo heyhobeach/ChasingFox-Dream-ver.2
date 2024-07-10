@@ -33,12 +33,11 @@ public class Werwolf : PlayerUnit
     /// 대쉬 코루틴을 저장하는 변수, 대쉬 중 여부 겸용
     /// </summary>
     private Coroutine dashCoroutine;
-
+    public int air_attack_count = 1;
     protected override void OnEnable()
     {
         base.OnEnable();
-        attackCount = 1;
-        var pi = CameraManager.Instance.proCamera2DPointerInfluence;
+        var pi = GameManager.Instance.proCamera2DPointerInfluence;
         pi.MaxHorizontalInfluence = 2.5f;
         pi.MaxVerticalInfluence = 1.5f;
         pi.InfluenceSmoothness = 0.0f;
@@ -81,7 +80,6 @@ public class Werwolf : PlayerUnit
     }
     
 
-    private int attackCount;
     public override bool Attack(Vector3 clickPos)
     {
         if((unitState != UnitState.Default && unitState != UnitState.Air && unitState != UnitState.HoldingWall && unitState != UnitState.Dash) || unitState == UnitState.FormChange ||
@@ -92,10 +90,23 @@ public class Werwolf : PlayerUnit
         //Vector2 testvec = (Vector2.up * (clickPos.y - transform.position.y)).normalized;
         //MeleeAttack.transform.localPosition = testvec;
         //MeleeAttack.transform.localPosition = (Vector2.right * CheckDir(clickPos))+testvec; // 클릭 방향으로 공격 위치 설정
-        //deg*=Mathf.Deg2Rad;//라디안으로 바꿔주기는 하는데 이렇게 하면 좀 문제생김
-        attackCount--;
+        if (unitState == UnitState.Air)
+        {
+            if (air_attack_count < 1)
+            {
+                return false;
+            }
+            else
+            {
+                air_attack_count--;
+            }
+        }
+        Debug.Log("공격횟수" + air_attack_count);
+        
         Vector2 subvec = clickPos - transform.position;
-        float deg = Mathf.Atan2(subvec.y, subvec.x); //mathf.de
+        float deg = Mathf.Atan2(subvec.y, subvec.x) ;//mathf.de
+        //deg*=Mathf.Deg2Rad;//라디안으로 바꿔주기는 하는데 이렇게 하면 좀 문제생김
+        //Debug.Log(deg);
         MeleeAttack.transform.localPosition = new Vector3(Mathf.Cos(deg), Mathf.Sin(deg)*2,transform.localPosition.z);
         MeleeAttack.transform.localEulerAngles = new Vector3(0, 0, Quaternion.FromToRotation(Vector2.up, transform.position - MeleeAttack.transform.position).eulerAngles.z - 90);
 
@@ -112,13 +123,10 @@ public class Werwolf : PlayerUnit
         unitState = UnitState.Attack;
         // 지속시간만큼 히트박스를 온오프
         MeleeAttack.SetActive(true);
-        if(attackCount >= 0)
-        {
-            var tempDir = MeleeAttack.transform.localPosition.normalized;
-            SetHorizontalVelocity(tempDir.x);
-            SetHorizontalForce(tempDir.x * attackImpulse);
-            SetVerticalForce(tempDir.y * attackImpulse * 0.25f);
-        }
+        var tempDir = MeleeAttack.transform.localPosition.normalized;
+        SetHorizontalVelocity(tempDir.x);
+        SetHorizontalForce(tempDir.x * attackImpulse);
+        SetVerticalForce(tempDir.y * attackImpulse * 0.25f);
         // SetHorizontalForce(Mathf.Sign(MeleeAttack.transform.localPosition.x)*attackImpulse);
         // float high = Mathf.Sin(deg) * 10;
         // if (high > 3)
@@ -238,6 +246,7 @@ public class Werwolf : PlayerUnit
     {
         if(dashCoroutine != null) StopCoroutine(dashCoroutine);
         dashCoroutine = null;
+        invalidation=false;
         unitState = UnitState.Default;
     }
 

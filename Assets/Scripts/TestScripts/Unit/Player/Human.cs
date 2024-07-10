@@ -139,8 +139,10 @@ public class Human : PlayerUnit
     public void StopDash()
     {
         if(dashCoroutine != null) StopCoroutine(dashCoroutine);
+        invalidation = false;
         dashCoroutine = null;
         unitState = UnitState.Default;
+        //여기 false
     }
 
     /// <summary>
@@ -172,6 +174,7 @@ public class Human : PlayerUnit
         if(reloadCoroutine != null) return false;
         base.Reload();
         reloadCoroutine = StartCoroutine(Reloading());
+        base.Reload();
         return true;
     }
 

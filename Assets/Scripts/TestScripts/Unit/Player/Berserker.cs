@@ -50,6 +50,7 @@ public class Berserker : PlayerUnit
         float t = 0;
         while(t < dashDuration)
         {
+            Debug.Log("구르기중");
             t += Time.deltaTime;
             AddHorizontalForce(hzVel * movementSpeed * 2f);
             yield return null;

@@ -7,8 +7,16 @@ using UnityEngine;
 /// 유닛의 기본적인 동작을 정의하는 추상 클래스
 /// MonoBehaviour, IUnitController를 상속함
 /// </summary>
-public abstract class UnitBase : MonoBehaviour, IUnitController
+public abstract class UnitBase : MonoBehaviour, IUnitController,IDamageable
 {
+    public int _maxHealth;
+    public int maxHealth { get { return _maxHealth; } set { _maxHealth = value; } }
+
+    private int _health;
+    public int health { get { return _health; } set { _health = value; } }
+
+    private bool _invalidation;
+    public bool invalidation { get { return _invalidation; } set { _invalidation = value; } }
     /// <summary>
     /// 중력 상수
     /// </summary>
