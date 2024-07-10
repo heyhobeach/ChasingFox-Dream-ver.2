@@ -37,7 +37,7 @@ public class Werwolf : PlayerUnit
     protected override void OnEnable()
     {
         base.OnEnable();
-        var pi = GameManager.Instance.proCamera2DPointerInfluence;
+        var pi = CameraManager.Instance.proCamera2DPointerInfluence;
         pi.MaxHorizontalInfluence = 2.5f;
         pi.MaxVerticalInfluence = 1.5f;
         pi.InfluenceSmoothness = 0.0f;
@@ -63,7 +63,6 @@ public class Werwolf : PlayerUnit
                 break;
             case MapType.Ground:
                 if(unitState == UnitState.HoldingWall) StopHoldingWall();
-                attackCount = 1;
             break;
         }
     }

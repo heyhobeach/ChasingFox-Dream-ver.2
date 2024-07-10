@@ -33,13 +33,6 @@ public class Player : MonoBehaviour, IUnitController,IDamageable
     public static GameObject pObject;
 
 
-
-    [SerializeField] private int _maxHealth;    //?private아닌가 A : 맞음
-    public int maxHealth { get => _maxHealth; set => _maxHealth = value; }
-    public int health { get; set; }
-    public bool invalidation { get; set; }
-
-
     /// <summary>
     /// 폼 체인지 딜레이 시간
     /// </summary>
