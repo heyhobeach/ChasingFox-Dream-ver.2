@@ -41,6 +41,7 @@ public class Werwolf : PlayerUnit
         pi.MaxHorizontalInfluence = 2.5f;
         pi.MaxVerticalInfluence = 1.5f;
         pi.InfluenceSmoothness = 0.0f;
+        CameraManager.Instance.ChangeSize = 6f;
     }
     protected override void OnDisable()
     {

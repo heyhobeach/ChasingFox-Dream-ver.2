@@ -53,6 +53,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72563116e1533314c83fb6189af9ad74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _maxHealth: 0
   movementSpeed: 6
   accelerate: 3
   dashDuration: 1
@@ -452,9 +453,11 @@ GameObject:
   m_Component:
   - component: {fileID: 4001559939898364622}
   - component: {fileID: 5729484149470370084}
+  - component: {fileID: 400262811350688250}
+  - component: {fileID: 9104192416386877871}
   m_Layer: 7
   m_Name: AttackBox
-  m_TagString: Untagged
+  m_TagString: DamageObj
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -520,6 +523,45 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.5, y: 0.8}
   m_EdgeRadius: 0
+--- !u!50 &400262811350688250
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2585130286110849391}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!114 &9104192416386877871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2585130286110849391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4754100c651d1d342b2e010d43fe6702, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2848746887222954708
 GameObject:
   m_ObjectHideFlags: 0
@@ -1021,6 +1063,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 299e458c57be4094ea38037b97c92b8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _maxHealth: 0
   movementSpeed: 10
   accelerate: 5
   dashDuration: 1
@@ -1138,7 +1181,7 @@ GameObject:
   - component: {fileID: 5611539893621525020}
   - component: {fileID: 1316758974825071571}
   - component: {fileID: 7630119145529125285}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Bullet
   m_TagString: DamageObj
   m_Icon: {fileID: 0}
@@ -1391,6 +1434,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 700302fee283dd841808bef0e3be6208, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _maxHealth: 0
   movementSpeed: 10
   accelerate: 5
   dashDuration: 1
@@ -1403,6 +1447,7 @@ MonoBehaviour:
   MeleeAttack: {fileID: 2585130286110849391}
   attackDuration: 0.5
   attackImpulse: 20
+  air_attack_count: 1
 --- !u!212 &254208249613797784
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1664,7 +1709,7 @@ SpriteRenderer:
   m_Size: {x: 0.9375, y: 0.9375}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!95 &8485842080173502161
@@ -1819,6 +1864,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 299e458c57be4094ea38037b97c92b8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _maxHealth: 0
   movementSpeed: 8
   accelerate: 0.03
   dashDuration: 0.2

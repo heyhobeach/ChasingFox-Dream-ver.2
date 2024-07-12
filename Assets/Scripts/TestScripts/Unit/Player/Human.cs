@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Com.LuisPedroFonseca.ProCamera2D;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -60,6 +61,7 @@ public class Human : PlayerUnit
         pi.MaxHorizontalInfluence = 2.2f;
         pi.MaxVerticalInfluence = 1.2f;
         pi.InfluenceSmoothness = 0.2f;
+        CameraManager.Instance.ChangeSize = 5.5f;
     }
     protected override void OnDisable()
     {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Com.LuisPedroFonseca.ProCamera2D;
@@ -7,8 +8,23 @@ public class GameManager : MonoBehaviour
 {
     private static GameManager instance;
     public static GameManager Instance { get => instance; }
+    public BrutalDatas _brutalDatas;
+    public static BrutalDatas brutalDatas;
+    public HumanDatas _humanDatas;
+    public static HumanDatas humanDatas;
 
-    [System.Serializable]
+    [CreateAssetMenu(fileName = "HumanData", menuName = "ScriptableObjects/HumanData", order = 1)]
+    public class HumanDatas : ScriptableObject
+    {
+        public int[] counts;
+    }
+
+    [CreateAssetMenu(fileName = "BrutalData", menuName = "ScriptableObjects/BrutalData", order = 1)]
+    public class BrutalDatas : ScriptableObject
+    {
+        public BrutalData[] brutalDatas;
+    }
+    [Serializable]
     public class BrutalData
     {
         public int maxGage;
@@ -24,8 +40,6 @@ public class GameManager : MonoBehaviour
             this.frm = frm;
         }
     }
-    public List<BrutalData> brutalDatas = new();
-    public List<int> humanDatas = new();
 
     private int karma = 100;
     [SerializeField] private int karmaRatio = 65;
@@ -34,17 +48,15 @@ public class GameManager : MonoBehaviour
     public int Brutality { get => karma-karmaRatio; set { karmaRatio = -value; ClampRatio(); } }
     private int ClampRatio() => Mathf.Clamp(karmaRatio, 0, 100);
 
-    public int GetHumanData()
-    {
-        if(Humanity >= 30) return humanDatas[1];
-        else return humanDatas[0];
-    }
-    public BrutalData GetBrutalData() => brutalDatas[Brutality/10];
+    public int GetHumanData() => humanDatas.counts[Humanity/10];
+    public BrutalData GetBrutalData() => brutalDatas.brutalDatas[Brutality/10];
 
     private void Awake()
     {
         if (instance != null) return;
         instance = this;
         DontDestroyOnLoad(gameObject);
+        humanDatas = _humanDatas;
+        brutalDatas = _brutalDatas;
     }
 }

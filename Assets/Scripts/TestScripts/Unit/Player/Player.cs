@@ -28,7 +28,7 @@ public class Player : MonoBehaviour, IUnitController,IDamageable
     public bool invalidation { get; set; }
 
     private int bulletTimeCount;
-    private GameManager.BrutalData brutalData;
+    public GameManager.BrutalData brutalData;
 
     public static GameObject pObject;
 
@@ -41,7 +41,7 @@ public class Player : MonoBehaviour, IUnitController,IDamageable
     /// <summary>
     /// 늑대인간 폼 유지를 위한 게이지 변수
     /// </summary>
-    private float changeGage;
+    public float changeGage;
 
     /// <summary>
     /// 입력 방향을 저장할 변수
