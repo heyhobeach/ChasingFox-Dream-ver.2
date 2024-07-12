@@ -8,55 +8,43 @@ public class GameManager : MonoBehaviour
 {
     private static GameManager instance;
     public static GameManager Instance { get => instance; }
-    public BrutalDatas _brutalDatas;
-    public static BrutalDatas brutalDatas;
-    public HumanDatas _humanDatas;
-    public static HumanDatas humanDatas;
 
-    [CreateAssetMenu(fileName = "HumanData", menuName = "ScriptableObjects/HumanData", order = 1)]
-    public class HumanDatas : ScriptableObject
+    private Stack<BaseController> controllers = new();
+    public static void PushController(BaseController @base) => instance.controllers.Push(@base);
+    public static void PopController(BaseController @base)
     {
-        public int[] counts;
-    }
-
-    [CreateAssetMenu(fileName = "BrutalData", menuName = "ScriptableObjects/BrutalData", order = 1)]
-    public class BrutalDatas : ScriptableObject
-    {
-        public BrutalData[] brutalDatas;
-    }
-    [Serializable]
-    public class BrutalData
-    {
-        public int maxGage;
-        public int sec;
-        public int atk;
-        public int frm;
-
-        public BrutalData(int maxGage, int sec, int atk, int frm)
+        if(instance.controllers.Peek() != @base)
         {
-            this.maxGage = maxGage;
-            this.sec = sec;
-            this.atk = atk;
-            this.frm = frm;
+            Stack<BaseController> temp = new();
+            while(instance.controllers.Count > 0 && !temp.Equals(instance.controllers.Peek())) temp.Push(instance.controllers.Pop());
+            while(temp.Count > 0) instance.controllers.Push(temp.Pop());
         }
+        instance.controllers.Pop();
     }
 
-    private int karma = 100;
+    public BrutalDatas brutalDatas;
+    public HumanDatas humanDatas;
+
+    private const int karma = 100;
     [SerializeField] private int karmaRatio = 65;
 
-    public int Humanity { get => karmaRatio; set { karmaRatio = value; ClampRatio(); } }
-    public int Brutality { get => karma-karmaRatio; set { karmaRatio = -value; ClampRatio(); } }
+    public static int Humanity { get => instance.karmaRatio; set { instance.karmaRatio = value; instance.ClampRatio(); } }
+    public static int Brutality { get => karma-instance.karmaRatio; set { instance.karmaRatio = -value; instance.ClampRatio(); } }
     private int ClampRatio() => Mathf.Clamp(karmaRatio, 0, 100);
 
-    public int GetHumanData() => humanDatas.counts[Humanity/10];
-    public BrutalData GetBrutalData() => brutalDatas.brutalDatas[Brutality/10];
+    public static int GetHumanData() => instance.humanDatas.counts[Humanity/10];
+    public static BrutalData GetBrutalData() => instance.brutalDatas.brutalDatas[Brutality/10];
 
     private void Awake()
     {
         if (instance != null) return;
         instance = this;
         DontDestroyOnLoad(gameObject);
-        humanDatas = _humanDatas;
-        brutalDatas = _brutalDatas;
+        if(controllers == null) controllers = new();
+    }
+
+    private void Update()
+    {
+        if(controllers.Count > 0) controllers.Peek().Controller();
     }
 }

@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : BaseController
 {
     private IUnitController unitController;
 
     void Start() => unitController = GetComponent<IUnitController>();
 
-    void Update()
+    public override void Controller()
     {
         if(Input.GetKeyDown(KeyCode.Mouse1)) unitController.FormChange();
         if(Input.GetKeyDown(KeyCode.R)) unitController.Reload();

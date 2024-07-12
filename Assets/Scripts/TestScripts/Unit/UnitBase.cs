@@ -62,6 +62,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController,IDamageable
     /// </summary>
     public UnitState UnitState { get => unitState; set => unitState = value; }
 
+    protected float boxOffsetX;
     /// <summary>
     /// 유닛 콜라이더 가로 크기
     /// </summary>
@@ -72,6 +73,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController,IDamageable
     /// </summary>
     public float BoxSizeX { get; private set; }
 
+    protected float boxOffsetY;
     /// <summary>
     /// 유닛 콜라이더 세로 크기
     /// </summary>
@@ -116,6 +118,8 @@ public abstract class UnitBase : MonoBehaviour, IUnitController,IDamageable
         // 콜라이더 크기(절반) 계산
         boxSizeX = gameObject.GetComponent<Collider2D>().bounds.extents.x;
         boxSizeY = gameObject.GetComponent<Collider2D>().bounds.extents.y;
+        boxOffsetX = gameObject.GetComponent<Collider2D>().offset.x;
+        boxOffsetY = gameObject.GetComponent<Collider2D>().offset.y;
         
         unitState = UnitState.Default;
 

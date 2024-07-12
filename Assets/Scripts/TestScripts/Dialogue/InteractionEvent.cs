@@ -309,7 +309,7 @@ public class InteractionEvent : MonoBehaviour
                     { time(); }
                     break;
                 case "brutal":
-                    { brutal(); }
+                    { brutal(filteredSubstrings); }
                     break;
                 case "police":
                     { police(); }
@@ -331,7 +331,7 @@ public class InteractionEvent : MonoBehaviour
     private string[] spaceremove(string[] com)//공백 제거 함수
     {
         List<string> temp = new List<string>();
-        int index = 0;
+        // int index = 0;
         foreach (var j in com)
         {
             if (j.ToString() != "")
@@ -358,9 +358,10 @@ public class InteractionEvent : MonoBehaviour
     {
         Debug.Log("switch_time");
     }
-    public void brutal()
+    public void brutal(string[] command_args)
     {
         Debug.Log("switch_brutal");
+        GameManager.Brutality += int.Parse(command_args[0]);
     }
     public void police()    
     {

@@ -28,7 +28,7 @@ public class Player : MonoBehaviour, IUnitController,IDamageable
     public bool invalidation { get; set; }
 
     private int bulletTimeCount;
-    public GameManager.BrutalData brutalData;
+    public BrutalData brutalData;
 
     public static GameObject pObject;
 
@@ -71,8 +71,8 @@ public class Player : MonoBehaviour, IUnitController,IDamageable
         changedForm.gameObject.SetActive(true);
         health = maxHealth; // 체력 초기화
         fixedDir = 1;
-        bulletTimeCount = GameManager.Instance.GetHumanData();
-        brutalData = GameManager.Instance.GetBrutalData();
+        bulletTimeCount = GameManager.GetHumanData();
+        brutalData = GameManager.GetBrutalData();
         changeGage = brutalData.maxGage;
     }
 

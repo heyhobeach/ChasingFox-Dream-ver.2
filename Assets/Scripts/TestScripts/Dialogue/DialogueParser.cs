@@ -18,7 +18,7 @@ public class DialogueParser : MonoBehaviour
     //테스트
     public Dialogue[] Parse(string _CSVFileName)
     {
-        int chap = 1;
+        // int chap = 1;
         List<Dialogue> dialoguesList = new List<Dialogue>();
         TextAsset csvData = Resources.Load<TextAsset>(_CSVFileName);//csv파일 로드
 
@@ -35,7 +35,7 @@ public class DialogueParser : MonoBehaviour
         
         for(int i=1+DatabaseManager.instance.lastIndex;i<data.Length-1; )//ID 1번 부터 위에는 다른거라서 필요없음
         {
-            int command_num = 0;
+            // int command_num = 0;
             List<string> commandList = new List<string>();
             List<string> testarr = new List<string>();
             row = Regex.Split(data[i], SPLIT_RE);

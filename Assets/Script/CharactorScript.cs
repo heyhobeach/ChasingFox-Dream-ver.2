@@ -79,7 +79,7 @@ public partial class ControllerScript : MonoBehaviour
         public bool isAttacking = false;//공격 보여주고 하는 용 변수 공격시간 등 체크할때 사용되는중
 
 
-        float t = 0;
+        // float t = 0;
 
         public static WereWolf Instance()//늑대 인스턴트등 쉽게 교체하기 위함 어차피 늑대와 인간은 한번생성되면 더 생성이 안될것이라고 생각했음
         {
@@ -127,7 +127,7 @@ public partial class ControllerScript : MonoBehaviour
             Debug.Log("늑대 공격");
             //float startAttack = Time.time;
             // float startAttack = 0;
-            t = 0;
+            // t = 0;
             ControllerScript.instance.meleeAttack.transform.position = ControllerScript.instance.attackPoint.transform.position;//meleeAttack오브젝트의 위치를 처음 설정한 attackPoint로 이동시킴
 
 
