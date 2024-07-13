@@ -8,6 +8,7 @@ public class PlayerController : BaseController
 
     void Start() => unitController = GetComponent<IUnitController>();
     void OnEnable() => AddController();
+    void OnDisable() => RemoveController();
 
     public override void Controller()
     {
@@ -24,6 +25,9 @@ public class PlayerController : BaseController
         else unitController.Jump(KeyState.None);
         unitController.Move(Input.GetAxisRaw("Horizontal"));
     }
+
+    public void Attack(float angle) => unitController.Attack(new Vector3(0, Mathf.Sin(Mathf.Deg2Rad * angle + 180) * 10000, Mathf.Cos(Mathf.Deg2Rad * angle + 180) * 10000));
+    public void Reload() => unitController.Reload();
 
     public Vector3 ClickPos()//클릭한 좌료를 보내주며 현재 공격 클릭시 캐릭터의 바라보는 방향도 변해야한다고 생각해서 필요했던 부분
     {

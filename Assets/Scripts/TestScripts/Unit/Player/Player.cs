@@ -7,7 +7,7 @@ using UnityEngine;
 /// <summary>
 /// 플레이어 클래스. IUnitController 및 IDamageable 인터페이스를 상속
 /// </summary>
-public class Player : MonoBehaviour, IUnitController,IDamageable
+public class Player : MonoBehaviour, IUnitController, IDamageable
 {
     /// <summary>
     /// 폼을 저장하는 배열
@@ -91,7 +91,6 @@ public class Player : MonoBehaviour, IUnitController,IDamageable
         if(changedForm is Werwolf) changeGage -= brutalData.atk;
         return changedForm.Attack(clickPos);
     }
-    public void Attack(float angle) => Attack(new Vector3(0, Mathf.Sin(Mathf.Deg2Rad * angle + 180) * 10, Mathf.Cos(Mathf.Deg2Rad * angle + 180) * 10));
 
     public bool Dash() 
     {

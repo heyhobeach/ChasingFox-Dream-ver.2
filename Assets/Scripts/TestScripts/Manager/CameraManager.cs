@@ -11,7 +11,8 @@ public class CameraManager : MonoBehaviour
     public ProCamera2DShake proCamera2DShake;
     public ProCamera2DPointerInfluence proCamera2DPointerInfluence;
 
-    public float ChangeSize { get; set; }
+    public float ChangeSize { set => ProCamera2D.Instance.UpdateScreenSize(value, 0.5f); }
+    // public float CameraOffsetY { set => cameraOffsetY = value; }
 
     void Awake()
     {
@@ -22,11 +23,10 @@ public class CameraManager : MonoBehaviour
 
     void Update()
     {
-        if(!ChangeSize.Equals(Camera.main.orthographicSize))
-        {
-            Camera.main.orthographicSize = Mathf.Ceil(Mathf.Lerp(Camera.main.orthographicSize, ChangeSize, 5f * Time.deltaTime) * 10000) * 0.0001f;
-            // Camera.main.orthographicSize += Mathf.Ceil((ChangeSize - Camera.main.orthographicSize) * Time.deltaTime * 1000) * 0.001f;
-            // Camera.main.orthographicSize = Mathf.Floor(Camera.main.orthographicSize * 100) * 0.01f;
-        }
+        // ProCamera2D.Instance.OffsetY = cameraOffsetY;
+        // if(!ChangeSize.Equals(Camera.main.orthographicSize))
+        // {
+        //     Camera.main.orthographicSize = Mathf.Ceil(Mathf.Lerp(Camera.main.orthographicSize, ChangeSize, 5f * Time.deltaTime) * 10000) * 0.0001f;
+        // }
     }
 }
