@@ -128,7 +128,6 @@ public abstract class UnitBase : MonoBehaviour, IUnitController,IDamageable
     }
     protected virtual void Update()
     {
-        if(ControllerChecker()) return;
         // 힘의 방향에 따라 이미지를 좌우 반전
         if(hzForce < -0.1f) spriteRenderer.flipX = true;
         else if(hzForce > 0.1f) spriteRenderer.flipX = false;
@@ -136,6 +135,16 @@ public abstract class UnitBase : MonoBehaviour, IUnitController,IDamageable
         else anim.SetBool("isAir", false);
         if(Mathf.Abs(vcForce) > 0.2f) anim.SetFloat("vcForce", vcForce);
         else anim.SetFloat("vcForce", 0);
+        if(Mathf.Abs(hzForce) < 0.1f || Physics2D.Raycast(transform.position, Vector2.right*Mathf.Sign(hzForce), boxSizeX*1.1f, 1<<LayerMask.NameToLayer("Map")))
+        {
+            anim.SetFloat("hzForce", 0);
+            anim.SetBool("isRun", false);
+        }
+        else
+        {
+            anim.SetFloat("hzForce", Mathf.Sign(hzForce) * (Mathf.Clamp(hzForce / movementSpeed, -1, 1) - fixDir * 1.5f));
+            anim.SetBool("isRun", true);
+        }
     }
     
     protected abstract void OnEnable();
@@ -169,18 +178,10 @@ public abstract class UnitBase : MonoBehaviour, IUnitController,IDamageable
 
     public abstract bool Crouch(KeyState crouchKey);
 
+    private float fixDir;
     public virtual bool Move(float dir)
     {
-        if (dir == 0 || Mathf.Abs(hzForce) <= 0.1f || Physics2D.Raycast(transform.position, Vector2.right*Mathf.Sign(hzForce), boxSizeX*1.1f, 1<<LayerMask.NameToLayer("Map")))
-        {
-            anim.SetBool("isRun", false);
-        }
-        else
-        {
-            anim.SetBool("isRun", true);
-        }
-        if(Mathf.Abs(hzForce) >= 0.1f) anim.SetFloat("hzForce", Mathf.Sign(hzForce) * (Mathf.Clamp(hzForce / movementSpeed, -1, 1) - dir * 1.5f));
-        else anim.SetFloat("hzForce", 0);
+        fixDir = dir;
         return true;
     }
 

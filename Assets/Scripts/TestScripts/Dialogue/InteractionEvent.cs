@@ -50,7 +50,6 @@ public class InteractionEvent : MonoBehaviour
     }
     private void Start()
     {
-
         GetDialogue();
         command[0] = "";
         foreach (var i in DatabaseManager.instance.indexList)
@@ -59,13 +58,11 @@ public class InteractionEvent : MonoBehaviour
         }
         //time_check_cor = ChocieTimer(5, Timeover);
         //time_check_cor = ChocieTimer(5,start);
-
-
-
     }
 
     private void Update()
     {
+        return;
         //GetDialogue();
         //화살표로 선택지 왔다 갔다 하면서 f로 선택
         //Debug.Log(string.Format("num =>{0}", num));
@@ -245,6 +242,14 @@ public class InteractionEvent : MonoBehaviour
             }
         }
 
+    }
+
+    public void Next()
+    {
+        num++;
+        contentNum = 0;
+        command = spaceremove(command);
+        CallFunction(command);
     }
 
     private void CallFunction(string[] _functions)

@@ -7,6 +7,7 @@ public class PlayerController : BaseController
     private IUnitController unitController;
 
     void Start() => unitController = GetComponent<IUnitController>();
+    void OnEnable() => AddController();
 
     public override void Controller()
     {

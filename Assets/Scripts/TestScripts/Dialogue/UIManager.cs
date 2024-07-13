@@ -4,8 +4,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIManager : MonoBehaviour
+public class UIManager : BaseController
 {
+    public InteractionEvent interactionEvent;
     //public Text
     public TMP_Text namemesh;
     public TMP_Text content;
@@ -27,6 +28,14 @@ public class UIManager : MonoBehaviour
     void Update()
     {
         //namemesh.text = "조현섭";
+    }
+
+
+
+    public override void Controller()
+    {
+        if(Input.GetKeyDown(KeyCode.F)) interactionEvent.Next();
+        if(Input.GetKeyDown(KeyCode.X)) gameObject.SetActive(false);
     }
 
     public void Setname(string name)

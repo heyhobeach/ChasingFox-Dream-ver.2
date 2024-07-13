@@ -91,8 +91,10 @@ public class Player : MonoBehaviour, IUnitController,IDamageable
         if(changedForm is Werwolf) changeGage -= brutalData.atk;
         return changedForm.Attack(clickPos);
     }
+    public void Attack(float angle) => Attack(new Vector3(0, Mathf.Sin(Mathf.Deg2Rad * angle + 180) * 10, Mathf.Cos(Mathf.Deg2Rad * angle + 180) * 10));
 
-    public bool Dash() {
+    public bool Dash() 
+    {
         changedForm.Dash();
         return true;
     }

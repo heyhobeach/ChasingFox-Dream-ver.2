@@ -5,7 +5,8 @@ using UnityEngine;
 
 public abstract class BaseController : MonoBehaviour
 {
-    void OnEnable() => GameManager.PushController(this);
+    // void OnEnable() => GameManager.PushController(this);
+    public void AddController() => GameManager.PushController(this);
     void OnDisable() => GameManager.PopController(this);
 
     public abstract void Controller();

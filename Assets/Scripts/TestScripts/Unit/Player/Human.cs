@@ -186,7 +186,7 @@ public class Human : PlayerUnit
         yield return null;
         yield return new WaitUntil(() => !shootingAnimationController.isReloadAni);
         unitState = UnitState.Default;
-        UIController.Instance.DrawReload(0);
+        // UIController.Instance.DrawReload(0);
         residualAmmo = maxAmmo;
         reloadCoroutine = null;
     }

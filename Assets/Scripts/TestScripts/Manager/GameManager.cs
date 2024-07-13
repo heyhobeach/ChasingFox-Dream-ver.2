@@ -10,7 +10,11 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get => instance; }
 
     private Stack<BaseController> controllers = new();
-    public static void PushController(BaseController @base) => instance.controllers.Push(@base);
+    public static void PushController(BaseController @base)
+    {
+        if(instance.controllers.Contains(@base)) return;
+        instance.controllers.Push(@base);
+    }
     public static void PopController(BaseController @base)
     {
         if(instance.controllers.Peek() != @base)
@@ -35,9 +39,15 @@ public class GameManager : MonoBehaviour
     public static int GetHumanData() => instance.humanDatas.counts[Humanity/10];
     public static BrutalData GetBrutalData() => instance.brutalDatas.brutalDatas[Brutality/10];
 
+    public void TimeScale(float t) => Time.timeScale = t;
+
     private void Awake()
     {
-        if (instance != null) return;
+        if (instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
         instance = this;
         DontDestroyOnLoad(gameObject);
         if(controllers == null) controllers = new();
