@@ -26,6 +26,7 @@ public class PlayerController : BaseController
         unitController.Move(Input.GetAxisRaw("Horizontal"));
     }
 
+    public void Move(float dir) => unitController.Move(dir);
     public void Attack(float angle) => unitController.Attack(new Vector3(0, Mathf.Sin(Mathf.Deg2Rad * angle + 180) * 10000, Mathf.Cos(Mathf.Deg2Rad * angle + 180) * 10000));
     public void Reload() => unitController.Reload();
 
