@@ -9,9 +9,11 @@ using UnityEngine.Events;
 public class EventTrigger : BaseController
 {
     public string targetTag;
+    public bool autoTrigger;
+    public KeyCode keyCode;
     public EventList[] eventLists;
     private int eventIdx = 0;
-    private bool used = true;
+    private bool used = false;
     private bool eventLock;
 
     public override void Controller()
@@ -30,10 +32,15 @@ public class EventTrigger : BaseController
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        if(used && !collider.CompareTag(targetTag)) return;
+        if(used || (autoTrigger ? false : !Input.GetKeyDown(keyCode)) || !collider.CompareTag(targetTag)) return;
         AddController();
         used = false;
-        // UnityEventTools.AddVoidPersistentListener(this, "", "");
+    }
+    private void OnTriggerStay2D(Collider2D collider)
+    {
+        if(used || (autoTrigger ? false : !Input.GetKeyDown(keyCode)) || !collider.CompareTag(targetTag)) return;
+        AddController();
+        used = false;
     }
 
     private IEnumerator LockTime(float lockTime)

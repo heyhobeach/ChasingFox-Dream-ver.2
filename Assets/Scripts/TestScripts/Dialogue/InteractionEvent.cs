@@ -244,12 +244,48 @@ public class InteractionEvent : MonoBehaviour
 
     }
 
-    public void Next()
+    public string[] Next()
     {
-        num++;
-        contentNum = 0;
+        if(num > dialogue.dialouses.Length) return null;
+        if (num == dialogue.dialouses.Length)//or추가
+        {
+            num++;
+            contentNum = 0;
+            command = spaceremove(command);
+            CallFunction(command);
+            return null;
+        }
         command = spaceremove(command);
         CallFunction(command);
+        string[] strings = new string[2];
+        if (num < dialogue.dialouses.Length)
+        {
+            strings[0] = dialogue.dialouses[num].name;//이름 변경 되는중 마찬가지로 내용도 같이 하면 될듯
+            strings[1] = string.Join("", dialogue.dialouses[num].context[contentNum]);
+            contentlength = dialogue.dialouses[num].context.Length;
+
+            command = Regex.Split(dialogue.dialouses[num].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);
+        }
+        contentNum = 0;
+        num++;
+        return strings;
+    }
+
+    public string ChoiceLeft()
+    {
+        if(contentNum <= 0) return null;
+        contentNum--;
+        string str = string.Join("", dialogue.dialouses[num - 1].context[contentNum]);
+        command = Regex.Split(dialogue.dialouses[num - 1].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);
+        return str;
+    }
+    public string ChoiceRight()
+    {
+        if (contentlength <= (contentNum + 1)) return null;
+        contentNum++;
+        string str = string.Join("", dialogue.dialouses[num - 1].context[contentNum]);
+        command = Regex.Split(dialogue.dialouses[num - 1].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);
+        return str;
     }
 
     private void CallFunction(string[] _functions)

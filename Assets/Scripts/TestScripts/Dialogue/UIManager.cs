@@ -30,13 +30,34 @@ public class UIManager : BaseController
         //namemesh.text = "조현섭";
     }
 
-
+    public void Enable()
+    {
+        gameObject.SetActive(true);
+        AddController();
+        Next();
+    }
+    public void Disable()
+    {
+        RemoveController();
+        gameObject.SetActive(false);
+    }
 
     public override void Controller()
     {
-        if(Input.GetKeyDown(KeyCode.F)) interactionEvent.Next();
-        if(Input.GetKeyDown(KeyCode.X)) gameObject.SetActive(false);
+        if(Input.GetKeyDown(KeyCode.F)) Next();
+        if(Input.GetKeyDown(KeyCode.LeftArrow)) ChoiceLeft();
+        else if(Input.GetKeyDown(KeyCode.RightArrow)) ChoiceRight();
+        if(Input.GetKeyDown(KeyCode.X)) Disable();
     }
+
+    private void Next()
+    {
+        var temp = interactionEvent.Next();
+        Setname(temp[0]);
+        SetContent(temp[1]);
+    }
+    public void ChoiceLeft() => SetContent(interactionEvent.ChoiceLeft());
+    public void ChoiceRight() => SetContent(interactionEvent.ChoiceRight());
 
     public void Setname(string name)
     {
