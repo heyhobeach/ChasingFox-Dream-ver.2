@@ -13,6 +13,9 @@ public class CameraManager : MonoBehaviour
 
     public float ChangeSize { set => ProCamera2D.Instance.UpdateScreenSize(value, 0.5f); }
 
+    public void AddTarget(Transform transform) => ProCamera2D.Instance.AddCameraTarget(transform);
+    public void RemoveTarget(Transform transform) => ProCamera2D.Instance.RemoveCameraTarget(transform);
+
     void Awake()
     {
         if(instance == null) instance = this;
