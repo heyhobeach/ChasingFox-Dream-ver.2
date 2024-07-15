@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor.Events;
 using UnityEngine;
 using UnityEngine.Events;
@@ -16,9 +17,11 @@ public class EventTrigger : BaseController
     public override void Controller()
     {
         if(eventLock) return;
-        if(eventIdx < eventLists.Length && (eventLists[eventIdx].keyCode == KeyCode.None || Input.GetKeyDown(eventLists[eventIdx].keyCode)))
+        if(eventIdx < eventLists.Length && 
+            (eventLists[eventIdx].prerequisites == null || eventLists[eventIdx].prerequisites.isSatisfySatisfy) &&
+            (eventLists[eventIdx].keyCode == KeyCode.None || Input.GetKeyDown(eventLists[eventIdx].keyCode)))
         {
-            eventLists[eventIdx].action.Invoke();
+            if(eventLists[eventIdx].action != null) eventLists[eventIdx].action.Invoke();
             StartCoroutine(LockTime(eventLists[eventIdx].lockTime));
             eventIdx++;
         }
@@ -43,6 +46,7 @@ public class EventTrigger : BaseController
     [Serializable]
     public class EventList
     {
+        public QTE_Prerequisites prerequisites;
         public KeyCode keyCode;
         public UnityEvent action;
         public float lockTime;
