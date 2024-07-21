@@ -15,6 +15,11 @@ public class Bullet : MonoBehaviour
     private float startTime;
     private string ignoreTag;
 
+    /// <summary>
+    /// 벽과 충돌시 총알이 남아있는 시간
+    /// </summary>
+    public float soundTime = 0.3f;
+
     public void Set(Vector3 shootPos, Vector3 targetPos, int damage, float speed, GameObject gobj, Vector3 addPos = new Vector3())
     {
         // if (gobj.tag == "Enemy")
@@ -27,12 +32,14 @@ public class Bullet : MonoBehaviour
         //     ignoreTag = gobj.tag;
         //     // Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Bullet"), LayerMask.NameToLayer("Player"));
         // }
+        Debug.Log(string.Format("this object shoot {0}", gobj));
         ignoreTag = gobj.tag;
         transform.position = (Vector2)shootPos + (Vector2)addPos;
         destination = ((Vector2)targetPos - (Vector2)shootPos).normalized;
         this.damage = damage;
         this.speed = speed;
         gameObject.SetActive(true);
+
     }
 
     private void OnEnable() => startTime = 0;
@@ -96,6 +103,8 @@ public class Bullet : MonoBehaviour
         if (collision.gameObject.tag == "Map")
         {
             Destroy(this.gameObject);
+            GameObject obj = SoundManager.Instance.bullet.standbyBullet.Dequeue();
+            SoundManager.Instance.bullet.standbyBullet.Enqueue(obj);
         }
         if (collision.gameObject.CompareTag("ground") || collision.gameObject.CompareTag("Wall")) Destroy(gameObject);
 

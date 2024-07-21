@@ -10,6 +10,9 @@ public class Werwolf : PlayerUnit
 {
     public GameObject MeleeAttack;
 
+    AudioSource sound;
+    public AudioClip soundClip;
+
     /// <summary>
     /// 공격 지속시간
     /// </summary>

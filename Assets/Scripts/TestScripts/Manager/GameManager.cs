@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public SoundManager soundManager;
+
     private static GameManager instance;
     public static GameManager Instance { get => instance; }
 

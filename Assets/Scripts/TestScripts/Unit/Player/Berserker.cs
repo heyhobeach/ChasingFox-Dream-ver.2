@@ -12,6 +12,9 @@ public class Berserker : PlayerUnit
     /// </summary>
     private Coroutine dashCoroutine;
 
+    AudioSource sound;
+    public AudioClip soundClip;
+
     protected override void OnDisable()
     {
         base.OnDisable();

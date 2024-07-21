@@ -10,6 +10,9 @@ public class Human : PlayerUnit
 {
     public GameObject bullet;
 
+    AudioSource sound;
+    public AudioClip soundClip;
+
     /// <summary>
     /// 재장전 시간
     /// </summary>
@@ -91,15 +94,23 @@ public class Human : PlayerUnit
 
     protected override void Start()
     {
+        sound=GetComponent<AudioSource>(); 
+        //sound.PlayOneShot(soundClip, 0.3f);
         base.Start();
         residualAmmo = maxAmmo;
     }
 
     public override bool Attack(Vector3 clickPos)
     {
+        Debug.Log("공격");
         shootingAnimationController.AttackAni();
-        if(ControllerChecker() || unitState == UnitState.Dash || unitState == UnitState.Reload || shootingAnimationController.isAttackAni || residualAmmo <= 0) return false;
+        Debug.Log("문제 이전");
+        //sound.GetComponent<AudioSource>().Play();
+
+        Debug.Log("여기 문제");
+        if (ControllerChecker() || unitState == UnitState.Dash || unitState == UnitState.Reload || shootingAnimationController.isAttackAni || residualAmmo <= 0) return false;
         base.Attack(clickPos);
+        sound.PlayOneShot(soundClip, 0.3f);
         ProCamera2DShake.Instance.Shake("GunShot ShakePreset");
         Vector2 pos = Vector2.zero;
         GetSignedAngle((Vector2) transform.position, clickPos, out pos);
