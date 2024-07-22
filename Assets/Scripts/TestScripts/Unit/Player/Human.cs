@@ -13,6 +13,8 @@ public class Human : PlayerUnit
     AudioSource sound;
     public AudioClip soundClip;
 
+    public GameObject userGunsoud;
+
     /// <summary>
     /// 재장전 시간
     /// </summary>
@@ -59,10 +61,10 @@ public class Human : PlayerUnit
     protected override void OnEnable()
     {
         base.OnEnable();
-        //var pi = GameManager.Instance.proCamera2DPointerInfluence;
-        //pi.MaxHorizontalInfluence = 2.2f;
-        //pi.MaxVerticalInfluence = 1.2f;
-        //pi.InfluenceSmoothness = 0.2f;
+        var pi = GameManager.Instance.proCamera2DPointerInfluence;
+        pi.MaxHorizontalInfluence = 2.2f;
+        pi.MaxVerticalInfluence = 1.2f;
+        pi.InfluenceSmoothness = 0.2f;
     }
     protected override void OnDisable()
     {
@@ -111,6 +113,7 @@ public class Human : PlayerUnit
         if (ControllerChecker() || unitState == UnitState.Dash || unitState == UnitState.Reload || shootingAnimationController.isAttackAni || residualAmmo <= 0) return false;
         base.Attack(clickPos);
         sound.PlayOneShot(soundClip, 0.3f);
+        SoundManager.Instance.CoStartBullet(userGunsoud);
         ProCamera2DShake.Instance.Shake("GunShot ShakePreset");
         Vector2 pos = Vector2.zero;
         GetSignedAngle((Vector2) transform.position, clickPos, out pos);

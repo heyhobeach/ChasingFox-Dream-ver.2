@@ -31,6 +31,8 @@ public abstract class PlayerUnit : UnitBase
 
     // private Vector3 hidePos;
 
+
+
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
         //Debug.Log(CheckMapType(collision));
@@ -38,6 +40,7 @@ public abstract class PlayerUnit : UnitBase
         switch (CheckMapType(collision))
         {
             case MapType.Platform:
+                Debug.Log("플랫폼 들어옴");
                 currentOneWayPlatform = collision.gameObject;//플랫폼이라면 현재 플렛폼을 담음
                 // Debug.Log(collision.gameObject.GetComponent<PlatformScript>().dObject);//다운 오브젝트 타입확인용 로그
                 switch (collision.gameObject.GetComponent<PlatformScript>().dObject)//대각선 직선 오브젝트 마다 떨어지는 시간이 다를수도 있으니  
@@ -72,7 +75,7 @@ public abstract class PlayerUnit : UnitBase
                     Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), false);
                     Debug.Log("점프");
                 }
-                currentOneWayPlatform = null;//platform에서 벗어난거라면 플랫폼 변수를 비움
+                //currentOneWayPlatform = null;//platform에서 벗어난거라면 플랫폼 변수를 비움
                 break;
         }
         // if(collision.gameObject.CompareTag("ground") || collision.gameObject.CompareTag("platform")) isGrounded = false;
@@ -213,6 +216,13 @@ public abstract class PlayerUnit : UnitBase
         }
         return false;
     }
+
+    public void GetCurrenttPlatform()
+    {
+
+    }
+
+
     private void CrouchUpdate()
     {
         var charBoxCollider = GetComponent<BoxCollider2D>();
@@ -248,6 +258,10 @@ public abstract class PlayerUnit : UnitBase
             var indexG = Array.FindIndex(hit, x => x.transform.tag == "ground"&&x.distance>charBoxCollider.size.y/2);//만약 람다를 안 쓰려면 for로 hit만큼 돌ㅡㅜ   아가면서 태그가 맞는지 확인해야함
             
             var indexP = Array.FindIndex(hit, x => x.transform.tag == "platform" && x.distance > charBoxCollider.size.y / 2);
+
+            GetCurrenttPlatform();
+
+            Debug.Log(string.Format("indexG {0} indexP{1}", indexG, indexP));
             // Debug.Log(string.Format("indexG=>{0}  indexP=>{1}", indexG,indexP));
 
 

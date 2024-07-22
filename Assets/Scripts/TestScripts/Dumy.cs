@@ -187,6 +187,13 @@ public partial class Dumy : MonoBehaviour, IDamageable
 
         if (ray2d&!follow)//추격상태가 아니고 죽은 
         {
+            Debug.Log(this.transform.parent.name + "유저 찾음");
+            Debug.Log(ray2d.transform.name+"레이");
+            if (ray2d.transform.gameObject.layer == 15)
+            {
+                Debug.Log("총소리");
+                return;
+            }
             Debug.Log("Name"+ray2d.transform.gameObject.name); 
             Debug.Log("주변에 죽은 친구 있음");
             StartCoroutine(timer());
@@ -194,6 +201,7 @@ public partial class Dumy : MonoBehaviour, IDamageable
         
         if (index_player>-1)//ray2d,여기 !follow해도 될것 같앗음
         {
+            
             Debug.Log(string.Format("타겟{0} index{1}", target_ray2d[index_player].transform.name,index_player));
             subvec = (Vector2)target_ray2d[index_player].transform.position - (Vector2)transform.position;// ray2d=>tartget_ray2d[index_player]
             float deg = Mathf.Atan2(subvec.y, subvec.x);//mathf.de
@@ -210,8 +218,9 @@ public partial class Dumy : MonoBehaviour, IDamageable
                 // Debug.Log(string.Format("{0}||{1}||{2}||", deg, mysize, subvec.magnitude));
                 if (!follow)//이미 레이 = 시야에 감지 되었기에 계속 추격해야함
                 {
-                    //1초마다 갱신하게 코루틴 필요    
+                    //1초마다 갱신하게 코루틴 필요
                     //Debug.Log(ray2d.collider.gameObject.name);
+                    Debug.Log(this.transform.parent.name+"유저 찾음");
                     StartCoroutine(timer());
                 }
                 

@@ -7,20 +7,19 @@ public class SoundManager:MonoBehaviour
 {
     // Start is called before the first frame update
     /// <summary>
-    /// ¹è°æÀ½¾ÇÀ» ´ã´çÇÒ ¿Àµğ¿À ¼Ò½º º¯¼ö
+    /// ë°°ê²½ìŒì•…ì„ ë‹´ë‹¹í•  ì˜¤ë””ì˜¤ ì†ŒìŠ¤ ë³€ìˆ˜
     /// </summary>
     AudioSource BGsound;
 
-    public int publicTestInt = 0;
-    [SerializeField]
-    private int privateTestInt = 1;
+    public GameObject[] queueArr=new GameObject[4];
+    public float bulletTime = 0.3f;
 
     [System.Serializable]
     public class BulletWrapper
     {
-        public Queue<GameObject> standbyBullet = new Queue<GameObject>();
+        public Queue<GameObject> standbyBullet;
 
-        public Queue<GameObject> useBullet = new Queue<GameObject>();
+        //public Queue<GameObject> useBullet = new Queue<GameObject>();
     }
     
 
@@ -45,14 +44,42 @@ public class SoundManager:MonoBehaviour
             instance = this;
         }
         Instance = instance;
-
-
+        foreach(var obj in queueArr)
+        {
+            //Instantiate(obj);
+        }
+        bullet.standbyBullet = new Queue<GameObject>(queueArr);
     }
 
 
     public void SFXSound(AudioClip Sound)
     {
         AudioSource SFXsound =GetComponent<AudioSource>();
+    }
+
+    public void CoStartBullet(GameObject obj)
+    {
+        StartCoroutine(CoBulletSound(obj));
+    }
+
+    public IEnumerator CoBulletSound(GameObject obj)
+    {
+        //GameObject _obj=bullet.standbyBullet.Dequeue();
+        //Debug.Log("ì½”ë£¨í‹´ í˜¸ì¶œ");
+        Debug.Log(string.Format("ì¶©ëŒìœ„ì¹˜{0} ì˜¤ë¸Œì íŠ¸ ì´ë¦„{1}",obj.transform.position,obj.name));
+        obj.SetActive(true);
+        yield return new WaitForSeconds(0.3f);
+        Debug.Log("ì„±ê³µì  ì‚½ì…");
+        obj.SetActive(false);
+        if (obj.transform.parent.tag == "Player")
+        {
+            Debug.Log("ìœ ì € ì´ ì†Œë¦¬");
+            yield return null;
+        }
+        else
+        {
+            bullet.standbyBullet.Enqueue(obj);
+        }
     }
 
 }

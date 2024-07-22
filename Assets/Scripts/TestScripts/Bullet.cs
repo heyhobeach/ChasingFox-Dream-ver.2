@@ -102,9 +102,14 @@ public class Bullet : MonoBehaviour
         Debug.Log(collision.gameObject.name);
         if (collision.gameObject.tag == "Map")
         {
-            Destroy(this.gameObject);
-            GameObject obj = SoundManager.Instance.bullet.standbyBullet.Dequeue();
-            SoundManager.Instance.bullet.standbyBullet.Enqueue(obj);
+            BulletSound();
+            //Destroy(this.gameObject);
+            //GameObject obj = SoundManager.Instance.bullet.standbyBullet.Dequeue();
+            //obj.transform.position = this.transform.position;
+            //Debug.Log(string.Format("queue name => " + obj));
+            //SoundManager.Instance.CoStartBullet(obj);
+            //StartCoroutine(SoundManager.Instance.CoBulletSound(obj));//해당 객체가 사라져서 그런듯 이 부분을 soundManager로 옮겨야함
+            //SoundManager.Instance.bullet.standbyBullet.Enqueue(obj);
         }
         if (collision.gameObject.CompareTag("ground") || collision.gameObject.CompareTag("Wall")) Destroy(gameObject);
 
@@ -140,7 +145,8 @@ public class Bullet : MonoBehaviour
         Debug.Log(collision.gameObject.tag);
         if (collision.gameObject.tag == "Map")
         {
-            Destroy(this.gameObject);
+            BulletSound();
+            //Destroy(this.gameObject);
         }
         if (collision.gameObject.tag == "Player" && !collision.gameObject.CompareTag(ignoreTag))
         {
@@ -154,5 +160,14 @@ public class Bullet : MonoBehaviour
             // Debug.Log("벗어남");
             this.gameObject.GetComponent<Collider2D>().isTrigger = false;
         }
+    }
+
+    private void BulletSound()
+    {
+        Destroy(this.gameObject);
+        GameObject obj = SoundManager.Instance.bullet.standbyBullet.Dequeue();
+        obj.transform.position = this.transform.position;
+        Debug.Log(string.Format("queue name => " + obj));
+        SoundManager.Instance.CoStartBullet(obj);
     }
 }
