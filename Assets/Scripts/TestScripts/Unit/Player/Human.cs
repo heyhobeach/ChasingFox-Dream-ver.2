@@ -153,6 +153,7 @@ public class Human : PlayerUnit
     private IEnumerator DashAffterInput()
     {
         unitState = UnitState.Dash;
+        Debug.Log("DashTrigger");
         var tempVel = fixedDir == 0 ? spriteRenderer.flipX ? -1 : 1 : Mathf.Sign(fixedDir);
         SetHorizontalVelocity(tempVel);
         yield return new WaitUntil(() => anim.GetCurrentAnimatorStateInfo(0).IsName("Dash"));

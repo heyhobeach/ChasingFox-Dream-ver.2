@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
     public HumanDatas humanDatas;
 
     private const int karma = 100;
-    [SerializeField] private int karmaRatio = 65;
+    [SerializeField] [Range(0, 100)] private int karmaRatio = 65;
 
     public static int Humanity { get => instance.karmaRatio; set { instance.karmaRatio = value; instance.ClampRatio(); } }
     public static int Brutality { get => karma-instance.karmaRatio; set { instance.karmaRatio = -value; instance.ClampRatio(); } }
@@ -38,6 +38,13 @@ public class GameManager : MonoBehaviour
 
     public static int GetHumanData() => instance.humanDatas.counts[Humanity/10];
     public static BrutalData GetBrutalData() => instance.brutalDatas.brutalDatas[Brutality/10];
+
+    [SerializeField] private Queue<Animation> animations= new Queue<Animation>();
+    public static Animation Next()
+    {
+        if(instance.animations.Count > 0) return instance.animations.Dequeue();
+        else return null;
+    }
 
     public void TimeScale(float t) => Time.timeScale = t;
 

@@ -88,8 +88,9 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
 
     public bool Attack(Vector3 clickPos)
     {
-        if(changedForm is Werwolf) changeGage -= brutalData.atk;
-        return changedForm.Attack(clickPos);
+        var temp = changedForm.Attack(clickPos);
+        if(temp && changedForm is Werwolf) changeGage -= brutalData.atk;
+        return temp;
     }
 
     public bool Dash() 

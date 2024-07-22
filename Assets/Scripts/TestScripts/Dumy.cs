@@ -201,7 +201,7 @@ public partial class Dumy : MonoBehaviour, IDamageable
                 }
                 
                 attacking = true;
-                //Shoot();
+                Shoot();
                 Debug.Log("공격");
             }
             else
