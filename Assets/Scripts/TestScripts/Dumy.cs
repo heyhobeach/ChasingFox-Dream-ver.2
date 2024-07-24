@@ -192,6 +192,8 @@ public partial class Dumy : MonoBehaviour, IDamageable
             if (ray2d.transform.gameObject.layer == 15)
             {
                 Debug.Log("총소리");
+                SetFollow();
+                //StartCoroutine(timer());
                 return;
             }
             Debug.Log("Name"+ray2d.transform.gameObject.name); 
@@ -261,18 +263,7 @@ public partial class Dumy : MonoBehaviour, IDamageable
             }
             else//추격부분
             {
-                startPos.x = (int)_startPos.position.x;
-                startPos.y = (int)_startPos.position.y;
-                targetPos.x = (int)_targetPos.position.x;
-                targetPos.y = Mathf.FloorToInt(_targetPos.position.y);
-
-                attacking = false;
-                PathFinding();
-                if (Move_Cor != null)
-                {
-                    StopCoroutine(Move_Cor);
-                }
-                Move_Cor = StartCoroutine(cMove());
+                SetFollow();
                 Debug.Log("경로 갱신");
             }
             if (!enemy_state.Missing)//못찾는 상태일때 트래킹을 끄기위해
@@ -289,6 +280,23 @@ public partial class Dumy : MonoBehaviour, IDamageable
             
         }
         
+    }
+
+    private void SetFollow()
+    {
+        startPos.x = (int)_startPos.position.x;
+        startPos.y = (int)_startPos.position.y;
+        targetPos.x = (int)_targetPos.position.x;
+        targetPos.y = Mathf.FloorToInt(_targetPos.position.y);
+
+        attacking = false;
+        PathFinding();
+        if (Move_Cor != null)
+        {
+            StopCoroutine(Move_Cor);
+        }
+        Move_Cor = StartCoroutine(cMove());
+        Debug.Log("경로 갱신");
     }
     public void Death()
     {
