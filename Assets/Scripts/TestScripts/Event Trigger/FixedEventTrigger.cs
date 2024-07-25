@@ -1,20 +1,14 @@
-using System;
 using System.Collections;
-using Unity.VisualScripting;
-using UnityEditor.Events;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class EventTrigger : MonoBehaviour
+public class FixedEventTrigger : EventTrigger, IBaseController
 {
-    public string targetTag;
-    public bool autoTrigger;
-    public KeyCode keyCode;
-    public EventList[] eventLists;
     private int eventIdx = 0;
     private bool used = false;
     private bool eventLock;
 
-    public void Controller()
+    public new void Controller()
     {
         if(eventLock) return;
         if(eventIdx < eventLists.Length && 
@@ -25,7 +19,20 @@ public class EventTrigger : MonoBehaviour
             StartCoroutine(LockTime(eventLists[eventIdx].lockTime));
             eventIdx++;
         }
-        else if(eventIdx >= eventLists.Length) return;
+        else if(eventIdx >= eventLists.Length) ((IBaseController)this).RemoveController();
+    }
+
+    private void OnTriggerEnter2D(Collider2D collider)
+    {
+        if(used || (autoTrigger ? false : !Input.GetKeyDown(keyCode)) || !collider.CompareTag(targetTag)) return;
+        ((IBaseController)this).AddController();
+        used = false;
+    }
+    private void OnTriggerStay2D(Collider2D collider)
+    {
+        if(used || (autoTrigger ? false : !Input.GetKeyDown(keyCode)) || !collider.CompareTag(targetTag)) return;
+        ((IBaseController)this).AddController();
+        used = false;
     }
 
     private IEnumerator LockTime(float lockTime)

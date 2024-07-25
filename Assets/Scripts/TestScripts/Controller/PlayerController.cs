@@ -2,24 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : BaseController
+public class PlayerController : MonoBehaviour, IBaseController
 {
     private IUnitController unitController;
 
     void Start() => unitController = GetComponent<IUnitController>();
-    void OnEnable() => AddController();
-    void OnDisable() => RemoveController();
+    void OnEnable() => ((IBaseController)this).AddController();
+    void OnDisable() => ((IBaseController)this).RemoveController();
 
-    public override void Controller()
+    public void Controller()
     {
         if(Input.GetKeyDown(KeyCode.Mouse1)) unitController.FormChange();
         if(Input.GetKeyDown(KeyCode.R)) unitController.Reload();
-        if(Input.GetKeyDown(KeyCode.Mouse0)) unitController.Attack(ClickPos());
         
-        if(Input.GetKeyDown(KeyCode.Space)) unitController.Dash();
         if (Input.GetKey(KeyCode.S)) unitController.Crouch(KeyState.KeyDown);//GetKeyDown -> GetKey
+        if(Input.GetKeyDown(KeyCode.Mouse0)) unitController.Attack(ClickPos());
+        else if(Input.GetKeyDown(KeyCode.Space)) unitController.Dash();
         else if(Input.GetKeyUp(KeyCode.S)) unitController.Crouch(KeyState.KeyUp);
-        if(Input.GetKeyDown(KeyCode.W)) unitController.Jump(KeyState.KeyDown);
+        else if(Input.GetKeyDown(KeyCode.W)) unitController.Jump(KeyState.KeyDown);
         else if(Input.GetKey(KeyCode.W)) unitController.Jump(KeyState.KeyStay);
         else if(Input.GetKeyUp(KeyCode.W)) unitController.Jump(KeyState.KeyUp);
         else unitController.Jump(KeyState.None);

@@ -48,6 +48,7 @@ public class Werwolf : PlayerUnit
         base.OnDisable();
         StopDash();
         StopAttack();
+        StopHoldingWall();
     }
 
     protected override void OnCollisionEnter2D(Collision2D collision)
@@ -244,7 +245,11 @@ public class Werwolf : PlayerUnit
     /// </summary>
     public void StopDash()
     {
-        if(dashCoroutine != null) StopCoroutine(dashCoroutine);
+        if(dashCoroutine != null) 
+        {
+            anim.SetTrigger("dash");
+            StopCoroutine(dashCoroutine);
+        }
         dashCoroutine = null;
         invalidation=false;
         unitState = UnitState.Default;

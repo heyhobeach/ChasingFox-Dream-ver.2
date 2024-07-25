@@ -138,7 +138,11 @@ public abstract class PlayerUnit : UnitBase
     private float jumpingHight;
     public override bool Jump(KeyState jumpKey)
     {
-        if(ControllerChecker() || unitState == UnitState.FormChange || unitState == UnitState.Dash) return false;
+        if(ControllerChecker() || unitState == UnitState.FormChange || unitState == UnitState.Dash)
+        {
+            isJumping = false;
+            return false;
+        }
         float temp = -gravity * Time.deltaTime; // 중력 무시를 위해 중력 값 만큼 힘 추가
         switch(jumpKey)
         {
@@ -361,7 +365,8 @@ public abstract class PlayerUnit : UnitBase
         {
             // Debug.Log("Posistion : " + hit[0].normal);
             var temp = Vector3.ProjectOnPlane(new Vector3(hzForce, 0), hit[0].normal);
-            rg.MovePosition(transform.position + new Vector3(temp.x, temp.y + vcForce) * Time.deltaTime * (Mathf.Abs(temp.x) < 1 ? 1.41f : 1));
+            Debug.Log("temp" + temp);
+            rg.MovePosition(transform.position + new Vector3(temp.x, temp.y + vcForce) * Time.deltaTime);
         }
         else rg.MovePosition(transform.position + (new Vector3(hzForce, vcForce) * Time.deltaTime));
     }

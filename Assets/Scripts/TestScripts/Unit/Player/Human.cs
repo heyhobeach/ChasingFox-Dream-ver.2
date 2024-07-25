@@ -67,6 +67,7 @@ public class Human : PlayerUnit
     {
         base.OnDisable();
         StopDash();
+        if(reloadCoroutine != null) StopCoroutine(reloadCoroutine);
     }
 
     protected override void OnCollisionEnter2D(Collision2D collision)
@@ -183,10 +184,10 @@ public class Human : PlayerUnit
 
     private IEnumerator Reloading()
     {
-        unitState = UnitState.Reload;
+        // unitState = UnitState.Reload;
         yield return null;
         yield return new WaitUntil(() => !shootingAnimationController.isReloadAni);
-        unitState = UnitState.Default;
+        // unitState = UnitState.Default;
         // UIController.Instance.DrawReload(0);
         residualAmmo = maxAmmo;
         reloadCoroutine = null;

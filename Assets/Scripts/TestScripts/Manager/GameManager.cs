@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Com.LuisPedroFonseca.ProCamera2D;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -9,17 +8,17 @@ public class GameManager : MonoBehaviour
     private static GameManager instance;
     public static GameManager Instance { get => instance; }
 
-    private Stack<BaseController> controllers = new();
-    public static void PushController(BaseController @base)
+    private Stack<IBaseController> controllers = new();
+    public static void PushController(IBaseController @base)
     {
         if(instance.controllers.Contains(@base)) return;
         instance.controllers.Push(@base);
     }
-    public static void PopController(BaseController @base)
+    public static void PopController(IBaseController @base)
     {
         if(instance.controllers.Peek() != @base)
         {
-            Stack<BaseController> temp = new();
+            Stack<IBaseController> temp = new();
             while(instance.controllers.Count > 0 && !temp.Equals(instance.controllers.Peek())) temp.Push(instance.controllers.Pop());
             while(temp.Count > 0) instance.controllers.Push(temp.Pop());
         }

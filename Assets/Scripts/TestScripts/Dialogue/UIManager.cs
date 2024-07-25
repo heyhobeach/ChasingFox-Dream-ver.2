@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIManager : BaseController
+public class UIManager : MonoBehaviour, IBaseController
 {
     public InteractionEvent interactionEvent;
     //public Text
@@ -33,16 +33,16 @@ public class UIManager : BaseController
     public void Enable()
     {
         gameObject.SetActive(true);
-        AddController();
+        ((IBaseController)this).AddController();
         Next();
     }
     public void Disable()
     {
-        RemoveController();
+        ((IBaseController)this).RemoveController();
         gameObject.SetActive(false);
     }
 
-    public override void Controller()
+    public void Controller()
     {
         if(Input.GetKeyDown(KeyCode.F)) Next();
         if(Input.GetKeyDown(KeyCode.LeftArrow)) ChoiceLeft();
