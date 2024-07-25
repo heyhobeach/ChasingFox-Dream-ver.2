@@ -15,7 +15,12 @@ public class Bullet : MonoBehaviour
     private float startTime;
     private string ignoreTag;
 
-    public void Set(Vector3 shootPos, Vector3 targetPos, Vector3 rotation, int damage, float speed, GameObject gobj, Vector3 addPos = new Vector3())
+    /// <summary>
+    /// 벽과 충돌시 총알이 남아있는 시간
+    /// </summary>
+    public float soundTime = 0.3f;
+
+    public void Set(Vector3 shootPos, Vector3 targetPos, int damage, float speed, GameObject gobj, Vector3 addPos = new Vector3())
     {
         // if (gobj.tag == "Enemy")
         // {
@@ -27,13 +32,14 @@ public class Bullet : MonoBehaviour
         //     ignoreTag = gobj.tag;
         //     // Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Bullet"), LayerMask.NameToLayer("Player"));
         // }
+        Debug.Log(string.Format("this object shoot {0}", gobj));
         ignoreTag = gobj.tag;
         transform.position = (Vector2)shootPos + (Vector2)addPos;
         destination = ((Vector2)targetPos - (Vector2)shootPos).normalized;
-        transform.GetChild(0).transform.localEulerAngles = rotation;
         this.damage = damage;
         this.speed = speed;
         gameObject.SetActive(true);
+
     }
 
     private void OnEnable() => startTime = 0;
@@ -93,7 +99,19 @@ public class Bullet : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.CompareTag("Map") || collision.gameObject.CompareTag("ground") || collision.gameObject.CompareTag("Wall")) Destroy(gameObject);
+        Debug.Log(collision.gameObject.name);
+        if (collision.gameObject.tag == "Map")
+        {
+            BulletSound();
+            //Destroy(this.gameObject);
+            //GameObject obj = SoundManager.Instance.bullet.standbyBullet.Dequeue();
+            //obj.transform.position = this.transform.position;
+            //Debug.Log(string.Format("queue name => " + obj));
+            //SoundManager.Instance.CoStartBullet(obj);
+            //StartCoroutine(SoundManager.Instance.CoBulletSound(obj));//해당 객체가 사라져서 그런듯 이 부분을 soundManager로 옮겨야함
+            //SoundManager.Instance.bullet.standbyBullet.Enqueue(obj);
+        }
+        if (collision.gameObject.CompareTag("ground") || collision.gameObject.CompareTag("Wall")) Destroy(gameObject);
 
         if (collision.gameObject.tag == "guard")//가드 만날겨우 trigger를 켜서 collision이 안일어나도록함
         {
@@ -127,7 +145,8 @@ public class Bullet : MonoBehaviour
         Debug.Log(collision.gameObject.tag);
         if (collision.gameObject.tag == "Map")
         {
-            Destroy(this.gameObject);
+            BulletSound();
+            //Destroy(this.gameObject);
         }
         if (collision.gameObject.tag == "Player" && !collision.gameObject.CompareTag(ignoreTag))
         {
@@ -141,5 +160,14 @@ public class Bullet : MonoBehaviour
             // Debug.Log("벗어남");
             this.gameObject.GetComponent<Collider2D>().isTrigger = false;
         }
+    }
+
+    private void BulletSound()
+    {
+        Destroy(this.gameObject);
+        GameObject obj = SoundManager.Instance.bullet.standbyBullet.Dequeue();
+        obj.transform.position = this.transform.position;
+        Debug.Log(string.Format("queue name => " + obj));
+        SoundManager.Instance.CoStartBullet(obj);
     }
 }

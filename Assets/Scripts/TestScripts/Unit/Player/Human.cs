@@ -11,6 +11,11 @@ public class Human : PlayerUnit
 {
     public GameObject bullet;
 
+    AudioSource sound;
+    public AudioClip soundClip;
+
+    public GameObject userGunsoud;
+
     /// <summary>
     /// 재장전 시간
     /// </summary>
@@ -94,16 +99,24 @@ public class Human : PlayerUnit
 
     protected override void Start()
     {
+        sound=GetComponent<AudioSource>(); 
+        //sound.PlayOneShot(soundClip, 0.3f);
         base.Start();
         residualAmmo = maxAmmo;
     }
 
     public override bool Attack(Vector3 clickPos)
     {
-        if(ControllerChecker() || unitState == UnitState.Dash || unitState == UnitState.Reload || unitState == UnitState.FormChange || shootingAnimationController.isAttackAni) return false;
+        Debug.Log("공격");
         shootingAnimationController.AttackAni();
-        if(residualAmmo <= 0 || (shootingAnimationController.GetShootPosition()-(Vector2)transform.position).magnitude > ((Vector2)(clickPos-transform.position)).magnitude) return false;
+        Debug.Log("문제 이전");
+        //sound.GetComponent<AudioSource>().Play();
+
+        Debug.Log("여기 문제");
+        if (ControllerChecker() || unitState == UnitState.Dash || unitState == UnitState.Reload || shootingAnimationController.isAttackAni || residualAmmo <= 0) return false;
         base.Attack(clickPos);
+        sound.PlayOneShot(soundClip, 0.3f);
+        SoundManager.Instance.CoStartBullet(userGunsoud);
         ProCamera2DShake.Instance.Shake("GunShot ShakePreset");
         GameObject _bullet = Instantiate(bullet);//총알을 공격포지션에서 생성함
         GameObject gObj = this.gameObject;
