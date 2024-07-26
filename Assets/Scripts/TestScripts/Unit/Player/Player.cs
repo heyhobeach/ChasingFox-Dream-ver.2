@@ -88,8 +88,16 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
 
     public bool Attack(Vector3 clickPos)
     {
-        var temp = changedForm.Attack(clickPos);
-        if(temp && changedForm is Werwolf) changeGage -= brutalData.atk;
+        bool temp = false;
+        if(changedForm is Human)
+        {
+            if(changedForm.UnitState == UnitState.FormChange)
+            {
+                if(isBulletTime) temp = changedForm.Attack(clickPos);
+            }
+            else temp = changedForm.Attack(clickPos);
+        }
+        else if(changedForm is Werwolf) if(temp = changedForm.Attack(clickPos)) changeGage -= brutalData.atk;
         return temp;
     }
 
@@ -144,6 +152,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
 
     }
     private Coroutine changing;
+    private bool isBulletTime;
     public bool FormChange()
     {
         if(changedForm is Berserker || changing != null) return false; // 대쉬 중이거나 제어가 불가능한 상태일 경우 동작을 수행하지 않음
@@ -173,6 +182,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     private IEnumerator BulletTime()
     {
         var tempDir = fixedDir;
+        changedForm.UnitState = UnitState.FormChange;
         yield return new WaitUntil(() => changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("Dash"));
         yield return new WaitUntil(() => {
             FixMove();
@@ -180,11 +190,12 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         });
         if(changedForm is Human && bulletTimeCount-- > 0)
         {
-            changedForm.shootingAnimationController.AttackAni();
+            isBulletTime = true;
             Time.timeScale = 0.05f;
             Time.fixedDeltaTime = 0.05f * 0.02f;
             changedForm.anim.speed = 0;
             yield return new WaitForSecondsRealtime(bulletTime);
+            isBulletTime = false;
             changedForm.shootingAnimationController.NomalAni();
 
             changedForm.anim.speed = 1;
@@ -195,6 +206,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
             FixMove();
             return !(changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("Dash") && changedForm.anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.95f);
         });
+        changedForm.UnitState = UnitState.Default;
 
         changing = null;
 
@@ -238,7 +250,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         });
         if(changedForm is Human && bulletTimeCount-- > 0)
         {
-            changedForm.shootingAnimationController.AttackAni();
+            isBulletTime = true;
             Time.timeScale = 0.5f;
             Time.fixedDeltaTime = 0.5f * 0.02f;
             changedForm.anim.speed = 0;
@@ -248,6 +260,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
                 FixMove();
                 yield return null;
             }
+            isBulletTime = false;
             changedForm.shootingAnimationController.NomalAni();
             changedForm.anim.speed = 1;
             Time.timeScale = 1;
