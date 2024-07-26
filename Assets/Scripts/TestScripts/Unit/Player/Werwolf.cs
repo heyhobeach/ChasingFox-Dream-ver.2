@@ -180,7 +180,6 @@ public class Werwolf : PlayerUnit
         switch(jumpKey)
         {
             case KeyState.KeyDown:
-            if(dashCoroutine != null) StopDash();
             if(unitState == UnitState.HoldingWall)
             {
                 StopHoldingWall();
@@ -274,11 +273,7 @@ public class Werwolf : PlayerUnit
     /// </summary>
     public void StopDash()
     {
-        if(dashCoroutine != null) 
-        {
-            anim.SetTrigger("dash");
-            StopCoroutine(dashCoroutine);
-        }
+        if(dashCoroutine != null) StopCoroutine(dashCoroutine);
         dashCoroutine = null;
         invalidation=false;
         if(isGrounded) unitState = UnitState.Default;
