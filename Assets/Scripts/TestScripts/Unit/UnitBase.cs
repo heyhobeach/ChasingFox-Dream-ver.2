@@ -109,7 +109,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController,IDamageable
     public Animator anim;
 
     private bool longRangeUnit;
-    protected ShootingAnimationController shootingAnimationController;
+    public ShootingAnimationController shootingAnimationController;
 
     protected virtual void Start()
     {

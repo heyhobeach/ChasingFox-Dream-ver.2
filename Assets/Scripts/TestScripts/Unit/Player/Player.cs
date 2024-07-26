@@ -180,14 +180,17 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         });
         if(changedForm is Human && bulletTimeCount-- > 0)
         {
+            changedForm.shootingAnimationController.AttackAni();
             Time.timeScale = 0.05f;
             Time.fixedDeltaTime = 0.05f * 0.02f;
             changedForm.anim.speed = 0;
             yield return new WaitForSecondsRealtime(bulletTime);
+            changedForm.shootingAnimationController.NomalAni();
+
             changedForm.anim.speed = 1;
+            Time.timeScale = 1;
+            Time.fixedDeltaTime = 1 * 0.02f;
         }
-        Time.timeScale = 1;
-        Time.fixedDeltaTime = 1 * 0.02f;
         yield return new WaitUntil(() => {
             FixMove();
             return !(changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("Dash") && changedForm.anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.95f);
@@ -231,10 +234,11 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         yield return new WaitUntil(() => changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("FormChange"));
         yield return new WaitUntil(() => {
             FixMove();
-            return !(changedForm is Human && changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("FormChange") && changedForm.anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.2f);
+            return !(changedForm is Human && changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("FormChange") && changedForm.anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.3f);
         });
         if(changedForm is Human && bulletTimeCount-- > 0)
         {
+            changedForm.shootingAnimationController.AttackAni();
             Time.timeScale = 0.5f;
             Time.fixedDeltaTime = 0.5f * 0.02f;
             changedForm.anim.speed = 0;
@@ -244,6 +248,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
                 FixMove();
                 yield return null;
             }
+            changedForm.shootingAnimationController.NomalAni();
             changedForm.anim.speed = 1;
             Time.timeScale = 1;
             Time.fixedDeltaTime = 1 * 0.02f;

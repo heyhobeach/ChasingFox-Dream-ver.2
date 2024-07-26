@@ -55,6 +55,7 @@ public class Human : PlayerUnit
     /// </summary>
     private Coroutine dashCoroutine;
     private Coroutine reloadCoroutine;
+    private Coroutine attackCoroutine;
 
     private float fixedDir = 0;
 
@@ -66,12 +67,15 @@ public class Human : PlayerUnit
         pi.MaxVerticalInfluence = 1.2f;
         pi.InfluenceSmoothness = 0.2f;
         CameraManager.Instance.ChangeSize = 5.5f;
+        attackCoroutine = StartCoroutine(AttackDelay());
+        isAttack = false;
     }
     protected override void OnDisable()
     {
         base.OnDisable();
         StopDash();
-        if(reloadCoroutine != null) StopCoroutine(reloadCoroutine);
+        ReloadCancel();
+        StopCoroutine(attackCoroutine);
     }
 
     protected override void OnCollisionEnter2D(Collision2D collision)
@@ -104,24 +108,37 @@ public class Human : PlayerUnit
         residualAmmo = maxAmmo;
     }
 
+    bool isAttack = false;
+    Vector3 clickPos;
     public override bool Attack(Vector3 clickPos)
     {
-        Debug.Log("공격");
-        shootingAnimationController.AttackAni();
-        Debug.Log("문제 이전");
-        //sound.GetComponent<AudioSource>().Play();
-
-        Debug.Log("여기 문제");
         if (ControllerChecker() || unitState == UnitState.Dash || unitState == UnitState.Reload || shootingAnimationController.isAttackAni || residualAmmo <= 0) return false;
-        base.Attack(clickPos);
-        sound.PlayOneShot(soundClip, 0.3f);
-        SoundManager.Instance.CoStartBullet(userGunsoud);
-        ProCamera2DShake.Instance.Shake("GunShot ShakePreset");
-        GameObject _bullet = Instantiate(bullet);//총알을 공격포지션에서 생성함
-        GameObject gObj = this.gameObject;
-        _bullet.GetComponent<Bullet>().Set(shootingAnimationController.GetShootPosition(), clickPos, shootingAnimationController.GetShootRotation(), bulletDamage, bulletSpeed, gObj);
-        residualAmmo--;
+        isAttack = true;
+        this.clickPos = clickPos;
         return true;
+    }
+    private IEnumerator AttackDelay()
+    {
+        while(true)
+        {
+            yield return new WaitUntil(() => isAttack);
+            shootingAnimationController.AttackAni();
+            yield return null;
+            Debug.Log("공격");
+            Debug.Log("문제 이전");
+            //sound.GetComponent<AudioSource>().Play();
+
+            Debug.Log("여기 문제");
+            base.Attack(clickPos);
+            sound.PlayOneShot(soundClip, 0.3f);
+            SoundManager.Instance.CoStartBullet(userGunsoud);
+            ProCamera2DShake.Instance.Shake("GunShot ShakePreset");
+            GameObject _bullet = Instantiate(bullet);//총알을 공격포지션에서 생성함
+            GameObject gObj = this.gameObject;
+            _bullet.GetComponent<Bullet>().Set(shootingAnimationController.GetShootPosition(), clickPos, shootingAnimationController.GetShootRotation(), bulletDamage, bulletSpeed, gObj);
+            residualAmmo--;
+            isAttack = false;
+        }
     }
 
     public override bool Move(float dir)
@@ -166,7 +183,8 @@ public class Human : PlayerUnit
     private IEnumerator DashAffterInput()
     {
         unitState = UnitState.Dash;
-        Debug.Log("DashTrigger");
+        ReloadCancel();
+        ResetForce();
         var tempVel = fixedDir == 0 ? spriteRenderer.flipX ? -1 : 1 : Mathf.Sign(fixedDir);
         SetHorizontalVelocity(tempVel);
         yield return new WaitUntil(() => anim.GetCurrentAnimatorStateInfo(0).IsName("Dash"));
@@ -182,7 +200,11 @@ public class Human : PlayerUnit
     public override bool FormChange()
     {
         if(unitState != UnitState.Default) return false;
-        else return base.FormChange();
+        else
+        {
+            ReloadCancel();
+            return base.FormChange();
+        }
     }
 
     public override bool Reload()
@@ -196,12 +218,14 @@ public class Human : PlayerUnit
 
     private IEnumerator Reloading()
     {
-        // unitState = UnitState.Reload;
-        yield return null;
+        yield return new WaitUntil(() => shootingAnimationController.isReloadAni);
         yield return new WaitUntil(() => !shootingAnimationController.isReloadAni);
-        // unitState = UnitState.Default;
-        // UIController.Instance.DrawReload(0);
         residualAmmo = maxAmmo;
         reloadCoroutine = null;
+    }
+    private void ReloadCancel()
+    {
+        if(reloadCoroutine != null) StopCoroutine(reloadCoroutine);
+        shootingAnimationController.NomalAni();
     }
 }

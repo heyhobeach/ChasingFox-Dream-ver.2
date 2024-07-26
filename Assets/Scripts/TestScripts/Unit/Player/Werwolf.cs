@@ -37,6 +37,9 @@ public class Werwolf : PlayerUnit
     /// </summary>
     private Coroutine dashCoroutine;
     public int air_attack_count = 1;
+    private bool isFormChangeReady;
+
+
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -45,6 +48,7 @@ public class Werwolf : PlayerUnit
         pi.MaxVerticalInfluence = 1.5f;
         pi.InfluenceSmoothness = 0.0f;
         CameraManager.Instance.ChangeSize = 6f;
+        isFormChangeReady = false;
     }
     protected override void OnDisable()
     {
@@ -54,17 +58,38 @@ public class Werwolf : PlayerUnit
         StopHoldingWall();
     }
 
+    protected override void Update()
+    {
+        base.Update();
+        if(isGrounded)
+        {
+            air_attack_count = 1;
+            isholded = false;
+        }
+        if(Input.GetKeyDown(KeyCode.Alpha0)) Time.timeScale = 0.1f;
+        else if(Input.GetKeyDown(KeyCode.Alpha1)) Time.timeScale = 1;
+    }
+
     protected override void OnCollisionEnter2D(Collision2D collision)
     {
         base.OnCollisionEnter2D(collision);
         switch(CheckMapType(collision))
         {
             case MapType.Wall:
-                if(unitState == UnitState.Air)
-                {
-                    foreach(var hit in Physics2D.BoxCastAll(transform.position, new Vector2(boxSizeX, boxSizeY * 2.1f), 0, Vector2.right * (transform.position.x - collision.contacts[0].point.x))) if(hit.transform.CompareTag("ground")) return;
-                    HoldingWall(collision);
-                }
+                if(unitState == UnitState.Air && !isFormChangeReady) HoldingWall(collision);
+                break;
+            case MapType.Ground:
+                if(unitState == UnitState.HoldingWall) StopHoldingWall();
+            break;
+        }
+    }
+    protected override void OnCollisionStay2D(Collision2D collision)
+    {
+        base.OnCollisionStay2D(collision);
+        switch(CheckMapType(collision))
+        {
+            case MapType.Wall:
+                if(unitState == UnitState.Air && !isFormChangeReady) HoldingWall(collision);
                 break;
             case MapType.Ground:
                 if(unitState == UnitState.HoldingWall) StopHoldingWall();
@@ -87,26 +112,15 @@ public class Werwolf : PlayerUnit
     public override bool Attack(Vector3 clickPos)
     {
         if((unitState != UnitState.Default && unitState != UnitState.Air && unitState != UnitState.HoldingWall && unitState != UnitState.Dash) || unitState == UnitState.FormChange ||
-            attackCoroutine != null || anim.GetCurrentAnimatorStateInfo(0).IsName("Attack")) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
+            isFormChangeReady || attackCoroutine != null || anim.GetCurrentAnimatorStateInfo(0).IsName("Attack")) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
         if(dashCoroutine != null) StopDash();
         if(unitState == UnitState.HoldingWall) StopHoldingWall();
         //Vector2 testvec = new Vector2(1 * CheckDir(clickPos), clickPos.y - transform.position.y);//이렇게 되면 대각선으로 갈 수록 좁아짐
         //Vector2 testvec = (Vector2.up * (clickPos.y - transform.position.y)).normalized;
         //MeleeAttack.transform.localPosition = testvec;
         //MeleeAttack.transform.localPosition = (Vector2.right * CheckDir(clickPos))+testvec; // 클릭 방향으로 공격 위치 설정
-        if (unitState == UnitState.Air)
-        {
-            if (air_attack_count < 1)
-            {
-                return false;
-            }
-            else
-            {
-                air_attack_count--;
-            }
-        }
-        Debug.Log("공격횟수" + air_attack_count);
-        
+        if (unitState == UnitState.Air) air_attack_count--;
+        isJumping = false;
         Vector2 subvec = clickPos - transform.position;
         float deg = Mathf.Atan2(subvec.y, subvec.x) ;//mathf.de
         //deg*=Mathf.Deg2Rad;//라디안으로 바꿔주기는 하는데 이렇게 하면 좀 문제생김
@@ -114,7 +128,7 @@ public class Werwolf : PlayerUnit
         MeleeAttack.transform.localPosition = new Vector3(Mathf.Cos(deg), Mathf.Sin(deg)*2,transform.localPosition.z);
         MeleeAttack.transform.localEulerAngles = new Vector3(0, 0, Quaternion.FromToRotation(Vector2.up, transform.position - MeleeAttack.transform.position).eulerAngles.z - 90);
 
-        attackCoroutine = StartCoroutine(Attacking(deg));
+        attackCoroutine = StartCoroutine(Attacking());
         base.Attack(clickPos);
         return true;
     }
@@ -122,29 +136,34 @@ public class Werwolf : PlayerUnit
     /// <summary>
     /// 공격 중의 동작을 수행
     /// </summary>
-    private IEnumerator Attacking(float deg)
+    private IEnumerator Attacking()
     {
         unitState = UnitState.Attack;
         // 지속시간만큼 히트박스를 온오프
         MeleeAttack.SetActive(true);
         var tempDir = MeleeAttack.transform.localPosition.normalized;
-        SetHorizontalVelocity(tempDir.x);
-        SetHorizontalForce(tempDir.x * attackImpulse);
-        SetVerticalForce(tempDir.y * attackImpulse * 0.25f);
-        // SetHorizontalForce(Mathf.Sign(MeleeAttack.transform.localPosition.x)*attackImpulse);
-        // float high = Mathf.Sin(deg) * 10;
-        // if (high > 3)
-        // {
-        //     high = 3;
-        // }
-        // SetVerticalForce(high);
-        yield return new WaitForSeconds(attackDuration);
+        if(air_attack_count >= 0)
+        {
+            SetHorizontalVelocity(tempDir.x);
+            SetHorizontalForce(tempDir.x * attackImpulse);
+            SetVerticalForce(tempDir.y * attackImpulse * 0.25f);
+        }
+        float t = 0;
+        while(t < attackDuration)
+        {
+            t += Time.deltaTime;
+            if(!isFormChangeReady) base.Crouch(KeyState.KeyStay);
+            else base.Crouch(KeyState.KeyUp);
+            yield return null;
+        }
+        base.Crouch(KeyState.KeyUp);
         StopAttack();
     }
 
     private void StopAttack()
     {
-        unitState = UnitState.Default;
+        if(isGrounded) unitState = UnitState.Default;
+        else unitState = UnitState.Air;
         MeleeAttack.SetActive(false);
         attackCoroutine = null;
     }
@@ -167,7 +186,7 @@ public class Werwolf : PlayerUnit
                 StopHoldingWall();
                 isJumping = false;
                 SetVerticalForce(jumpImpulse); // 윗 방향 힘 추가
-                base.Move(fixedDir * movementSpeed * 3);
+                base.Move(fixedDir * 40);
                 return true;
             }
             else return base.Jump(jumpKey);
@@ -181,43 +200,50 @@ public class Werwolf : PlayerUnit
     }
 
     Coroutine holdingCoroutine;
+    bool isholded;
     private void HoldingWall(Collision2D collision)
     {
+        fixedDir = -CheckDir(collision.contacts[0].point); // 벽의 반대 방향을 저장
+        if(isholded || holdingCoroutine != null || !Physics2D.Raycast(transform.position + Vector3.down * boxSizeY * 0.9f, Vector2.right*-fixedDir, boxSizeX*1.05f, 1<<LayerMask.NameToLayer("Map"))) return;
+        if(holdingCoroutine != null) StopHoldingWall();
+        isJumping = false;
+        isholded = true;
         anim.SetBool("isHoldingWall", true);
         unitState = UnitState.HoldingWall; // 벽붙기 상태로 변경
-        fixedDir = -CheckDir(collision.contacts[0].point); // 벽의 반대 방향을 저장
+        if(fixedDir < 0) spriteRenderer.flipX = true;
+        else spriteRenderer.flipX = false;
         ResetForce();
         SetHorizontalVelocity(0);
-        SetHorizontalForce(fixedDir * 0.11f);
         holdingCoroutine = StartCoroutine(Holding(-fixedDir));
     }
     private void StopHoldingWall()
     {
         anim.SetBool("isHoldingWall", false);
-        unitState = UnitState.Air;
+        if(isGrounded) unitState = UnitState.Default;
+        else unitState = UnitState.Air;
         StopCoroutine(holdingCoroutine);
         holdingCoroutine = null;
     }
 
     private IEnumerator Holding(float dir)
     {
-        yield return new WaitUntil(() => 
-            !Physics2D.Raycast(transform.position, Vector2.right*dir, boxSizeX*1.05f, 1<<LayerMask.NameToLayer("Map")) ||
-            Physics2D.Raycast(transform.position, Vector2.down, boxSizeY*1.05f, 1<<LayerMask.NameToLayer("Map"))
+        yield return new WaitUntil(() => isFormChangeReady ||
+            !Physics2D.Raycast(transform.position + Vector3.down * boxSizeY * 0.9f, Vector2.right*dir, boxSizeX*1.05f, 1<<LayerMask.NameToLayer("Map")) ||
+            Physics2D.Raycast(transform.position, Vector2.down, boxSizeY*1.2f, 1<<LayerMask.NameToLayer("Map"))
         );
         StopHoldingWall();
     }
 
     public override bool Crouch(KeyState crouchKey)
     {
-        if(ControllerChecker() || unitState == UnitState.Dash || unitState == UnitState.HoldingWall || unitState == UnitState.Attack) return false;
+        if(ControllerChecker() || isFormChangeReady || unitState == UnitState.Dash || unitState == UnitState.HoldingWall || unitState == UnitState.Attack) return false;
         return base.Crouch(crouchKey);
     }
 
     // 수정 필요함
     public override bool Dash()
     {
-        if(ControllerChecker() || unitState == UnitState.HoldingWall || unitState == UnitState.FormChange || dashCoroutine != null) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
+        if(ControllerChecker() || isFormChangeReady || unitState == UnitState.HoldingWall || unitState == UnitState.FormChange || dashCoroutine != null) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
         if(attackCoroutine != null) StopAttack();
         base.Dash();
         dashCoroutine = StartCoroutine(DashAffterInput());
@@ -255,12 +281,17 @@ public class Werwolf : PlayerUnit
         }
         dashCoroutine = null;
         invalidation=false;
-        unitState = UnitState.Default;
+        if(isGrounded) unitState = UnitState.Default;
+        else unitState = UnitState.Air;
     }
 
     public override bool FormChange()
     {
-        if(unitState != UnitState.Default) return false;
+        if(unitState != UnitState.Default)
+        {
+            isFormChangeReady = true;
+            return false;
+        }
         else return base.FormChange();
     }
 

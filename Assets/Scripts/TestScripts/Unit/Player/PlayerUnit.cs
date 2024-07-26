@@ -118,7 +118,7 @@ public abstract class PlayerUnit : UnitBase
     {
         AddGravity();
         AddFrictional();
-        var hit = Physics2D.BoxCast(transform.position, new Vector2(boxSizeX*2, boxSizeY*2), 0, Vector2.right*Mathf.Sign(hzForce), 0.02f, 1<<LayerMask.NameToLayer("Map"));
+        var hit = Physics2D.BoxCast(transform.position, new Vector2(boxSizeX*1.8f, boxSizeY*2), 0, Vector2.right*Mathf.Sign(hzForce), 0.02f, 1<<LayerMask.NameToLayer("Map"));
         if(hit)
         {
             SetHorizontalForce(0);
@@ -191,7 +191,7 @@ public abstract class PlayerUnit : UnitBase
     // 수정 필요함
     public override bool Crouch(KeyState crouchKey)
     {
-        if(ControllerChecker() || unitState == UnitState.FormChange || unitState == UnitState.Air || !findRayPlatform) return false;
+        if(ControllerChecker() || unitState == UnitState.FormChange || !findRayPlatform) return false;
         switch(crouchKey)
         {
             case KeyState.KeyDown:

@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour, IBaseController
 {
     private IUnitController unitController;
+    private bool isKeyDown;
 
     void Start() => unitController = GetComponent<IUnitController>();
     void OnEnable() => ((IBaseController)this).AddController();
@@ -12,18 +13,26 @@ public class PlayerController : MonoBehaviour, IBaseController
 
     public void Controller()
     {
-        if(Input.GetKeyDown(KeyCode.Mouse1)) unitController.FormChange();
-        if(Input.GetKeyDown(KeyCode.R)) unitController.Reload();
+        if(Input.GetKeyDown(KeyCode.Mouse1) && KeyControll()) unitController.FormChange();
+        if(Input.GetKeyDown(KeyCode.R) && KeyControll()) unitController.Reload();
+        if(Input.GetKeyDown(KeyCode.Mouse0) && KeyControll()) unitController.Attack(ClickPos());
+        if(Input.GetKeyDown(KeyCode.Space) && KeyControll()) unitController.Dash();
         
-        if (Input.GetKey(KeyCode.S)) unitController.Crouch(KeyState.KeyDown);//GetKeyDown -> GetKey
-        if(Input.GetKeyDown(KeyCode.Mouse0)) unitController.Attack(ClickPos());
-        else if(Input.GetKeyDown(KeyCode.Space)) unitController.Dash();
-        else if(Input.GetKeyUp(KeyCode.S)) unitController.Crouch(KeyState.KeyUp);
-        else if(Input.GetKeyDown(KeyCode.W)) unitController.Jump(KeyState.KeyDown);
+        if (Input.GetKey(KeyCode.S) && KeyControll()) unitController.Crouch(KeyState.KeyDown);//GetKeyDown -> GetKey
+        else if(Input.GetKey(KeyCode.S)) unitController.Crouch(KeyState.KeyUp);
+        if(Input.GetKeyDown(KeyCode.W) && KeyControll()) unitController.Jump(KeyState.KeyDown);
         else if(Input.GetKey(KeyCode.W)) unitController.Jump(KeyState.KeyStay);
         else if(Input.GetKeyUp(KeyCode.W)) unitController.Jump(KeyState.KeyUp);
         else unitController.Jump(KeyState.None);
         unitController.Move(Input.GetAxisRaw("Horizontal"));
+        isKeyDown = false;
+    }
+
+    private bool KeyControll()
+    {
+        if(isKeyDown) return false;
+        isKeyDown = true;
+        return true;
     }
 
     public void Move(float dir) => unitController.Move(dir);
