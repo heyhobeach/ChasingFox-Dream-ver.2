@@ -25,7 +25,18 @@ public class EventTrigger : MonoBehaviour
             StartCoroutine(LockTime(eventLists[eventIdx].lockTime));
             eventIdx++;
         }
-        else if(eventIdx >= eventLists.Length) return;
+        else if(eventIdx >= eventLists.Length) used = true;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collider)
+    {
+        if(used || (autoTrigger ? false : !Input.GetKeyDown(keyCode)) || !collider.CompareTag(targetTag)) return;
+        Controller();
+    }
+    private void OnTriggerStay2D(Collider2D collider)
+    {
+        if(used || (autoTrigger ? false : !Input.GetKeyDown(keyCode)) || !collider.CompareTag(targetTag)) return;
+        Controller();
     }
 
     private IEnumerator LockTime(float lockTime)

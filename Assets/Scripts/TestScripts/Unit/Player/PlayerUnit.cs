@@ -253,7 +253,8 @@ public abstract class PlayerUnit : UnitBase
         {
             var indexG = Array.FindIndex(hit, x => x.transform.tag == "ground"&&x.distance>boxOffsetY/2);//만약 람다를 안 쓰려면 for로 hit만큼 돌ㅡㅜ   아가면서 태그가 맞는지 확인해야함
             
-            var indexP = Array.FindIndex(hit, x => x.transform.tag == "platform" && x.distance > charBoxCollider.size.y / 2);
+            // var indexP = Array.FindIndex(hit, x => x.transform.tag == "platform" && x.distance > charBoxCollider.size.y / 2);
+            var indexP = Array.FindIndex(hit, x => x.transform.tag == "platform" && x.distance > boxOffsetY / 2);
 
             GetCurrenttPlatform();
 

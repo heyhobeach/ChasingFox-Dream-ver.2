@@ -20,7 +20,7 @@ public class Bullet : MonoBehaviour
     /// </summary>
     public float soundTime = 0.3f;
 
-    public void Set(Vector3 shootPos, Vector3 targetPos, int damage, float speed, GameObject gobj, Vector3 addPos = new Vector3())
+    public void Set(Vector3 shootPos, Vector3 targetPos, Vector3 rotation, int damage, float speed, GameObject gobj, Vector3 addPos = new Vector3())
     {
         // if (gobj.tag == "Enemy")
         // {
@@ -32,14 +32,13 @@ public class Bullet : MonoBehaviour
         //     ignoreTag = gobj.tag;
         //     // Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Bullet"), LayerMask.NameToLayer("Player"));
         // }
-        Debug.Log(string.Format("this object shoot {0}", gobj));
         ignoreTag = gobj.tag;
         transform.position = (Vector2)shootPos + (Vector2)addPos;
         destination = ((Vector2)targetPos - (Vector2)shootPos).normalized;
+        transform.GetChild(0).transform.localEulerAngles = rotation;
         this.damage = damage;
         this.speed = speed;
         gameObject.SetActive(true);
-
     }
 
     private void OnEnable() => startTime = 0;

@@ -334,9 +334,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0522f97873de74345b09fe1321b2896b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundManager: {fileID: 0}
-  proCamera2DShake: {fileID: 0}
-  proCamera2DPointerInfluence: {fileID: 0}
+  soundManager: {fileID: 1891448}
+  brutalDatas: {fileID: 11400000, guid: 3dd26ef704510464b8dfc1701b077cb6, type: 2}
+  humanDatas: {fileID: 11400000, guid: 64b063eba2fdac44e8f9374fda825bb1, type: 2}
+  karmaRatio: 65
 --- !u!4 &17303144
 Transform:
   m_ObjectHideFlags: 0
@@ -8379,7 +8380,6 @@ MonoBehaviour:
   duration: 1
   jumpForce: 7
   jumpDuration: 0.5
-  isMoving: 0
   isGround: 1
   isHide: 0
   isCrouching: 0
@@ -9048,9 +9048,12 @@ MonoBehaviour:
   - {fileID: 1915511437}
   - {fileID: 87478938}
   - {fileID: 450397336}
-  transformNum: 2
   _maxHealth: 0
-  changeDelay: 1
+  brutalData:
+    maxGage: 0
+    sec: 0
+    atk: 0
+    frm: 0
   changeGage: 0
   bulletTime: 0
 --- !u!50 &642844991
@@ -9903,6 +9906,7 @@ GameObject:
   - component: {fileID: 963194229}
   - component: {fileID: 963194232}
   - component: {fileID: 963194233}
+  - component: {fileID: 963194234}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -10093,6 +10097,20 @@ MonoBehaviour:
   ConstantShakePresets: []
   StartConstantShakePreset: {fileID: 0}
   CurrentConstantShakePreset: {fileID: 0}
+--- !u!114 &963194234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474419b0ccb40b94daf825dd42630d58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  proCamera2DShake: {fileID: 0}
+  proCamera2DPointerInfluence: {fileID: 0}
 --- !u!1 &1020442138
 GameObject:
   m_ObjectHideFlags: 0
