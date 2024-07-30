@@ -217,9 +217,33 @@ public abstract class PlayerUnit : UnitBase
         return false;
     }
 
-    public void GetCurrenttPlatform()
+    public void GetCurrenttPlatform(RaycastHit2D ray)
     {
-
+        switch (CheckMapType(ray))
+        {
+            case MapType.Platform:
+                Debug.Log("플랫폼 들어옴");
+                currentOneWayPlatform = ray.transform.gameObject;//플랫폼이라면 현재 플렛폼을 담음
+                // Debug.Log(collision.gameObject.GetComponent<PlatformScript>().dObject);//다운 오브젝트 타입확인용 로그
+                switch (ray.transform.gameObject.GetComponent<PlatformScript>().dObject)//대각선 직선 오브젝트 마다 떨어지는 시간이 다를수도 있으니  
+                {
+                    case PlatformScript.downJumpObject.STRAIGHT://직선
+                        downTime = 1f;//떨어지는 시간 다르게 하기 위함
+                        break;
+                    case PlatformScript.downJumpObject.DIAGONAL://대각선
+                        downTime = 0.8f;//떨어지는 시간 다르게 하기 위함 , 0.7초까지도 1칸에 대해서는 가능하지만 만약에 쭉 앞으로 가면서 떨어진다고 하면 안전한 시간은 0.75~0.8사이임
+                        break;
+                }
+                //canDown = true;
+                break;
+            case MapType.Floor:
+                isJumping = false;
+                SetVerticalForce(gravity * Time.fixedDeltaTime);
+                break;
+                //default:
+                //    
+                //    break;
+        }
     }
 
 
@@ -259,7 +283,11 @@ public abstract class PlayerUnit : UnitBase
             
             var indexP = Array.FindIndex(hit, x => x.transform.tag == "platform" && x.distance > charBoxCollider.size.y / 2);
 
-            GetCurrenttPlatform();
+            if (indexP != -1)
+            {
+                GetCurrenttPlatform(hit[indexP]);
+            }
+            
 
             Debug.Log(string.Format("indexG {0} indexP{1}", indexG, indexP));
             // Debug.Log(string.Format("indexG=>{0}  indexP=>{1}", indexG,indexP));
@@ -397,6 +425,8 @@ public abstract class PlayerUnit : UnitBase
         SetVerticalForce(0);
     }
 
+
+
     /// <summary>
     /// 충돌면의 MapType을 반환
     /// </summary>
@@ -406,6 +436,11 @@ public abstract class PlayerUnit : UnitBase
     {
         float angle = 0;
         return CheckMapType(collision, ref angle);
+    }
+    protected MapType CheckMapType(RaycastHit2D ray)
+    {
+        float angle = 0;
+        return CheckMapType(ray, ref angle);
     }
     /// <summary>
     /// 충돌면의 MapType을 반환
@@ -420,6 +455,15 @@ public abstract class PlayerUnit : UnitBase
         angle = Mathf.Abs(Vector2.Angle(Vector2.up, collision.contacts[0].normal));
         if(angle <= 45) return MapType.Ground;
         else if(angle >= 135) return MapType.Floor;
+        else return MapType.Wall;
+    }
+    protected MapType CheckMapType(RaycastHit2D collision, ref float angle)
+    {
+        if (!(collision.collider.CompareTag("Map") || collision.collider.CompareTag("platform")) ) return MapType.None;
+        if (collision.collider.CompareTag("platform")) return MapType.Platform;
+        angle = Mathf.Abs(Vector2.Angle(Vector2.up, collision.normal));
+        if (angle <= 45) return MapType.Ground;
+        else if (angle >= 135) return MapType.Floor;
         else return MapType.Wall;
     }
 }
