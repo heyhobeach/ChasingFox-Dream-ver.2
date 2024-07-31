@@ -41,7 +41,7 @@ public abstract class PlayerUnit : UnitBase
         {
             case MapType.Platform:
                 Debug.Log("플랫폼 들어옴");
-                currentOneWayPlatform = collision.gameObject;//플랫폼이라면 현재 플렛폼을 담음
+              //  currentOneWayPlatform = collision.gameObject;//플랫폼이라면 현재 플렛폼을 담음
                 // Debug.Log(collision.gameObject.GetComponent<PlatformScript>().dObject);//다운 오브젝트 타입확인용 로그
                 switch (collision.gameObject.GetComponent<PlatformScript>().dObject)//대각선 직선 오브젝트 마다 떨어지는 시간이 다를수도 있으니  
                 {
@@ -90,7 +90,7 @@ public abstract class PlayerUnit : UnitBase
                 SetVerticalForce(gravity * Time.fixedDeltaTime);
                 break;
             case MapType.Platform:
-                currentOneWayPlatform = collision.gameObject;
+            //    currentOneWayPlatform = collision.gameObject;
                 break;
         }
         if(CheckMapType(collision) == MapType.Floor) isJumping = false;
@@ -191,11 +191,15 @@ public abstract class PlayerUnit : UnitBase
     // 수정 필요함
     public override bool Crouch(KeyState crouchKey)
     {
-        if(ControllerChecker() || unitState == UnitState.FormChange || !findRayPlatform) return false;
-        switch(crouchKey)
+        Debug.Log("findRayPlatform" + findRayPlatform);
+        if (ControllerChecker() || unitState == UnitState.FormChange || !findRayPlatform) return false;
+        if (currentOneWayPlatform == null) Debug.Log("크라우치에서 플랫폼 없음");
+        else Debug.Log("크라우치에서 플랫폼 있음");
+        switch (crouchKey)
         {
             case KeyState.KeyDown:
             case KeyState.KeyStay:
+                //canDown = true;
                 if (currentOneWayPlatform != null)//밑 아래 점프 가능한 오브젝트와 닿아있을때 ,우선순위 따라서 위로 올리고 return이 필요할듯 
                 {
                     Debug.Log("hello");
@@ -213,20 +217,43 @@ public abstract class PlayerUnit : UnitBase
         return false;
     }
 
-    public void GetCurrenttPlatform()
+    public void GetCurrenttPlatform(RaycastHit2D ray)
     {
-
+        switch (CheckMapType(ray))
+        {
+            case MapType.Platform:
+                Debug.Log("플랫폼 들어옴");
+                currentOneWayPlatform = ray.transform.gameObject;//플랫폼이라면 현재 플렛폼을 담음
+                // Debug.Log(collision.gameObject.GetComponent<PlatformScript>().dObject);//다운 오브젝트 타입확인용 로그
+                switch (ray.transform.gameObject.GetComponent<PlatformScript>().dObject)//대각선 직선 오브젝트 마다 떨어지는 시간이 다를수도 있으니  
+                {
+                    case PlatformScript.downJumpObject.STRAIGHT://직선
+                        downTime = 1f;//떨어지는 시간 다르게 하기 위함
+                        break;
+                    case PlatformScript.downJumpObject.DIAGONAL://대각선
+                        downTime = 0.8f;//떨어지는 시간 다르게 하기 위함 , 0.7초까지도 1칸에 대해서는 가능하지만 만약에 쭉 앞으로 가면서 떨어진다고 하면 안전한 시간은 0.75~0.8사이임
+                        break;
+                }
+                break;
+            case MapType.Floor:
+                isJumping = false;
+                SetVerticalForce(gravity * Time.fixedDeltaTime);
+                break;
+                //default:
+                //    
+                //    break;
+        }
     }
-
 
     private void CrouchUpdate()
     {
         // var charBoxCollider = GetComponent<BoxCollider2D>();
+        Debug.Log("candown" + canDown);
         float player_dialog = Mathf.Sqrt(MathF.Pow(boxSizeX, 2) + MathF.Pow(boxSizeY, 2));
         RaycastHit2D[] hit =Physics2D.RaycastAll(transform.parent.position + Vector3.up * boxOffsetY, Vector2.down, distanceToCheck, lm);
         Debug.DrawRay(transform.position + Vector3.up * boxOffsetY, Vector2.down * distanceToCheck, Color.red);
         //BoxCollider2D box = GetComponent<BoxCollider2D>();
-        Vector2 test = new Vector2(transform.position.x - boxSizeX + boxOffsetX, transform.position.y - boxSizeY + boxOffsetY)  - (Vector2)transform.position;//우측대각선
+        Vector2 test = new Vector2(transform.position.x + boxSizeX + boxOffsetX, transform.position.y - boxSizeY + boxOffsetY)  - (Vector2)transform.position;//우측대각선
         //RaycastHit2D dHit = Physics2D.Raycast(transform.position, test,(MathF.Sqrt(charBoxCollider.size.x / 2) + MathF.Sqrt(charBoxCollider.size.y/2)) * 0.65f, 1<<LayerMask.NameToLayer("OneWayPlatform"));//플랫폼감지용 레이,하드 코딩때 값 0.75f,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정 
         RaycastHit2D dHit = Physics2D.Raycast(transform.position + Vector3.up * boxOffsetY, test, player_dialog*1.05f, 1 << LayerMask.NameToLayer("OneWayPlatform") | 1 << LayerMask.NameToLayer("Ground"));//플랫폼감지용 레이,하드 코딩때 값 0.75f,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정 
         RaycastHit2D []dHitarr = Physics2D.RaycastAll(transform.position + Vector3.up * boxOffsetY, test, player_dialog * 1.05f, 1 << LayerMask.NameToLayer("OneWayPlatform") | 1 << LayerMask.NameToLayer("Ground"));//플랫폼감지용 레이,하드 코딩때 값 0.75f,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정 
@@ -243,11 +270,44 @@ public abstract class PlayerUnit : UnitBase
         {
             // Debug.Log("dHit null");
         }
+        else
+        {
+            var indexP = Array.FindIndex(dHitarr, x => x.transform.tag == "platform" && x.distance > boxOffsetY / 2);
+            
+        
+            if (indexP != -1)
+            {
+                
+                GetCurrenttPlatform(dHitarr[indexP]);
+                Debug.Log("플랫폼 찾음"+canDown);
+            }
+            else
+            {
+                Debug.Log("플랫폼 못찾음");
+            }
+        }
         if (d2Hit.collider == null)
         {
             // Debug.Log("d2Hit null");
         }
+        else
+         {
+            var indexP = Array.FindIndex(d2Hitarr, x => x.transform.tag == "platform" && x.distance > boxOffsetY / 2);
+            Debug.Log(indexP);
+            if (indexP != -1)
+            {
+                
+                GetCurrenttPlatform(d2Hitarr[indexP]);
+                Debug.Log("플랫폼 찾음" + canDown);
+            }
+            else
+            {
+                Debug.Log("플랫폼 못찾음");
+            }
+         }
         // Debug.Log("hit=>"+hit.Length);
+
+        bool sideRay = (dHit) | (d2Hit);
         
         if (hit != null)
         {
@@ -256,7 +316,11 @@ public abstract class PlayerUnit : UnitBase
             // var indexP = Array.FindIndex(hit, x => x.transform.tag == "platform" && x.distance > charBoxCollider.size.y / 2);
             var indexP = Array.FindIndex(hit, x => x.transform.tag == "platform" && x.distance > boxOffsetY / 2);
 
-            GetCurrenttPlatform();
+            if (indexP != -1)
+            {
+                GetCurrenttPlatform(hit[indexP]);
+            }
+
 
             Debug.Log(string.Format("indexG {0} indexP{1}", indexG, indexP));
             // Debug.Log(string.Format("indexG=>{0}  indexP=>{1}", indexG,indexP));
@@ -268,7 +332,7 @@ public abstract class PlayerUnit : UnitBase
             // Debug.Log(string.Format("dhit length=>{0} d2hit length=>{1}", dHitarr.Length, d2Hitarr.Length));
             //isGrounded = indexP >= 0 | indexG >= 0 ;
             // Debug.Log(string.Format("isGrounded => {0} indexP=>{1} indexG=>{2} dhit=>{3} d2hit=>{4}",isGrounded,indexP,indexG,(bool)dHit,(bool)d2Hit));
-            findRayPlatform = indexP >= 0;
+            findRayPlatform = indexP >= 0|sideRay;
             cTemp = indexG >= 0;
             // Debug.Log(string.Format("{0}", findRayPlatform));
             
@@ -405,6 +469,11 @@ public abstract class PlayerUnit : UnitBase
         float angle = 0;
         return CheckMapType(collision, ref angle);
     }
+    protected MapType CheckMapType(RaycastHit2D ray)
+    {
+        float angle = 0;
+        return CheckMapType(ray, ref angle);
+    }
     /// <summary>
     /// 충돌면의 MapType을 반환
     /// </summary>
@@ -418,6 +487,15 @@ public abstract class PlayerUnit : UnitBase
         angle = Mathf.Abs(Vector2.Angle(Vector2.up, collision.contacts[0].normal));
         if(angle <= 45) return MapType.Ground;
         else if(angle >= 135) return MapType.Floor;
+        else return MapType.Wall;
+    }
+    protected MapType CheckMapType(RaycastHit2D collision, ref float angle)
+    {
+        if (!(collision.collider.CompareTag("Map") || collision.collider.CompareTag("platform"))) return MapType.None;
+        if (collision.collider.CompareTag("platform")) return MapType.Platform;
+        angle = Mathf.Abs(Vector2.Angle(Vector2.up, collision.normal));
+        if (angle <= 45) return MapType.Ground;
+        else if (angle >= 135) return MapType.Floor;
         else return MapType.Wall;
     }
 }
