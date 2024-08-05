@@ -220,8 +220,12 @@ public class Werwolf : PlayerUnit
         anim.SetBool("isHoldingWall", false);
         if(isGrounded) unitState = UnitState.Default;
         else unitState = UnitState.Air;
-        StopCoroutine(holdingCoroutine);
-        holdingCoroutine = null;
+        if(holdingCoroutine != null) 
+        {
+            StopCoroutine(holdingCoroutine);
+            holdingCoroutine = null;
+        }
+        isholded = false;
     }
 
     private IEnumerator Holding(float dir)
@@ -258,6 +262,7 @@ public class Werwolf : PlayerUnit
         unitState = UnitState.Dash; // 대쉬 상태로 변경
         var tempVel = fixedDir == 0 ? spriteRenderer.flipX ? -1 : 1 : Mathf.Sign(fixedDir);
         SetHorizontalVelocity(tempVel);
+        SetVerticalForce(0);
         yield return new WaitUntil(() => anim.GetCurrentAnimatorStateInfo(0).IsName("Dash"));
         while(anim.GetCurrentAnimatorStateInfo(0).IsName("Dash")) // 대쉬 지속 시간 동안
         {

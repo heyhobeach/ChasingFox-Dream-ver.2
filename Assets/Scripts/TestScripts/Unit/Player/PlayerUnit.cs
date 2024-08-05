@@ -226,14 +226,14 @@ public abstract class PlayerUnit : UnitBase
         RaycastHit2D[] hit =Physics2D.RaycastAll(transform.parent.position + Vector3.up * boxOffsetY, Vector2.down, distanceToCheck, lm);
         Debug.DrawRay(transform.position + Vector3.up * boxOffsetY, Vector2.down * distanceToCheck, Color.red);
         //BoxCollider2D box = GetComponent<BoxCollider2D>();
-        Vector2 test = new Vector2(transform.position.x - boxSizeX + boxOffsetX, transform.position.y - boxSizeY + boxOffsetY)  - (Vector2)transform.position;//우측대각선
+        Vector2 test = new Vector2(transform.position.x + boxSizeX + boxOffsetX, transform.position.y - boxSizeY + boxOffsetY - 0.05f)  - (Vector2)transform.position;//우측대각선
         //RaycastHit2D dHit = Physics2D.Raycast(transform.position, test,(MathF.Sqrt(charBoxCollider.size.x / 2) + MathF.Sqrt(charBoxCollider.size.y/2)) * 0.65f, 1<<LayerMask.NameToLayer("OneWayPlatform"));//플랫폼감지용 레이,하드 코딩때 값 0.75f,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정 
         RaycastHit2D dHit = Physics2D.Raycast(transform.position + Vector3.up * boxOffsetY, test, player_dialog*1.05f, 1 << LayerMask.NameToLayer("OneWayPlatform") | 1 << LayerMask.NameToLayer("Ground"));//플랫폼감지용 레이,하드 코딩때 값 0.75f,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정 
         RaycastHit2D []dHitarr = Physics2D.RaycastAll(transform.position + Vector3.up * boxOffsetY, test, player_dialog * 1.05f, 1 << LayerMask.NameToLayer("OneWayPlatform") | 1 << LayerMask.NameToLayer("Ground"));//플랫폼감지용 레이,하드 코딩때 값 0.75f,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정 
 
 
         Debug.DrawRay(transform.position,test, Color.green);
-        Vector2 test2 = new Vector2(transform.position.x - boxSizeX + boxOffsetX , transform.position.y - boxSizeY + boxOffsetY) - (Vector2)transform.position;//좌측 대각선
+        Vector2 test2 = new Vector2(transform.position.x - boxSizeX + boxOffsetX , transform.position.y - boxSizeY + boxOffsetY - 0.05f) - (Vector2)transform.position;//좌측 대각선
         //RaycastHit2D d2Hit = Physics2D.Raycast(transform.position, test2, (MathF.Sqrt(charBoxCollider.size.x / 2) + MathF.Sqrt(charBoxCollider.size.y / 2))*0.65f, 1 << LayerMask.NameToLayer("OneWayPlatform"));//플랫폼감지용 레이,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정
         RaycastHit2D d2Hit = Physics2D.Raycast(transform.position + Vector3.up * boxOffsetY, test2, player_dialog*1.05f , 1 << LayerMask.NameToLayer("OneWayPlatform") | 1 << LayerMask.NameToLayer("Ground"));//플랫폼감지용 레이,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정
         RaycastHit2D []d2Hitarr = Physics2D.RaycastAll(transform.position + Vector3.up * boxOffsetY, test2, player_dialog * 1.05f, 1 << LayerMask.NameToLayer("OneWayPlatform") | 1 << LayerMask.NameToLayer("Ground"));//플랫폼감지용 레이,0.5에서 0.45로 수정함으로서 collider보다 더 길게설정
@@ -374,13 +374,10 @@ public abstract class PlayerUnit : UnitBase
     /// </summary>
     private void Movement()
     {
-        // rg.MovePosition(transform.position + new Vector3(hzForce, vcForce) * Time.deltaTime);
         var hit = Physics2D.BoxCastAll(transform.position-new Vector3(0, boxSizeY), new Vector2(boxSizeX, 0.05f), 0, Vector2.down, boxSizeX, 1<<LayerMask.NameToLayer("OneWayPlatform") | 1<<LayerMask.NameToLayer("Ground"));
         if(hit.Length > 0 && !canDown && Mathf.Abs(hit[0].normal.x) < 1)
         {
-            // Debug.Log("Posistion : " + hit[0].normal);
             var temp = Vector3.ProjectOnPlane(new Vector3(hzForce, 0), hit[0].normal);
-            Debug.Log("temp" + temp);
             rg.MovePosition(transform.position + new Vector3(temp.x, temp.y + vcForce) * Time.deltaTime);
         }
         else rg.MovePosition(transform.position + (new Vector3(hzForce, vcForce) * Time.deltaTime));

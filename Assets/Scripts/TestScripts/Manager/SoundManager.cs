@@ -66,19 +66,20 @@ public class SoundManager:MonoBehaviour
     {
         //GameObject _obj=bullet.standbyBullet.Dequeue();
         //Debug.Log("코루틴 호출");
-        Debug.Log(string.Format("충돌위치{0} 오브젝트 이름{1}",obj.transform.position,obj.name));
+        // Debug.Log(string.Format("충돌위치{0} 오브젝트 이름{1}",obj.transform.position,obj.name));
         obj.SetActive(true);
-        yield return new WaitForSeconds(0.3f);
+        if (obj.gameObject.layer == LayerMask.NameToLayer("GunSound"))
+        {
+            Debug.Log("총 소리 레이어");
+            bullet.standbyBullet.Enqueue(obj);
+        }
+        yield return null;
         Debug.Log("성공적 삽입");
         obj.SetActive(false);
         if (obj.transform.parent.tag == "Player")
         {
             Debug.Log("유저 총 소리");
             yield return null;
-        }
-        else
-        {
-            bullet.standbyBullet.Enqueue(obj);
         }
     }
 

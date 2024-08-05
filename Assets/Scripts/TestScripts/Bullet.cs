@@ -13,7 +13,6 @@ public class Bullet : MonoBehaviour
 
     private Rigidbody2D rg;
     private float startTime;
-    private string ignoreTag;
 
     /// <summary>
     /// 벽과 충돌시 총알이 남아있는 시간
@@ -22,17 +21,7 @@ public class Bullet : MonoBehaviour
 
     public void Set(Vector3 shootPos, Vector3 targetPos, Vector3 rotation, int damage, float speed, GameObject gobj, Vector3 addPos = new Vector3())
     {
-        // if (gobj.tag == "Enemy")
-        // {
-        //     ignoreTag = gobj.tag;
-        //     // Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Bullet"), LayerMask.NameToLayer("Enemy"));
-        // }
-        // else if(gobj.tag == "Player")
-        // {
-        //     ignoreTag = gobj.tag;
-        //     // Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Bullet"), LayerMask.NameToLayer("Player"));
-        // }
-        ignoreTag = gobj.tag;
+        Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Bullet"), gobj.layer);
         transform.position = (Vector2)shootPos + (Vector2)addPos;
         destination = ((Vector2)targetPos - (Vector2)shootPos).normalized;
         transform.GetChild(0).transform.localEulerAngles = rotation;
@@ -60,16 +49,48 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag("ground") || collision.CompareTag("Wall")) Destroy(gameObject);
+        if(collision.CompareTag("Map")) BulletSound();
+        if(collision.CompareTag("ground") || collision.CompareTag("Wall") || collision.CompareTag("Map")) Destroy(gameObject);
         if (collision.gameObject.tag == "guard")//필요없어보임
         {
             this.gameObject.GetComponent<Collider2D>().isTrigger = true;
         }
-        if (collision.gameObject.tag == "Player" && !collision.gameObject.CompareTag(ignoreTag))//레이어 설정한 것 때문에 적군 총알만 플레이어 에게 충돌일어남
+        if (collision.gameObject.tag == "Player")//레이어 설정한 것 때문에 적군 총알만 플레이어 에게 충돌일어남
         {
 
         }
-        if(collision.gameObject.tag == "Enemy" && !collision.gameObject.CompareTag(ignoreTag))//플레이어 총알이 적군에게 충돌시
+        if(collision.gameObject.tag == "Enemy")//플레이어 총알이 적군에게 충돌시
+        {
+            Debug.Log("적 충돌");
+            //Destroy(this.gameObject);
+            var temp = collision.gameObject.GetComponent<IDamageable>();
+            Debug.Log(temp.health);
+            bool isDamaged = false;
+            if(temp != null) isDamaged = temp.GetDamage(damage);//이거 작동안함
+            if (isDamaged)
+            {
+                Debug.Log("데미지 받음");
+                // Destroy(gameObject);
+            }
+            else
+            {
+                Debug.Log("작동안함");
+            }
+        }
+    }
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if(collision.CompareTag("Map")) BulletSound();
+        if(collision.CompareTag("ground") || collision.CompareTag("Wall") || collision.CompareTag("Map")) Destroy(gameObject);
+        if (collision.gameObject.tag == "guard")//필요없어보임
+        {
+            this.gameObject.GetComponent<Collider2D>().isTrigger = true;
+        }
+        if (collision.gameObject.tag == "Player")//레이어 설정한 것 때문에 적군 총알만 플레이어 에게 충돌일어남
+        {
+
+        }
+        if(collision.gameObject.tag == "Enemy")//플레이어 총알이 적군에게 충돌시
         {
             Debug.Log("적 충돌");
             //Destroy(this.gameObject);
@@ -98,11 +119,10 @@ public class Bullet : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log(collision.gameObject.name);
         if (collision.gameObject.tag == "Map")
         {
             BulletSound();
-            //Destroy(this.gameObject);
+            Destroy(this.gameObject);
             //GameObject obj = SoundManager.Instance.bullet.standbyBullet.Dequeue();
             //obj.transform.position = this.transform.position;
             //Debug.Log(string.Format("queue name => " + obj));
@@ -116,7 +136,7 @@ public class Bullet : MonoBehaviour
         {
             this.gameObject.GetComponent<Collider2D>().isTrigger = true;
         }
-        if (collision.gameObject.tag == "Player" && !collision.gameObject.CompareTag(ignoreTag))//레이어 설정한 것 때문에 적군 총알만 플레이어 에게 충돌일어남
+        if (collision.gameObject.tag == "Player")//레이어 설정한 것 때문에 적군 총알만 플레이어 에게 충돌일어남
         {
             // Debug.Log("플레이어 충돌");
             var temp = collision.gameObject.GetComponent<IDamageable>();
@@ -130,7 +150,7 @@ public class Bullet : MonoBehaviour
             }
             else Debug.Log("Not Work");
         }
-        if (collision.gameObject.tag == "Enemy" && !collision.gameObject.CompareTag(ignoreTag))//플레이어 총알이 적군에게 충돌시 적이 trigger로 설정되어있어서 안 쓸것 같음
+        if (collision.gameObject.tag == "Enemy")//플레이어 총알이 적군에게 충돌시 적이 trigger로 설정되어있어서 안 쓸것 같음
         {
             //Debug.Log("적 충돌");
             //Destroy(this.gameObject);
@@ -141,13 +161,13 @@ public class Bullet : MonoBehaviour
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        Debug.Log(collision.gameObject.tag);
+        Destroy(gameObject);
         if (collision.gameObject.tag == "Map")
         {
             BulletSound();
-            //Destroy(this.gameObject);
+            Destroy(this.gameObject);
         }
-        if (collision.gameObject.tag == "Player" && !collision.gameObject.CompareTag(ignoreTag))
+        if (collision.gameObject.tag == "Player")
         {
             //Destroy(this.gameObject);
         }

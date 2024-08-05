@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public partial class GameManager : MonoBehaviour
 {
     public SoundManager soundManager;
 
@@ -40,12 +40,7 @@ public class GameManager : MonoBehaviour
     public static int GetHumanData() => instance.humanDatas.counts[Humanity/10];
     public static BrutalData GetBrutalData() => instance.brutalDatas.brutalDatas[Brutality/10];
 
-    [SerializeField] private Queue<Animation> animations= new Queue<Animation>();
-    public static Animation Next()
-    {
-        if(instance.animations.Count > 0) return instance.animations.Dequeue();
-        else return null;
-    }
+    public Player player { get; private set; }
 
     public void TimeScale(float t) => Time.timeScale = t;
 
@@ -57,8 +52,8 @@ public class GameManager : MonoBehaviour
             return;
         }
         instance = this;
-        DontDestroyOnLoad(gameObject);
         if(controllers == null) controllers = new();
+        player = FindObjectOfType<Player>();
     }
 
     private void Update()
