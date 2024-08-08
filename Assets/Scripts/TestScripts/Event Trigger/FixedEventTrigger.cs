@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class FixedEventTrigger : EventTrigger, IBaseController
 {
-    private int eventIdx = 0;
-    private bool used = false;
-    private bool eventLock;
 
     public new void Controller()
     {

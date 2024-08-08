@@ -19,7 +19,7 @@ public class CameraManager : MonoBehaviour
     void Awake()
     {
         if(instance == null) instance = this;
-        proCamera2DShake = Camera.main.GetComponent<ProCamera2DShake>();
-        proCamera2DPointerInfluence = Camera.main.GetComponent<ProCamera2DPointerInfluence>();
+        proCamera2DShake = GetComponent<ProCamera2DShake>();
+        proCamera2DPointerInfluence = GetComponent<ProCamera2DPointerInfluence>();
     }
 }

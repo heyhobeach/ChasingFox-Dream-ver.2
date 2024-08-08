@@ -75,7 +75,7 @@ public class Human : PlayerUnit
         base.OnDisable();
         StopDash();
         ReloadCancel();
-        StopCoroutine(attackCoroutine);
+        if(attackCoroutine != null) StopCoroutine(attackCoroutine);
     }
 
     protected override void OnCollisionEnter2D(Collision2D collision)
@@ -161,6 +161,7 @@ public class Human : PlayerUnit
     {
         if(unitState != UnitState.Default || dashCoroutine != null) return false; // 조작이 불가능한 상태일 경우 동작을 수행하지 않음
         base.Dash();
+        if(reloadCoroutine != null) ReloadCancel();
         dashCoroutine = StartCoroutine(DashAffterInput());
         return true;
     }

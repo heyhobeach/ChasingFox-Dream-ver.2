@@ -10,9 +10,9 @@ public class EventTrigger : MonoBehaviour
     public bool autoTrigger;
     public KeyCode keyCode;
     public EventList[] eventLists;
-    private int eventIdx = 0;
-    private bool used = false;
-    private bool eventLock;
+    protected int eventIdx = 0;
+    protected bool used = false;
+    protected bool eventLock;
 
     public void Controller()
     {

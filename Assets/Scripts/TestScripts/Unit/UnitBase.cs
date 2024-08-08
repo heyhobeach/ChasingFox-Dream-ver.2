@@ -7,6 +7,7 @@ using UnityEngine;
 /// 유닛의 기본적인 동작을 정의하는 추상 클래스
 /// MonoBehaviour, IUnitController를 상속함
 /// </summary>
+[RequireComponent(typeof(Animator))]
 public abstract class UnitBase : MonoBehaviour, IUnitController,IDamageable
 {
     public int _maxHealth;
@@ -106,10 +107,10 @@ public abstract class UnitBase : MonoBehaviour, IUnitController,IDamageable
 
     protected SpriteRenderer spriteRenderer;
 
-    public Animator anim;
+    [HideInInspector] public Animator anim;
 
     private bool longRangeUnit;
-    public ShootingAnimationController shootingAnimationController;
+    [HideInInspector] public ShootingAnimationController shootingAnimationController;
 
     protected virtual void Start()
     {
@@ -122,6 +123,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController,IDamageable
         boxOffsetY = gameObject.GetComponent<Collider2D>().offset.y;
         
         unitState = UnitState.Default;
+        anim.SetFloat("dashMultiplier", dashDuration > 0 ? 1/dashDuration : 1);
 
         shootingAnimationController = GetComponent<ShootingAnimationController>();
         if(shootingAnimationController != null) longRangeUnit = true;
@@ -145,6 +147,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController,IDamageable
             anim.SetFloat("hzForce", Mathf.Sign(hzForce) * (Mathf.Clamp(hzForce / movementSpeed, -1, 1) - fixDir * 1.5f));
             anim.SetBool("isRun", true);
         }
+        anim.SetFloat("dashMultiplier", dashDuration > 0 ? 1/dashDuration : 1);
     }
     
     protected abstract void OnEnable();
