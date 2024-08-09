@@ -1,14 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using BehaviorTree;
 
 public class EnemyController : MonoBehaviour
 {
-    public BehaviorNode behaviorNode;
+    public BehaviourTree.BehaviourTree behaviorTree;
 
+    void Start()
+    {
+        behaviorTree = behaviorTree.Clone();
+        behaviorTree.Bind();
+    }
     void Update()
     {
-        behaviorNode.OnUpdate();
+        behaviorTree.Update();
     }
 }
