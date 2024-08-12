@@ -3,6 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.U2D.Animation;
+
+[RequireComponent(typeof(SpriteLibrary))]
+[RequireComponent(typeof(SpriteResolver))]
+[RequireComponent(typeof(PlayerController))]
 
 /// <summary>
 /// 플레이어 유닛의 기본 동작을 정의, UnitBase를 상속한 추상 클래스

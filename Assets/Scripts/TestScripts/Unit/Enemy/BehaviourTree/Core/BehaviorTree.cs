@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace BehaviourTree
@@ -14,6 +13,8 @@ namespace BehaviourTree
         public BehaviourNode.NodeState nodeState;
         public List<BehaviourNode> nodes = new();
         public Blackboard blackboard = new();
+        [HideInInspector] public Vector2 viewPos = Vector2.zero;
+        [HideInInspector] public Vector3 viewScale = Vector3.one;
 
         public BehaviourNode.NodeState Update() => rootNode.Update();
 

@@ -13,7 +13,9 @@ namespace BehaviourTree.Editor
     public class BehaviourTreeView : GraphView
     {
         public Action<NodeView> OnNodeSelected;
-        private BehaviourTree behaviourTree;
+        public BehaviourTree behaviourTree;
+
+        private Vector2 mousePos;
 
         public new class UxmlFactory : UxmlFactory<BehaviourTreeView, UxmlTraits> {}
         public BehaviourTreeView() 
@@ -23,6 +25,7 @@ namespace BehaviourTree.Editor
             this.AddManipulator(new ContentDragger());
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
+            this.RegisterCallback<ContextualMenuPopulateEvent>(x => mousePos = Event.current.mousePosition);
 
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Editor/BehaviourTree/BehaviourTreeEditor.uss");
             styleSheets.Add(styleSheet);
@@ -41,6 +44,12 @@ namespace BehaviourTree.Editor
         internal void PopulateView(BehaviourTree tree) // 저장된 트리 불러오기
         {
             behaviourTree = tree;
+
+            viewTransform.scale = behaviourTree.viewScale;
+            viewTransform.position = behaviourTree.viewPos;
+
+            viewTransformChanged -= OnViewTransformChanged;
+            viewTransformChanged += OnViewTransformChanged;
 
             graphViewChanged -= OnGraphViewChanged;
             DeleteElements(graphElements);
@@ -93,7 +102,14 @@ namespace BehaviourTree.Editor
                     nodeView.SortChildren();
                 });
             }
+
             return graphViewChange;
+        }
+
+        private void OnViewTransformChanged(GraphView graphView)
+        {
+            behaviourTree.viewPos = graphView.viewTransform.position;
+            behaviourTree.viewScale = graphView.viewTransform.scale;
         }
 
         private void CreateNodeView(BehaviourNode node)
@@ -139,7 +155,7 @@ namespace BehaviourTree.Editor
             if(types.Count <= 0) return;
             foreach(var type in types)
             {
-                evt.menu.AppendAction($"{type.Name}", (a) => CreateNode(type));
+                evt.menu.AppendAction($"{type.BaseType.Name.Replace("BehaviourTree.", "")}/{type.Name}", (a) => CreateNode(type));
             }
         }
 
@@ -147,13 +163,9 @@ namespace BehaviourTree.Editor
         {
             var node = behaviourTree.CreateNode(type);
             CreateNodeView(node);
-        }
-        private void CreateNode(Type type, Vector2 pos)
-        {
-            var node = behaviourTree.CreateNode(type);
-            CreateNodeView(node);
             var view = FindNodeView(node);
-            view.SetPosition(new Rect(pos, view.contentRect.size));
+            var ctPos = contentViewContainer.WorldToLocal(mousePos);
+            view.SetPosition(new Rect(ctPos, Vector2.zero));
         }
 
         public void NodeStateUpdate()

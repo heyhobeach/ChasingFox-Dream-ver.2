@@ -1,0 +1,517 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8123740153036079787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37a939d5f51d55f4c80240888ca9f509, type: 3}
+  m_Name: EnemyStateChecker
+  m_EditorClassIdentifier: 
+  state: 0
+  isStarted: 0
+  guid: 4143ece776986104ca74890f0dab927b
+  positon: {x: -12.000005, y: 344}
+  blackboard:
+    thisUnit: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 1
+  clone: {fileID: 0}
+  description: Alert
+  child: {fileID: 531290968384818618}
+  stateCase: 1
+--- !u!114 &-7927501825422272763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b04a02dbcabafa4cba798a6e6c2dec3, type: 3}
+  m_Name: SendMesege
+  m_EditorClassIdentifier: 
+  state: 0
+  isStarted: 0
+  guid: 362f281e714be4843a31df6104b4799b
+  positon: {x: -86.999954, y: 593.0001}
+  blackboard:
+    thisUnit: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 1
+  clone: {fileID: 0}
+  description: 
+  unityEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 738758846542200766}
+        m_TargetAssemblyTypeName: BehaviourTree.RunTimeLine, Assembly-CSharp
+        m_MethodName: TimeLineStop
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &-7161608127579499380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e4b973c34db69c408370d7d0e2d80a1, type: 3}
+  m_Name: Selector
+  m_EditorClassIdentifier: 
+  state: 0
+  isStarted: 0
+  guid: f183d937c977a344abbb0cfa8e67c063
+  positon: {x: -0.000014066696, y: 218.56781}
+  blackboard:
+    thisUnit: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 1
+  clone: {fileID: 0}
+  description: 
+  children:
+  - {fileID: 8165423392858955647}
+  - {fileID: -8123740153036079787}
+  - {fileID: -1691638311106959918}
+--- !u!114 &-6798369374170880989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 517d2316710431e4ea0746739a2a71a9, type: 3}
+  m_Name: RootNode
+  m_EditorClassIdentifier: 
+  state: 0
+  isStarted: 0
+  guid: 8329ec2b28aae0443829f38ab3e41016
+  positon: {x: 0, y: 0}
+  blackboard:
+    thisUnit: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 1
+  clone: {fileID: 0}
+  description: 
+  child: {fileID: 7754139705782111083}
+--- !u!114 &-5203994678265369763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6587f59b5d3a2a4eab4ba889f75c396, type: 3}
+  m_Name: UnitStateChecker
+  m_EditorClassIdentifier: 
+  state: 0
+  isStarted: 0
+  guid: 33d2ab388c23c9b40ba708547227cf81
+  positon: {x: -522.54614, y: 593}
+  blackboard:
+    thisUnit: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 1
+  clone: {fileID: 0}
+  description: Death
+  child: {fileID: -147182563217488490}
+  stateCase: 10
+--- !u!114 &-5093957440746577806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e4b973c34db69c408370d7d0e2d80a1, type: 3}
+  m_Name: Selector
+  m_EditorClassIdentifier: 
+  state: 0
+  isStarted: 0
+  guid: 62a979ed91a9be44abc8fe1f7ab50c2e
+  positon: {x: -447.5461, y: 458.99997}
+  blackboard:
+    thisUnit: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 1
+  clone: {fileID: 0}
+  description: 
+  children:
+  - {fileID: -5203994678265369763}
+  - {fileID: -2439860200776135322}
+--- !u!114 &-4417137505816075133
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 354ad601dacff3a4582936538a764ce7, type: 3}
+  m_Name: DebugLogNode
+  m_EditorClassIdentifier: 
+  state: 0
+  isStarted: 0
+  guid: 07ee4503b95fbdd438b8d8dae073c8d9
+  positon: {x: 159, y: 242.00002}
+  blackboard:
+    thisUnit: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 1
+  clone: {fileID: 0}
+  description: "\uD57C\uB3D9 \uC624\uB958 \uB85C\uADF8"
+  debugLogType: 2
+  message: "\uC801 AI \uD589\uB3D9 \uBD88\uB2A5"
+--- !u!114 &-3604086991514170634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3195d4dea04c0744aadaef31853ab61, type: 3}
+  m_Name: SequenceNode
+  m_EditorClassIdentifier: 
+  state: 0
+  isStarted: 0
+  guid: 156f70ebb47edd44fbf48fb304a8b8bc
+  positon: {x: 369.2347, y: 459}
+  blackboard:
+    thisUnit: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 1
+  clone: {fileID: 0}
+  description: 
+  children: []
+--- !u!114 &-2439860200776135322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6587f59b5d3a2a4eab4ba889f75c396, type: 3}
+  m_Name: UnitStateChecker
+  m_EditorClassIdentifier: 
+  state: 0
+  isStarted: 0
+  guid: 2002b582cfd7c9b40b4d2fb95e67af83
+  positon: {x: -372.5461, y: 593}
+  blackboard:
+    thisUnit: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 1
+  clone: {fileID: 0}
+  description: Default
+  child: {fileID: 738758846542200766}
+  stateCase: 0
+--- !u!114 &-1691638311106959918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37a939d5f51d55f4c80240888ca9f509, type: 3}
+  m_Name: EnemyStateChecker
+  m_EditorClassIdentifier: 
+  state: 0
+  isStarted: 0
+  guid: 3f14566b3d90ccc4e969e4cbabaec16e
+  positon: {x: 358.23468, y: 344}
+  blackboard:
+    thisUnit: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 1
+  clone: {fileID: 0}
+  description: Chase
+  child: {fileID: -3604086991514170634}
+  stateCase: 2
+--- !u!114 &-147182563217488490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 354ad601dacff3a4582936538a764ce7, type: 3}
+  m_Name: DebugLogNode
+  m_EditorClassIdentifier: 
+  state: 0
+  isStarted: 0
+  guid: 3faf70284fdcb374eb40b2c6e178c0a0
+  positon: {x: -522.54614, y: 709}
+  blackboard:
+    thisUnit: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 1
+  clone: {fileID: 0}
+  description: 
+  debugLogType: 0
+  message: 'Behaviour : death'
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a54fa91364e07b4aaf8bd939bae61e2, type: 3}
+  m_Name: BehaviourTree
+  m_EditorClassIdentifier: 
+  rootNode: {fileID: -6798369374170880989}
+  nodeState: 0
+  nodes:
+  - {fileID: -6798369374170880989}
+  - {fileID: -7161608127579499380}
+  - {fileID: 8165423392858955647}
+  - {fileID: -5203994678265369763}
+  - {fileID: -8123740153036079787}
+  - {fileID: -1691638311106959918}
+  - {fileID: -2439860200776135322}
+  - {fileID: -5093957440746577806}
+  - {fileID: 7754139705782111083}
+  - {fileID: -4417137505816075133}
+  - {fileID: -147182563217488490}
+  - {fileID: 237555008413651082}
+  - {fileID: 3682697649059420072}
+  - {fileID: 738758846542200766}
+  - {fileID: 531290968384818618}
+  - {fileID: -3604086991514170634}
+  - {fileID: -7927501825422272763}
+  blackboard:
+    thisUnit: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 1
+  viewPos: {x: 474, y: -332}
+  viewScale: {x: 1, y: 1, z: 1}
+--- !u!114 &237555008413651082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 354ad601dacff3a4582936538a764ce7, type: 3}
+  m_Name: DebugLogNode
+  m_EditorClassIdentifier: 
+  state: 0
+  isStarted: 0
+  guid: 53f44e2bddad68f4cb5a84f5d1f0c97d
+  positon: {x: 75.00007, y: 593}
+  blackboard:
+    thisUnit: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 1
+  clone: {fileID: 0}
+  description: 
+  debugLogType: 0
+  message: 
+--- !u!114 &531290968384818618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3195d4dea04c0744aadaef31853ab61, type: 3}
+  m_Name: SequenceNode
+  m_EditorClassIdentifier: 
+  state: 0
+  isStarted: 0
+  guid: f1d14b191e72d34498c163f31d6b523c
+  positon: {x: 0.0000014305115, y: 459.0001}
+  blackboard:
+    thisUnit: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 1
+  clone: {fileID: 0}
+  description: 
+  children:
+  - {fileID: -7927501825422272763}
+  - {fileID: 237555008413651082}
+--- !u!114 &738758846542200766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d96f5e3b74cf20845bf8aaf054ec61bd, type: 3}
+  m_Name: RunTimeLine
+  m_EditorClassIdentifier: 
+  state: 0
+  isStarted: 0
+  guid: 283d1963e5691d045a655144109c76c9
+  positon: {x: -372.5461, y: 709}
+  blackboard:
+    thisUnit: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 1
+  clone: {fileID: 0}
+  description: 
+  isCan: 1
+--- !u!114 &3682697649059420072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 354ad601dacff3a4582936538a764ce7, type: 3}
+  m_Name: DebugLogNode
+  m_EditorClassIdentifier: 
+  state: 0
+  isStarted: 0
+  guid: 6264dc75d20357d4ab95bbc9aab0f2c6
+  positon: {x: 464.23468, y: 571}
+  blackboard:
+    thisUnit: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 1
+  clone: {fileID: 0}
+  description: 
+  debugLogType: 0
+  message: 
+--- !u!114 &7754139705782111083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e4b973c34db69c408370d7d0e2d80a1, type: 3}
+  m_Name: Selector
+  m_EditorClassIdentifier: 
+  state: 0
+  isStarted: 0
+  guid: 5d79fa0490a7ceb49a4654721174788a
+  positon: {x: 0, y: 107}
+  blackboard:
+    thisUnit: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 1
+  clone: {fileID: 0}
+  description: 
+  children:
+  - {fileID: -7161608127579499380}
+  - {fileID: -4417137505816075133}
+--- !u!114 &8165423392858955647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37a939d5f51d55f4c80240888ca9f509, type: 3}
+  m_Name: EnemyStateChecker
+  m_EditorClassIdentifier: 
+  state: 0
+  isStarted: 0
+  guid: 52ab1833378ac324bb06f1fcf2adfe58
+  positon: {x: -458.54617, y: 343.99997}
+  blackboard:
+    thisUnit: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 1
+  clone: {fileID: 0}
+  description: Default
+  child: {fileID: -5093957440746577806}
+  stateCase: 0

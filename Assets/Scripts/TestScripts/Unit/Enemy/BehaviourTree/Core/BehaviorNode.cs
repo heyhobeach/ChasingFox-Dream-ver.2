@@ -2,20 +2,24 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
-using System.ComponentModel;
 
 namespace BehaviourTree
 {
     public abstract class BehaviourNode : ScriptableObject
     {
-        public enum NodeState { RUNNING, FAILURE, SUCCESS }
-        [HideInInspector] public NodeState state = NodeState.RUNNING;
+        public enum NodeState { Running, Failure, Success }
+        [HideInInspector] public NodeState state = NodeState.Running;
         [HideInInspector] public bool isStarted = false;
         [HideInInspector] public string guid;
         [HideInInspector] public Vector2 positon;
         [HideInInspector] public Blackboard blackboard;
+        [HideInInspector] public BehaviourNode clone;
         [TextArea] public string description;
+
+        private void OnDisable()
+        {
+            clone = null;
+        }
 
         public NodeState Update()
         {
@@ -25,7 +29,7 @@ namespace BehaviourTree
                 isStarted = true;
             }
             state = OnUpdate();
-            if(state == NodeState.FAILURE || state == NodeState.SUCCESS) 
+            if(state == NodeState.Failure || state == NodeState.Success) 
             {
                 OnEnd(); 
                 isStarted = false;
@@ -34,7 +38,12 @@ namespace BehaviourTree
             return state;
         }
 
-        public virtual BehaviourNode Clone() => Instantiate(this);
+        public virtual BehaviourNode Clone()
+        {
+            var node = Instantiate(this);
+            clone = node;
+            return node;
+        }
 
         protected abstract void OnStart();
         protected abstract NodeState OnUpdate();

@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using BehaviourTree;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public partial class GameManager : MonoBehaviour
@@ -18,7 +20,7 @@ public partial class GameManager : MonoBehaviour
     }
     public static void PopController(IBaseController @base)
     {
-        if(instance.controllers.Peek() != @base)
+        if(instance.controllers.Count > 0 && instance.controllers.Peek() != @base)
         {
             Stack<IBaseController> temp = new();
             while(instance.controllers.Count > 0 && !temp.Equals(instance.controllers.Peek())) temp.Push(instance.controllers.Pop());

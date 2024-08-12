@@ -8,6 +8,8 @@ using UnityEngine;
 /// MonoBehaviour, IUnitController를 상속함
 /// </summary>
 [RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(BoxCollider2D))]
 public abstract class UnitBase : MonoBehaviour, IUnitController,IDamageable
 {
     public int _maxHealth;

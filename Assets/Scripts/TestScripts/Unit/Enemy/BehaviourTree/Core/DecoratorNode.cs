@@ -6,19 +6,15 @@ using UnityEngine;
 
 namespace BehaviourTree
 {
-    public class RootNode : BehaviourNode
+    public abstract class DecoratorNode : BehaviourNode
     {
         public BehaviourNode child;
 
-        protected override void OnEnd() {}
-
-        protected override void OnStart() {}
-        protected override NodeState OnUpdate() => child.Update();
-        
         public override BehaviourNode Clone()
         {
             var node = Instantiate(this);
             node.child = child.Clone();
+            clone = node;
             return node;
         }
 
@@ -38,6 +34,7 @@ namespace BehaviourTree
         {
             List<BehaviourNode> temp = new();
             if(child != null) temp.Add(child);
+            
             return temp;
         }
     }

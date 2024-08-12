@@ -81,13 +81,13 @@ namespace BehaviourTree.Editor
             if(!Application.isPlaying) return;
             switch(behaviourNode.state)
             {
-                case BehaviourNode.NodeState.RUNNING:
+                case BehaviourNode.NodeState.Running:
                 if(behaviourNode.isStarted) AddToClassList("running");
                 break;
-                case BehaviourNode.NodeState.FAILURE:
+                case BehaviourNode.NodeState.Failure:
                 AddToClassList("failure");
                 break;
-                case BehaviourNode.NodeState.SUCCESS:
+                case BehaviourNode.NodeState.Success:
                 AddToClassList("success");
                 break;
             }

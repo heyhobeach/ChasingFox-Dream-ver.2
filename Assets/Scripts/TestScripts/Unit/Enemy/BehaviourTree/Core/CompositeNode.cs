@@ -1,40 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
-using BehaviourTree;
 using UnityEditor;
 using UnityEngine;
 
 namespace BehaviourTree
 {
-    public abstract class DecoratorNode : BehaviourNode
+    public abstract class CompositeNode : BehaviourNode
     {
-        public BehaviourNode child;
+        public List<BehaviourNode> children = new();
 
         public override BehaviourNode Clone()
         {
             var node = Instantiate(this);
-            node.child = child.Clone();
+            node.children = children.ConvertAll(n => n.Clone());
+            clone = node;
             return node;
         }
 
         public override void AddChild(BehaviourNode child)
         {
             Undo.RecordObject(this, "BehaviourTree AddChild");
-            this.child = child;
+            this.children.Add(child);
             EditorUtility.SetDirty(this);
         }
         public override void RemoveChild(BehaviourNode child)
         {
             Undo.RecordObject(this, "BehaviourTree RemoveChild");
-            this.child = null;
+            this.children.Remove(child);
             EditorUtility.SetDirty(this);
         }
-        public override List<BehaviourNode> GetChildren()
-        {
-            List<BehaviourNode> temp = new();
-            if(child != null) temp.Add(child);
-            
-            return temp;
-        }
+        public override List<BehaviourNode> GetChildren() => children;
     }
 }

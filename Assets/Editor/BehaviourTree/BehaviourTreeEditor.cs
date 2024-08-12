@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.Callbacks;
 using System;
+using Unity.VisualScripting;
 
 namespace BehaviourTree.Editor
 {    
@@ -76,6 +77,7 @@ namespace BehaviourTree.Editor
             inspectorView = root.Q<InspectorView>();
             blackboardView = root.Q<IMGUIContainer>();
             blackboardView.onGUIHandler = () => {
+                if(treeObject.IsUnityNull()) return;
                 treeObject.Update();
                 EditorGUILayout.PropertyField(blackboardProperty);
                 treeObject.ApplyModifiedProperties();
