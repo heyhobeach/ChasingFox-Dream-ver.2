@@ -10,16 +10,11 @@ namespace BehaviourTree
         public enum NodeState { Running, Failure, Success }
         [HideInInspector] public NodeState state = NodeState.Running;
         [HideInInspector] public bool isStarted = false;
-        [HideInInspector] public string guid;
+        public string guid;
         [HideInInspector] public Vector2 positon;
         [HideInInspector] public Blackboard blackboard;
-        [HideInInspector] public BehaviourNode clone;
+        [HideInInspector] public static Dictionary<(int, string), BehaviourNode> clone = new();
         [TextArea] public string description;
-
-        private void OnDisable()
-        {
-            clone = null;
-        }
 
         public NodeState Update()
         {
@@ -41,7 +36,8 @@ namespace BehaviourTree
         public virtual BehaviourNode Clone()
         {
             var node = Instantiate(this);
-            clone = node;
+            if(clone.ContainsKey((blackboard.thisUnit.GetInstanceID(), guid))) clone[(blackboard.thisUnit.GetInstanceID(), guid)] = node;
+            else clone.Add((blackboard.thisUnit.GetInstanceID(), guid), node);
             return node;
         }
 

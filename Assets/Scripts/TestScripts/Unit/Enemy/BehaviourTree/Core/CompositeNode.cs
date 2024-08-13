@@ -13,7 +13,8 @@ namespace BehaviourTree
         {
             var node = Instantiate(this);
             node.children = children.ConvertAll(n => n.Clone());
-            clone = node;
+            if(clone.ContainsKey((blackboard.thisUnit.GetInstanceID(), guid))) clone[(blackboard.thisUnit.GetInstanceID(), guid)] = node;
+            else clone.Add((blackboard.thisUnit.GetInstanceID(), guid), node);
             return node;
         }
 

@@ -9,30 +9,40 @@ namespace BehaviourTree
     {
         public bool isCan;
 
+        private PlayableDirector playableDirector;
+
         private void OnEnable()
         {
-            blackboard.playableDirector.stopped -= OnTimeLineStoped;
-            blackboard.playableDirector.stopped += OnTimeLineStoped;
+            playableDirector = blackboard.playableDirector;
+            playableDirector.stopped -= OnTimeLineStoped;
+            playableDirector.stopped += OnTimeLineStoped;
             isCan = true;
         }
         protected override void OnEnd() {}
 
         protected override void OnStart()
         {
-            Debug.Log(isCan + ", " + (blackboard.playableDirector.state != PlayState.Playing));
-            if(blackboard.playableDirector != null && isCan && blackboard.playableDirector.state != PlayState.Playing)
+            if(playableDirector != null && isCan && playableDirector.state != PlayState.Playing)
             {
-                blackboard.playableDirector.Play();
+                playableDirector.Play();
             }
         }
 
         protected override NodeState OnUpdate()
         {
-            if(isCan) return NodeState.Success;
+            if(!isCan && playableDirector.state != PlayState.Playing)
+            {
+                if(playableDirector.state == PlayState.Playing) TimeLineStop();
+                return NodeState.Failure;
+            }
             else return NodeState.Failure;
         }
 
-        private void OnTimeLineStoped(PlayableDirector playableDirector) => isCan = false;
-        public void TimeLineStop() => blackboard.playableDirector.Stop();
+        private void OnTimeLineStoped(PlayableDirector pd)
+        {
+            isCan = false;
+            playableDirector.enabled = false;
+        }
+        public void TimeLineStop() => playableDirector.Stop();
     }
 }

@@ -21,6 +21,7 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
+        behaviorTree.Bind();
         behaviorTree = behaviorTree.Clone();
         behaviorTree.Bind();
         StartCoroutine(timer());

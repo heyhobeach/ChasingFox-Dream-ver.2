@@ -23,50 +23,9 @@ MonoBehaviour:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
-  clone: {fileID: 0}
   description: Alert
   child: {fileID: 531290968384818618}
   stateCase: 1
---- !u!114 &-7927501825422272763
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b04a02dbcabafa4cba798a6e6c2dec3, type: 3}
-  m_Name: SendMesege
-  m_EditorClassIdentifier: 
-  state: 0
-  isStarted: 0
-  guid: 362f281e714be4843a31df6104b4799b
-  positon: {x: -86.999954, y: 593.0001}
-  blackboard:
-    thisUnit: {fileID: 0}
-    playableDirector: {fileID: 0}
-    enemy_state:
-      stateCase: 0
-      recognition: 1
-      Increase_Sight: 1
-  clone: {fileID: 0}
-  description: 
-  unityEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 738758846542200766}
-        m_TargetAssemblyTypeName: BehaviourTree.RunTimeLine, Assembly-CSharp
-        m_MethodName: TimeLineStop
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &-7161608127579499380
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -80,7 +39,7 @@ MonoBehaviour:
   m_Name: Selector
   m_EditorClassIdentifier: 
   state: 0
-  isStarted: 0
+  isStarted: 1
   guid: f183d937c977a344abbb0cfa8e67c063
   positon: {x: -0.000014066696, y: 218.56781}
   blackboard:
@@ -90,7 +49,6 @@ MonoBehaviour:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
-  clone: {fileID: 0}
   description: 
   children:
   - {fileID: 8165423392858955647}
@@ -109,7 +67,7 @@ MonoBehaviour:
   m_Name: RootNode
   m_EditorClassIdentifier: 
   state: 0
-  isStarted: 0
+  isStarted: 1
   guid: 8329ec2b28aae0443829f38ab3e41016
   positon: {x: 0, y: 0}
   blackboard:
@@ -119,7 +77,6 @@ MonoBehaviour:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
-  clone: {fileID: 0}
   description: 
   child: {fileID: 7754139705782111083}
 --- !u!114 &-5203994678265369763
@@ -135,7 +92,7 @@ MonoBehaviour:
   m_Name: UnitStateChecker
   m_EditorClassIdentifier: 
   state: 0
-  isStarted: 0
+  isStarted: 1
   guid: 33d2ab388c23c9b40ba708547227cf81
   positon: {x: -522.54614, y: 593}
   blackboard:
@@ -145,7 +102,6 @@ MonoBehaviour:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
-  clone: {fileID: 0}
   description: Death
   child: {fileID: -147182563217488490}
   stateCase: 10
@@ -162,7 +118,7 @@ MonoBehaviour:
   m_Name: Selector
   m_EditorClassIdentifier: 
   state: 0
-  isStarted: 0
+  isStarted: 1
   guid: 62a979ed91a9be44abc8fe1f7ab50c2e
   positon: {x: -447.5461, y: 458.99997}
   blackboard:
@@ -172,7 +128,6 @@ MonoBehaviour:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
-  clone: {fileID: 0}
   description: 
   children:
   - {fileID: -5203994678265369763}
@@ -200,7 +155,6 @@ MonoBehaviour:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
-  clone: {fileID: 0}
   description: "\uD57C\uB3D9 \uC624\uB958 \uB85C\uADF8"
   debugLogType: 2
   message: "\uC801 AI \uD589\uB3D9 \uBD88\uB2A5"
@@ -227,7 +181,6 @@ MonoBehaviour:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
-  clone: {fileID: 0}
   description: 
   children: []
 --- !u!114 &-2439860200776135322
@@ -253,9 +206,8 @@ MonoBehaviour:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
-  clone: {fileID: 0}
   description: Default
-  child: {fileID: 738758846542200766}
+  child: {fileID: 2189719155329094222}
   stateCase: 0
 --- !u!114 &-1691638311106959918
 MonoBehaviour:
@@ -280,7 +232,6 @@ MonoBehaviour:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
-  clone: {fileID: 0}
   description: Chase
   child: {fileID: -3604086991514170634}
   stateCase: 2
@@ -307,7 +258,6 @@ MonoBehaviour:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
-  clone: {fileID: 0}
   description: 
   debugLogType: 0
   message: 'Behaviour : death'
@@ -339,10 +289,10 @@ MonoBehaviour:
   - {fileID: -147182563217488490}
   - {fileID: 237555008413651082}
   - {fileID: 3682697649059420072}
-  - {fileID: 738758846542200766}
   - {fileID: 531290968384818618}
   - {fileID: -3604086991514170634}
-  - {fileID: -7927501825422272763}
+  - {fileID: 2189719155329094222}
+  - {fileID: 7291363975000716481}
   blackboard:
     thisUnit: {fileID: 0}
     playableDirector: {fileID: 0}
@@ -350,8 +300,8 @@ MonoBehaviour:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
-  viewPos: {x: 474, y: -332}
-  viewScale: {x: 1, y: 1, z: 1}
+  viewPos: {x: 365, y: -141}
+  viewScale: {x: 0.7561437, y: 0.7561437, z: 1}
 --- !u!114 &237555008413651082
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -375,7 +325,6 @@ MonoBehaviour:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
-  clone: {fileID: 0}
   description: 
   debugLogType: 0
   message: 
@@ -402,12 +351,11 @@ MonoBehaviour:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
-  clone: {fileID: 0}
   description: 
   children:
-  - {fileID: -7927501825422272763}
   - {fileID: 237555008413651082}
---- !u!114 &738758846542200766
+  - {fileID: 7291363975000716481}
+--- !u!114 &2189719155329094222
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -421,8 +369,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   state: 0
   isStarted: 0
-  guid: 283d1963e5691d045a655144109c76c9
-  positon: {x: -372.5461, y: 709}
+  guid: 762cfaa1d28d0c64da93230bd8a36698
+  positon: {x: -373.00003, y: 709}
   blackboard:
     thisUnit: {fileID: 0}
     playableDirector: {fileID: 0}
@@ -430,7 +378,6 @@ MonoBehaviour:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
-  clone: {fileID: 0}
   description: 
   isCan: 1
 --- !u!114 &3682697649059420072
@@ -456,10 +403,48 @@ MonoBehaviour:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
-  clone: {fileID: 0}
   description: 
   debugLogType: 0
   message: 
+--- !u!114 &7291363975000716481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b04a02dbcabafa4cba798a6e6c2dec3, type: 3}
+  m_Name: SendMesege
+  m_EditorClassIdentifier: 
+  state: 0
+  isStarted: 0
+  guid: c59d58d2d7ba73d48b8496ed39e2ce57
+  positon: {x: -75.000015, y: 593}
+  blackboard:
+    thisUnit: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 1
+  description: 
+  unityEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2189719155329094222}
+        m_TargetAssemblyTypeName: BehaviourTree.RunTimeLine, Assembly-CSharp
+        m_MethodName: TimeLineStop
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &7754139705782111083
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -473,7 +458,7 @@ MonoBehaviour:
   m_Name: Selector
   m_EditorClassIdentifier: 
   state: 0
-  isStarted: 0
+  isStarted: 1
   guid: 5d79fa0490a7ceb49a4654721174788a
   positon: {x: 0, y: 107}
   blackboard:
@@ -483,7 +468,6 @@ MonoBehaviour:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
-  clone: {fileID: 0}
   description: 
   children:
   - {fileID: -7161608127579499380}
@@ -501,7 +485,7 @@ MonoBehaviour:
   m_Name: EnemyStateChecker
   m_EditorClassIdentifier: 
   state: 0
-  isStarted: 0
+  isStarted: 1
   guid: 52ab1833378ac324bb06f1fcf2adfe58
   positon: {x: -458.54617, y: 343.99997}
   blackboard:
@@ -511,7 +495,6 @@ MonoBehaviour:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
-  clone: {fileID: 0}
   description: Default
   child: {fileID: -5093957440746577806}
   stateCase: 0

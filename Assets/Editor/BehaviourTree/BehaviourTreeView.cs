@@ -66,7 +66,7 @@ namespace BehaviourTree.Editor
             tree.nodes.ForEach(n => CreateEdge(n));
         }
 
-        private NodeView FindNodeView(BehaviourNode node) => GetNodeByGuid(node.guid) as NodeView;
+        public NodeView FindNodeView(BehaviourNode node) => GetNodeByGuid(node.guid) as NodeView;
 
         private GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange) // 요소 변경 시 실행
         {

@@ -46,6 +46,11 @@ public partial class GameManager : MonoBehaviour
 
     public void TimeScale(float t) => Time.timeScale = t;
 
+    private void OnDestroy()
+    {
+        BehaviourNode.clone.Clear();
+    }
+
     private void Awake()
     {
         if (instance != null)
