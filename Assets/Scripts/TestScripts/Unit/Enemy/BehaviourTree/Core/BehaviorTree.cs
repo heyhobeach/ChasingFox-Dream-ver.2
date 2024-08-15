@@ -61,12 +61,12 @@ namespace BehaviourTree
         public BehaviourTree Clone()
         {
             var tree = Instantiate(this);
+            Traverse(tree.rootNode, (n) => n.blackboard = tree.blackboard);
             tree.rootNode = tree.rootNode.Clone();
             tree.nodes = new();
             Traverse(tree.rootNode, (n) => tree.nodes.Add(n));
+            Traverse(tree.rootNode, (n) => n.blackboard = tree.blackboard);
             return tree;
         }
-
-        public void Bind() => Traverse(rootNode, (n) => n.blackboard = blackboard);
     }
 }

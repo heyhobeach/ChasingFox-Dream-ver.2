@@ -80,9 +80,9 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
 
     public bool Jump(KeyState jumpKey) => changedForm.Jump(jumpKey);
 
-    public bool Move(float dir)
+    public bool Move(Vector2 dir)
     {
-        if(dir != 0)fixedDir = dir;
+        if(dir.x != 0)fixedDir = dir.x;
         return changedForm.Move(dir);
     }
 

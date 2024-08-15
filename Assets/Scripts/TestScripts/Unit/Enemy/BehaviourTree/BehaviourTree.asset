@@ -18,11 +18,13 @@ MonoBehaviour:
   positon: {x: -12.000005, y: 344}
   blackboard:
     thisUnit: {fileID: 0}
+    target: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
+    FinalNodeList: []
   description: Alert
   child: {fileID: 531290968384818618}
   stateCase: 1
@@ -44,16 +46,47 @@ MonoBehaviour:
   positon: {x: -0.000014066696, y: 218.56781}
   blackboard:
     thisUnit: {fileID: 0}
+    target: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
+    FinalNodeList: []
   description: 
   children:
   - {fileID: 8165423392858955647}
   - {fileID: -8123740153036079787}
   - {fileID: -1691638311106959918}
+--- !u!114 &-6837737098215565050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3195d4dea04c0744aadaef31853ab61, type: 3}
+  m_Name: SequenceNode
+  m_EditorClassIdentifier: 
+  state: 0
+  isStarted: 0
+  guid: 687b32c61faa2ce4b991526e68b19251
+  positon: {x: 505.99997, y: 829.0605}
+  blackboard:
+    thisUnit: {fileID: 0}
+    target: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 1
+    FinalNodeList: []
+  description: 
+  children:
+  - {fileID: -3665431613940398393}
+  - {fileID: 4253570027041858493}
 --- !u!114 &-6798369374170880989
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72,13 +105,43 @@ MonoBehaviour:
   positon: {x: 0, y: 0}
   blackboard:
     thisUnit: {fileID: 0}
+    target: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
+    FinalNodeList: []
   description: 
   child: {fileID: 7754139705782111083}
+--- !u!114 &-6427869476823379261
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5687702bb086321449a0687d9d9f77c6, type: 3}
+  m_Name: InnerCheckFloat
+  m_EditorClassIdentifier: 
+  state: 0
+  isStarted: 0
+  guid: fa57ac7405d47e24695aff2c24de62f9
+  positon: {x: 505.99994, y: 713.00006}
+  blackboard:
+    thisUnit: {fileID: 0}
+    target: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 1
+    FinalNodeList: []
+  description: 
+  child: {fileID: -6837737098215565050}
+  targetFlaot: 6
 --- !u!114 &-5203994678265369763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -94,14 +157,16 @@ MonoBehaviour:
   state: 0
   isStarted: 1
   guid: 33d2ab388c23c9b40ba708547227cf81
-  positon: {x: -522.54614, y: 593}
+  positon: {x: -613.20935, y: 593}
   blackboard:
     thisUnit: {fileID: 0}
+    target: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
+    FinalNodeList: []
   description: Death
   child: {fileID: -147182563217488490}
   stateCase: 10
@@ -120,14 +185,16 @@ MonoBehaviour:
   state: 0
   isStarted: 1
   guid: 62a979ed91a9be44abc8fe1f7ab50c2e
-  positon: {x: -447.5461, y: 458.99997}
+  positon: {x: -538.20935, y: 459}
   blackboard:
     thisUnit: {fileID: 0}
+    target: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
+    FinalNodeList: []
   description: 
   children:
   - {fileID: -5203994678265369763}
@@ -150,14 +217,43 @@ MonoBehaviour:
   positon: {x: 159, y: 242.00002}
   blackboard:
     thisUnit: {fileID: 0}
+    target: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
+    FinalNodeList: []
   description: "\uD57C\uB3D9 \uC624\uB958 \uB85C\uADF8"
   debugLogType: 2
   message: "\uC801 AI \uD589\uB3D9 \uBD88\uB2A5"
+--- !u!114 &-3665431613940398393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18010df103739f34fa8a9e484853ec76, type: 3}
+  m_Name: Wait
+  m_EditorClassIdentifier: 
+  state: 0
+  isStarted: 0
+  guid: ef0d0f6d1f5eb634bab89ab5f9d51861
+  positon: {x: 420, y: 949}
+  blackboard:
+    thisUnit: {fileID: 0}
+    target: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 1
+    FinalNodeList: []
+  description: 
+  waitTime: 3
 --- !u!114 &-3604086991514170634
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -173,16 +269,61 @@ MonoBehaviour:
   state: 0
   isStarted: 0
   guid: 156f70ebb47edd44fbf48fb304a8b8bc
-  positon: {x: 369.2347, y: 459}
+  positon: {x: 506.49405, y: 459}
   blackboard:
     thisUnit: {fileID: 0}
+    target: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
+    FinalNodeList: []
   description: 
-  children: []
+  children:
+  - {fileID: -2728198117769598043}
+  - {fileID: 4433449385017773004}
+--- !u!114 &-2728198117769598043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b04a02dbcabafa4cba798a6e6c2dec3, type: 3}
+  m_Name: SendMesege
+  m_EditorClassIdentifier: 
+  state: 0
+  isStarted: 0
+  guid: 0d6a38aaf2c696e419588ec8b3821afa
+  positon: {x: 345.49405, y: 593}
+  blackboard:
+    thisUnit: {fileID: 0}
+    target: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 1
+    FinalNodeList: []
+  description: 
+  unityEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2189719155329094222}
+        m_TargetAssemblyTypeName: BehaviourTree.RunTimeLine, Assembly-CSharp
+        m_MethodName: TimeLineStop
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &-2439860200776135322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -198,16 +339,18 @@ MonoBehaviour:
   state: 0
   isStarted: 0
   guid: 2002b582cfd7c9b40b4d2fb95e67af83
-  positon: {x: -372.5461, y: 593}
+  positon: {x: -387.9999, y: 593}
   blackboard:
     thisUnit: {fileID: 0}
+    target: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
+    FinalNodeList: []
   description: Default
-  child: {fileID: 2189719155329094222}
+  child: {fileID: 5577737174887897221}
   stateCase: 0
 --- !u!114 &-1691638311106959918
 MonoBehaviour:
@@ -224,14 +367,16 @@ MonoBehaviour:
   state: 0
   isStarted: 0
   guid: 3f14566b3d90ccc4e969e4cbabaec16e
-  positon: {x: 358.23468, y: 344}
+  positon: {x: 495.49402, y: 344}
   blackboard:
     thisUnit: {fileID: 0}
+    target: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
+    FinalNodeList: []
   description: Chase
   child: {fileID: -3604086991514170634}
   stateCase: 2
@@ -250,14 +395,16 @@ MonoBehaviour:
   state: 0
   isStarted: 0
   guid: 3faf70284fdcb374eb40b2c6e178c0a0
-  positon: {x: -522.54614, y: 709}
+  positon: {x: -613.20935, y: 709}
   blackboard:
     thisUnit: {fileID: 0}
+    target: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
+    FinalNodeList: []
   description: 
   debugLogType: 0
   message: 'Behaviour : death'
@@ -288,20 +435,31 @@ MonoBehaviour:
   - {fileID: -4417137505816075133}
   - {fileID: -147182563217488490}
   - {fileID: 237555008413651082}
-  - {fileID: 3682697649059420072}
   - {fileID: 531290968384818618}
   - {fileID: -3604086991514170634}
   - {fileID: 2189719155329094222}
   - {fileID: 7291363975000716481}
+  - {fileID: 7899660468187832458}
+  - {fileID: 5577737174887897221}
+  - {fileID: 555910949820902959}
+  - {fileID: -6427869476823379261}
+  - {fileID: -3665431613940398393}
+  - {fileID: 4253570027041858493}
+  - {fileID: 1877198029125055445}
+  - {fileID: -2728198117769598043}
+  - {fileID: 4433449385017773004}
+  - {fileID: -6837737098215565050}
   blackboard:
     thisUnit: {fileID: 0}
+    target: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
-  viewPos: {x: 365, y: -141}
-  viewScale: {x: 0.7561437, y: 0.7561437, z: 1}
+    FinalNodeList: []
+  viewPos: {x: 180, y: 156}
+  viewScale: {x: 0.375937, y: 0.375937, z: 1}
 --- !u!114 &237555008413651082
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -317,14 +475,16 @@ MonoBehaviour:
   state: 0
   isStarted: 0
   guid: 53f44e2bddad68f4cb5a84f5d1f0c97d
-  positon: {x: 75.00007, y: 593}
+  positon: {x: 158.99992, y: 593.0001}
   blackboard:
     thisUnit: {fileID: 0}
+    target: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
+    FinalNodeList: []
   description: 
   debugLogType: 0
   message: 
@@ -346,15 +506,72 @@ MonoBehaviour:
   positon: {x: 0.0000014305115, y: 459.0001}
   blackboard:
     thisUnit: {fileID: 0}
+    target: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
+    FinalNodeList: []
   description: 
   children:
-  - {fileID: 237555008413651082}
   - {fileID: 7291363975000716481}
+  - {fileID: 555910949820902959}
+  - {fileID: 237555008413651082}
+--- !u!114 &555910949820902959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a99f1fe0a4135074b9e1db9c4f23e44b, type: 3}
+  m_Name: Move
+  m_EditorClassIdentifier: 
+  state: 0
+  isStarted: 0
+  guid: 5b50aebe0fae8f1498cb4283f3fbaf73
+  positon: {x: 0, y: 593}
+  blackboard:
+    thisUnit: {fileID: 0}
+    target: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 1
+    FinalNodeList: []
+  description: 
+  reloadTime: 1
+--- !u!114 &1877198029125055445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a99f1fe0a4135074b9e1db9c4f23e44b, type: 3}
+  m_Name: Move
+  m_EditorClassIdentifier: 
+  state: 0
+  isStarted: 0
+  guid: 30819079b6d50d040bdb0fb32cc96d65
+  positon: {x: 681.99994, y: 713.00006}
+  blackboard:
+    thisUnit: {fileID: 0}
+    target: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 1
+    FinalNodeList: []
+  description: 
+  reloadTime: 1
 --- !u!114 &2189719155329094222
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -370,17 +587,19 @@ MonoBehaviour:
   state: 0
   isStarted: 0
   guid: 762cfaa1d28d0c64da93230bd8a36698
-  positon: {x: -373.00003, y: 709}
+  positon: {x: -463, y: 832.67755}
   blackboard:
     thisUnit: {fileID: 0}
+    target: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
+    FinalNodeList: []
   description: 
   isCan: 1
---- !u!114 &3682697649059420072
+--- !u!114 &4253570027041858493
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -389,23 +608,81 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 354ad601dacff3a4582936538a764ce7, type: 3}
-  m_Name: DebugLogNode
+  m_Script: {fileID: 11500000, guid: bd55777f44ebe3b46bb49fdc9bb398c1, type: 3}
+  m_Name: Attack
   m_EditorClassIdentifier: 
   state: 0
   isStarted: 0
-  guid: 6264dc75d20357d4ab95bbc9aab0f2c6
-  positon: {x: 464.23468, y: 571}
+  guid: e02181b8217de8e499de93e4f69eaf64
+  positon: {x: 584.99994, y: 949}
   blackboard:
     thisUnit: {fileID: 0}
+    target: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
+    FinalNodeList: []
   description: 
-  debugLogType: 0
-  message: 
+--- !u!114 &4433449385017773004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e4b973c34db69c408370d7d0e2d80a1, type: 3}
+  m_Name: Selector
+  m_EditorClassIdentifier: 
+  state: 0
+  isStarted: 0
+  guid: d585dbe1aeb8b6c4d8ebff0010826691
+  positon: {x: 505.99994, y: 593}
+  blackboard:
+    thisUnit: {fileID: 0}
+    target: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 1
+    FinalNodeList: []
+  description: 
+  children:
+  - {fileID: -6427869476823379261}
+  - {fileID: 1877198029125055445}
+--- !u!114 &5577737174887897221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e4b973c34db69c408370d7d0e2d80a1, type: 3}
+  m_Name: Selector
+  m_EditorClassIdentifier: 
+  state: 0
+  isStarted: 0
+  guid: e4a00da362c87a54fbeec99e7abbf90c
+  positon: {x: -388.00015, y: 709}
+  blackboard:
+    thisUnit: {fileID: 0}
+    target: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 1
+    FinalNodeList: []
+  description: 
+  children:
+  - {fileID: 2189719155329094222}
+  - {fileID: 7899660468187832458}
 --- !u!114 &7291363975000716481
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -421,14 +698,16 @@ MonoBehaviour:
   state: 0
   isStarted: 0
   guid: c59d58d2d7ba73d48b8496ed39e2ce57
-  positon: {x: -75.000015, y: 593}
+  positon: {x: -162.00005, y: 593}
   blackboard:
     thisUnit: {fileID: 0}
+    target: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
+    FinalNodeList: []
   description: 
   unityEvent:
     m_PersistentCalls:
@@ -463,15 +742,45 @@ MonoBehaviour:
   positon: {x: 0, y: 107}
   blackboard:
     thisUnit: {fileID: 0}
+    target: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
+    FinalNodeList: []
   description: 
   children:
   - {fileID: -7161608127579499380}
   - {fileID: -4417137505816075133}
+--- !u!114 &7899660468187832458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 354ad601dacff3a4582936538a764ce7, type: 3}
+  m_Name: DebugLogNode
+  m_EditorClassIdentifier: 
+  state: 0
+  isStarted: 0
+  guid: 2d7352dfb435eff4ca8230ef7deeb403
+  positon: {x: -313.00003, y: 832.67755}
+  blackboard:
+    thisUnit: {fileID: 0}
+    target: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 1
+    FinalNodeList: []
+  description: 
+  debugLogType: 0
+  message: 
 --- !u!114 &8165423392858955647
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -487,14 +796,16 @@ MonoBehaviour:
   state: 0
   isStarted: 1
   guid: 52ab1833378ac324bb06f1fcf2adfe58
-  positon: {x: -458.54617, y: 343.99997}
+  positon: {x: -549.20935, y: 343.99997}
   blackboard:
     thisUnit: {fileID: 0}
+    target: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
       stateCase: 0
       recognition: 1
       Increase_Sight: 1
+    FinalNodeList: []
   description: Default
   child: {fileID: -5093957440746577806}
   stateCase: 0

@@ -9,8 +9,9 @@ namespace BehaviourTree
     [Serializable]
     public class Blackboard
     {
-        [HideInInspector] public EnemyUnit thisUnit;
-        [HideInInspector] public PlayableDirector playableDirector;
+        public EnemyUnit thisUnit;
+        public Transform target;
+        public PlayableDirector playableDirector;
         [Serializable]
         public class Enemy_State//적군 상태값을 이너 클래스로 표현 중첩되는 표현 사용시 enum으로 표현 안 될것 같아 해당 방식 사용
         {
@@ -39,5 +40,6 @@ namespace BehaviourTree
             // }
         }
         public Enemy_State enemy_state;
+        public List<GameManager.Node> FinalNodeList = new();
     }
 }

@@ -7,14 +7,19 @@ using UnityEngine;
 public class EnemyUnit : UnitBase
 {
     public float maxDistance = 1.06f;
+    
+    protected float hzVel;
 
     public GameObject bullet;//�Ѿ� ����
-    // public GameObject[] bullets;//���� ����� �� �ϸ� Ȥ�ó� �ʿ��ұ� ����� �� �κ� ����� �� �ϴ��� 
+    
 
-    protected override void OnEnable() { GameObject.FindGameObjectWithTag("Player"); unitState = UnitState.Default; }
+    protected override void OnEnable() {}
 
-    public override bool Move(float dir)
+    public override bool Move(Vector2 dir)
     {
+        hzVel += dir.x == 0 ? -hzVel * accelerate * Time.deltaTime : (dir.x-hzForce/movementSpeed) * accelerate * Time.deltaTime; // 가속도만큼 입력 방향에 힘을 추가
+        if(dir.x == 0 && Mathf.Abs(hzVel) < 0.01f) hzVel = 0;
+        transform.position = Vector2.MoveTowards(transform.position, (Vector2)transform.position + dir, Time.deltaTime);
         return base.Move(dir);
     }
 
@@ -24,7 +29,7 @@ public class EnemyUnit : UnitBase
 
     public override bool Attack(Vector3 attackPos)
     {
-        if(ControllerChecker()) return false;
+        if(ControllerChecker() || Physics2D.Raycast(transform.position, attackPos-transform.position, Mathf.Infinity, 1<<LayerMask.NameToLayer("Ground"))) return false;
         GameObject _bullet = Instantiate(bullet, transform.position, transform.rotation);
 
         GameObject gObj = this.gameObject;

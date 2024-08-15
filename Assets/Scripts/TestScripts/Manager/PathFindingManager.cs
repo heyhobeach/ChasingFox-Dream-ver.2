@@ -67,6 +67,7 @@ public partial class GameManager : MonoBehaviour
     }
     public List<Node> PathFinding(Vector3 startPosV3, Vector3 targetPosV3)
     {
+        if(NodeArray == null) MapSearch();
         Vector2Int startPos = new Vector2Int((int)startPosV3.x - bottomLeft.x, (int)startPosV3.y - bottomLeft.y);
         Vector2Int targetPos = new Vector2Int((int)targetPosV3.x - bottomLeft.x, (int)targetPosV3.y - bottomLeft.y);
         StartNode = NodeArray[startPos.x - bottomLeft.x, startPos.y - bottomLeft.y];//���� �� �κ� ������ �߱��� �۵����� ������ ����
@@ -108,6 +109,7 @@ public partial class GameManager : MonoBehaviour
                     _cnt++;
                     if (_cnt > 2000)//Ȥ�ó� ���� �ݺ��� ��� ���� 
                     {
+                        Debug.LogError("path error");
                         return null;
                     }
                     if (TargetCurNode.isplatform||TargetCurNode.ParentNode.isplatform)
@@ -201,6 +203,7 @@ public partial class GameManager : MonoBehaviour
 
                 FinalNodeList.Add(StartNode);
                 FinalNodeList.Reverse();
+                Debug.Log("path success");
                 return FinalNodeList;
             }
 
@@ -230,6 +233,7 @@ public partial class GameManager : MonoBehaviour
                 Debug.Log("üũ");
             }
         }
+        Debug.Log("path ??");
         return null;
     }
 

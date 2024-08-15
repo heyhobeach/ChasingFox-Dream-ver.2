@@ -10,7 +10,7 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(BoxCollider2D))]
-public abstract class UnitBase : MonoBehaviour, IUnitController,IDamageable
+public abstract class UnitBase : MonoBehaviour, IUnitController, IDamageable
 {
     public int _maxHealth;
     public int maxHealth { get { return _maxHealth; } set { _maxHealth = value; } }
@@ -184,9 +184,9 @@ public abstract class UnitBase : MonoBehaviour, IUnitController,IDamageable
     public abstract bool Crouch(KeyState crouchKey);
 
     private float fixDir;
-    public virtual bool Move(float dir)
+    public virtual bool Move(Vector2 dir)
     {
-        fixDir = dir;
+        fixDir = dir.x;
         return true;
     }
 

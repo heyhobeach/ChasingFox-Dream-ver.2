@@ -13,7 +13,7 @@ public class EnemyStateChecker : DecoratorNode
 
     protected override NodeState OnUpdate()
     {
-        if(blackboard.enemy_state.stateCase == stateCase) return child.Update();
+        if(blackboard.enemy_state.stateCase == stateCase && blackboard.enemy_state.recognition) return child.Update();
         return NodeState.Failure;
     }
 }

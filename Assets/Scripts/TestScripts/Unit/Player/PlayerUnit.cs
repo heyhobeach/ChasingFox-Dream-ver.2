@@ -177,14 +177,14 @@ public abstract class PlayerUnit : UnitBase
         return false;
     }
 
-    public override bool Move(float dir)
+    public override bool Move(Vector2 dir)
     {
         if(ControllerChecker()) return false;
-        hzVel += dir == 0 ? -hzVel * accelerate * Time.deltaTime : (dir-hzForce/movementSpeed) * accelerate * Time.deltaTime; // 가속도만큼 입력 방향에 힘을 추가
-        if(dir == 0 && Mathf.Abs(hzVel) < 0.01f) hzVel = 0;
-        if(unitState == UnitState.FormChange || dir == 0) // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
+        hzVel += dir.x == 0 ? -hzVel * accelerate * Time.deltaTime : (dir.x-hzForce/movementSpeed) * accelerate * Time.deltaTime; // 가속도만큼 입력 방향에 힘을 추가
+        if(dir.x == 0 && Mathf.Abs(hzVel) < 0.01f) hzVel = 0;
+        if(unitState == UnitState.FormChange || dir.x == 0) // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
         {
-            base.Move(0);
+            base.Move(Vector2.zero);
             return false;
         }
         else base.Move(dir);
