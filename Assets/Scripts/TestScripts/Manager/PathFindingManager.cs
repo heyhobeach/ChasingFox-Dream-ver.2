@@ -68,8 +68,9 @@ public partial class GameManager : MonoBehaviour
     public List<Node> PathFinding(Vector3 startPosV3, Vector3 targetPosV3)
     {
         if(NodeArray == null) MapSearch();
-        Vector2Int startPos = new Vector2Int((int)startPosV3.x - bottomLeft.x, (int)startPosV3.y - bottomLeft.y);
-        Vector2Int targetPos = new Vector2Int((int)targetPosV3.x - bottomLeft.x, (int)targetPosV3.y - bottomLeft.y);
+        Debug.Log(new Vector2Int((int)startPosV3.x, (int)startPosV3.y) + ", " + new Vector2Int((int)targetPosV3.x, (int)targetPosV3.y));
+        Vector2Int startPos = new Vector2Int((int)startPosV3.x, (int)startPosV3.y);
+        Vector2Int targetPos = new Vector2Int((int)targetPosV3.x, (int)targetPosV3.y);
         StartNode = NodeArray[startPos.x - bottomLeft.x, startPos.y - bottomLeft.y];//���� �� �κ� ������ �߱��� �۵����� ������ ����
         TargetNode = NodeArray[targetPos.x - bottomLeft.x, targetPos.y - bottomLeft.y];
         int tempNum = 0;
@@ -109,7 +110,6 @@ public partial class GameManager : MonoBehaviour
                     _cnt++;
                     if (_cnt > 2000)//Ȥ�ó� ���� �ݺ��� ��� ���� 
                     {
-                        Debug.LogError("path error");
                         return null;
                     }
                     if (TargetCurNode.isplatform||TargetCurNode.ParentNode.isplatform)
@@ -203,7 +203,6 @@ public partial class GameManager : MonoBehaviour
 
                 FinalNodeList.Add(StartNode);
                 FinalNodeList.Reverse();
-                Debug.Log("path success");
                 return FinalNodeList;
             }
 
@@ -233,7 +232,6 @@ public partial class GameManager : MonoBehaviour
                 Debug.Log("üũ");
             }
         }
-        Debug.Log("path ??");
         return null;
     }
 
@@ -266,4 +264,9 @@ public partial class GameManager : MonoBehaviour
             }
         }
     }
+    // void OnDrawGizmos()
+    // {
+    //     if (FinalNodeList.Count != 0) for (int i = 0; i < FinalNodeList.Count - 1; i++)
+    //             Gizmos.DrawLine(new Vector2(FinalNodeList[i].x, FinalNodeList[i].y), new Vector2(FinalNodeList[i + 1].x, FinalNodeList[i + 1].y));
+    // }
 }

@@ -19,7 +19,7 @@ public class EnemyUnit : UnitBase
     {
         hzVel += dir.x == 0 ? -hzVel * accelerate * Time.deltaTime : (dir.x-hzForce/movementSpeed) * accelerate * Time.deltaTime; // 가속도만큼 입력 방향에 힘을 추가
         if(dir.x == 0 && Mathf.Abs(hzVel) < 0.01f) hzVel = 0;
-        transform.position = Vector2.MoveTowards(transform.position, (Vector2)transform.position + dir, Time.deltaTime);
+        transform.position = Vector2.MoveTowards(transform.position, dir, Time.deltaTime * movementSpeed);
         return base.Move(dir);
     }
 

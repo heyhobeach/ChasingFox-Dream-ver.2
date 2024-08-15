@@ -20,7 +20,7 @@ namespace BehaviourTree
             if(blackboard.target != null && (startTime >= reloadTime || blackboard.FinalNodeList == null))
             {
                 if(startTime >= reloadTime) startTime = 0;
-                blackboard.FinalNodeList = GameManager.Instance.PathFinding(blackboard.thisUnit.transform.position, blackboard.target.position);
+                blackboard.FinalNodeList = GameManager.Instance.PathFinding(blackboard.thisUnit.transform.position + (Vector3.down * 0.5f), blackboard.target.position);
                 idx = 0;
             }
             if(blackboard.FinalNodeList == null || blackboard.FinalNodeList.Count <= idx) 
