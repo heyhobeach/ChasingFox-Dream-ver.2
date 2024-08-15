@@ -239,6 +239,7 @@ public abstract class PlayerUnit : UnitBase
                         downTime = 0.8f;//떨어지는 시간 다르게 하기 위함 , 0.7초까지도 1칸에 대해서는 가능하지만 만약에 쭉 앞으로 가면서 떨어진다고 하면 안전한 시간은 0.75~0.8사이임
                         break;
                 }
+                //canDown = true;
                 break;
             case MapType.Floor:
                 isJumping = false;
@@ -326,6 +327,11 @@ public abstract class PlayerUnit : UnitBase
                 GetCurrenttPlatform(hit[indexP]);
             }
 
+            if (indexP != -1)
+            {
+                GetCurrenttPlatform(hit[indexP]);
+            }
+            
 
             Debug.Log(string.Format("indexG {0} indexP{1}", indexG, indexP));
             // Debug.Log(string.Format("indexG=>{0}  indexP=>{1}", indexG,indexP));
@@ -461,6 +467,8 @@ public abstract class PlayerUnit : UnitBase
         SetVerticalForce(0);
     }
 
+
+
     /// <summary>
     /// 충돌면의 MapType을 반환
     /// </summary>
@@ -493,7 +501,7 @@ public abstract class PlayerUnit : UnitBase
     }
     protected MapType CheckMapType(RaycastHit2D collision, ref float angle)
     {
-        if (!(collision.collider.CompareTag("Map") || collision.collider.CompareTag("platform"))) return MapType.None;
+        if (!(collision.collider.CompareTag("Map") || collision.collider.CompareTag("platform")) ) return MapType.None;
         if (collision.collider.CompareTag("platform")) return MapType.Platform;
         angle = Mathf.Abs(Vector2.Angle(Vector2.up, collision.normal));
         if (angle <= 45) return MapType.Ground;
