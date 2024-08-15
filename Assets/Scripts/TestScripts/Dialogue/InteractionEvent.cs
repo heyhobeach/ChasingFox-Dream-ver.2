@@ -23,28 +23,23 @@ public class InteractionEvent : MonoBehaviour
     string[] command = new string[1];
     bool start = false;
 
-    IEnumerator time_check_cor;
-
+    /// <summary>
+    /// 명령어 끼리 , 를 분리하는 정규식
+    /// </summary>
     string SPLIT_COMMAND_PASER = @"[""!,]";//명령어 분리 정규식
+
+    private delegate void delayDelegeate();
+    private delayDelegeate _nextDelegate;
 
     public Dialogue[] GetDialogue()
     {
 
-        //dialogue.line.x = DatabaseManager.instance.indexList[indexNum++];
         if (indexNum >= DatabaseManager.instance.indexList.Count)
         {
             indexNum = DatabaseManager.instance.indexList.Count - 1;
         }
-        //Debug.Log("indexNum" + indexNum);
         dialogue.line.y = DatabaseManager.instance.indexList[indexNum];//마지막 라인을 받아오기는 하지만 필요한건 마지막라인이 아닌 인덱스? 딕셔너리에 들어가는 그 y가 필요함
-
-        //Debug.Log(string.Format("시작지점{0} 끝 지점{1}", dialogue.line.x, dialogue.line.y));
         dialogue.dialouses = DatabaseManager.instance.GetDialogues((int)dialogue.line.x, (int)dialogue.line.y);//y값 찾아오는 법
-
-        //Debug.Log(string.Format("{0}줄 가져옴",dialogue.dialouses.Length));
-        //foreach(var context in dialogue.dialouses) {
-        //    foreach(var text in context.context) { Debug.Log(text); }
-        //}
         Debug.Log("길이" + dialogue.dialouses.Length);
         return dialogue.dialouses;
     }
@@ -57,243 +52,154 @@ public class InteractionEvent : MonoBehaviour
         {
             Debug.Log(string.Format("list {0}", i));
         }
-        //time_check_cor = ChocieTimer(5, Timeover);
-        //time_check_cor = ChocieTimer(5,start);
-
-
-
     }
 
     private void Update()
     {
-        //GetDialogue();
-        //화살표로 선택지 왔다 갔다 하면서 f로 선택
-        //Debug.Log(string.Format("num =>{0}", num));
-        //if(Input.GetKeyDown(KeyCode.RightArrow))
-        //{
-        //    Debug.Log(string.Format("{0}, {1}",num,contentNum));
-        //    gameObject.GetComponentInParent<UIManager>().SetContent(string.Join("", dialogue.dialouses[num].context[contentNum]));
-        //    //Debug.Log(string.Format("메모장 테스트용{0}", dialogue.dialouses[num].test[contentNum]));
-        //    //Debug.Log(string.Format("명령어 테스트용{0}", dialogue.dialouses[num].command[contentNum]));
-        //    command = Regex.Split(dialogue.dialouses[num].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);
-        //    //command = spaceremove(command);
-        //    //CallFunction(command);
-        //    //foreach (var _com in command)
-        //    //{
-        //    //    Debug.Log(string.Format("{1} 명령어 {0}", _com, num));
-        //    //}
-        //    //if ()
-        //    //{
-        //    //
-        //    //}
-        //    contentNum++;
-        //    return;
-        //}
-        Debug.Log(string.Format("num => {0} 대화 길이 =>{1}", num, dialogue.dialouses.Length));
         if ((num <= dialogue.dialouses.Length))//line을 조절 해야함 대화가 끝나는 시점을 정하려면 line.y를 설정해야함
         {
-            //Debug.Log(string.Format("{0} contentnum {1} length", contentNum, dialogue.dialouses[num - 1].context.Length));//contentNum + "contentnum"
-            //foreach (var _com in command)
-            //{
-            //    Debug.Log(string.Format("{1} 명령어 {0}", _com, num));
-            //}
-            Debug.Log("num이 작음");
-            if (Input.GetKeyDown(KeyCode.F))
+            HandleDialogue();
+        }
+        if (num > dialogue.dialouses.Length)
+        {
+            EndDialogue();
+        }
+    }
+
+    private void HandleCommand()
+    {
+        if (command.Length > 0)
+        {
+            Debug.Log("command size is " + command.Length);
+            command = spaceremove(command);
+            CallFunction(command);
+        }
+        contentNum = 0;
+    }
+    public void SetNextContext()
+    {
+        //while (gameObject.GetComponentInParent<UIManager>().is_closing) { }//역시나 무한루프
+        Debug.Log("nextContext");
+        HandleCommand();
+        if (num < dialogue.dialouses.Length)
+        {
+            //Debug.Log("id" + dialogue.dialouses[num].id +"이름" + dialogue.dialouses[num].name);
+            gameObject.GetComponentInParent<UIManager>().Setname(dialogue.dialouses[num].name);//이름 변경 되는중 마찬가지로 내용도 같이 하면 될듯
+                                                                                               //Debug.Log(dialogue.dialouses[num].context.Length);
+                                                                                               //Debug.Log(string.Format("num => {0} contentnum ={1}", num, contentNum));
+            contentlength = dialogue.dialouses[num].context.Length;
+            //Debug.Log("contentLength"+contentlength);//지금 자꾸 길이가 0이라고 나옴
+            if (contentlength == 1)
             {
-
-
-                if (num >= dialogue.dialouses.Length)//or추가
-                {
-                    Debug.Log("여기서 커맨드 발동");
-
-                    num++;
-                    contentNum = 0;
-                    command = spaceremove(command);
-                    CallFunction(command);
-                    return;
-                }
-                command = spaceremove(command);
-                CallFunction(command);
-                if (num < dialogue.dialouses.Length)
-                {
-                    gameObject.GetComponentInParent<UIManager>().Setname(dialogue.dialouses[num].name);//이름 변경 되는중 마찬가지로 내용도 같이 하면 될듯
-                                                                                                       //Debug.Log(dialogue.dialouses[num].context.Length);
-                    Debug.Log(string.Format("num => {0} contentnum ={1}", num, contentNum));
-                    gameObject.GetComponentInParent<UIManager>().SetContent(string.Join("", dialogue.dialouses[num].context[contentNum]));
-                    Debug.Log(string.Format("num => {0} 대화 길이 =>{1}", num, dialogue.dialouses.Length));
-                    contentlength = dialogue.dialouses[num].context.Length;
-
-                    command = Regex.Split(dialogue.dialouses[num].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);
-                }
-                contentNum = 0;
-                num++;
-
-                //if (num >= dialogue.dialouses.Length)//명령어 호출후 
-                //{
-                //    return;
-                //}
-
-                //if(contentlength > 1)
-                //{
-                //    Debug.Log("선택지 있음");
-                //    return;
-                //}
-
-
-
-
-            }
-            //command = spaceremove(command);
-            //CallFunction(command);
-            ////Debug.Log(string.Format("{0}", dialogue.dialouses[num].context[0]));
-            ////ui.Setname(dialogue.dialouses[num].name);
-            //gameObject.GetComponentInParent<UIManager>().Setname(dialogue.dialouses[num].name);//이름 변경 되는중 마찬가지로 내용도 같이 하면 될듯
-            //Debug.Log(dialogue.dialouses[num].context.Length);
-            //Debug.Log(string.Format("길이{0}", dialogue.dialouses[num].command.Length));
-            //foreach(var coms in dialogue.dialouses[num].command)
-            //{
-            //    foreach (var com in coms)
-            //    {
-            //        Debug.Log(string.Format("커맨드 체크 =>{0}", com));
-            //    }
-            //}
-
-            //foreach (var coms in dialogue.dialouses[num].command)
-            //{
-            //    CallFunction(coms);
-            //}
-            if (contentlength > 1)
-            {
-               
-                //StartCoroutine(time_check_cor);
-                if (start == false)
-                {
-                    start = true;
-                    //time_check_cor = ChocieTimer(5, start);
-                    StartCoroutine(ChocieTimer(5, start,Timeover));
-                }
-                //StartCoroutine(time_check_cor);
-                if (Input.GetKeyDown(KeyCode.RightArrow))
-                {
-                    //contentNum++;
-                    //첫 부분에 관한 예외 처리 필요
-                    //임시방편,//시작시 띄우고 그리고 값을 1부터 시작한다면?
-                    if (contentlength > (contentNum + 1))
-                    {
-                        contentNum++;
-                        Debug.Log(string.Format("선택지 확인 {0}, {1}", num - 1, contentNum));
-                        gameObject.GetComponentInParent<UIManager>().SetContent(string.Join("", dialogue.dialouses[num - 1].context[contentNum]));
-                        //Debug.Log(string.Format("메모장 테스트용{0}", dialogue.dialouses[num].test[contentNum]));
-                        //Debug.Log(string.Format("명령어 테스트용{0}", dialogue.dialouses[num].command[contentNum]));
-                        command = Regex.Split(dialogue.dialouses[num - 1].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);
-                        //command = spaceremove(command);
-                        //CallFunction(command);
-                        //foreach (var _com in command)
-                        //{
-                        //    Debug.Log(string.Format("{1} 명령어 {0}", _com, num));
-                        //}
-                        //contentNum++;
-                        return;
-                    }
-
-                }
-
-                if (Input.GetKeyDown(KeyCode.LeftArrow) & (contentNum > 0))
-                {
-                    contentNum--;
-                    Debug.Log(string.Format("선택지 확인 {0}, {1}", num - 1, contentNum));
-                    gameObject.GetComponentInParent<UIManager>().SetContent(string.Join("", dialogue.dialouses[num - 1].context[contentNum]));
-                    //Debug.Log(string.Format("메모장 테스트용{0}", dialogue.dialouses[num].test[contentNum]));
-                    //Debug.Log(string.Format("명령어 테스트용{0}", dialogue.dialouses[num].command[contentNum]));
-                    command = Regex.Split(dialogue.dialouses[num - 1].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);
-                    //내용
-                }
+                gameObject.GetComponentInParent<UIManager>().SetContent(string.Join("", dialogue.dialouses[num].context[contentNum]));
 
             }
             else
             {
-                start = false;
+                Debug.Log("선택지 부분");
+                string[] textSum = new string[contentlength];
+                //gameObject.GetComponentInParent<UIManager>().SetContent(string.Join("", ""));
+                for (int index = 0; index < contentlength; index++)//한번만 호출 되어야함
+                {
+                    //Debug.Log(string.Format("index =>{0} : content=>{1}",index, dialogue.dialouses[num].context[index]));
+                    textSum[index] = dialogue.dialouses[num].context[index];
+
+
+                }
+                gameObject.GetComponentInParent<UIManager>().SetContent(textSum);
+                if (start == false)
+                {
+                    start = true;
+                    StartCoroutine(ChocieTimer(10, start, Timeover));
+                }
             }
 
 
-
-            //gameObject.GetComponentInParent<UIManager>().SetContent(string.Join("", dialogue.dialouses[num].context[contentNum]));
-            //command = Regex.Split(dialogue.dialouses[num].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);
-            ////command = spaceremove(command);
-            ////CallFunction(command);
-            //contentNum = 0;
-            //num++;
+            command = Regex.Split(dialogue.dialouses[num].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);
         }
-        //if (dialogue.dialouses[num].context.Length > -1 & Input.GetKeyDown(KeyCode.RightArrow))
-        //{
-        //
-        //}
-        //Debug.Log("여기일지도?");
-        if (num > dialogue.dialouses.Length)
+        contentNum = 0;
+        num++;
+    }
+    private void HandleDialogue()
+    {
+        if (Input.GetKeyDown(KeyCode.F))//f누를때 문제 생기는듯?
         {
-            Debug.Log("대화끝");
+            //Debug.Log("선택 번호" + contentNum);
+            gameObject.GetComponentInParent<UIManager>().CloseSelceet(contentNum);
 
-            if (Input.GetKeyDown(KeyCode.X))
+            if (gameObject.GetComponentInParent<UIManager>().is_closing)
             {
-                //command = spaceremove(command);
-                //CallFunction(command);
-                dialogue.line.x = ++dialogue.line.y;
-                indexNum++;
-                GetDialogue();
-                Debug.Log(dialogue.dialouses.Length);
-                num = 0;
+                Debug.Log("닫는중");
+                StartCoroutine(gameObject.GetComponentInParent<UIManager>().ClosingAnim(SetNextContext));
+                //Debug.Log("실행 했음");
+                return;
+                //클로징 중이면 넘어가면 안 됨
+                //Debug.Log("클로징 확인" + gameObject.GetComponentInParent<UIManager>().is_closing);
+                //return;
             }
+            SetNextContext();
+ 
         }
+        if (contentlength > 1)//선택지 부분
+        {
+            Debug.Log("선택지 부분");
+            //string textSum = "";
+            //if (start == false)//이게 사용되는 부분인지 모르겠넹,처음 부터 선택지일경우?//일단 주석 처리 했는데 만나자 마자 선택지가 발생하는 경우? 그때 아마 사용 될것 같음 지금은 아마 사용 안 될듯
+            //{
+            //    start = true;
+            //    StartCoroutine(ChocieTimer(5, start, Timeover));
+            //}
+            if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                //countnum은 downArrow가 실행 되면 값이 변하게 되어있음
+                if (contentlength - 1 > (contentNum))
+                {
+                    gameObject.GetComponentInParent<UIManager>().DownArrow(ref contentNum);
+                    command = Regex.Split(dialogue.dialouses[num - 1].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);
+                    return;
+                }
 
+            }
+
+            if (Input.GetKeyDown(KeyCode.UpArrow) & (contentNum > 0))
+            {
+                gameObject.GetComponentInParent<UIManager>().UpArrow(ref contentNum);
+                command = Regex.Split(dialogue.dialouses[num - 1].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);
+                return;
+            }
+
+        }
+        else
+        {
+            start = false;
+        }
+    }
+
+    private void EndDialogue()
+    {
+        Debug.Log("대화끝");
+
+        if (Input.GetKeyDown(KeyCode.X)&(indexNum< DatabaseManager.instance.indexList.Count))
+        {
+            dialogue.line.x = ++dialogue.line.y;
+            indexNum++;
+            GetDialogue();
+            Debug.Log(dialogue.dialouses.Length);
+            num = 0;
+        }
     }
 
     private void CallFunction(string[] _functions)
     {
         string SPLIT_NUM = @"([a-z]+|\ )+";//공백 분리 정규식//새로운식([a-z]+|\ )+
         string GET_COMMAND = @"[a-z]{1,}";
-        //if(_functions == null)
-        //{
-        //    return;
-        //}
-        //if (_functions[0] == "")
-        //{
-        //    Debug.Log("null");
-        //    return;
-        //}
-        //else
-        //{
-        //    Debug.Log(string.Format("데이터 있음 {0}", _functions[0]));
-        //}
         foreach (var func in _functions)
         {
 
             string[] strarr = Regex.Split(func, SPLIT_NUM);
             string[] filteredSubstrings = strarr.Where(s => s != Regex.Match(s, SPLIT_NUM).ToString()).ToArray();
-
-            if (filteredSubstrings.Length > 0)//명령어 인자 있음
-            {
-                //Debug.Log("명령어 인자 있음");
-            }
-            else//명령어 인자 없음
-            {
-                //Debug.Log("명령어 인자 없음");
-            }
-            //foreach (var str in filteredSubstrings)
-            //{
-            //    Debug.Log(string.Format("테스트str {0}", str));
-            //}
             int n;
             string[] numarr = Array.FindAll(strarr, s => !string.IsNullOrEmpty(s) && (int.TryParse(s, out n)));
-            //Debug.Log(string.Format("숫자 길이{0}", numarr.Length));
-            //foreach(var str in numarr)
-            //{
-            //    Debug.Log(string.Format("명령어 인자{0}", str));
-            //}
-            //if (strarr[0].ToString() =="") { Debug.Log("숫자 없는 명령어"); }
-            //else
-            //{
-            //    Debug.Log("숫자 있는 명령어");
-            //}
             Debug.Log(string.Format("mat => {0}", func));
             var mat = Regex.Matches(func, GET_COMMAND);
             Debug.Log(string.Format("커맨드 체크 =>{0}", mat));
@@ -331,7 +237,7 @@ public class InteractionEvent : MonoBehaviour
     private string[] spaceremove(string[] com)//공백 제거 함수
     {
         List<string> temp = new List<string>();
-        int index = 0;
+        //int index = 0;
         foreach (var j in com)
         {
             if (j.ToString() != "")
@@ -362,7 +268,7 @@ public class InteractionEvent : MonoBehaviour
     {
         Debug.Log("switch_brutal");
     }
-    public void police()    
+    public void police()
     {
         Debug.Log("switch_plice");
     }
@@ -390,25 +296,18 @@ public class InteractionEvent : MonoBehaviour
     public void Timeover()
     {
         Debug.Log("time over");
-        if (contentlength > 1&& num <= dialogue.dialouses.Length)
+        if (contentlength > 1 && num <= dialogue.dialouses.Length)
         {
             Debug.Log(string.Format("{0} num {1} contentNum", num - 1, contentNum));
+            Debug.Log("Time over" + dialogue.dialouses[num - 1].context[0]);
             command = Regex.Split(dialogue.dialouses[num - 1].command[0], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);
-            command = spaceremove(command);
-            CallFunction(command);
-            num++;
-            contentNum = 0;
+            //command = spaceremove(command);
+            //CallFunction(command);
+            //num++;
+            //contentNum = 0;
         }
     }
-
-    //IEnumerator ChocieTimer(float seconds, Action act)
-    //{
-    //    Debug.Log("코루틴 초" + seconds);
-    //    yield return new WaitForSeconds(seconds);
-    //    Debug.Log("time 코루틴 시작");
-    //    act();
-    //}
-    IEnumerator ChocieTimer(float seconds,bool start,Action act)
+    IEnumerator ChocieTimer(float seconds, bool start, Action act)
     {
         if (start)
         {
