@@ -120,7 +120,7 @@ public class InteractionEvent : MonoBehaviour
         contentNum = 0;
         num++;
     }
-    private void HandleDialogue()
+    public void HandleDialogue()
     {
         if (Input.GetKeyDown(KeyCode.F))//f누를때 문제 생기는듯?
         {
