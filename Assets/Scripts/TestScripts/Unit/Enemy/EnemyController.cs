@@ -8,17 +8,22 @@ public class EnemyController : MonoBehaviour
     public BehaviourTree.BehaviourTree behaviorTree;
     public PlayableDirector playableDirector;
     private Blackboard blackboard;
+    public SpriteRenderer spriteRenderer;
+
+    private RaycastHit2D[] hits = new RaycastHit2D[0];
 
     public float layDistance;
+    public float viewOuterRange;
+    public float viewinnerRange;
+    public float viewAngle;
     public float appendDistance;
     private float distance { get => layDistance*(blackboard.enemy_state.Increase_Sight*appendDistance); }
-    private Vector2 subvec;//ai거리관련
 
     void Start()
     {
+        if(spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
         behaviorTree.blackboard.thisUnit = GetComponent<EnemyUnit>();
         behaviorTree.blackboard.playableDirector = playableDirector;
-        // behaviorTree.blackboard.playableDirector = GetComponent<PlayableDirector>();
         behaviorTree = behaviorTree.Clone();
         blackboard = behaviorTree.blackboard;
         blackboard.FinalNodeList = null;
@@ -29,82 +34,76 @@ public class EnemyController : MonoBehaviour
         behaviorTree.Update();
     }
 
-    private void CircleRay()//유저 탐색할 레이 관련 함수
+    private bool ViewCheck(int idx)
     {
-        // float maxDistance = 5f;
-        // float mysize = 5f;//반지름
-        int layerMask = 1 << LayerMask.NameToLayer("DeadEnemy") | 1 << LayerMask.NameToLayer("GunSound");//enemy와 gunsound 객체 총알이 만약 바닥에 박히면 gunsound객체를 생성했다가 일정시간 이후 지우는식
-        RaycastHit2D ray2d = Physics2D.CircleCast(transform.position, distance, Vector2.up, 0,layerMask);//죽은 적군 찾는 변수
-
-        Vector2 subpos = GameManager.Instance.player.transform.position - transform.position;
-        int linelayerMask = 1 << LayerMask.NameToLayer("Player");
-        RaycastHit2D[] target_ray2d = Physics2D.RaycastAll(transform.position, subpos, distance, linelayerMask);
-        int index_player = Array.FindIndex(target_ray2d, x => x.transform.tag == "Player");
-
-        if (ray2d && blackboard.enemy_state.stateCase == Blackboard.Enemy_State.StateCase.Default)//추격상태가 아니고 죽은 
-        {
-            blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Alert;
-            blackboard.target = ray2d.transform;
-            // if (ray2d.transform.gameObject.layer == 15) // 이거 뭐임
-            // {
-            //     SetFollow();
-            //     return;
-            // }
-            // StartCoroutine(timer());
+        int layerMapMask = 1 << LayerMask.NameToLayer("OneWayPlatform") | 1 << LayerMask.NameToLayer("Map");
+        var subvec = (Vector2)hits[idx].transform.position - (Vector2)transform.position;// ray2d=>tartget_ray2d[index_player]
+        float deg = Mathf.Atan2(subvec.y, subvec.x);//mathf.de
+        deg *= Mathf.Rad2Deg;
+        bool inAngle = Mathf.Abs(deg) <= viewAngle*0.5f;
+        bool isForword = Mathf.Sign(subvec.normalized.x)>0&&!spriteRenderer.flipX ? true : Mathf.Sign(subvec.normalized.x)<0&&spriteRenderer.flipX ? true : false;
+        if((subvec.magnitude <= viewinnerRange || (subvec.magnitude <= viewOuterRange && inAngle && isForword))
+            && !Physics2D.Raycast(transform.position, subvec.normalized, subvec.magnitude, layerMapMask))
+        {                
+            return true;
         }
-        
-        if (index_player>-1)//ray2d,여기 !follow해도 될것 같앗음
-        {
-            blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Chase;
-            blackboard.target = GameManager.Instance.player.transform;
-            subvec = (Vector2)target_ray2d[index_player].transform.position - (Vector2)transform.position;// ray2d=>tartget_ray2d[index_player]
-            float deg = Mathf.Atan2(subvec.y, subvec.x);//mathf.de
-            deg *= Mathf.Rad2Deg;
-            // if (attackRange <= subvec.magnitude) {}
-            // else//범위 안에 들어왔을때
-            // {
-            //     // if (!behaviorTree.blackboard.enemy_state.Tracking)//이미 레이 = 시야에 감지 되었기에 계속 추격해야함
-            //     // {
-            //     //     StartCoroutine(timer());
-            //     // }
-            // }
-        }
+        else return false;
     }
 
-    // public int index_player = 0;
-    // bool attacking;
-    // public float attackRange;
-    // IEnumerator timer()
-    // {
-    //     // behaviorTree.blackboard.enemy_state.Tracking = true;
-    //     // behaviorTree.blackboard.enemy_state.Defalut = false;
-    //     while (behaviorTree.blackboard.thisUnit.UnitState != UnitState.Death)
-    //     {
-    //         yield return new WaitForSeconds(1);
-    //         if ((subvec.magnitude <= attackRange)&(index_player==0))//만약 벽이 2개 겹처있는 경우는 체크 안되어있음, 공격부분
-    //         {
-    //             if (Move_Cor != null)
-    //             {
-    //                 StopCoroutine(Move_Cor);
-    //             }
-    //             attacking = true;
-    //             // Attack((player.transform.position + transform.position).normalized);
-    //         }
-    //         else//추격부분
-    //         {
-    //             // SetFollow();
-    //         }
-    //         // if (!behaviorTree.blackboard.enemy_state.Missing)//못찾는 상태일때 트래킹을 끄기위해
-    //         // {
-    //         //     behaviorTree.blackboard.enemy_state.Tracking = true;
-    //         // }
-    //         // else
-    //         // {
-    //         //     behaviorTree.blackboard.enemy_state.Tracking = false;
-    //         // }
+    private void CircleRay()//유저 탐색할 레이 관련 함수
+    {
+        if(blackboard.enemy_state.stateCase == Blackboard.Enemy_State.StateCase.Chase 
+            || (blackboard.target != null && (blackboard.target.position-transform.position).magnitude>1)) return;
 
-            
-    //     }
-        
-    // }
+        int layerMask = 1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("GunSound") | 1 << LayerMask.NameToLayer("Player");//enemy와 gunsound 객체 총알이 만약 바닥에 박히면 gunsound객체를 생성했다가 일정시간 이후 지우는식
+        hits = Physics2D.CircleCastAll(transform.position, distance, Vector2.zero, 0, layerMask);//죽은 적군 찾는 변수
+
+        if(hits.Length<=0) return;
+
+        int index_player = -1;
+        int index_enemy = -1;
+        int index_gunsound = -1;
+        int idx = 0;
+
+        foreach(RaycastHit2D ray in hits)
+        {
+            switch(ray.transform.tag)
+            {
+                case "Player": index_player = idx;
+                break;
+                case "Enemy": index_enemy = idx;
+                break;
+                case "GunSound": index_gunsound = idx;
+                break;
+            }
+            idx++;
+        }
+        if(index_player>-1)
+        {
+            if(hits[index_player].transform.GetComponent<Player>().ChagedForm.UnitState == UnitState.Death)
+            {
+                blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Default;
+                blackboard.target = null;
+            }
+            else if(ViewCheck(index_player))
+            {                
+                blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Chase;
+                blackboard.target = hits[index_player].transform;
+            }
+        }
+        else if(index_enemy>-1 && hits[index_enemy].transform.GetComponent<UnitBase>().UnitState == UnitState.Death && ViewCheck(index_enemy))
+        {               
+            blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Chase;
+            blackboard.target = GameManager.Instance.player.transform;
+        }
+        else if(index_gunsound>-1)
+        {
+            var subvec = (Vector2)hits[idx].transform.position - (Vector2)transform.position;
+            if(subvec.magnitude <= viewinnerRange)
+            {
+                blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Alert;
+                blackboard.target = hits[index_gunsound].transform;
+            }
+        }
+    }
 }

@@ -41,5 +41,6 @@ namespace BehaviourTree
         }
         public Enemy_State enemy_state;
         public List<GameManager.Node> FinalNodeList;
+        public int nodeIdx;
     }
 }

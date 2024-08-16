@@ -25,7 +25,7 @@ public class EnemyUnit : UnitBase
     {
         UpdateVel(dir.x);
         transform.position = Vector2.MoveTowards(transform.position, dir, Time.deltaTime * hzVel);
-        return base.Move(dir);
+        return base.Move(dir-(Vector2)transform.position);
     }
 
     public override bool Crouch(KeyState crouchKey) => false;
