@@ -38,6 +38,18 @@ public partial class GameManager : MonoBehaviour
     private List<Node> FinalNodeList;
     List<string> NodeDistanceList;
     Node[,] NodeArray;
+    private bool isLoad;
+
+    public IEnumerator MapSearchStart()
+    {
+        while(true)
+        {
+            yield return new WaitUntil(() => isLoad);
+            MapSearch();
+            isLoad = false;
+        }
+    }
+
     public void MapSearch()
     {
         // NodeArray�� ũ�� �����ְ�, isWall, x, y ����
@@ -67,8 +79,11 @@ public partial class GameManager : MonoBehaviour
     }
     public List<Node> PathFinding(Vector3 startPosV3, Vector3 targetPosV3)
     {
-        if(NodeArray == null) MapSearch();
-        Debug.Log(new Vector2Int((int)startPosV3.x, (int)startPosV3.y) + ", " + new Vector2Int((int)targetPosV3.x, (int)targetPosV3.y));
+        if(NodeArray == null)
+        {
+            isLoad = true;
+            return null;
+        }
         Vector2Int startPos = new Vector2Int((int)startPosV3.x, (int)startPosV3.y);
         Vector2Int targetPos = new Vector2Int((int)targetPosV3.x, (int)targetPosV3.y);
         StartNode = NodeArray[startPos.x - bottomLeft.x, startPos.y - bottomLeft.y];//���� �� �κ� ������ �߱��� �۵����� ������ ����

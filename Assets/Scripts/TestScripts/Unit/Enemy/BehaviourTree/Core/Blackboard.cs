@@ -40,6 +40,6 @@ namespace BehaviourTree
             // }
         }
         public Enemy_State enemy_state;
-        public List<GameManager.Node> FinalNodeList = new();
+        public List<GameManager.Node> FinalNodeList;
     }
 }

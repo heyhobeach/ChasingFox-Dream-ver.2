@@ -21,6 +21,7 @@ public class EnemyController : MonoBehaviour
         // behaviorTree.blackboard.playableDirector = GetComponent<PlayableDirector>();
         behaviorTree = behaviorTree.Clone();
         blackboard = behaviorTree.blackboard;
+        blackboard.FinalNodeList = null;
     }
     void Update()
     {

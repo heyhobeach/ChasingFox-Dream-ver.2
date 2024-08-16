@@ -16,6 +16,7 @@ namespace BehaviourTree
         private void OnEnable()
         {
             playableDirector = blackboard.playableDirector;
+            if(playableDirector == null) return;
             if(blackboard.thisUnit != null)
             {
                 ac = blackboard.thisUnit.anim.runtimeAnimatorController;
@@ -37,7 +38,7 @@ namespace BehaviourTree
 
         protected override NodeState OnUpdate()
         {
-            if(!isCan || playableDirector.state != PlayState.Playing)
+            if(playableDirector == null || !isCan || playableDirector.state != PlayState.Playing)
             {
                 if(playableDirector.state == PlayState.Playing) TimeLineStop();
                 return NodeState.Failure;

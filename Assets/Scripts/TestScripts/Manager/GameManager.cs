@@ -49,6 +49,7 @@ public partial class GameManager : MonoBehaviour
     private void OnDestroy()
     {
         BehaviourNode.clone.Clear();
+        StopAllCoroutines();
     }
 
     private void Awake()
@@ -61,6 +62,11 @@ public partial class GameManager : MonoBehaviour
         instance = this;
         if(controllers == null) controllers = new();
         player = FindObjectOfType<Player>();
+    }
+
+    private void Start()
+    {
+        StartCoroutine(MapSearchStart());
     }
 
     private void Update()
