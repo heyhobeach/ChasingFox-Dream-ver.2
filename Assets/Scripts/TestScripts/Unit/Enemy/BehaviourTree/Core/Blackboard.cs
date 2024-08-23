@@ -9,17 +9,17 @@ namespace BehaviourTree
     [Serializable]
     public class Blackboard
     {
-        public EnemyUnit thisUnit;
-        public Transform target;
-        public PlayableDirector playableDirector;
+        [DisableInspector] public EnemyUnit thisUnit;
+        [DisableInspector] public Transform target;
+        [HideInInspector] public PlayableDirector playableDirector;
         [Serializable]
         public class Enemy_State//적군 상태값을 이너 클래스로 표현 중첩되는 표현 사용시 enum으로 표현 안 될것 같아 해당 방식 사용
         {
             // public bool Defalut=true;//생성시 기준 생성시 defalut는 true기 때문에
             public enum StateCase { Default, Alert, Chase }
-            public StateCase stateCase;
-            public bool recognition = true;
-            public int Increase_Sight = 1;
+            [DisableInspector] public StateCase stateCase;
+            [DisableInspector] public bool recognition = true;
+            [DisableInspector] public int Increase_Sight = 0;
 
             public void Reset_State()//모든 상태를 false로 전환
             {
@@ -40,7 +40,16 @@ namespace BehaviourTree
             // }
         }
         public Enemy_State enemy_state;
-        public List<GameManager.Node> FinalNodeList;
-        public int nodeIdx;
+        [HideInInspector] public List<GameManager.Node> FinalNodeList;
+        private int _nodeIdx;
+        [HideInInspector] public int nodeIdx 
+        { 
+            get => Mathf.Clamp(_nodeIdx, 0, FinalNodeList.Count); 
+            set 
+            {
+                _nodeIdx = value;
+                _nodeIdx = Mathf.Clamp(_nodeIdx, 0, FinalNodeList.Count); 
+            }
+        }
     }
 }

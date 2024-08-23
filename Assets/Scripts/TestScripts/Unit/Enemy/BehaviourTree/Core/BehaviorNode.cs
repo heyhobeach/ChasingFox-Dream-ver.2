@@ -10,11 +10,11 @@ namespace BehaviourTree
         public enum NodeState { Running, Failure, Success }
         [HideInInspector] public NodeState state = NodeState.Running;
         [HideInInspector] public bool isStarted = false;
-        public string guid;
+        [SerializeField, DisableInspector] public string guid;
         [HideInInspector] public Vector2 positon;
         [HideInInspector] public Blackboard blackboard;
         [HideInInspector] public static Dictionary<(int, string), BehaviourNode> clone = new();
-        [TextArea] public string description;
+        [SerializeField, TextArea] public string description;
 
         public NodeState Update()
         {

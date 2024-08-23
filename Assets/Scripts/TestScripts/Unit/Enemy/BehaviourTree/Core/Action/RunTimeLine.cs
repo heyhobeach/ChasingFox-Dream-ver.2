@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Animations;
@@ -52,6 +53,6 @@ namespace BehaviourTree
             blackboard.thisUnit.anim.runtimeAnimatorController = ac;
             playableDirector.enabled = false;
         }
-        public void TimeLineStop() => playableDirector.Stop();
+        [MesageTarget] public void TimeLineStop() => playableDirector.Stop();
     }
 }

@@ -11,18 +11,28 @@ public class EnemyController : MonoBehaviour
     public SpriteRenderer spriteRenderer;
 
     private RaycastHit2D[] hits = new RaycastHit2D[0];
+    private Transform originPos;
 
     public float layDistance;
     public float viewOuterRange;
     public float viewinnerRange;
     public float viewAngle;
     public float appendDistance;
-    private float distance { get => layDistance*(blackboard.enemy_state.Increase_Sight*appendDistance); }
+    private float distance { get => layDistance+(blackboard.enemy_state.Increase_Sight*appendDistance); }
 
     void Start()
     {
         if(spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
         behaviorTree.blackboard.thisUnit = GetComponent<EnemyUnit>();
+        if(originPos == null)
+        {
+            var posObj = new GameObject(){
+                name = transform.name+" Pos",
+                layer = LayerMask.NameToLayer("Ignore Raycast"),
+            };
+            originPos = posObj.transform;
+        }
+        originPos.transform.position = transform.position;
         behaviorTree.blackboard.playableDirector = playableDirector;
         behaviorTree = behaviorTree.Clone();
         blackboard = behaviorTree.blackboard;
@@ -89,12 +99,14 @@ public class EnemyController : MonoBehaviour
             {                
                 blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Chase;
                 blackboard.target = hits[index_player].transform;
+                blackboard.enemy_state.Increase_Sight++;
             }
         }
         else if(index_enemy>-1 && hits[index_enemy].transform.GetComponent<UnitBase>().UnitState == UnitState.Death && ViewCheck(index_enemy))
         {               
             blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Chase;
             blackboard.target = GameManager.Instance.player.transform;
+            blackboard.enemy_state.Increase_Sight++;
         }
         else if(index_gunsound>-1)
         {
@@ -103,7 +115,13 @@ public class EnemyController : MonoBehaviour
             {
                 blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Alert;
                 blackboard.target = hits[index_gunsound].transform;
+                blackboard.enemy_state.Increase_Sight++;
             }
+        }
+        else if(blackboard.enemy_state.stateCase == Blackboard.Enemy_State.StateCase.Alert)
+        {
+            blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Default;
+            blackboard.target = originPos;
         }
     }
 }
