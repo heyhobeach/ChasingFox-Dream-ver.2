@@ -14,13 +14,16 @@ namespace BehaviourTree
 
         protected override NodeState OnUpdate()
         {
-            switch(children[crurent].Update())
+            do
             {
+                switch(children[crurent].Update())
+                {
                 case NodeState.Running: return NodeState.Running;
                 case NodeState.Failure: return NodeState.Failure;
                 case NodeState.Success: crurent++; break;
-            }
-            return crurent == children.Count ? NodeState.Success : NodeState.Running;
+                }
+            } while(crurent < children.Count);
+            return NodeState.Success;
         }
     }
 }

@@ -186,7 +186,7 @@ public class Bullet : MonoBehaviour
         Destroy(this.gameObject);
         GameObject obj = SoundManager.Instance.bullet.standbyBullet.Dequeue();
         obj.transform.position = this.transform.position;
-        Debug.Log(string.Format("queue name => " + obj));
+        // Debug.Log(string.Format("queue name => " + obj));
         SoundManager.Instance.CoStartBullet(obj);
     }
 }

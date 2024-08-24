@@ -1,15 +1,25 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Com.LuisPedroFonseca.ProCamera2D;
 using UnityEngine;
 
 [RequireComponent(typeof(EnemyController))]
 public class EnemyUnit : UnitBase
 {
-    public float maxDistance = 1.06f;
+    public float attackDistance = 1;
+    [Range(0, 1)] public float attackRange = 1;
 
     public GameObject bullet;//�Ѿ� ����
     
+    public bool isAttacking 
+    {
+        get
+        {
+            if(shootingAnimationController == null) return anim.GetCurrentAnimatorStateInfo(0).IsName("Attack");
+            else return shootingAnimationController.isAttackAni;
+        }
+    }
 
     protected override void OnEnable() {}
 
@@ -24,9 +34,21 @@ public class EnemyUnit : UnitBase
 
     public override bool Jump(KeyState jumpKey) => false;
 
+    public bool AttackCheck(Vector3 attackPos)
+    {
+        var pos = attackPos-transform.position;
+        float deg = Mathf.Atan2(pos.y, pos.x);//mathf.de
+        deg *= Mathf.Rad2Deg;
+        bool inAngle = Mathf.Abs(deg) <= 180;
+        bool inRange = (pos.magnitude < attackDistance) && pos.magnitude >= attackDistance*(1-attackRange);
+        bool isForword = Mathf.Sign(pos.normalized.x)>0&&!spriteRenderer.flipX ? true : Mathf.Sign(pos.normalized.x)<0&&spriteRenderer.flipX ? true : false;
+        var hit = Physics2D.Raycast(transform.position, pos, pos.magnitude, 1<<LayerMask.NameToLayer("Map"));
+        if(ControllerChecker() || hit || !inRange || !inAngle || !isForword) return false;
+        else return true;
+    }
+
     public override bool Attack(Vector3 attackPos)
     {
-        if(ControllerChecker() || Physics2D.Raycast(transform.position, attackPos-transform.position, Mathf.Infinity, 1<<LayerMask.NameToLayer("Ground"))) return false;
         GameObject _bullet = Instantiate(bullet, transform.position, transform.rotation);
 
         GameObject gObj = this.gameObject;

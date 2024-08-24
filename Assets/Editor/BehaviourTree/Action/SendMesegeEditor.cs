@@ -60,11 +60,12 @@ namespace BehaviourTree.Editor
             {
                 position.height = EditorGUIUtility.singleLineHeight;
                 var sizeX = position.size.x;
-
+                EditorGUI.BeginChangeCheck();
                 EditorGUI.ObjectField(
                     new Rect(position.x-sizeX*0.4f, position.y, sizeX*0.8f, EditorGUIUtility.singleLineHeight),
                     property.FindPropertyRelative("targetNode")
                 );
+                if(EditorGUI.EndChangeCheck()) property.FindPropertyRelative("methodIdx").intValue = 0;
                 if(property.FindPropertyRelative("targetNode").objectReferenceValue != null)
                 {
                     List<string> sl = new();

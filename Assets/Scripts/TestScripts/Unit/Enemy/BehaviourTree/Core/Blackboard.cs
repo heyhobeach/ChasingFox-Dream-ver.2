@@ -26,7 +26,7 @@ namespace BehaviourTree
                 // this.Defalut = true;//생성시 기준 생성시 defalut는 true기 때문에
                 this.stateCase = StateCase.Default;
                 this.recognition = true;
-                this.Increase_Sight = 1;
+                this.Increase_Sight = 0;
             }
 
             // public bool[] Get_State()

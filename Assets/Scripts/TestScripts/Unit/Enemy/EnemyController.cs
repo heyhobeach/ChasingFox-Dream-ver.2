@@ -15,7 +15,7 @@ public class EnemyController : MonoBehaviour
 
     public float layDistance;
     public float viewOuterRange;
-    public float viewinnerRange;
+    public float viewInnerRange;
     public float viewAngle;
     public float appendDistance;
     private float distance { get => layDistance+(blackboard.enemy_state.Increase_Sight*appendDistance); }
@@ -46,13 +46,13 @@ public class EnemyController : MonoBehaviour
 
     private bool ViewCheck(int idx)
     {
-        int layerMapMask = 1 << LayerMask.NameToLayer("OneWayPlatform") | 1 << LayerMask.NameToLayer("Map");
+        int layerMapMask = 1 << LayerMask.NameToLayer("Map");
         var subvec = (Vector2)hits[idx].transform.position - (Vector2)transform.position;// ray2d=>tartget_ray2d[index_player]
         float deg = Mathf.Atan2(subvec.y, subvec.x);//mathf.de
         deg *= Mathf.Rad2Deg;
         bool inAngle = Mathf.Abs(deg) <= viewAngle*0.5f;
         bool isForword = Mathf.Sign(subvec.normalized.x)>0&&!spriteRenderer.flipX ? true : Mathf.Sign(subvec.normalized.x)<0&&spriteRenderer.flipX ? true : false;
-        if((subvec.magnitude <= viewinnerRange || (subvec.magnitude <= viewOuterRange && inAngle && isForword))
+        if((subvec.magnitude <= viewInnerRange || (subvec.magnitude <= viewOuterRange && inAngle && isForword))
             && !Physics2D.Raycast(transform.position, subvec.normalized, subvec.magnitude, layerMapMask))
         {                
             return true;
@@ -62,8 +62,7 @@ public class EnemyController : MonoBehaviour
 
     private void CircleRay()//유저 탐색할 레이 관련 함수
     {
-        if(blackboard.enemy_state.stateCase == Blackboard.Enemy_State.StateCase.Chase 
-            || (blackboard.target != null && (blackboard.target.position-transform.position).magnitude>1)) return;
+        if(blackboard.enemy_state.stateCase == Blackboard.Enemy_State.StateCase.Chase) return;
 
         int layerMask = 1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("GunSound") | 1 << LayerMask.NameToLayer("Player");//enemy와 gunsound 객체 총알이 만약 바닥에 박히면 gunsound객체를 생성했다가 일정시간 이후 지우는식
         hits = Physics2D.CircleCastAll(transform.position, distance, Vector2.zero, 0, layerMask);//죽은 적군 찾는 변수
@@ -111,7 +110,7 @@ public class EnemyController : MonoBehaviour
         else if(index_gunsound>-1)
         {
             var subvec = (Vector2)hits[idx].transform.position - (Vector2)transform.position;
-            if(subvec.magnitude <= viewinnerRange)
+            if(subvec.magnitude <= viewInnerRange)
             {
                 blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Alert;
                 blackboard.target = hits[index_gunsound].transform;

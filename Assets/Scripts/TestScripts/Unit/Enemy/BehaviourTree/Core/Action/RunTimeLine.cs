@@ -18,19 +18,19 @@ namespace BehaviourTree
         {
             playableDirector = blackboard.playableDirector;
             if(playableDirector == null) return;
-            if(blackboard.thisUnit != null)
+            if(Application.isPlaying && blackboard.thisUnit != null && blackboard.thisUnit.anim != null)
             {
                 ac = blackboard.thisUnit.anim.runtimeAnimatorController;
                 blackboard.thisUnit.anim.runtimeAnimatorController = null;
             }
             isCan = true;
+            playableDirector.stopped -= OnTimeLineStoped;
+            playableDirector.stopped += OnTimeLineStoped;
         }
         protected override void OnEnd() {}
 
         protected override void OnStart()
         {
-            playableDirector.stopped -= OnTimeLineStoped;
-            playableDirector.stopped += OnTimeLineStoped;
             if(playableDirector != null && isCan && playableDirector.state != PlayState.Playing)
             {
                 playableDirector.Play();
