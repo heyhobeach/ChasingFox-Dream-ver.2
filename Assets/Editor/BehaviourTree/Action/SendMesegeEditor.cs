@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEditorInternal;
 using System;
 using System.Linq;
+using UnityEngine.UIElements;
 
 namespace BehaviourTree.Editor
 {
@@ -30,11 +31,25 @@ namespace BehaviourTree.Editor
             list.drawHeaderCallback = DrawHeader;
         }
 
+        public override VisualElement CreateInspectorGUI()
+        {
+            // VisualElement root = new();
+            // serializedObject.Update();
+            // EditorGUILayout.PropertyField(script, true);
+            // EditorGUILayout.PropertyField(guid, true);
+            // EditorGUILayout.PropertyField(description, true);
+            // EditorGUILayout.PropertyField(child, true);
+            // list.DoLayoutList();
+            // serializedObject.ApplyModifiedProperties();
+            // return root;
+            return base.CreateInspectorGUI();
+        }
+
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
             // EditorGUILayout.PropertyField(script, true);
-            EditorGUILayout.PropertyField(guid, true);
+            // EditorGUILayout.PropertyField(guid, true);
             EditorGUILayout.PropertyField(description, true);
             // EditorGUILayout.PropertyField(child, true);
             list.DoLayoutList();
@@ -46,42 +61,6 @@ namespace BehaviourTree.Editor
         {
             SerializedProperty element = list.serializedProperty.GetArrayElementAtIndex(index);
             EditorGUI.PropertyField(rect, element, GUIContent.none);
-        }
-    }
-
-    [CustomPropertyDrawer(typeof(SendMesage.Mesage))]
-    public class MesageDrawer : PropertyDrawer
-    {
-        private string[] methodsNames;
-
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
-        {
-            using (new EditorGUI.PropertyScope(position, label, property))
-            {
-                position.height = EditorGUIUtility.singleLineHeight;
-                var sizeX = position.size.x;
-                EditorGUI.BeginChangeCheck();
-                EditorGUI.ObjectField(
-                    new Rect(position.x-sizeX*0.4f, position.y, sizeX*0.8f, EditorGUIUtility.singleLineHeight),
-                    property.FindPropertyRelative("targetNode")
-                );
-                if(EditorGUI.EndChangeCheck()) property.FindPropertyRelative("methodIdx").intValue = 0;
-                if(property.FindPropertyRelative("targetNode").objectReferenceValue != null)
-                {
-                    List<string> sl = new();
-                    var methods = TypeCache.GetMethodsWithAttribute<MesageTarget>().ToList();
-                    foreach(var method in methods) sl.Add(method.Name);
-                    sl.Insert(0, "None");
-                    methodsNames = sl.ToArray();
-                    var idx = property.FindPropertyRelative("methodIdx").intValue;
-                    property.FindPropertyRelative("methodIdx").intValue = EditorGUI.Popup(
-                        new Rect(position.x-sizeX*0.4f+sizeX*0.9f, position.y, sizeX*0.5f, EditorGUIUtility.singleLineHeight),
-                        idx,
-                        methodsNames
-                    );
-                    property.FindPropertyRelative("methodName").stringValue = methodsNames[idx];
-                }
-            }
         }
     }
 }
