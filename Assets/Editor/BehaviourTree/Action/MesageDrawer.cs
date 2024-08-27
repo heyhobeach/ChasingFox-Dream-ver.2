@@ -44,7 +44,7 @@ namespace BehaviourTree.Editor
                 var sizeX = position.size.x;
                 EditorGUI.BeginChangeCheck();
                 EditorGUI.ObjectField(
-                    new Rect(position.x-sizeX*0.4f, position.y, sizeX*0.8f, EditorGUIUtility.singleLineHeight),
+                    new Rect(position.x-sizeX*0.5f, position.y, sizeX*0.8f, EditorGUIUtility.singleLineHeight),
                     property.FindPropertyRelative("targetNode")
                 );
                 if(EditorGUI.EndChangeCheck()) property.FindPropertyRelative("methodIdx").intValue = 0;
@@ -58,14 +58,14 @@ namespace BehaviourTree.Editor
                     var type = property.FindPropertyRelative("targetNode").objectReferenceValue.GetType();
                     sl = Array.ConvertAll<MethodInfo, string>(type.GetMethods(), (n) => {
                         if(n.GetCustomAttribute<MesageTarget>() != null) return n.Name;
-                        else return "";
+                        else return "None";
                     }).ToList();
                     sl.Insert(0, "None");
                     string.Join(", ", sl);
                     methodsNames = sl.ToArray();
                     var idx = property.FindPropertyRelative("methodIdx").intValue;
                     property.FindPropertyRelative("methodIdx").intValue = EditorGUI.Popup(
-                        new Rect(position.x-sizeX*0.4f+sizeX*0.9f, position.y, sizeX*0.5f, EditorGUIUtility.singleLineHeight),
+                        new Rect(position.x+sizeX*0.9f-sizeX*0.5f, position.y, sizeX*0.5f, EditorGUIUtility.singleLineHeight),
                         idx,
                         methodsNames
                     );

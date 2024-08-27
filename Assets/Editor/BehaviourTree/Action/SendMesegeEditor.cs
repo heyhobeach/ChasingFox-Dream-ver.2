@@ -49,7 +49,7 @@ namespace BehaviourTree.Editor
         {
             serializedObject.Update();
             // EditorGUILayout.PropertyField(script, true);
-            // EditorGUILayout.PropertyField(guid, true);
+            EditorGUILayout.PropertyField(guid, true);
             EditorGUILayout.PropertyField(description, true);
             // EditorGUILayout.PropertyField(child, true);
             list.DoLayoutList();

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace BehaviourTree
@@ -10,28 +11,36 @@ namespace BehaviourTree
     {
         public List<Mesage> mesages = new();
 
+        private List<MethodInfo> actions;
+        private BehaviourNode targetNode;
+
         protected override void OnEnd() { }
 
         protected override void OnStart() { }
 
         protected override NodeState OnUpdate()
         {
-            try 
+            foreach(var action in actions) action.Invoke(targetNode, null);
+            return NodeState.Success;
+        }
+
+        private void OnEnable()
+        {
+            if(BehaviourNode.clone == null || blackboard.thisUnit == null) return;
+            actions = new();
+            foreach(var mesage in mesages)
             {
-                // var node = BehaviourNode.clone[(blackboard.thisUnit.GetInstanceID(), (unityEvent.GetPersistentTarget(0) as BehaviourNode).guid)];
-                // if(node) node.GetType().GetMethod(unityEvent.GetPersistentMethodName(0)).Invoke(node, null);
-                foreach(var mesage in mesages)
+                if(mesage.GetName.Equals("None")) continue;
+                try 
                 {
-                    if(mesage.GetName.Equals("None")) continue;
-                    var node = BehaviourNode.clone[(blackboard.thisUnit.GetInstanceID(), mesage.GetGUID)];
-                    if(node) node.GetType().GetMethod(mesage.GetName).Invoke(node, null);
+                    targetNode = BehaviourNode.clone[(blackboard.thisUnit.GetInstanceID(), mesage.GetGUID)];
+                    if(targetNode) actions.Add(targetNode.GetType().GetMethod(mesage.GetName)); 
                 }
-                return NodeState.Success;
-            }
-            catch (TargetException e)
-            { 
-                Debug.LogError(e.Message);
-                return NodeState.Failure;
+                catch (Exception e)
+                { 
+                    Debug.LogError(e.Message);
+                    continue;
+                }
             }
         }
 
