@@ -9,7 +9,21 @@ namespace BehaviourTree
     {
         public enum NodeState { Running, Failure, Success }
         [HideInInspector] public NodeState state = NodeState.Running;
-        [HideInInspector] public bool isStarted = false;
+        private bool isStarted = false;
+        private bool _isUpdated;
+        public bool isUpdated
+        {
+            get
+            {
+                if(_isUpdated)
+                {
+                    _isUpdated = false;
+                    return true;
+                }
+                else return false;
+            }
+            set => _isUpdated = value;
+        }
         [SerializeField, DisableInspector] public string guid;
         [HideInInspector] public Vector2 positon;
         [HideInInspector] public Blackboard blackboard;
@@ -24,6 +38,7 @@ namespace BehaviourTree
                 isStarted = true;
             }
             state = OnUpdate();
+            isUpdated = true;
             if(state == NodeState.Failure || state == NodeState.Success) 
             {
                 OnEnd(); 

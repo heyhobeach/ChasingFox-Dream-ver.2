@@ -78,11 +78,11 @@ namespace BehaviourTree.Editor
             RemoveFromClassList("running");
             RemoveFromClassList("failure");
             RemoveFromClassList("success");
-            if(!Application.isPlaying) return;
+            if(!Application.isPlaying || !behaviourNode.isUpdated) return;
             switch(behaviourNode.state)
             {
                 case BehaviourNode.NodeState.Running:
-                if(behaviourNode.isStarted) AddToClassList("running");
+                AddToClassList("running");
                 break;
                 case BehaviourNode.NodeState.Failure:
                 AddToClassList("failure");
