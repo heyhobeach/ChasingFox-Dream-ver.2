@@ -40,10 +40,10 @@ public class DialogueParser : MonoBehaviour
             List<string> commandList = new List<string>();
             List<string> testarr = new List<string>();
             row = Regex.Split(data[i], SPLIT_RE);
-            foreach(var txt in row)
-            {
-                Debug.Log(txt);
-            }
+            //foreach(var txt in row)
+            //{
+            //    Debug.Log(txt);
+            //}
             Dialogue dialogue = new Dialogue();//
             //dialogue.command = new string[10][];
             dialogue.name = row[2];//
