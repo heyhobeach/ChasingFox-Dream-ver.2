@@ -80,9 +80,9 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
 
     public bool Jump(KeyState jumpKey) => changedForm.Jump(jumpKey);
 
-    public bool Move(float dir)
+    public bool Move(Vector2 dir)
     {
-        if(dir != 0)fixedDir = dir;
+        if(dir.x != 0)fixedDir = dir.x;
         return changedForm.Move(dir);
     }
 
@@ -121,7 +121,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         Debug.Log("유저 사망");
         ProCamera2DShake.Instance.Shake("Hit ShakePreset");
         invalidation = true;
-        if(changedForm is not Berserker) // 버서커 상태가 아닐 시
+        if(changedForm.GetType() == typeof(Berserker)) // 버서커 상태가 아닐 시
         {
             Debug.Log("버서커");
             changedForm.Death();

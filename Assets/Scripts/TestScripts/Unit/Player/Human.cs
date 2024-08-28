@@ -57,7 +57,7 @@ public class Human : PlayerUnit
     private Coroutine reloadCoroutine;
     private Coroutine attackCoroutine;
 
-    private float fixedDir = 0;
+    private Vector2 fixedDir = Vector2.zero;
 
     protected override void OnEnable()
     {
@@ -141,10 +141,10 @@ public class Human : PlayerUnit
         }
     }
 
-    public override bool Move(float dir)
+    public override bool Move(Vector2 dir)
     {
         if(ControllerChecker() || unitState == UnitState.Dash) return false; // 조작이 불가능한 상태일 경우 동작을 수행하지 않음
-        fixedDir = (int)dir; // 대쉬 방향을 저장
+        fixedDir = dir; // 대쉬 방향을 저장
         //Anim
         return base.Move(dir);
     }
@@ -186,7 +186,7 @@ public class Human : PlayerUnit
         unitState = UnitState.Dash;
         ReloadCancel();
         ResetForce();
-        var tempVel = fixedDir == 0 ? spriteRenderer.flipX ? -1 : 1 : Mathf.Sign(fixedDir);
+        var tempVel = fixedDir.x == 0 ? spriteRenderer.flipX ? -1 : 1 : Mathf.Sign(fixedDir.x);
         SetHorizontalVelocity(tempVel);
         yield return new WaitUntil(() => anim.GetCurrentAnimatorStateInfo(0).IsName("Dash"));
         while(anim.GetCurrentAnimatorStateInfo(0).IsName("Dash")) // 대쉬 지속 시간 동안

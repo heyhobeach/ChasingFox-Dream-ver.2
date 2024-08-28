@@ -22,13 +22,14 @@ public class DialogueParser : MonoBehaviour
         List<Dialogue> dialoguesList = new List<Dialogue>();
         TextAsset csvData = Resources.Load<TextAsset>(_CSVFileName);//csv파일 로드
 
-        if(csvData != null)
+        if(csvData == null)
         {
-            //Debug.Log("�ҷ���");
+            // Debug.Log(_CSVFileName+"파일 못 불러옴");
+            return null;
         }
         else
         {
-            //Debug.Log("�� �ҷ���");
+            // Debug.Log("파일 불러옴");
         }
 
         string[] data =csvData.text.Split(new char[] { '\n' });//공백분리 split('\n')
@@ -39,9 +40,13 @@ public class DialogueParser : MonoBehaviour
             List<string> commandList = new List<string>();
             List<string> testarr = new List<string>();
             row = Regex.Split(data[i], SPLIT_RE);
+            foreach(var txt in row)
+            {
+                // Debug.Log(txt);
+            }
             Dialogue dialogue = new Dialogue();//
             //dialogue.command = new string[10][];
-            dialogue.name = row[2];
+            dialogue.name = row[2];//
             dialogue.id = row[0];
             //command = Regex.Split(row[4], SPLIT_COMMAND_PASER);
             //command = spaceremove(command);
@@ -121,7 +126,7 @@ public class DialogueParser : MonoBehaviour
         if (row[0].ToString() == "")
         {
             //dialoub
-            Debug.Log("null");
+            // Debug.Log("null");
         }
         return endIndex;
     }

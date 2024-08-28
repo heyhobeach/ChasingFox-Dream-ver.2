@@ -38,6 +38,18 @@ public partial class GameManager : MonoBehaviour
     private List<Node> FinalNodeList;
     List<string> NodeDistanceList;
     Node[,] NodeArray;
+    private bool isLoad;
+
+    public IEnumerator MapSearchStart()
+    {
+        while(true)
+        {
+            yield return new WaitUntil(() => isLoad);
+            MapSearch();
+            isLoad = false;
+        }
+    }
+
     public void MapSearch()
     {
         // NodeArray�� ũ�� �����ְ�, isWall, x, y ����
@@ -67,8 +79,13 @@ public partial class GameManager : MonoBehaviour
     }
     public List<Node> PathFinding(Vector3 startPosV3, Vector3 targetPosV3)
     {
-        Vector2Int startPos = new Vector2Int((int)startPosV3.x - bottomLeft.x, (int)startPosV3.y - bottomLeft.y);
-        Vector2Int targetPos = new Vector2Int((int)targetPosV3.x - bottomLeft.x, (int)targetPosV3.y - bottomLeft.y);
+        if(NodeArray == null)
+        {
+            isLoad = true;
+            return null;
+        }
+        Vector2Int startPos = new Vector2Int((int)startPosV3.x, (int)startPosV3.y);
+        Vector2Int targetPos = new Vector2Int((int)targetPosV3.x, (int)targetPosV3.y);
         StartNode = NodeArray[startPos.x - bottomLeft.x, startPos.y - bottomLeft.y];//���� �� �κ� ������ �߱��� �۵����� ������ ����
         TargetNode = NodeArray[targetPos.x - bottomLeft.x, targetPos.y - bottomLeft.y];
         int tempNum = 0;
@@ -262,4 +279,9 @@ public partial class GameManager : MonoBehaviour
             }
         }
     }
+    // void OnDrawGizmos()
+    // {
+    //     if (FinalNodeList.Count != 0) for (int i = 0; i < FinalNodeList.Count - 1; i++)
+    //             Gizmos.DrawLine(new Vector2(FinalNodeList[i].x, FinalNodeList[i].y), new Vector2(FinalNodeList[i + 1].x, FinalNodeList[i + 1].y));
+    // }
 }

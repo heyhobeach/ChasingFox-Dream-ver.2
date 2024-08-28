@@ -50,7 +50,7 @@ public interface IUnitController
     /// </summary>
     /// <param name="dir">이동 방향</param>
     /// <returns>이동 동작이 성공적으로 수행되었을 시 true를 반환</returns>
-    bool Move(float dir);
+    bool Move(Vector2 dir);
 
     /// <summary>
     /// 크라우치 동작을 수행

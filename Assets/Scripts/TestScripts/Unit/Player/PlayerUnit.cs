@@ -3,6 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.U2D.Animation;
+
+[RequireComponent(typeof(SpriteLibrary))]
+[RequireComponent(typeof(SpriteResolver))]
+[RequireComponent(typeof(PlayerController))]
 
 /// <summary>
 /// 플레이어 유닛의 기본 동작을 정의, UnitBase를 상속한 추상 클래스
@@ -40,7 +45,7 @@ public abstract class PlayerUnit : UnitBase
         switch (CheckMapType(collision))
         {
             case MapType.Platform:
-                Debug.Log("플랫폼 들어옴");
+                // Debug.Log("플랫폼 들어옴");
               //  currentOneWayPlatform = collision.gameObject;//플랫폼이라면 현재 플렛폼을 담음
                 // Debug.Log(collision.gameObject.GetComponent<PlatformScript>().dObject);//다운 오브젝트 타입확인용 로그
                 switch (collision.gameObject.GetComponent<PlatformScript>().dObject)//대각선 직선 오브젝트 마다 떨어지는 시간이 다를수도 있으니  
@@ -69,11 +74,11 @@ public abstract class PlayerUnit : UnitBase
         switch(CheckMapType(collision))
         {
             case MapType.Platform:
-                Debug.Log("플랫폼 벗어남");
+                // Debug.Log("플랫폼 벗어남");
                 if (isJumping)
                 {
                     Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), false);
-                    Debug.Log("점프");
+                    // Debug.Log("점프");
                 }
                 //currentOneWayPlatform = null;//platform에서 벗어난거라면 플랫폼 변수를 비움
                 break;
@@ -172,14 +177,14 @@ public abstract class PlayerUnit : UnitBase
         return false;
     }
 
-    public override bool Move(float dir)
+    public override bool Move(Vector2 dir)
     {
         if(ControllerChecker()) return false;
-        hzVel += dir == 0 ? -hzVel * accelerate * Time.deltaTime : (dir-hzForce/movementSpeed) * accelerate * Time.deltaTime; // 가속도만큼 입력 방향에 힘을 추가
-        if(dir == 0 && Mathf.Abs(hzVel) < 0.01f) hzVel = 0;
-        if(unitState == UnitState.FormChange || dir == 0) // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
+        hzVel += dir.x == 0 ? -hzVel * accelerate * Time.deltaTime : (dir.x-hzForce/movementSpeed) * accelerate * Time.deltaTime; // 가속도만큼 입력 방향에 힘을 추가
+        if(dir.x == 0 && Mathf.Abs(hzVel) < 0.01f) hzVel = 0;
+        if(unitState == UnitState.FormChange || dir.x == 0) // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
         {
-            base.Move(0);
+            base.Move(Vector2.zero);
             return false;
         }
         else base.Move(dir);
@@ -191,10 +196,10 @@ public abstract class PlayerUnit : UnitBase
     // 수정 필요함
     public override bool Crouch(KeyState crouchKey)
     {
-        Debug.Log("findRayPlatform" + findRayPlatform);
+        // Debug.Log("findRayPlatform" + findRayPlatform);
         if (ControllerChecker() || unitState == UnitState.FormChange || !findRayPlatform) return false;
-        if (currentOneWayPlatform == null) Debug.Log("크라우치에서 플랫폼 없음");
-        else Debug.Log("크라우치에서 플랫폼 있음");
+        // if (currentOneWayPlatform == null) Debug.Log("크라우치에서 플랫폼 없음");
+        // else Debug.Log("크라우치에서 플랫폼 있음");
         switch (crouchKey)
         {
             case KeyState.KeyDown:
@@ -202,13 +207,13 @@ public abstract class PlayerUnit : UnitBase
                 //canDown = true;
                 if (currentOneWayPlatform != null)//밑 아래 점프 가능한 오브젝트와 닿아있을때 ,우선순위 따라서 위로 올리고 return이 필요할듯 
                 {
-                    Debug.Log("hello");
+                    // Debug.Log("hello");
                     // canDown = !isHide;
                     canDown = true;
                 }
                 else
                 {
-                    Debug.Log("여기에 걸림");
+                    // Debug.Log("여기에 걸림");
                 }
                 return true;
             case KeyState.KeyUp:
@@ -222,7 +227,7 @@ public abstract class PlayerUnit : UnitBase
         switch (CheckMapType(ray))
         {
             case MapType.Platform:
-                Debug.Log("플랫폼 들어옴");
+                // Debug.Log("플랫폼 들어옴");
                 currentOneWayPlatform = ray.transform.gameObject;//플랫폼이라면 현재 플렛폼을 담음
                 // Debug.Log(collision.gameObject.GetComponent<PlatformScript>().dObject);//다운 오브젝트 타입확인용 로그
                 switch (ray.transform.gameObject.GetComponent<PlatformScript>().dObject)//대각선 직선 오브젝트 마다 떨어지는 시간이 다를수도 있으니  
@@ -234,6 +239,7 @@ public abstract class PlayerUnit : UnitBase
                         downTime = 0.8f;//떨어지는 시간 다르게 하기 위함 , 0.7초까지도 1칸에 대해서는 가능하지만 만약에 쭉 앞으로 가면서 떨어진다고 하면 안전한 시간은 0.75~0.8사이임
                         break;
                 }
+                //canDown = true;
                 break;
             case MapType.Floor:
                 isJumping = false;
@@ -248,7 +254,7 @@ public abstract class PlayerUnit : UnitBase
     private void CrouchUpdate()
     {
         // var charBoxCollider = GetComponent<BoxCollider2D>();
-        Debug.Log("candown" + canDown);
+        // Debug.Log("candown" + canDown);
         float player_dialog = Mathf.Sqrt(MathF.Pow(boxSizeX, 2) + MathF.Pow(boxSizeY, 2));
         RaycastHit2D[] hit =Physics2D.RaycastAll(transform.parent.position + Vector3.up * boxOffsetY, Vector2.down, distanceToCheck, lm);
         Debug.DrawRay(transform.position + Vector3.up * boxOffsetY, Vector2.down * distanceToCheck, Color.red);
@@ -279,11 +285,11 @@ public abstract class PlayerUnit : UnitBase
             {
                 
                 GetCurrenttPlatform(dHitarr[indexP]);
-                Debug.Log("플랫폼 찾음"+canDown);
+                // Debug.Log("플랫폼 찾음"+canDown);
             }
             else
             {
-                Debug.Log("플랫폼 못찾음");
+                // Debug.Log("플랫폼 못찾음");
             }
         }
         if (d2Hit.collider == null)
@@ -293,16 +299,16 @@ public abstract class PlayerUnit : UnitBase
         else
          {
             var indexP = Array.FindIndex(d2Hitarr, x => x.transform.tag == "platform" && x.distance > boxOffsetY / 2);
-            Debug.Log(indexP);
+            // Debug.Log(indexP);
             if (indexP != -1)
             {
                 
                 GetCurrenttPlatform(d2Hitarr[indexP]);
-                Debug.Log("플랫폼 찾음" + canDown);
+                // Debug.Log("플랫폼 찾음" + canDown);
             }
             else
             {
-                Debug.Log("플랫폼 못찾음");
+                // Debug.Log("플랫폼 못찾음");
             }
          }
         // Debug.Log("hit=>"+hit.Length);
@@ -321,8 +327,13 @@ public abstract class PlayerUnit : UnitBase
                 GetCurrenttPlatform(hit[indexP]);
             }
 
+            if (indexP != -1)
+            {
+                GetCurrenttPlatform(hit[indexP]);
+            }
+            
 
-            Debug.Log(string.Format("indexG {0} indexP{1}", indexG, indexP));
+            // Debug.Log(string.Format("indexG {0} indexP{1}", indexG, indexP));
             // Debug.Log(string.Format("indexG=>{0}  indexP=>{1}", indexG,indexP));
 
 
@@ -366,20 +377,20 @@ public abstract class PlayerUnit : UnitBase
         {
             if (canDown)//아래 점프 가능한 오브젝트 만날경우
             {
-                Debug.Log("hi");
+                // Debug.Log("hi");
                 findRayPlatform = true;
                 Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), true);//원리는 그냥 설정한 시간동안 해당 플렛폼들을 그냥 무시하는식으로 설정했음 근데 지금 생각해보면 지금 플렛폼을 받아와서 플렛폼의 네임을 무시하는식으로 해도 되지않을까 하는 영감이 떠오름
                 SetVerticalForce(gravity * Time.deltaTime);
-                Debug.Log("무시중");
+                // Debug.Log("무시중");
                 currentOneWayPlatform.GetComponent<PlatformEffector2D>().useColliderMask = false;
                 yield return new WaitForSeconds(downTime);//downtime변수는 나중에 중력 설정시 이질감이 든다면 변경필요
-                Debug.Log("무시 끝");
+                // Debug.Log("무시 끝");
                 findRayPlatform = false;
                 currentOneWayPlatform.GetComponent<PlatformEffector2D>().useColliderMask = true;
                 //Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), false);
                 canDown = false;
             }
-            yield return new WaitForEndOfFrame();
+            yield return null;
         }
     }
 
@@ -456,6 +467,8 @@ public abstract class PlayerUnit : UnitBase
         SetVerticalForce(0);
     }
 
+
+
     /// <summary>
     /// 충돌면의 MapType을 반환
     /// </summary>
@@ -488,7 +501,7 @@ public abstract class PlayerUnit : UnitBase
     }
     protected MapType CheckMapType(RaycastHit2D collision, ref float angle)
     {
-        if (!(collision.collider.CompareTag("Map") || collision.collider.CompareTag("platform"))) return MapType.None;
+        if (!(collision.collider.CompareTag("Map") || collision.collider.CompareTag("platform")) ) return MapType.None;
         if (collision.collider.CompareTag("platform")) return MapType.Platform;
         angle = Mathf.Abs(Vector2.Angle(Vector2.up, collision.normal));
         if (angle <= 45) return MapType.Ground;

@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using BehaviourTree;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public partial class GameManager : MonoBehaviour
@@ -18,13 +20,13 @@ public partial class GameManager : MonoBehaviour
     }
     public static void PopController(IBaseController @base)
     {
-        if(instance.controllers.Peek() != @base)
+        if(instance.controllers.Count > 0 && instance.controllers.Peek() != @base)
         {
             Stack<IBaseController> temp = new();
             while(instance.controllers.Count > 0 && !temp.Equals(instance.controllers.Peek())) temp.Push(instance.controllers.Pop());
             while(temp.Count > 0) instance.controllers.Push(temp.Pop());
         }
-        instance.controllers.Pop();
+        if(instance.controllers.Count > 0) instance.controllers.Pop();
     }
 
     public BrutalDatas brutalDatas;
@@ -44,6 +46,12 @@ public partial class GameManager : MonoBehaviour
 
     public void TimeScale(float t) => Time.timeScale = t;
 
+    private void OnDestroy()
+    {
+        BehaviourNode.clone.Clear();
+        StopAllCoroutines();
+    }
+
     private void Awake()
     {
         if (instance != null)
@@ -54,6 +62,11 @@ public partial class GameManager : MonoBehaviour
         instance = this;
         if(controllers == null) controllers = new();
         player = FindObjectOfType<Player>();
+    }
+
+    private void Start()
+    {
+        StartCoroutine(MapSearchStart());
     }
 
     private void Update()

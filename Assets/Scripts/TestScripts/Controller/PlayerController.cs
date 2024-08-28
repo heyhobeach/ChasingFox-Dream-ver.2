@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour, IBaseController
         else if(Input.GetKey(KeyCode.W)) unitController.Jump(KeyState.KeyStay);
         else if(Input.GetKeyUp(KeyCode.W)) unitController.Jump(KeyState.KeyUp);
         else unitController.Jump(KeyState.None);
-        unitController.Move(Input.GetAxisRaw("Horizontal"));
+        unitController.Move(Vector2.right * Input.GetAxisRaw("Horizontal"));
         isKeyDown = false;
     }
 
@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour, IBaseController
         return true;
     }
 
-    public void Move(float dir) => unitController.Move(dir);
+    public void Move(Vector2 dir) => unitController.Move(dir);
     public void Attack(float angle) => unitController.Attack(new Vector3(Mathf.Sin(Mathf.Deg2Rad * angle) * 10000, Mathf.Cos(Mathf.Deg2Rad * angle) * 10000));
     public void Reload() => unitController.Reload();
 

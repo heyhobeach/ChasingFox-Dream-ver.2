@@ -26,7 +26,7 @@ public class Werwolf : PlayerUnit
     /// <summary>
     /// 고정된 방향을 저장하기 위한 변수
     /// </summary>
-    private int fixedDir = 0;
+    private Vector2 fixedDir = Vector2.zero;
 
     /// <summary>
     /// 공격 코루틴을 저장하는 변수, 공격 중 여부 겸용
@@ -168,11 +168,11 @@ public class Werwolf : PlayerUnit
         attackCoroutine = null;
     }
 
-    public override bool Move(float dir)
+    public override bool Move(Vector2 dir)
     {
         if(ControllerChecker() || unitState == UnitState.HoldingWall || 
             unitState == UnitState.Dash || unitState == UnitState.Attack) return false; // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
-        fixedDir = (int)dir; // 대쉬 방향을 저장
+        fixedDir = dir.normalized; // 대쉬 방향을 저장
         return base.Move(dir);
     }
     public override bool Jump(KeyState jumpKey)
@@ -202,14 +202,14 @@ public class Werwolf : PlayerUnit
     bool isholded;
     private void HoldingWall(Collision2D collision)
     {
-        fixedDir = -CheckDir(collision.contacts[0].point); // 벽의 반대 방향을 저장
+        fixedDir = Vector2.right * -CheckDir(collision.contacts[0].point); // 벽의 반대 방향을 저장
         if(isholded || holdingCoroutine != null || !Physics2D.Raycast(transform.position + Vector3.down * boxSizeY * 0.9f, Vector2.right*-fixedDir, boxSizeX*1.05f, 1<<LayerMask.NameToLayer("Map"))) return;
         if(holdingCoroutine != null) StopHoldingWall();
         isJumping = false;
         isholded = true;
         anim.SetBool("isHoldingWall", true);
         unitState = UnitState.HoldingWall; // 벽붙기 상태로 변경
-        if(fixedDir < 0) spriteRenderer.flipX = true;
+        if(fixedDir.x < 0) spriteRenderer.flipX = true;
         else spriteRenderer.flipX = false;
         ResetForce();
         SetHorizontalVelocity(0);
@@ -228,7 +228,7 @@ public class Werwolf : PlayerUnit
         isholded = false;
     }
 
-    private IEnumerator Holding(float dir)
+    private IEnumerator Holding(Vector2 dir)
     {
         yield return new WaitUntil(() => isFormChangeReady ||
             !Physics2D.Raycast(transform.position + Vector3.down * boxSizeY * 0.9f, Vector2.right*dir, boxSizeX*1.05f, 1<<LayerMask.NameToLayer("Map")) ||
@@ -260,7 +260,7 @@ public class Werwolf : PlayerUnit
     {
         if(unitState == UnitState.HoldingWall) StopHoldingWall();
         unitState = UnitState.Dash; // 대쉬 상태로 변경
-        var tempVel = fixedDir == 0 ? spriteRenderer.flipX ? -1 : 1 : Mathf.Sign(fixedDir);
+        var tempVel = fixedDir.x == 0 ? spriteRenderer.flipX ? -1 : 1 : Mathf.Sign(fixedDir.x);
         SetHorizontalVelocity(tempVel);
         SetVerticalForce(0);
         yield return new WaitUntil(() => anim.GetCurrentAnimatorStateInfo(0).IsName("Dash"));
