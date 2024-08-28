@@ -37,13 +37,13 @@ public class DatabaseManager : MonoBehaviour
             theParser = GetComponent<DialogueParser>();
             csv_FileName= string.Format("{0}\\{1}\\Chapter{2}\\Chapter{3}", "FindTest", CheckLangugea(eLang), chapter,chapter);
             //Dialogue[] dialogues =theParser.Parse(csv_FileName);//여기서 지금 대화 모든 내용을 다 파싱 한 상태//주석 풀고 사용 하면 됨
-            Dialogue[] dialogues =theParser.Parse("테스트파일");//여기서 지금 대화 모든 내용을 다 파싱 한 상태//주석 풀고 사용 하면 됨
-            
+            Dialogue[] dialogues =theParser.Parse(csv_FileName);//여기서 지금 대화 모든 내용을 다 파싱 한 상태//주석 풀고 사용 하면 됨
             for (int i =0;i<dialogues.Length;i++)
             {
                 dialogueDic.Add(i +1, dialogues[i]);
             }
             isFinish= true;
+            Debug.Log("디셔너리 크기 확인"+dialogueDic.Count);//크기 65//파싱이 잘 못 되어있음
         }
     }
     string CheckLangugea(Lang eLang)

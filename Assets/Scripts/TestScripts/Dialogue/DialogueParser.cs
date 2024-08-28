@@ -18,32 +18,32 @@ public class DialogueParser : MonoBehaviour
     //테스트
     public Dialogue[] Parse(string _CSVFileName)
     {
-        // int chap = 1;
+        int chap = 1;
         List<Dialogue> dialoguesList = new List<Dialogue>();
         TextAsset csvData = Resources.Load<TextAsset>(_CSVFileName);//csv파일 로드
 
         if(csvData == null)
         {
-            // Debug.Log(_CSVFileName+"파일 못 불러옴");
+            Debug.Log(_CSVFileName+"파일 못 불러옴");
             return null;
         }
         else
         {
-            // Debug.Log("파일 불러옴");
+            Debug.Log("파일 불러옴");
         }
 
         string[] data =csvData.text.Split(new char[] { '\n' });//공백분리 split('\n')
         
         for(int i=1+DatabaseManager.instance.lastIndex;i<data.Length-1; )//ID 1번 부터 위에는 다른거라서 필요없음
         {
-            // int command_num = 0;
+            int command_num = 0;
             List<string> commandList = new List<string>();
             List<string> testarr = new List<string>();
             row = Regex.Split(data[i], SPLIT_RE);
-            foreach(var txt in row)
-            {
-                // Debug.Log(txt);
-            }
+            //foreach(var txt in row)
+            //{
+            //    Debug.Log(txt);
+            //}
             Dialogue dialogue = new Dialogue();//
             //dialogue.command = new string[10][];
             dialogue.name = row[2];//
@@ -126,7 +126,7 @@ public class DialogueParser : MonoBehaviour
         if (row[0].ToString() == "")
         {
             //dialoub
-            // Debug.Log("null");
+            Debug.Log("null");
         }
         return endIndex;
     }
