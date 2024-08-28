@@ -40,7 +40,7 @@ namespace BehaviourTree
             // }
         }
         public Enemy_State enemy_state;
-        [HideInInspector] public List<GameManager.Node> FinalNodeList;
+         public List<GameManager.Node> FinalNodeList;
         private int _nodeIdx;
         [HideInInspector] public int nodeIdx 
         { 
@@ -48,7 +48,7 @@ namespace BehaviourTree
             set 
             {
                 _nodeIdx = value;
-                _nodeIdx = Mathf.Clamp(_nodeIdx, 0, FinalNodeList.Count); 
+                if(FinalNodeList != null) _nodeIdx = Mathf.Clamp(_nodeIdx, 0, FinalNodeList.Count); 
             }
         }
     }
