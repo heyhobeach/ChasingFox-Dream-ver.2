@@ -40,7 +40,7 @@ namespace BehaviourTree
             // }
         }
         public Enemy_State enemy_state;
-         public List<GameManager.Node> FinalNodeList;
+        [HideInInspector] public List<GameManager.Node> FinalNodeList;
         private int _nodeIdx;
         [HideInInspector] public int nodeIdx 
         { 

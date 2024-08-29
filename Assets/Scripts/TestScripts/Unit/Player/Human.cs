@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Com.LuisPedroFonseca.ProCamera2D;
 using UnityEngine;
 
+[RequireComponent(typeof(ShootingAnimationController))]
 /// <summary>
 /// 인간 상태 클래스, PlayerUnit 클래스를 상속함
 /// </summary>

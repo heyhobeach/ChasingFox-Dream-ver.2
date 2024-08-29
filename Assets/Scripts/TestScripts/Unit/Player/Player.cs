@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Com.LuisPedroFonseca.ProCamera2D;
 using UnityEngine;
 
+
+[RequireComponent(typeof(PlayerController))]
 /// <summary>
 /// 플레이어 클래스. IUnitController 및 IDamageable 인터페이스를 상속
 /// </summary>
@@ -155,9 +157,9 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     private bool isBulletTime;
     public bool FormChange()
     {
-        if(changedForm is Berserker || changing != null) return false; // 대쉬 중이거나 제어가 불가능한 상태일 경우 동작을 수행하지 않음
+        if(changedForm.GetType() == typeof(Berserker) || changing != null) return false; // 대쉬 중이거나 제어가 불가능한 상태일 경우 동작을 수행하지 않음
         bool b = false;
-        if(changedForm is Human)
+        if(changedForm.GetType() == typeof(Human))
         {
             if(changeGage > 0 && changedForm.FormChange())
             {
@@ -171,7 +173,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
                 changing = StartCoroutine(BulletTime());
             }
         }
-        else if(changedForm is Werwolf && changedForm.FormChange())
+        else if(changedForm.GetType() == typeof(Werwolf) && changedForm.FormChange())
         {
             changing = StartCoroutine(ChangeHuman());
             b = true;
@@ -186,9 +188,9 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         yield return new WaitUntil(() => changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("Dash"));
         yield return new WaitUntil(() => {
             FixMove();
-            return !(changedForm is Human && changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("Dash") && changedForm.anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.3f);
+            return !(changedForm.GetType() == typeof(Human) && changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("Dash") && changedForm.anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.3f);
         });
-        if(changedForm is Human && bulletTimeCount-- > 0)
+        if(changedForm.GetType() == typeof(Human) && bulletTimeCount-- > 0)
         {
             isBulletTime = true;
             Time.timeScale = 0.05f;
@@ -246,9 +248,9 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         yield return new WaitUntil(() => changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("FormChange"));
         yield return new WaitUntil(() => {
             FixMove();
-            return !(changedForm is Human && changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("FormChange") && changedForm.anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.3f);
+            return !(changedForm.GetType() == typeof(Human) && changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("FormChange") && changedForm.anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.3f);
         });
-        if(changedForm is Human && bulletTimeCount-- > 0)
+        if(changedForm.GetType() == typeof(Human) && bulletTimeCount-- > 0)
         {
             isBulletTime = true;
             Time.timeScale = 0.5f;
@@ -319,7 +321,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     void Update()
     {
         pObject = this.gameObject;
-        if(changedForm is Werwolf)
+        if(changedForm.GetType() == typeof(Werwolf))
         {
             if(changeGage >= 0) changeGage -= brutalData.sec * Time.deltaTime;
             else FormChange();
