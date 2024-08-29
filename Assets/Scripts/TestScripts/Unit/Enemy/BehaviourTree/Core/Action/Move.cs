@@ -27,16 +27,13 @@ namespace BehaviourTree
             }
             if(blackboard.FinalNodeList == null || blackboard.FinalNodeList.Count <= blackboard.nodeIdx) 
             {
+                while(blackboard.FinalNodeList != null && blackboard.FinalNodeList.Count <= blackboard.nodeIdx) blackboard.nodeIdx--;
                 if(blackboard.nodeIdx > 0) blackboard.nodeIdx--;
                 return NodeState.Failure;
             }
-            var b = blackboard.thisUnit.Move(new Vector2(blackboard.FinalNodeList[blackboard.nodeIdx].x, blackboard.FinalNodeList[blackboard.nodeIdx].y + 1));
+            blackboard.thisUnit.Move(new Vector2(blackboard.FinalNodeList[blackboard.nodeIdx].x, blackboard.FinalNodeList[blackboard.nodeIdx].y + 1));
             if((blackboard.thisUnit.transform.position - new Vector3(blackboard.FinalNodeList[blackboard.nodeIdx].x, blackboard.FinalNodeList[blackboard.nodeIdx].y + 1, blackboard.thisUnit.transform.position.z)).magnitude < 0.1f) blackboard.nodeIdx++;
-            switch(b)
-            {
-                case true: return NodeState.Success;
-                case false: return NodeState.Failure;
-            }
+            return NodeState.Success;
         }
 
         private async void GetPathAsync()

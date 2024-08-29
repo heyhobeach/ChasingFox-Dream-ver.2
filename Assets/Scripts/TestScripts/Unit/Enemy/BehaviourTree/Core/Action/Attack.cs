@@ -12,7 +12,7 @@ namespace BehaviourTree
         float time;
         Vector2 aimPos;
         
-        protected override void OnEnd() { }
+        protected override void OnEnd() => blackboard.thisUnit.ShootingAni(false);
 
         protected override void OnStart()
         {
@@ -21,6 +21,7 @@ namespace BehaviourTree
             aimPos = blackboard.target.position;
             canAttack = blackboard.thisUnit.AttackCheck(aimPos);
             blackboard.thisUnit.Move(blackboard.thisUnit.transform.position);
+            blackboard.thisUnit.ShootingAni(true);
         }
 
         protected override NodeState OnUpdate()
@@ -29,7 +30,11 @@ namespace BehaviourTree
             if(time < aimmingTime)
             {
                 time += Time.deltaTime;
-                if(blackboard.thisUnit.AttackCheck(blackboard.target.position)) aimPos = blackboard.target.position;
+                if(blackboard.thisUnit.AttackCheck(blackboard.target.position))
+                {
+                    aimPos = blackboard.target.position;
+                    blackboard.thisUnit.shootingAnimationController.targetPosition = aimPos;
+                }
                 return NodeState.Running;
             }
             else if(time < aimmingTime+delayTime)

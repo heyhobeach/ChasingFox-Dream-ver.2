@@ -109,6 +109,18 @@ public class Human : PlayerUnit
         residualAmmo = maxAmmo;
     }
 
+    protected override void Update()
+    {
+        base.Update();
+        
+        var screenPoint = Input.mousePosition;
+        screenPoint.z = Camera.main.transform.position.z;
+        screenPoint = Camera.main.ScreenToWorldPoint(screenPoint);
+        screenPoint.z = 0;
+
+        shootingAnimationController.targetPosition = screenPoint;
+    }
+
     bool isAttack = false;
     Vector3 clickPos;
     public override bool Attack(Vector3 clickPos)

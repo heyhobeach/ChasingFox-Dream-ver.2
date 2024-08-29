@@ -23,6 +23,7 @@ public class ShootingAnimationController : MonoBehaviour
     public bool isReloadAni { get => armAnim.GetCurrentAnimatorStateInfo(0).IsName("Reload"); }
 
     public float errorRange;
+    public Vector2 targetPosition;
 
     private void OnDisable() => attackCoroutine = null;
 
@@ -47,11 +48,7 @@ public class ShootingAnimationController : MonoBehaviour
         thisPoint -= new Vector3(tempPositon.y, tempPositon.x);
         thisPoint.z = 0;
         shootPostion.transform.localPosition = new Vector3(shootPostion.transform.localPosition.x, arm.flipY ? -errorRange : errorRange);
-        var screenPoint = Input.mousePosition;
-        screenPoint.z = Camera.main.transform.position.z;
-        screenPoint = Camera.main.ScreenToWorldPoint(screenPoint);
-        screenPoint.z = 0;
-        var resultPoint = screenPoint - thisPoint;
+        var resultPoint = targetPosition - (Vector2) thisPoint;
         angle = Quaternion.FromToRotation(Vector2.down, resultPoint).eulerAngles.z;
         headAnim.SetFloat("angle", Vector2.Angle(Vector2.down, resultPoint));
         var flip = Mathf.Sign(resultPoint.x) >= 0 ? false : true;
