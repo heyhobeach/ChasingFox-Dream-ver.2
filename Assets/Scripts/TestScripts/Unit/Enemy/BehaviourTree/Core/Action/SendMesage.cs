@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace BehaviourTree
@@ -33,6 +32,7 @@ namespace BehaviourTree
                 if(mesage.GetName.Equals("None")) continue;
                 try 
                 {
+                    if(!BehaviourNode.clone.ContainsKey((blackboard.thisUnit.GetInstanceID(), mesage.GetGUID))) return;
                     targetNode = BehaviourNode.clone[(blackboard.thisUnit.GetInstanceID(), mesage.GetGUID)];
                     if(targetNode) actions.Add(targetNode.GetType().GetMethod(mesage.GetName)); 
                 }

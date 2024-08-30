@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 namespace BehaviourTree
@@ -18,6 +20,7 @@ namespace BehaviourTree
             return node;
         }
 
+#if UNITY_EDITOR
         public override void AddChild(BehaviourNode child)
         {
             Undo.RecordObject(this, "BehaviourTree AddChild");
@@ -30,6 +33,7 @@ namespace BehaviourTree
             this.children.Remove(child);
             EditorUtility.SetDirty(this);
         }
+#endif
         public override List<BehaviourNode> GetChildren() => children;
     }
 }

@@ -42,8 +42,7 @@ public class EnemyUnit : UnitBase
         bool inAngle = Mathf.Abs(deg) <= 180;
         bool inRange = (pos.magnitude < attackDistance) && pos.magnitude >= attackDistance*(1-attackRange);
         bool isForword = Mathf.Sign(pos.normalized.x)>0&&!spriteRenderer.flipX ? true : Mathf.Sign(pos.normalized.x)<0&&spriteRenderer.flipX ? true : false;
-        // bool isInner = Math.Abs(attackPos.x - transform.position.x) < boxSizeX;
-        bool isInner = pos.magnitude < boxSizeX;
+        bool isInner = pos.magnitude < boxSizeX*2;
         var hit = Physics2D.Raycast(transform.position, pos, pos.magnitude, 1<<LayerMask.NameToLayer("Map"));
         if(ControllerChecker() || hit || !inRange || !inAngle || !isForword || isInner) return false;
         else return true;
@@ -51,25 +50,24 @@ public class EnemyUnit : UnitBase
 
     public override bool Attack(Vector3 attackPos)
     {
-        if(shootingAnimationController != null) shootingAnimationController.targetPosition = attackPos;
+        if(shootingAnimationController != null)
+        {
+            GameObject _bullet = Instantiate(bullet);
+            GameObject gObj = this.gameObject;
+            shootingAnimationController.targetPosition = attackPos;
+            _bullet.GetComponent<Bullet>().Set(shootingAnimationController.GetShootPosition(), attackPos, shootingAnimationController.GetShootRotation(), 1, 5, gObj);
+        }
 
-        GameObject _bullet = Instantiate(bullet, transform.position, transform.rotation);
 
-        GameObject gObj = this.gameObject;
-        _bullet.GetComponent<Bullet>().Set(transform.position, attackPos, Vector3.zero, 1, 1, gObj, (Vector2)(attackPos-transform.position).normalized);
-        return true;
+        return base.Attack(attackPos);
     }
 
-    public void ShootingAni(bool b)
+    public void SetAni(bool b)
     {
         switch(b)
         {
-            case true:
-            shootingAnimationController.AttackAni();
-            break;
-            case false:
-            shootingAnimationController.NomalAni();
-            break;
+            case true: shootingAnimationController.AttackAni(); break;
+            case false: shootingAnimationController.NomalAni(); break;
         }
     }
 }

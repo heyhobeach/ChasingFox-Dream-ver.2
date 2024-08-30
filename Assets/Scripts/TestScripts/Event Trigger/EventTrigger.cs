@@ -1,7 +1,5 @@
 using System;
 using System.Collections;
-using Unity.VisualScripting;
-using UnityEditor.Events;
 using UnityEngine;
 
 public class EventTrigger : MonoBehaviour

@@ -279,9 +279,11 @@ public partial class GameManager : MonoBehaviour
             }
         }
     }
-    // void OnDrawGizmos()
-    // {
-    //     if (FinalNodeList.Count != 0) for (int i = 0; i < FinalNodeList.Count - 1; i++)
-    //             Gizmos.DrawLine(new Vector2(FinalNodeList[i].x, FinalNodeList[i].y), new Vector2(FinalNodeList[i + 1].x, FinalNodeList[i + 1].y));
-    // }
+// #if UNITY_EDITOR
+//     void OnDrawGizmos()
+//     {
+//         if (FinalNodeList.Count != 0) for (int i = 0; i < FinalNodeList.Count - 1; i++)
+//                 Gizmos.DrawLine(new Vector2(FinalNodeList[i].x, FinalNodeList[i].y), new Vector2(FinalNodeList[i + 1].x, FinalNodeList[i + 1].y));
+//     }
+// #endif
 }

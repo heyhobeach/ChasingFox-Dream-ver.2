@@ -96,7 +96,7 @@ namespace BehaviourTree.Editor
                 var runner = Selection.activeGameObject.GetComponent<EnemyController>();
                 if(runner) tree = runner.behaviorTree;
             }
-            if(Application.isPlaying) { if(tree) treeView.PopulateView(tree); } 
+            if(Application.isPlaying) { if(tree && treeView != null) treeView.PopulateView(tree); } 
             else { if(tree && AssetDatabase.CanOpenAssetInEditor(tree.GetInstanceID())) treeView.PopulateView(tree); }
             if(tree) 
             {
