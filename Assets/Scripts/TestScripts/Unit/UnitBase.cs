@@ -228,10 +228,16 @@ public abstract class UnitBase : MonoBehaviour, IUnitController, IDamageable
     public static bool ControllerChecker(UnitBase unitBase)
     {
         var unitState = unitBase.UnitState;
-        if(unitState == UnitState.KnockBack || unitState == UnitState.Stiffen || 
-            unitState == UnitState.Stiffen_er || unitState == UnitState.Death || 
-            unitState == UnitState.Pause) return true;
-        else return false;
+        switch(unitState)
+        {
+            case UnitState.KnockBack:
+            case UnitState.Stiffen:
+            case UnitState.Stiffen_er:
+            case UnitState.Death:
+            case UnitState.Pause:
+            return true;
+            default: return false;
+        }
     }
 
     /// <summary>

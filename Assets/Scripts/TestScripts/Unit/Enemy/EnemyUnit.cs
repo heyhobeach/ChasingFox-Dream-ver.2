@@ -37,14 +37,11 @@ public class EnemyUnit : UnitBase
     public bool AttackCheck(Vector3 attackPos)
     {
         var pos = attackPos-transform.position;
-        float deg = Mathf.Atan2(pos.y, pos.x);//mathf.de
-        deg *= Mathf.Rad2Deg;
-        bool inAngle = Mathf.Abs(deg) <= 180;
         bool inRange = (pos.magnitude < attackDistance) && pos.magnitude >= attackDistance*(1-attackRange);
         bool isForword = Mathf.Sign(pos.normalized.x)>0&&!spriteRenderer.flipX ? true : Mathf.Sign(pos.normalized.x)<0&&spriteRenderer.flipX ? true : false;
         bool isInner = pos.magnitude < boxSizeX*2;
         var hit = Physics2D.Raycast(transform.position, pos, pos.magnitude, 1<<LayerMask.NameToLayer("Map"));
-        if(ControllerChecker() || hit || !inRange || !inAngle || !isForword || isInner) return false;
+        if(ControllerChecker() || hit || !inRange || !isForword || isInner) return false;
         else return true;
     }
 

@@ -44,7 +44,11 @@ namespace BehaviourTree
         private int _nodeIdx;
         [HideInInspector] public int nodeIdx 
         { 
-            get => Mathf.Clamp(_nodeIdx, 0, FinalNodeList.Count); 
+            get
+            {
+                if(FinalNodeList != null) return Mathf.Clamp(_nodeIdx, 0, FinalNodeList.Count); 
+                else return 0;
+            }
             set 
             {
                 _nodeIdx = value;

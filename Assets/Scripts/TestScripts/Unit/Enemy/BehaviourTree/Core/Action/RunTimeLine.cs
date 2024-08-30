@@ -33,7 +33,7 @@ namespace BehaviourTree
         {
             if(playableDirector == null || !isCan || playableDirector.state != PlayState.Playing)
             {
-                if(playableDirector.state == PlayState.Playing) TimeLineStop();
+                if(playableDirector != null && playableDirector.state == PlayState.Playing) TimeLineStop();
                 return NodeState.Failure;
             }
             else return NodeState.Success;
@@ -44,6 +44,9 @@ namespace BehaviourTree
             isCan = false;
             playableDirector.enabled = false;
         }
-        [MesageTarget] public void TimeLineStop() => playableDirector.Stop();
+        [MesageTarget] public void TimeLineStop()
+        {
+            if(playableDirector != null) playableDirector.Stop();
+        }
     }
 }

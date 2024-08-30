@@ -123,10 +123,10 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         Debug.Log("유저 사망");
         ProCamera2DShake.Instance.Shake("Hit ShakePreset");
         invalidation = true;
-        if(changedForm.GetType() == typeof(Berserker)) // 버서커 상태가 아닐 시
+        changedForm.Death();
+        if(changedForm.GetType() != typeof(Berserker) && brutalData.canBerserker) // 버서커 상태가 아닐 시
         {
             Debug.Log("버서커");
-            changedForm.Death();
             StartCoroutine(Test());
         }
         else
