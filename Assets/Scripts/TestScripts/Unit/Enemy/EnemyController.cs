@@ -92,7 +92,7 @@ public class EnemyController : MonoBehaviour
                 blackboard.target = null;
                 isTrigger = true;
             }
-            else if(ViewCheck(index_player))
+            else if(ViewCheck(index_player) && blackboard.target!= hits[index_player].transform)
             {                
                 blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Chase;
                 blackboard.target = hits[index_player].transform;

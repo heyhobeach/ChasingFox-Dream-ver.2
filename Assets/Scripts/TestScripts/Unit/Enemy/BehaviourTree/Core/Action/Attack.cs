@@ -19,7 +19,8 @@ namespace BehaviourTree
         {
             time = 0;
             isAttacking = false;
-            canAttack = blackboard.thisUnit.AttackCheck(blackboard.target.position);
+            aimPos = blackboard.target.position;
+            canAttack = blackboard.thisUnit.AttackCheck(aimPos);
             blackboard.thisUnit.Move(blackboard.thisUnit.transform.position);
             blackboard.thisUnit.SetAni(true);
         }
@@ -34,7 +35,7 @@ namespace BehaviourTree
                 if(blackboard.thisUnit.AttackCheck(blackboard.target.position))
                 {
                     aimPos = blackboard.target.position;
-                    blackboard.thisUnit.shootingAnimationController.targetPosition = aimPos;
+                    if(blackboard.thisUnit.shootingAnimationController != null) blackboard.thisUnit.shootingAnimationController.targetPosition = aimPos;
                 }
             }
             else if(time < aimmingTime+delayTime)

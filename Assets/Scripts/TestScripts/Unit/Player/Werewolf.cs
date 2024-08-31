@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// 늑대인간 상태 클래스, PlayerUnit 클래스를 상속함
 /// </summary>
-public class Werwolf : PlayerUnit
+public class Werewolf : PlayerUnit
 {
     public GameObject MeleeAttack;
 

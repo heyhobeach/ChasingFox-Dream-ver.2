@@ -99,7 +99,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
             }
             else temp = changedForm.Attack(clickPos);
         }
-        else if(changedForm is Werwolf) if(temp = changedForm.Attack(clickPos)) changeGage -= brutalData.atk;
+        else if(changedForm is Werewolf) if(temp = changedForm.Attack(clickPos)) changeGage -= brutalData.atk;
         return temp;
     }
 
@@ -173,7 +173,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
                 changing = StartCoroutine(BulletTime());
             }
         }
-        else if(changedForm.GetType() == typeof(Werwolf) && changedForm.FormChange())
+        else if(changedForm.GetType() == typeof(Werewolf) && changedForm.FormChange())
         {
             changing = StartCoroutine(ChangeHuman());
             b = true;
@@ -321,7 +321,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     void Update()
     {
         pObject = this.gameObject;
-        if(changedForm.GetType() == typeof(Werwolf))
+        if(changedForm.GetType() == typeof(Werewolf))
         {
             if(changeGage >= 0) changeGage -= brutalData.sec * Time.deltaTime;
             else FormChange();

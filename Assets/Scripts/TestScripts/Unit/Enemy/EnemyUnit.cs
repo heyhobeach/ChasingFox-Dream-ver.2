@@ -9,8 +9,6 @@ public class EnemyUnit : UnitBase
 {
     public float attackDistance = 1;
     [Range(0, 1)] public float attackRange = 1;
-
-    public GameObject bullet;//�Ѿ� ����
     
     public bool isAttacking 
     {
@@ -39,33 +37,11 @@ public class EnemyUnit : UnitBase
 
     public override bool Jump(KeyState jumpKey) => false;
 
-    public bool AttackCheck(Vector3 attackPos)
-    {
-        var pos = attackPos-transform.position;
-        bool inRange = (pos.magnitude < attackDistance) && pos.magnitude >= attackDistance*(1-attackRange);
-        bool isForword = Mathf.Sign(pos.normalized.x)>0&&!spriteRenderer.flipX ? true : Mathf.Sign(pos.normalized.x)<0&&spriteRenderer.flipX ? true : false;
-        bool isInner = pos.magnitude < boxSizeX*2;
-        var hit = Physics2D.Raycast(transform.position, pos, pos.magnitude, 1<<LayerMask.NameToLayer("Map"));
-        if(ControllerChecker() || hit || !inRange || !isForword || isInner) return false;
-        else return true;
-    }
-
-    public override bool Attack(Vector3 attackPos)
-    {
-        if(shootingAnimationController != null)
-        {
-            GameObject _bullet = Instantiate(bullet);
-            GameObject gObj = this.gameObject;
-            shootingAnimationController.targetPosition = attackPos;
-            _bullet.GetComponent<Bullet>().Set(shootingAnimationController.GetShootPosition(), attackPos, shootingAnimationController.GetShootRotation(), 1, 5, gObj);
-        }
-
-
-        return base.Attack(attackPos);
-    }
+    public virtual bool AttackCheck(Vector3 attackPos) => true;
 
     public void SetAni(bool b)
     {
+        if(shootingAnimationController == null) return;
         switch(b)
         {
             case true: shootingAnimationController.AttackAni(); break;
