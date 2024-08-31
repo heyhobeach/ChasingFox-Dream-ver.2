@@ -18,7 +18,7 @@ namespace BehaviourTree
 
         protected override NodeState OnUpdate()
         {
-            if(blackboard.target != null && (blackboard.target.transform.position-blackboard.thisUnit.transform.position).magnitude < 0.3f) return NodeState.Failure;
+            if(blackboard.target != null && (blackboard.target.transform.position-blackboard.thisUnit.transform.position).magnitude < 1f) return NodeState.Failure;
             if(!isRunning) startTime += Time.deltaTime;
             if(!isRunning && blackboard.target != null && (startTime >= reloadTime || blackboard.FinalNodeList == null))
             {
@@ -28,8 +28,11 @@ namespace BehaviourTree
             }
             if(blackboard.FinalNodeList == null || blackboard.FinalNodeList.Count <= blackboard.nodeIdx) 
             {
-                while(blackboard.FinalNodeList != null && blackboard.FinalNodeList.Count <= blackboard.nodeIdx) blackboard.nodeIdx--;
-                if(blackboard.nodeIdx > 0) blackboard.nodeIdx--;
+                if(blackboard.FinalNodeList.Count > 2)
+                {
+                    while(blackboard.FinalNodeList != null && blackboard.FinalNodeList.Count <= blackboard.nodeIdx) blackboard.nodeIdx--;
+                    // if(blackboard.nodeIdx > 0) blackboard.nodeIdx--;
+                }
                 return NodeState.Failure;
             }
             blackboard.thisUnit.Move(new Vector2(blackboard.FinalNodeList[blackboard.nodeIdx].x, blackboard.FinalNodeList[blackboard.nodeIdx].y + 1));
@@ -37,7 +40,7 @@ namespace BehaviourTree
             return NodeState.Success;
         }
 
-        private async void GetPathAsync()
+        [MesageTarget] public async void GetPathAsync()
         {
             if(isRunning) return;
             isRunning = true;

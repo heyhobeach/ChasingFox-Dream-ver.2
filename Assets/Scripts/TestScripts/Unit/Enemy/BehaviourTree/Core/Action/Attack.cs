@@ -21,7 +21,6 @@ namespace BehaviourTree
             isAttacking = false;
             aimPos = blackboard.target.position;
             canAttack = blackboard.thisUnit.AttackCheck(aimPos);
-            blackboard.thisUnit.Move(blackboard.thisUnit.transform.position);
             blackboard.thisUnit.SetAni(true);
         }
 
@@ -29,6 +28,7 @@ namespace BehaviourTree
         {
             if(isAttacking && !blackboard.thisUnit.isAttacking) return NodeState.Success;
             if(!canAttack) return NodeState.Failure;
+            blackboard.thisUnit.Move(blackboard.thisUnit.transform.position);
             if(time < aimmingTime)
             {
                 time += Time.deltaTime;

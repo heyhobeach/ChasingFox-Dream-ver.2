@@ -9,7 +9,9 @@ public class MeleeEnemy : EnemyUnit
     protected override void Start()
     {
         base.Start();
+        MeleeAttack.SetActive(true);
         attackDistance = MeleeAttack.GetComponent<BoxCollider2D>().bounds.extents.x + MeleeAttack.transform.localPosition.x;
+        MeleeAttack.SetActive(false);
     }
 
     public override bool AttackCheck(Vector3 attackPos)

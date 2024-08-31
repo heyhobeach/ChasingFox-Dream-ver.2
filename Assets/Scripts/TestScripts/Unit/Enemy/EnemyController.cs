@@ -13,8 +13,16 @@ public class EnemyController : MonoBehaviour
     private RaycastHit2D[] hits = new RaycastHit2D[0];
 
     public float layDistance;
-    public float viewOuterRange;
-    public float viewInnerRange;
+    public float _viewOuterRange;
+    public float viewOuterRange
+    {
+        get => _viewOuterRange+(blackboard.enemy_state.Increase_Sight*appendDistance);
+    }
+    public float _viewInnerRange;
+    public float viewInnerRange
+    {
+        get => _viewInnerRange+(blackboard.enemy_state.Increase_Sight*appendDistance);
+    }
     public float viewAngle;
     public float appendDistance;
     private float distance { get => layDistance+(blackboard.enemy_state.Increase_Sight*appendDistance); }

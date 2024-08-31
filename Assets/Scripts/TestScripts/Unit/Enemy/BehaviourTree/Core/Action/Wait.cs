@@ -19,6 +19,7 @@ namespace BehaviourTree
 
         protected override NodeState OnUpdate()
         {
+            blackboard.thisUnit.Move(blackboard.thisUnit.transform.position);
             time += Time.deltaTime;
             if (time >= waitTime) return NodeState.Success;
             else return NodeState.Running;
