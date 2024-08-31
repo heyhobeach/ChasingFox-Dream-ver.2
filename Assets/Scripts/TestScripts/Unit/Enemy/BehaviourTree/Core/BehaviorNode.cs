@@ -24,7 +24,7 @@ namespace BehaviourTree
             }
             set => _isUpdated = value;
         }
-        [SerializeField] public string guid;
+        [SerializeField, DisableInspector] public string guid;
         [HideInInspector] public Vector2 positon;
         [HideInInspector] public Blackboard blackboard;
         [HideInInspector] public static Dictionary<(int, string), BehaviourNode> clone = new();

@@ -1,5 +1,112 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8788340718880782463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18010df103739f34fa8a9e484853ec76, type: 3}
+  m_Name: Wait
+  m_EditorClassIdentifier: 
+  state: 0
+  guid: 2bfa51e6c1c6aff459dde89b6edf970f
+  positon: {x: 100.00006, y: 833}
+  blackboard:
+    thisUnit: {fileID: 0}
+    target: {fileID: 0}
+    originPos: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 2
+      recognition: 1
+      Increase_Sight: 2859
+    FinalNodeList:
+    - isWall: 0
+      isRoad: 0
+      isPoint: 0
+      isplatform: 0
+      x: 32
+      y: 14
+      G: 0
+      H: 0
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 32
+      y: 13
+      G: 10
+      H: 110
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 31
+      y: 12
+      G: 24
+      H: 90
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 30
+      y: 11
+      G: 38
+      H: 70
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 29
+      y: 10
+      G: 52
+      H: 50
+    - isWall: 0
+      isRoad: 1
+      isPoint: 1
+      isplatform: 0
+      x: 28
+      y: 10
+      G: 62
+      H: 40
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 27
+      y: 10
+      G: 72
+      H: 30
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 26
+      y: 10
+      G: 82
+      H: 20
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 25
+      y: 10
+      G: 92
+      H: 10
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 24
+      y: 10
+      G: 102
+      H: 0
+  description: 
+  waitTime: 1
 --- !u!114 &-8123740153036079787
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18,12 +125,93 @@ MonoBehaviour:
   blackboard:
     thisUnit: {fileID: 0}
     target: {fileID: 0}
+    originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
-    FinalNodeList: []
+      Increase_Sight: 2859
+    FinalNodeList:
+    - isWall: 0
+      isRoad: 0
+      isPoint: 0
+      isplatform: 0
+      x: 32
+      y: 14
+      G: 0
+      H: 0
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 32
+      y: 13
+      G: 10
+      H: 110
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 31
+      y: 12
+      G: 24
+      H: 90
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 30
+      y: 11
+      G: 38
+      H: 70
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 29
+      y: 10
+      G: 52
+      H: 50
+    - isWall: 0
+      isRoad: 1
+      isPoint: 1
+      isplatform: 0
+      x: 28
+      y: 10
+      G: 62
+      H: 40
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 27
+      y: 10
+      G: 72
+      H: 30
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 26
+      y: 10
+      G: 82
+      H: 20
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 25
+      y: 10
+      G: 92
+      H: 10
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 24
+      y: 10
+      G: 102
+      H: 0
   description: Alert
   child: {fileID: 531290968384818618}
   stateCase: 1
@@ -45,12 +233,93 @@ MonoBehaviour:
   blackboard:
     thisUnit: {fileID: 0}
     target: {fileID: 0}
+    originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
-    FinalNodeList: []
+      Increase_Sight: 2859
+    FinalNodeList:
+    - isWall: 0
+      isRoad: 0
+      isPoint: 0
+      isplatform: 0
+      x: 32
+      y: 14
+      G: 0
+      H: 0
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 32
+      y: 13
+      G: 10
+      H: 110
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 31
+      y: 12
+      G: 24
+      H: 90
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 30
+      y: 11
+      G: 38
+      H: 70
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 29
+      y: 10
+      G: 52
+      H: 50
+    - isWall: 0
+      isRoad: 1
+      isPoint: 1
+      isplatform: 0
+      x: 28
+      y: 10
+      G: 62
+      H: 40
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 27
+      y: 10
+      G: 72
+      H: 30
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 26
+      y: 10
+      G: 82
+      H: 20
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 25
+      y: 10
+      G: 92
+      H: 10
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 24
+      y: 10
+      G: 102
+      H: 0
   description: 
   children:
   - {fileID: 8165423392858955647}
@@ -74,12 +343,93 @@ MonoBehaviour:
   blackboard:
     thisUnit: {fileID: 0}
     target: {fileID: 0}
+    originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
-    FinalNodeList: []
+      Increase_Sight: 2859
+    FinalNodeList:
+    - isWall: 0
+      isRoad: 0
+      isPoint: 0
+      isplatform: 0
+      x: 32
+      y: 14
+      G: 0
+      H: 0
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 32
+      y: 13
+      G: 10
+      H: 110
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 31
+      y: 12
+      G: 24
+      H: 90
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 30
+      y: 11
+      G: 38
+      H: 70
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 29
+      y: 10
+      G: 52
+      H: 50
+    - isWall: 0
+      isRoad: 1
+      isPoint: 1
+      isplatform: 0
+      x: 28
+      y: 10
+      G: 62
+      H: 40
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 27
+      y: 10
+      G: 72
+      H: 30
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 26
+      y: 10
+      G: 82
+      H: 20
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 25
+      y: 10
+      G: 92
+      H: 10
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 24
+      y: 10
+      G: 102
+      H: 0
   description: 
   waitTime: 0
 --- !u!114 &-6798369374170880989
@@ -100,12 +450,93 @@ MonoBehaviour:
   blackboard:
     thisUnit: {fileID: 0}
     target: {fileID: 0}
+    originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
-    FinalNodeList: []
+      Increase_Sight: 2859
+    FinalNodeList:
+    - isWall: 0
+      isRoad: 0
+      isPoint: 0
+      isplatform: 0
+      x: 32
+      y: 14
+      G: 0
+      H: 0
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 32
+      y: 13
+      G: 10
+      H: 110
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 31
+      y: 12
+      G: 24
+      H: 90
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 30
+      y: 11
+      G: 38
+      H: 70
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 29
+      y: 10
+      G: 52
+      H: 50
+    - isWall: 0
+      isRoad: 1
+      isPoint: 1
+      isplatform: 0
+      x: 28
+      y: 10
+      G: 62
+      H: 40
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 27
+      y: 10
+      G: 72
+      H: 30
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 26
+      y: 10
+      G: 82
+      H: 20
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 25
+      y: 10
+      G: 92
+      H: 10
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 24
+      y: 10
+      G: 102
+      H: 0
   description: 
   child: {fileID: 7754139705782111083}
 --- !u!114 &-5203994678265369763
@@ -126,12 +557,93 @@ MonoBehaviour:
   blackboard:
     thisUnit: {fileID: 0}
     target: {fileID: 0}
+    originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
-    FinalNodeList: []
+      Increase_Sight: 2859
+    FinalNodeList:
+    - isWall: 0
+      isRoad: 0
+      isPoint: 0
+      isplatform: 0
+      x: 32
+      y: 14
+      G: 0
+      H: 0
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 32
+      y: 13
+      G: 10
+      H: 110
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 31
+      y: 12
+      G: 24
+      H: 90
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 30
+      y: 11
+      G: 38
+      H: 70
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 29
+      y: 10
+      G: 52
+      H: 50
+    - isWall: 0
+      isRoad: 1
+      isPoint: 1
+      isplatform: 0
+      x: 28
+      y: 10
+      G: 62
+      H: 40
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 27
+      y: 10
+      G: 72
+      H: 30
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 26
+      y: 10
+      G: 82
+      H: 20
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 25
+      y: 10
+      G: 92
+      H: 10
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 24
+      y: 10
+      G: 102
+      H: 0
   description: Death
   child: {fileID: -6813351491573769889}
   stateCase: 10
@@ -153,12 +665,93 @@ MonoBehaviour:
   blackboard:
     thisUnit: {fileID: 0}
     target: {fileID: 0}
+    originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
-    FinalNodeList: []
+      Increase_Sight: 2859
+    FinalNodeList:
+    - isWall: 0
+      isRoad: 0
+      isPoint: 0
+      isplatform: 0
+      x: 32
+      y: 14
+      G: 0
+      H: 0
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 32
+      y: 13
+      G: 10
+      H: 110
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 31
+      y: 12
+      G: 24
+      H: 90
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 30
+      y: 11
+      G: 38
+      H: 70
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 29
+      y: 10
+      G: 52
+      H: 50
+    - isWall: 0
+      isRoad: 1
+      isPoint: 1
+      isplatform: 0
+      x: 28
+      y: 10
+      G: 62
+      H: 40
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 27
+      y: 10
+      G: 72
+      H: 30
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 26
+      y: 10
+      G: 82
+      H: 20
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 25
+      y: 10
+      G: 92
+      H: 10
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 24
+      y: 10
+      G: 102
+      H: 0
   description: 
   children:
   - {fileID: -5203994678265369763}
@@ -181,12 +774,93 @@ MonoBehaviour:
   blackboard:
     thisUnit: {fileID: 0}
     target: {fileID: 0}
+    originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
-    FinalNodeList: []
+      Increase_Sight: 2859
+    FinalNodeList:
+    - isWall: 0
+      isRoad: 0
+      isPoint: 0
+      isplatform: 0
+      x: 32
+      y: 14
+      G: 0
+      H: 0
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 32
+      y: 13
+      G: 10
+      H: 110
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 31
+      y: 12
+      G: 24
+      H: 90
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 30
+      y: 11
+      G: 38
+      H: 70
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 29
+      y: 10
+      G: 52
+      H: 50
+    - isWall: 0
+      isRoad: 1
+      isPoint: 1
+      isplatform: 0
+      x: 28
+      y: 10
+      G: 62
+      H: 40
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 27
+      y: 10
+      G: 72
+      H: 30
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 26
+      y: 10
+      G: 82
+      H: 20
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 25
+      y: 10
+      G: 92
+      H: 10
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 24
+      y: 10
+      G: 102
+      H: 0
   description: "\uC778\uC9C0 \uBD88\uAC00"
   debugLogType: 1
   message: "\uC778\uC9C0 \uBD88\uAC00"
@@ -208,12 +882,93 @@ MonoBehaviour:
   blackboard:
     thisUnit: {fileID: 0}
     target: {fileID: 0}
+    originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
-    FinalNodeList: []
+      Increase_Sight: 2859
+    FinalNodeList:
+    - isWall: 0
+      isRoad: 0
+      isPoint: 0
+      isplatform: 0
+      x: 32
+      y: 14
+      G: 0
+      H: 0
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 32
+      y: 13
+      G: 10
+      H: 110
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 31
+      y: 12
+      G: 24
+      H: 90
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 30
+      y: 11
+      G: 38
+      H: 70
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 29
+      y: 10
+      G: 52
+      H: 50
+    - isWall: 0
+      isRoad: 1
+      isPoint: 1
+      isplatform: 0
+      x: 28
+      y: 10
+      G: 62
+      H: 40
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 27
+      y: 10
+      G: 72
+      H: 30
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 26
+      y: 10
+      G: 82
+      H: 20
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 25
+      y: 10
+      G: 92
+      H: 10
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 24
+      y: 10
+      G: 102
+      H: 0
   description: 
   children:
   - {fileID: -2728198117769598043}
@@ -236,12 +991,93 @@ MonoBehaviour:
   blackboard:
     thisUnit: {fileID: 0}
     target: {fileID: 0}
+    originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
-    FinalNodeList: []
+      Increase_Sight: 2859
+    FinalNodeList:
+    - isWall: 0
+      isRoad: 0
+      isPoint: 0
+      isplatform: 0
+      x: 32
+      y: 14
+      G: 0
+      H: 0
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 32
+      y: 13
+      G: 10
+      H: 110
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 31
+      y: 12
+      G: 24
+      H: 90
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 30
+      y: 11
+      G: 38
+      H: 70
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 29
+      y: 10
+      G: 52
+      H: 50
+    - isWall: 0
+      isRoad: 1
+      isPoint: 1
+      isplatform: 0
+      x: 28
+      y: 10
+      G: 62
+      H: 40
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 27
+      y: 10
+      G: 72
+      H: 30
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 26
+      y: 10
+      G: 82
+      H: 20
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 25
+      y: 10
+      G: 92
+      H: 10
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 24
+      y: 10
+      G: 102
+      H: 0
   description: 
   mesages:
   - targetNode: {fileID: 2189719155329094222}
@@ -265,12 +1101,93 @@ MonoBehaviour:
   blackboard:
     thisUnit: {fileID: 0}
     target: {fileID: 0}
+    originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
-    FinalNodeList: []
+      Increase_Sight: 2859
+    FinalNodeList:
+    - isWall: 0
+      isRoad: 0
+      isPoint: 0
+      isplatform: 0
+      x: 32
+      y: 14
+      G: 0
+      H: 0
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 32
+      y: 13
+      G: 10
+      H: 110
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 31
+      y: 12
+      G: 24
+      H: 90
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 30
+      y: 11
+      G: 38
+      H: 70
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 29
+      y: 10
+      G: 52
+      H: 50
+    - isWall: 0
+      isRoad: 1
+      isPoint: 1
+      isplatform: 0
+      x: 28
+      y: 10
+      G: 62
+      H: 40
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 27
+      y: 10
+      G: 72
+      H: 30
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 26
+      y: 10
+      G: 82
+      H: 20
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 25
+      y: 10
+      G: 92
+      H: 10
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 24
+      y: 10
+      G: 102
+      H: 0
   description: Default
   child: {fileID: 5577737174887897221}
   stateCase: 0
@@ -292,12 +1209,93 @@ MonoBehaviour:
   blackboard:
     thisUnit: {fileID: 0}
     target: {fileID: 0}
+    originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
-    FinalNodeList: []
+      Increase_Sight: 2859
+    FinalNodeList:
+    - isWall: 0
+      isRoad: 0
+      isPoint: 0
+      isplatform: 0
+      x: 32
+      y: 14
+      G: 0
+      H: 0
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 32
+      y: 13
+      G: 10
+      H: 110
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 31
+      y: 12
+      G: 24
+      H: 90
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 30
+      y: 11
+      G: 38
+      H: 70
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 29
+      y: 10
+      G: 52
+      H: 50
+    - isWall: 0
+      isRoad: 1
+      isPoint: 1
+      isplatform: 0
+      x: 28
+      y: 10
+      G: 62
+      H: 40
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 27
+      y: 10
+      G: 72
+      H: 30
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 26
+      y: 10
+      G: 82
+      H: 20
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 25
+      y: 10
+      G: 92
+      H: 10
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 24
+      y: 10
+      G: 102
+      H: 0
   description: Chase
   child: {fileID: -3604086991514170634}
   stateCase: 2
@@ -338,16 +1336,21 @@ MonoBehaviour:
   - {fileID: 4433449385017773004}
   - {fileID: -6813351491573769889}
   - {fileID: 1257187732414498288}
+  - {fileID: 7474582992549453383}
+  - {fileID: -8788340718880782463}
+  - {fileID: 8165040382968758816}
+  - {fileID: 5388380866008593317}
   blackboard:
     thisUnit: {fileID: 0}
     target: {fileID: 0}
+    originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
       stateCase: 0
       recognition: 1
       Increase_Sight: 0
     FinalNodeList: []
-  viewPos: {x: -169, y: -73}
+  viewPos: {x: 312, y: -104}
   viewScale: {x: 0.57175326, y: 0.57175326, z: 1}
 --- !u!114 &531290968384818618
 MonoBehaviour:
@@ -367,16 +1370,98 @@ MonoBehaviour:
   blackboard:
     thisUnit: {fileID: 0}
     target: {fileID: 0}
+    originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
-    FinalNodeList: []
+      Increase_Sight: 2859
+    FinalNodeList:
+    - isWall: 0
+      isRoad: 0
+      isPoint: 0
+      isplatform: 0
+      x: 32
+      y: 14
+      G: 0
+      H: 0
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 32
+      y: 13
+      G: 10
+      H: 110
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 31
+      y: 12
+      G: 24
+      H: 90
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 30
+      y: 11
+      G: 38
+      H: 70
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 29
+      y: 10
+      G: 52
+      H: 50
+    - isWall: 0
+      isRoad: 1
+      isPoint: 1
+      isplatform: 0
+      x: 28
+      y: 10
+      G: 62
+      H: 40
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 27
+      y: 10
+      G: 72
+      H: 30
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 26
+      y: 10
+      G: 82
+      H: 20
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 25
+      y: 10
+      G: 92
+      H: 10
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 24
+      y: 10
+      G: 102
+      H: 0
   description: 
   children:
   - {fileID: 7291363975000716481}
   - {fileID: 555910949820902959}
+  - {fileID: 7474582992549453383}
 --- !u!114 &555910949820902959
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -391,16 +1476,97 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   state: 0
   guid: 5b50aebe0fae8f1498cb4283f3fbaf73
-  positon: {x: 87.00002, y: 593}
+  positon: {x: -0.00010967255, y: 594.3225}
   blackboard:
     thisUnit: {fileID: 0}
     target: {fileID: 0}
+    originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
-    FinalNodeList: []
+      Increase_Sight: 2859
+    FinalNodeList:
+    - isWall: 0
+      isRoad: 0
+      isPoint: 0
+      isplatform: 0
+      x: 32
+      y: 14
+      G: 0
+      H: 0
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 32
+      y: 13
+      G: 10
+      H: 110
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 31
+      y: 12
+      G: 24
+      H: 90
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 30
+      y: 11
+      G: 38
+      H: 70
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 29
+      y: 10
+      G: 52
+      H: 50
+    - isWall: 0
+      isRoad: 1
+      isPoint: 1
+      isplatform: 0
+      x: 28
+      y: 10
+      G: 62
+      H: 40
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 27
+      y: 10
+      G: 72
+      H: 30
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 26
+      y: 10
+      G: 82
+      H: 20
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 25
+      y: 10
+      G: 92
+      H: 10
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 24
+      y: 10
+      G: 102
+      H: 0
   description: 
   reloadTime: 1
 --- !u!114 &1257187732414498288
@@ -421,12 +1587,93 @@ MonoBehaviour:
   blackboard:
     thisUnit: {fileID: 0}
     target: {fileID: 0}
+    originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
-    FinalNodeList: []
+      Increase_Sight: 2859
+    FinalNodeList:
+    - isWall: 0
+      isRoad: 0
+      isPoint: 0
+      isplatform: 0
+      x: 32
+      y: 14
+      G: 0
+      H: 0
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 32
+      y: 13
+      G: 10
+      H: 110
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 31
+      y: 12
+      G: 24
+      H: 90
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 30
+      y: 11
+      G: 38
+      H: 70
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 29
+      y: 10
+      G: 52
+      H: 50
+    - isWall: 0
+      isRoad: 1
+      isPoint: 1
+      isplatform: 0
+      x: 28
+      y: 10
+      G: 62
+      H: 40
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 27
+      y: 10
+      G: 72
+      H: 30
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 26
+      y: 10
+      G: 82
+      H: 20
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 25
+      y: 10
+      G: 92
+      H: 10
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 24
+      y: 10
+      G: 102
+      H: 0
   description: 
   waitTime: 0
 --- !u!114 &1877198029125055445
@@ -447,12 +1694,93 @@ MonoBehaviour:
   blackboard:
     thisUnit: {fileID: 0}
     target: {fileID: 0}
+    originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
-    FinalNodeList: []
+      Increase_Sight: 2859
+    FinalNodeList:
+    - isWall: 0
+      isRoad: 0
+      isPoint: 0
+      isplatform: 0
+      x: 32
+      y: 14
+      G: 0
+      H: 0
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 32
+      y: 13
+      G: 10
+      H: 110
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 31
+      y: 12
+      G: 24
+      H: 90
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 30
+      y: 11
+      G: 38
+      H: 70
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 29
+      y: 10
+      G: 52
+      H: 50
+    - isWall: 0
+      isRoad: 1
+      isPoint: 1
+      isplatform: 0
+      x: 28
+      y: 10
+      G: 62
+      H: 40
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 27
+      y: 10
+      G: 72
+      H: 30
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 26
+      y: 10
+      G: 82
+      H: 20
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 25
+      y: 10
+      G: 92
+      H: 10
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 24
+      y: 10
+      G: 102
+      H: 0
   description: 
   reloadTime: 1
 --- !u!114 &2189719155329094222
@@ -473,12 +1801,93 @@ MonoBehaviour:
   blackboard:
     thisUnit: {fileID: 0}
     target: {fileID: 0}
+    originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
-    FinalNodeList: []
+      Increase_Sight: 2859
+    FinalNodeList:
+    - isWall: 0
+      isRoad: 0
+      isPoint: 0
+      isplatform: 0
+      x: 32
+      y: 14
+      G: 0
+      H: 0
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 32
+      y: 13
+      G: 10
+      H: 110
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 31
+      y: 12
+      G: 24
+      H: 90
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 30
+      y: 11
+      G: 38
+      H: 70
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 29
+      y: 10
+      G: 52
+      H: 50
+    - isWall: 0
+      isRoad: 1
+      isPoint: 1
+      isplatform: 0
+      x: 28
+      y: 10
+      G: 62
+      H: 40
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 27
+      y: 10
+      G: 72
+      H: 30
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 26
+      y: 10
+      G: 82
+      H: 20
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 25
+      y: 10
+      G: 92
+      H: 10
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 24
+      y: 10
+      G: 102
+      H: 0
   description: 
   isCan: 1
 --- !u!114 &4253570027041858493
@@ -499,12 +1908,93 @@ MonoBehaviour:
   blackboard:
     thisUnit: {fileID: 0}
     target: {fileID: 0}
+    originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
-    FinalNodeList: []
+      Increase_Sight: 2859
+    FinalNodeList:
+    - isWall: 0
+      isRoad: 0
+      isPoint: 0
+      isplatform: 0
+      x: 32
+      y: 14
+      G: 0
+      H: 0
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 32
+      y: 13
+      G: 10
+      H: 110
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 31
+      y: 12
+      G: 24
+      H: 90
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 30
+      y: 11
+      G: 38
+      H: 70
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 29
+      y: 10
+      G: 52
+      H: 50
+    - isWall: 0
+      isRoad: 1
+      isPoint: 1
+      isplatform: 0
+      x: 28
+      y: 10
+      G: 62
+      H: 40
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 27
+      y: 10
+      G: 72
+      H: 30
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 26
+      y: 10
+      G: 82
+      H: 20
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 25
+      y: 10
+      G: 92
+      H: 10
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 24
+      y: 10
+      G: 102
+      H: 0
   description: 
   aimmingTime: 1
   delayTime: 0.5
@@ -526,16 +2016,206 @@ MonoBehaviour:
   blackboard:
     thisUnit: {fileID: 0}
     target: {fileID: 0}
+    originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
-    FinalNodeList: []
+      Increase_Sight: 2859
+    FinalNodeList:
+    - isWall: 0
+      isRoad: 0
+      isPoint: 0
+      isplatform: 0
+      x: 32
+      y: 14
+      G: 0
+      H: 0
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 32
+      y: 13
+      G: 10
+      H: 110
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 31
+      y: 12
+      G: 24
+      H: 90
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 30
+      y: 11
+      G: 38
+      H: 70
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 29
+      y: 10
+      G: 52
+      H: 50
+    - isWall: 0
+      isRoad: 1
+      isPoint: 1
+      isplatform: 0
+      x: 28
+      y: 10
+      G: 62
+      H: 40
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 27
+      y: 10
+      G: 72
+      H: 30
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 26
+      y: 10
+      G: 82
+      H: 20
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 25
+      y: 10
+      G: 92
+      H: 10
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 24
+      y: 10
+      G: 102
+      H: 0
   description: 
   children:
   - {fileID: 4253570027041858493}
   - {fileID: 1877198029125055445}
+--- !u!114 &5388380866008593317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3195d4dea04c0744aadaef31853ab61, type: 3}
+  m_Name: SequenceNode
+  m_EditorClassIdentifier: 
+  state: 0
+  guid: 138540f891899464d828eb40fce90ce2
+  positon: {x: 175.00015, y: 709}
+  blackboard:
+    thisUnit: {fileID: 0}
+    target: {fileID: 0}
+    originPos: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 2
+      recognition: 1
+      Increase_Sight: 2859
+    FinalNodeList:
+    - isWall: 0
+      isRoad: 0
+      isPoint: 0
+      isplatform: 0
+      x: 32
+      y: 14
+      G: 0
+      H: 0
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 32
+      y: 13
+      G: 10
+      H: 110
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 31
+      y: 12
+      G: 24
+      H: 90
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 30
+      y: 11
+      G: 38
+      H: 70
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 29
+      y: 10
+      G: 52
+      H: 50
+    - isWall: 0
+      isRoad: 1
+      isPoint: 1
+      isplatform: 0
+      x: 28
+      y: 10
+      G: 62
+      H: 40
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 27
+      y: 10
+      G: 72
+      H: 30
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 26
+      y: 10
+      G: 82
+      H: 20
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 25
+      y: 10
+      G: 92
+      H: 10
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 24
+      y: 10
+      G: 102
+      H: 0
+  description: 
+  children:
+  - {fileID: -8788340718880782463}
+  - {fileID: 8165040382968758816}
 --- !u!114 &5577737174887897221
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -554,12 +2234,93 @@ MonoBehaviour:
   blackboard:
     thisUnit: {fileID: 0}
     target: {fileID: 0}
+    originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
-    FinalNodeList: []
+      Increase_Sight: 2859
+    FinalNodeList:
+    - isWall: 0
+      isRoad: 0
+      isPoint: 0
+      isplatform: 0
+      x: 32
+      y: 14
+      G: 0
+      H: 0
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 32
+      y: 13
+      G: 10
+      H: 110
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 31
+      y: 12
+      G: 24
+      H: 90
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 30
+      y: 11
+      G: 38
+      H: 70
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 29
+      y: 10
+      G: 52
+      H: 50
+    - isWall: 0
+      isRoad: 1
+      isPoint: 1
+      isplatform: 0
+      x: 28
+      y: 10
+      G: 62
+      H: 40
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 27
+      y: 10
+      G: 72
+      H: 30
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 26
+      y: 10
+      G: 82
+      H: 20
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 25
+      y: 10
+      G: 92
+      H: 10
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 24
+      y: 10
+      G: 102
+      H: 0
   description: 
   children:
   - {fileID: 2189719155329094222}
@@ -578,21 +2339,210 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   state: 0
   guid: c59d58d2d7ba73d48b8496ed39e2ce57
-  positon: {x: -75.000015, y: 593}
+  positon: {x: -162.0001, y: 594.3225}
   blackboard:
     thisUnit: {fileID: 0}
     target: {fileID: 0}
+    originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
-    FinalNodeList: []
+      Increase_Sight: 2859
+    FinalNodeList:
+    - isWall: 0
+      isRoad: 0
+      isPoint: 0
+      isplatform: 0
+      x: 32
+      y: 14
+      G: 0
+      H: 0
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 32
+      y: 13
+      G: 10
+      H: 110
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 31
+      y: 12
+      G: 24
+      H: 90
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 30
+      y: 11
+      G: 38
+      H: 70
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 29
+      y: 10
+      G: 52
+      H: 50
+    - isWall: 0
+      isRoad: 1
+      isPoint: 1
+      isplatform: 0
+      x: 28
+      y: 10
+      G: 62
+      H: 40
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 27
+      y: 10
+      G: 72
+      H: 30
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 26
+      y: 10
+      G: 82
+      H: 20
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 25
+      y: 10
+      G: 92
+      H: 10
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 24
+      y: 10
+      G: 102
+      H: 0
   description: 
   mesages:
   - targetNode: {fileID: 2189719155329094222}
     methodName: TimeLineStop
     methodIdx: 1
+--- !u!114 &7474582992549453383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5687702bb086321449a0687d9d9f77c6, type: 3}
+  m_Name: InnerCheckFloat
+  m_EditorClassIdentifier: 
+  state: 0
+  guid: e8c79b252a732e2479f77da85c6b26f4
+  positon: {x: 175, y: 594}
+  blackboard:
+    thisUnit: {fileID: 0}
+    target: {fileID: 0}
+    originPos: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 2
+      recognition: 1
+      Increase_Sight: 2859
+    FinalNodeList:
+    - isWall: 0
+      isRoad: 0
+      isPoint: 0
+      isplatform: 0
+      x: 32
+      y: 14
+      G: 0
+      H: 0
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 32
+      y: 13
+      G: 10
+      H: 110
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 31
+      y: 12
+      G: 24
+      H: 90
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 30
+      y: 11
+      G: 38
+      H: 70
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 29
+      y: 10
+      G: 52
+      H: 50
+    - isWall: 0
+      isRoad: 1
+      isPoint: 1
+      isplatform: 0
+      x: 28
+      y: 10
+      G: 62
+      H: 40
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 27
+      y: 10
+      G: 72
+      H: 30
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 26
+      y: 10
+      G: 82
+      H: 20
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 25
+      y: 10
+      G: 92
+      H: 10
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 24
+      y: 10
+      G: 102
+      H: 0
+  description: 
+  child: {fileID: 5388380866008593317}
+  targetFlaot: 1.5
 --- !u!114 &7754139705782111083
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -611,16 +2561,203 @@ MonoBehaviour:
   blackboard:
     thisUnit: {fileID: 0}
     target: {fileID: 0}
+    originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
-    FinalNodeList: []
+      Increase_Sight: 2859
+    FinalNodeList:
+    - isWall: 0
+      isRoad: 0
+      isPoint: 0
+      isplatform: 0
+      x: 32
+      y: 14
+      G: 0
+      H: 0
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 32
+      y: 13
+      G: 10
+      H: 110
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 31
+      y: 12
+      G: 24
+      H: 90
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 30
+      y: 11
+      G: 38
+      H: 70
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 29
+      y: 10
+      G: 52
+      H: 50
+    - isWall: 0
+      isRoad: 1
+      isPoint: 1
+      isplatform: 0
+      x: 28
+      y: 10
+      G: 62
+      H: 40
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 27
+      y: 10
+      G: 72
+      H: 30
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 26
+      y: 10
+      G: 82
+      H: 20
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 25
+      y: 10
+      G: 92
+      H: 10
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 24
+      y: 10
+      G: 102
+      H: 0
   description: 
   children:
   - {fileID: -7161608127579499380}
   - {fileID: -4417137505816075133}
+--- !u!114 &8165040382968758816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 579edcccc3455f34289bea9320e5539e, type: 3}
+  m_Name: ResetTarget
+  m_EditorClassIdentifier: 
+  state: 0
+  guid: e4fec02c6d1b933498bdc78e1c333af9
+  positon: {x: 250.00006, y: 833}
+  blackboard:
+    thisUnit: {fileID: 0}
+    target: {fileID: 0}
+    originPos: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 2
+      recognition: 1
+      Increase_Sight: 2859
+    FinalNodeList:
+    - isWall: 0
+      isRoad: 0
+      isPoint: 0
+      isplatform: 0
+      x: 32
+      y: 14
+      G: 0
+      H: 0
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 32
+      y: 13
+      G: 10
+      H: 110
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 31
+      y: 12
+      G: 24
+      H: 90
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 30
+      y: 11
+      G: 38
+      H: 70
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 29
+      y: 10
+      G: 52
+      H: 50
+    - isWall: 0
+      isRoad: 1
+      isPoint: 1
+      isplatform: 0
+      x: 28
+      y: 10
+      G: 62
+      H: 40
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 27
+      y: 10
+      G: 72
+      H: 30
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 26
+      y: 10
+      G: 82
+      H: 20
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 25
+      y: 10
+      G: 92
+      H: 10
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 24
+      y: 10
+      G: 102
+      H: 0
+  description: 
 --- !u!114 &8165423392858955647
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -639,12 +2776,93 @@ MonoBehaviour:
   blackboard:
     thisUnit: {fileID: 0}
     target: {fileID: 0}
+    originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
-    FinalNodeList: []
+      Increase_Sight: 2859
+    FinalNodeList:
+    - isWall: 0
+      isRoad: 0
+      isPoint: 0
+      isplatform: 0
+      x: 32
+      y: 14
+      G: 0
+      H: 0
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 32
+      y: 13
+      G: 10
+      H: 110
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 31
+      y: 12
+      G: 24
+      H: 90
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 30
+      y: 11
+      G: 38
+      H: 70
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 1
+      x: 29
+      y: 10
+      G: 52
+      H: 50
+    - isWall: 0
+      isRoad: 1
+      isPoint: 1
+      isplatform: 0
+      x: 28
+      y: 10
+      G: 62
+      H: 40
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 27
+      y: 10
+      G: 72
+      H: 30
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 26
+      y: 10
+      G: 82
+      H: 20
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 25
+      y: 10
+      G: 92
+      H: 10
+    - isWall: 0
+      isRoad: 1
+      isPoint: 0
+      isplatform: 0
+      x: 24
+      y: 10
+      G: 102
+      H: 0
   description: Default
   child: {fileID: -5093957440746577806}
   stateCase: 0

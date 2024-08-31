@@ -11,7 +11,11 @@ namespace BehaviourTree
 
         protected override void OnEnd() { }
 
-        protected override void OnStart() => time = 0;
+        protected override void OnStart()
+        {
+            time = 0;
+            blackboard.thisUnit.Move(blackboard.thisUnit.transform.position);
+        }
 
         protected override NodeState OnUpdate()
         {

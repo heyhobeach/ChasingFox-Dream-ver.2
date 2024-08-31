@@ -11,6 +11,7 @@ namespace BehaviourTree
     {
         [DisableInspector] public EnemyUnit thisUnit;
         [DisableInspector] public Transform target;
+        [HideInInspector] public Transform originPos;
         [HideInInspector] public PlayableDirector playableDirector;
         [Serializable]
         public class Enemy_State//적군 상태값을 이너 클래스로 표현 중첩되는 표현 사용시 enum으로 표현 안 될것 같아 해당 방식 사용

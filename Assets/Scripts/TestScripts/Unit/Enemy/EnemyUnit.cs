@@ -22,6 +22,11 @@ public class EnemyUnit : UnitBase
     }
 
     protected override void OnEnable() {}
+    protected override void Start()
+    {
+        base.Start();
+        unitState = UnitState.Default;
+    }
 
     public override bool Move(Vector2 dir)
     {

@@ -18,6 +18,7 @@ namespace BehaviourTree
 
         protected override NodeState OnUpdate()
         {
+            if(blackboard.target != null && (blackboard.target.transform.position-blackboard.thisUnit.transform.position).magnitude < 1.5f) return NodeState.Failure;
             if(!isRunning) startTime += Time.deltaTime;
             if(!isRunning && blackboard.target != null && (startTime >= reloadTime || blackboard.FinalNodeList == null))
             {
