@@ -30,6 +30,8 @@ public class InteractionEvent : MonoBehaviour
     string[] command = new string[1];
     bool start = false;
 
+    Coroutine skipco = null;
+
     /// <summary>
     /// uimanager 스킬븥 접근 변수
     /// </summary>
@@ -67,6 +69,7 @@ public class InteractionEvent : MonoBehaviour
         public string _str;
         public SizeCommand(string[] args, string str, UIManager manager)
         {
+            Debug.Log("Get Sting" + str);
             start = int.Parse(args[0]);
             end = int.Parse(args[1]);
             size = int.Parse(args[2]);
@@ -116,7 +119,7 @@ public class InteractionEvent : MonoBehaviour
         {
             //base.OnExecute();
             Debug.Log("Skip onExecute테스트");
-            _manager.StartCoroutine(_manager.ChocieTimer(5, true, null));
+            _manager.skipco=_manager.StartCoroutine(_manager.ChocieTimer(5, true, null));
             //_uiManger.
         }
     }
@@ -236,7 +239,25 @@ public class InteractionEvent : MonoBehaviour
             indexNum = DatabaseManager.instance.indexList.Count - 1;
         }
         dialogue.line.y = DatabaseManager.instance.indexList[indexNum];//마지막 라인을 받아오기는 하지만 필요한건 마지막라인이 아닌 인덱스? 딕셔너리에 들어가는 그 y가 필요함
+        if (dialogue.line.x > dialogue.line.y)
+        {
+            Debug.Log("대화 종료");
+            return null;
+        }
+        dialogue.dialouses = null;
         dialogue.dialouses = DatabaseManager.instance.GetDialogues((int)dialogue.line.x, (int)dialogue.line.y);//y값 찾아오는 법
+        if(dialogue.dialouses == null)
+        {
+            Debug.Log("GetDialogues error");
+        }
+        else
+        {
+            Debug.Log("Getdialoogues succese" + dialogue.dialouses.Length);
+            Debug.Log(string.Format("content {0} num{1}", contentNum, num));
+            Debug.Log(string.Format("Get content {0}", dialogue.dialouses[0].context));
+            num = 0;
+        }
+        _Uimanager.content.text = "";
         command = Regex.Split(dialogue.dialouses[num].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);//이게 위로 간다면?
         //Debug.Log("길이" + dialogue.dialouses.Length);
         return dialogue.dialouses;
@@ -248,7 +269,6 @@ public class InteractionEvent : MonoBehaviour
     }
     private void Start()
     {
-
         GetDialogue();
         //command[0] = "";
         foreach (var i in DatabaseManager.instance.indexList)
@@ -261,16 +281,23 @@ public class InteractionEvent : MonoBehaviour
     private void Update()
     {
 
-
-        if ((num <= dialogue.dialouses.Length))//line을 조절 해야함 대화가 끝나는 시점을 정하려면 line.y를 설정해야함
+        if (_Uimanager.is_closing)
+        {
+            Debug.Log("닫는중");
+        }
+        else
+        {
+            Debug.Log("열리는중");
+        }
+        //if ((num <= dialogue.dialouses.Length))//line을 조절 해야함 대화가 끝나는 시점을 정하려면 line.y를 설정해야함
         {
 
             HandleDialogue();
         }
-        if (num > dialogue.dialouses.Length)
-        {
-            EndDialogue();
-        }
+        //if (num > dialogue.dialouses.Length)
+        //{
+        //    EndDialogue();
+        //}
     }
 
     private void HandleCommand()
@@ -284,9 +311,13 @@ public class InteractionEvent : MonoBehaviour
         //명령어 호출 시점 조절 했으므로 명령어 구별해서 호출 시점 구분
         if (command.Length > 0)
         {
-            Debug.Log("command size is " + command.Length);
+            //Debug.Log("command size is " + command.Length + "command [1]" + command[1]);
+
             command = spaceremove(command);
             CallFunction(command);
+            //Debug.Log("command size is " + command.Length+"command [0]" + command[0]);
+            //command[0] = "";
+
         }
         contentNum = 0;
     }
@@ -297,8 +328,9 @@ public class InteractionEvent : MonoBehaviour
         {
             if (_command is SizeCommand)
             {
-                Debug.Log("sizeCommand 호출");
+                Debug.Log("sizecommand 호출 테스트" + "id" + dialogue.dialouses[num].id + "이름" + dialogue.dialouses[num].name);//여기는 한번
                 string str = _command.OnExecute("");//이 str을 대입
+                Debug.Log(str);
                 dialogue.dialouses[num].context[contentNum] = str;
                 Debug.Log("size 변경후 " + str);
                 continue;
@@ -319,7 +351,8 @@ public class InteractionEvent : MonoBehaviour
         if (num < dialogue.dialouses.Length)
         {
             CallCommand(ref precommands);//이전에 실행되어야할 명령어들
-            Debug.Log("명령어 호출 테스트" + "id" + dialogue.dialouses[num].id + "이름" + dialogue.dialouses[num].name);
+                                         //이게 두번 일어나는듯?
+            Debug.Log("명령어 호출 테스트" + "id" + dialogue.dialouses[num].id + "이름" + dialogue.dialouses[num].name);//여기는 한번
             _Uimanager.Setname(dialogue.dialouses[num].name);//이름 변경 되는중 마찬가지로 내용도 같이 하면 될듯
                                                              //Debug.Log(dialogue.dialouses[num].context.Length);
                                                              //Debug.Log(string.Format("num => {0} contentnum ={1}", num, contentNum));
@@ -351,18 +384,48 @@ public class InteractionEvent : MonoBehaviour
             }
 
 
-            command = Regex.Split(dialogue.dialouses[++num].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);//이게 위로 간다면?
+
+                Debug.Log(string.Format("num {3}, name {0}: content{1} , 명령어{2}", dialogue.dialouses[num].name, dialogue.dialouses[num].context[contentNum], dialogue.dialouses[num].command[contentNum],num));
+                if (++num == dialogue.dialouses.Length)
+                {
+                    command = Regex.Split(dialogue.dialouses[num-1].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);//여기까지는 순서 맞음 command받기전에 num이 증가되어야함
+                    return;
+                }
+                command = Regex.Split(dialogue.dialouses[num].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);//여기까지는 순서 맞음 command받기전에 num이 증가되어야함
+
+
+            Debug.Log("command length"+command.Length);
+            Debug.Log("Getdialoogues succese" + dialogue.dialouses.Length);
+
+        }
+        else
+        {
+            EndDialogue();
         }
         contentNum = 0;
+        Debug.Log("contentNum 조욜");
 
         //num++;
     }
     private void HandleDialogue()
     {
-        if (Input.GetKeyDown(KeyCode.F) || isSkip)//f누를때 문제 생기는듯?
+        if ((Input.GetKeyDown(KeyCode.F) || isSkip)&&!_Uimanager.is_closing)//f누를때 문제 생기는듯?
         {
+
+            //EndDialogue();
+            //if (num > dialogue.dialouses.Length+1)//지금 바로 넘어가짐
+            //{
+            //    EndDialogue();
+            //}
             isSkip = false;
+            if (skipco != null)
+            {
+                StopCoroutine(skipco);
+                skipco = null;
+            }
+
             //Debug.Log("선택 번호" + contentNum);
+            
             _Uimanager.CloseSelceet(contentNum);
 
             if (_Uimanager.is_closing)
@@ -381,6 +444,11 @@ public class InteractionEvent : MonoBehaviour
         if (contentlength > 1)//선택지 부분
         {
             Debug.Log("선택지 부분");
+            int temp = num;
+            if (num > dialogue.dialouses.Length - 1)
+            {
+                temp = dialogue.dialouses.Length - 1;
+            }
             //string textSum = "";
             //if (start == false)//이게 사용되는 부분인지 모르겠넹,처음 부터 선택지일경우?//일단 주석 처리 했는데 만나자 마자 선택지가 발생하는 경우? 그때 아마 사용 될것 같음 지금은 아마 사용 안 될듯
             //{
@@ -393,7 +461,7 @@ public class InteractionEvent : MonoBehaviour
                 if (contentlength - 1 > (contentNum))
                 {
                     _Uimanager.DownArrow(ref contentNum);
-                    command = Regex.Split(dialogue.dialouses[num - 1].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);
+                    command = Regex.Split(dialogue.dialouses[temp].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);
                     return;
                 }
 
@@ -402,7 +470,7 @@ public class InteractionEvent : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.UpArrow) & (contentNum > 0))
             {
                 _Uimanager.UpArrow(ref contentNum);
-                command = Regex.Split(dialogue.dialouses[num - 1].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);
+                command = Regex.Split(dialogue.dialouses[temp].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);
                 return;
             }
 
@@ -416,26 +484,41 @@ public class InteractionEvent : MonoBehaviour
     private void EndDialogue()
     {
         Debug.Log("대화끝");
-
-        if (Input.GetKeyDown(KeyCode.X) & (indexNum < DatabaseManager.instance.indexList.Count))
+        if ( (indexNum < DatabaseManager.instance.indexList.Count))
+        //if (Input.GetKeyDown(KeyCode.X) & (indexNum < DatabaseManager.instance.indexList.Count))
         {
             dialogue.line.x = ++dialogue.line.y;
             indexNum++;
-            GetDialogue();
-            Debug.Log(dialogue.dialouses.Length);
+            //num--;
+
+            if (GetDialogue() == null)
+            {
+                Debug.Log("대화 끝났습니다");
+                _Uimanager.content.text = "대화종료";//추후 나중에 삭제 확인용
+                return;
+            }
             num = 0;
+            SetNextContext();
+            Debug.Log(dialogue.dialouses.Length);
+
         }
     }
 
     private void CallFunction(string[] _functions)
     {
+        int temp = num;
+        if (num> dialogue.dialouses.Length-1)
+        {
+            temp = dialogue.dialouses.Length - 1;
+        }
         string SPLIT_NUM = @"([a-z]+|\ )+";//공백 분리 정규식//새로운식([a-z]+|\ )+
         string GET_COMMAND = @"[a-z]{1,}";
         //Debug.LogFormat("명령어 호출 1번째 요소" + _functions[0]);
         //Debug.Log("_functions 체크 " + _functions.ToString());
+
         foreach (var func in _functions)
         {
-
+            Debug.Log("num=>" +num+ "func"+func);
             string[] strarr = Regex.Split(func, SPLIT_NUM);//
             string[] filteredSubstrings = strarr.Where(s => s != Regex.Match(s, SPLIT_NUM).ToString()).ToArray();
             int n;
@@ -447,7 +530,8 @@ public class InteractionEvent : MonoBehaviour
             {
                 case "size":
                     {
-                        precommands.Add(new SizeCommand(filteredSubstrings, dialogue.dialouses[num].context[contentNum], _Uimanager));
+                        Debug.Log("Num=>" + num);//선택지 부분에서만 문제
+                        precommands.Add(new SizeCommand(filteredSubstrings, dialogue.dialouses[temp].context[contentNum], _Uimanager));
                         //size(filteredSubstrings); 
                     }
                     break;
@@ -572,7 +656,7 @@ public class InteractionEvent : MonoBehaviour
         Debug.Log("time over");
         if (contentlength > 1 && num <= dialogue.dialouses.Length)
         {
-            Debug.Log(string.Format("{0} num {1} contentNum", num - 1, contentNum));
+            Debug.Log(string.Format("{0} num {1} contentNum", num - 1, contentNum));    
             Debug.Log("Time over" + dialogue.dialouses[num - 1].context[0]);
             command = Regex.Split(dialogue.dialouses[num - 1].command[0], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);
             //command = spaceremove(command);
@@ -594,6 +678,7 @@ public class InteractionEvent : MonoBehaviour
         {
             Debug.Log("null이므로 skip 실행");
             isSkip = true;
+            skipco = null;
         }
         else
         {

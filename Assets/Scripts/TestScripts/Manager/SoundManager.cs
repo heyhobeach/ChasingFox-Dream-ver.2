@@ -70,17 +70,17 @@ public class SoundManager:MonoBehaviour
         obj.SetActive(true);
         if (obj.gameObject.layer == LayerMask.NameToLayer("GunSound"))
         {
-            Debug.Log("총 소리 레이어");
+            // Debug.Log("총 소리 레이어");
             bullet.standbyBullet.Enqueue(obj);
         }
 
-        yield return new WaitForSeconds(0.3f);
+        yield return null;
         obj.SetActive(false);
-        Debug.Log(string.Format("태그{0} 오브젝트 이름{1}", obj.transform.parent.tag, obj.name));
+        // Debug.Log(string.Format("태그{0} 오브젝트 이름{1}", obj.transform.parent.tag, obj.name));
        
         if (obj.transform.parent.tag == "Player")
         {
-            Debug.Log("유저 총 소리");
+            // Debug.Log("유저 총 소리");
             yield return null;
         }
         //else

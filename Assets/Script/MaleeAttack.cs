@@ -10,4 +10,12 @@ public class MaleeAttack : MonoBehaviour
         Debug.Log(collision.gameObject.name);
     }
 
+    public void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Hatch")
+        {
+            collision.gameObject.SetActive(false);
+        }
+    }
+
 }

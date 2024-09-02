@@ -90,8 +90,8 @@ public partial class ControllerScript : MonoBehaviour
 
     public float jumpForce = 5f;//점프 힘 해당 부분은 나중에 클래스로 통합해서 보기 편하게 수정해야함
     public float jumpDuration = 0.5f;//긴 점프 할 수 있는 시간 해당 부분은 나중에 클래스로 통합해서 보기 편하게 수정해야함
-    [SerializeField]
-    private bool isMoving = false;//update에서 fixedUpdate로 움직임 전해주기 위함 
+    // [SerializeField]
+    // private bool isMoving = false;//update에서 fixedUpdate로 움직임 전해주기 위함 
     [SerializeField]
     private bool isGround = true;//점프 및 공격한것에 대한 테스트를 위함움직이면서 만약 안 된다면 다시 변수 만들어야함 공격을 했는지 판단하기 위함  
     public bool isHide = false;//크라우치 할 수 있는지 확인 용변수
@@ -482,7 +482,7 @@ public partial class ControllerScript : MonoBehaviour
                 //rg2d.position = transform.position;
                 charactor.Crouch(guard);
                 isCrouching = true;
-                isMoving = false;
+                // isMoving = false;
             }
             if (currentOneWayPlatform != null)//밑 아래 점프 가능한 오브젝트와 닿아있을때 ,우선순위 따라서 위로 올리고 return이 필요할듯 
             {
