@@ -1576,6 +1576,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: -1257665968, guid: 1ce9e22d2385e4e25b8cb3fdba58f409, type: 3}
+    - target: {fileID: 6025299058987733321, guid: df0fa93dd872bf4499cb85274f0d47d4, type: 3}
+      propertyPath: forms.Array.data[1]
+      value: 
+      objectReference: {fileID: 1243270289}
     - target: {fileID: 7214510558830398128, guid: df0fa93dd872bf4499cb85274f0d47d4, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -1628,10 +1632,14 @@ PrefabInstance:
       propertyPath: dashDuration
       value: 0.5
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2621639767711760588, guid: df0fa93dd872bf4499cb85274f0d47d4, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7214510558830398128, guid: df0fa93dd872bf4499cb85274f0d47d4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1243270289}
   m_SourcePrefab: {fileID: 100100000, guid: df0fa93dd872bf4499cb85274f0d47d4, type: 3}
 --- !u!1 &309795810
 GameObject:
@@ -6973,6 +6981,39 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1243270282 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7214510558830398128, guid: df0fa93dd872bf4499cb85274f0d47d4, type: 3}
+  m_PrefabInstance: {fileID: 205678860}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1243270289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1243270282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 961162cbb38aaad4aa1a210f8f53cc7b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxHealth: 0
+  movementSpeed: 0
+  accelerate: 0
+  dashDuration: 0
+  jumpForce: 0
+  jumpImpulse: 0
+  jumpTime: 0
+  anim: {fileID: 0}
+  shootingAnimationController: {fileID: 0}
+  coverBox: {fileID: 0}
+  rg: {fileID: 0}
+  MeleeAttack: {fileID: 1243270282}
+  soundClip: {fileID: 0}
+  attackDuration: 0
+  attackImpulse: 0
+  air_attack_count: 1
 --- !u!1 &1262665911
 GameObject:
   m_ObjectHideFlags: 0
