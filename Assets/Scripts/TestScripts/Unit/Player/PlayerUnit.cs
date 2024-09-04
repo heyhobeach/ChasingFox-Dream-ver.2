@@ -387,7 +387,7 @@ public abstract class PlayerUnit : UnitBase
                 findRayPlatform = true;
                 Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), true);//원리는 그냥 설정한 시간동안 해당 플렛폼들을 그냥 무시하는식으로 설정했음 근데 지금 생각해보면 지금 플렛폼을 받아와서 플렛폼의 네임을 무시하는식으로 해도 되지않을까 하는 영감이 떠오름
                 SetVerticalForce(gravity * Time.deltaTime);
-                Debug.Log("무시중");
+                // Debug.Log("무시중");
                 currentOneWayPlatform.GetComponent<PlatformEffector2D>().useColliderMask = false;
                 yield return new WaitForSeconds(downTime);//downtime변수는 나중에 중력 설정시 이질감이 든다면 변경필요
                 // Debug.Log("무시 끝");

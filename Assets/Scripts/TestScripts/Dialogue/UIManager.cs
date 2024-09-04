@@ -1,17 +1,9 @@
 using JetBrains.Annotations;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Net;
-using System.Text.RegularExpressions;
 using TMPro;
-using Unity.VisualScripting;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
-using static System.Net.WebRequestMethods;
-using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class UIManager : MonoBehaviour
 {
@@ -70,12 +62,12 @@ public class UIManager : MonoBehaviour
         co = Typing("",isTyping);
         ContentArr = new TMP_Text[1];
         size= content.rectTransform.rect.size.y;
-        setTestPosition(targetTransform.position);
+        // setTestPosition(targetTransform.position);
     }
 
     private void Update()
     {
-        setTestPosition(targetTransform.position);
+        // setTestPosition(targetTransform.position);
     }
     private void Awake()
     {
@@ -180,10 +172,10 @@ public class UIManager : MonoBehaviour
           DestroySelectBox();
         }
         content.text = null;
-        if (content.color != Color.black)
-        {
-            content.color = Color.black;
-        }
+        // if (content.color != Color.black)
+        // {
+        //     content.color = Color.black;
+        // }
         if (str == "")
         {
             yield return null;
@@ -273,6 +265,7 @@ public class UIManager : MonoBehaviour
         end_pos =content.transform.parent.GetChild(childs-1).transform.position;
         Debug.Log(string.Format("start_pos {0} end_pos{1}",start_pos,end_pos));
         DestroySelectBox();
+        content.text = "";
         //StartCoroutine(ClosingAnim(()=>{}));
         //StartCoroutine(ClosingAnim(testDel));
         //0 1 2 아래로 -50x
@@ -283,8 +276,8 @@ public class UIManager : MonoBehaviour
 
     public string UpSizeText(string _str,int start,int end, int size)//리턴으로 진행하는게 맞을듯 함 그런데 이제 텍스트 삽입이 여러개가 되어야한다면 해당 부분
     {
-        Debug.Log("UpsizeText 실행");
-        Debug.Log(string.Format("UpsizeText start{0} end{1}, speed{2}", start,end, size));
+        //Debug.Log("UpsizeText 실행");
+        Debug.Log(string.Format("UpsizeText start{0} end{1}, size{2}", start,end, size));
         string headtag = string.Format("<size={0}>", size);
         string tailtag = string.Format("</size>");
         string targetstring = "";
@@ -293,13 +286,15 @@ public class UIManager : MonoBehaviour
             Debug.Log(_str[i]);
             targetstring += _str[i];
         }
-        Debug.Log(targetstring + "targetstring");
+        //Debug.Log(targetstring + "targetstring");
         string change_string = headtag+targetstring+tailtag;
-        Debug.Log(string.Format("head{0} target{1} tail{2}", headtag, targetstring, tailtag));
-        Debug.Log(change_string + "change_string");
-        Debug.Log("before" + _str);
-        _str=_str.Replace(targetstring, change_string);
-        Debug.Log("_str"+_str);
+        //Debug.Log(string.Format("head{0} target{1} tail{2}", headtag, targetstring, tailtag));
+        //Debug.Log(change_string + "change_string");
+        //Debug.Log("before" + _str);
+
+       // _str=_str.Replace(targetstring, change_string);
+        _str=_str.Substring(0,start)+change_string+_str.Substring(start+targetstring.Length);
+        //Debug.Log("_str"+_str);
         return _str; 
     }
     public void TypingSpeed(int start,int end,int speed)
@@ -340,6 +335,7 @@ public class UIManager : MonoBehaviour
         else
         {
             Debug.Log("액션 시작");
+            content.text = "";
             Act();
         }
     }
