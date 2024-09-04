@@ -64,10 +64,10 @@ public class Human : PlayerUnit
     {
         base.OnEnable();
         var pi = CameraManager.Instance.proCamera2DPointerInfluence;
-        pi.MaxHorizontalInfluence = 2.2f;
-        pi.MaxVerticalInfluence = 1.2f;
-        pi.InfluenceSmoothness = 0.2f;
-        CameraManager.Instance.ChangeSize = 5.5f;
+        pi.MaxHorizontalInfluence = 4.75f;
+        pi.MaxVerticalInfluence = 0.35f;
+        pi.InfluenceSmoothness = 0.275f;
+        CameraManager.Instance.ChangeSize = 4.155f;
         attackCoroutine = StartCoroutine(AttackDelay());
         isAttack = false;
     }

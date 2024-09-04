@@ -44,10 +44,10 @@ public class Werewolf : PlayerUnit
     {
         base.OnEnable();
         var pi = CameraManager.Instance.proCamera2DPointerInfluence;
-        pi.MaxHorizontalInfluence = 2.5f;
-        pi.MaxVerticalInfluence = 1.5f;
-        pi.InfluenceSmoothness = 0.0f;
-        CameraManager.Instance.ChangeSize = 6f;
+        pi.MaxHorizontalInfluence = 4.75f;
+        pi.MaxVerticalInfluence = 0.3f;
+        pi.InfluenceSmoothness = 0.2f;
+        CameraManager.Instance.ChangeSize = 4.65f;
         isFormChangeReady = false;
     }
     protected override void OnDisable()
