@@ -62,12 +62,12 @@ public class UIManager : MonoBehaviour
         co = Typing("",isTyping);
         ContentArr = new TMP_Text[1];
         size= content.rectTransform.rect.size.y;
-        setTestPosition(targetTransform.position);
+        // setTestPosition(targetTransform.position);
     }
 
     private void Update()
     {
-        setTestPosition(targetTransform.position);
+        // setTestPosition(targetTransform.position);
     }
     private void Awake()
     {
@@ -172,10 +172,10 @@ public class UIManager : MonoBehaviour
           DestroySelectBox();
         }
         content.text = null;
-        if (content.color != Color.black)
-        {
-            content.color = Color.black;
-        }
+        // if (content.color != Color.black)
+        // {
+        //     content.color = Color.black;
+        // }
         if (str == "")
         {
             yield return null;

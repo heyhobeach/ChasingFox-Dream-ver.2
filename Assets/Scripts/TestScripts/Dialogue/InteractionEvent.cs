@@ -19,7 +19,7 @@ public class InteractionEvent : MonoBehaviour
     [SerializeField] DialogueEvent dialogue;
     //UIManager ui;
 
-    private bool isSkip = false;
+    public bool isSkip = false;
 
     int num = 0;
     int contentNum = 0;
@@ -299,6 +299,8 @@ public class InteractionEvent : MonoBehaviour
         //    EndDialogue();
         //}
     }
+
+    public void SetSkip(bool skip) => isSkip = skip;
 
     private void HandleCommand()
     {
