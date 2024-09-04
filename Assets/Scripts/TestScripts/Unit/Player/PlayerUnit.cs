@@ -336,7 +336,7 @@ public abstract class PlayerUnit : UnitBase
 
 
             //isGrounded = indexP >= 0 | indexG >= 0 | dHit | d2Hit;    
-            isGrounded = indexP >= 0 | indexG >= 0 | (dHit.distance>player_dialog|dHitarr.Length>1) | (d2Hit.distance>player_dialog|d2Hitarr.Length>1);
+            isGrounded = indexP >= 0 | indexG >= 0 | (dHit.distance>player_dialog|dHitarr.Length>1) | (d2Hit.distance>player_dialog|d2Hitarr.Length>1) | sideRay;
 
             // Debug.Log(string.Format("dhit length=>{0} d2hit length=>{1}", dHitarr.Length, d2Hitarr.Length));
             //isGrounded = indexP >= 0 | indexG >= 0 ;
