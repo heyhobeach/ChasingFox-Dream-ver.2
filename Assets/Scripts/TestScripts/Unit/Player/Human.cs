@@ -67,7 +67,7 @@ public class Human : PlayerUnit
         pi.MaxHorizontalInfluence = 4.75f;
         pi.MaxVerticalInfluence = 0.35f;
         pi.InfluenceSmoothness = 0.275f;
-        CameraManager.Instance.ChangeSize = 4.155f;
+        CameraManager.Instance.ChangeSize = 5.15f;
         attackCoroutine = StartCoroutine(AttackDelay());
         isAttack = false;
     }

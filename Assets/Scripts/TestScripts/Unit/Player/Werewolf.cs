@@ -47,7 +47,7 @@ public class Werewolf : PlayerUnit
         pi.MaxHorizontalInfluence = 4.75f;
         pi.MaxVerticalInfluence = 0.3f;
         pi.InfluenceSmoothness = 0.2f;
-        CameraManager.Instance.ChangeSize = 4.65f;
+        CameraManager.Instance.ChangeSize = 5.45f;
         isFormChangeReady = false;
     }
     protected override void OnDisable()
