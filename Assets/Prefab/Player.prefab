@@ -508,15 +508,15 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1257665968, guid: 1ce9e22d2385e4e25b8cb3fdba58f409, type: 3}
+  m_Sprite: {fileID: 199618081, guid: 1ce9e22d2385e4e25b8cb3fdba58f409, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.56, y: 2.94}
+  m_Size: {x: 1.71875, y: 1.65625}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &2856511862344391575
@@ -532,20 +532,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxHealth: 1
-  movementSpeed: 8
-  accelerate: 8
-  dashDuration: 0.5
-  jumpForce: 5
-  jumpImpulse: 0.5
-  jumpTime: 0.5
+  movementSpeed: 10
+  accelerate: 6
+  dashDuration: 0.35
+  jumpForce: 1.25
+  jumpImpulse: 7.155
+  jumpTime: 0.575
   anim: {fileID: 0}
   shootingAnimationController: {fileID: 0}
   coverBox: {fileID: 0}
   rg: {fileID: 6077080884683563979}
   MeleeAttack: {fileID: 6781453596941497994}
   soundClip: {fileID: 0}
-  attackDuration: 1
-  attackImpulse: 1
+  attackDuration: 0.35
+  attackImpulse: 25
   air_attack_count: 1
 --- !u!61 &2910635313753729082
 BoxCollider2D:
@@ -584,7 +584,7 @@ BoxCollider2D:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 1.71875, y: 1.65625}
-    newSize: {x: 1.56, y: 2.94}
+    newSize: {x: 1.71875, y: 1.65625}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
