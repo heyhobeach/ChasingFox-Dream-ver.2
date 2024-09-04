@@ -82,6 +82,7 @@ public class InteractionEvent : MonoBehaviour
             //base.OnExecute();
             Debug.Log("onExecute테스트");
             _str = _uiManger.UpSizeText(_str, start, end, size);
+            Debug.Log("_str" + _str);
             return _str;
         }
     }

@@ -284,17 +284,23 @@ public class UIManager : MonoBehaviour
     public string UpSizeText(string _str,int start,int end, int size)//리턴으로 진행하는게 맞을듯 함 그런데 이제 텍스트 삽입이 여러개가 되어야한다면 해당 부분
     {
         Debug.Log("UpsizeText 실행");
+        Debug.Log(string.Format("UpsizeText start{0} end{1}, speed{2}", start,end, size));
         string headtag = string.Format("<size={0}>", size);
         string tailtag = string.Format("</size>");
         string targetstring = "";
         for(int i = start; i <= end; i++)
         {
+            Debug.Log(_str[i]);
             targetstring += _str[i];
         }
-        //Debug.Log(targetstring + "targetstring");
+        Debug.Log(targetstring + "targetstring");
         string change_string = headtag+targetstring+tailtag;
-        Debug.Log(change_string + "targetstring");
-        return _str.Replace(targetstring, change_string); 
+        Debug.Log(string.Format("head{0} target{1} tail{2}", headtag, targetstring, tailtag));
+        Debug.Log(change_string + "change_string");
+        Debug.Log("before" + _str);
+        _str=_str.Replace(targetstring, change_string);
+        Debug.Log("_str"+_str);
+        return _str; 
     }
     public void TypingSpeed(int start,int end,int speed)
     {
