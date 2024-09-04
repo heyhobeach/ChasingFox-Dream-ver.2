@@ -74,7 +74,7 @@ public class SoundManager:MonoBehaviour
             bullet.standbyBullet.Enqueue(obj);
         }
 
-        yield return new WaitForSeconds(0.3f);
+        yield return null;
         obj.SetActive(false);
         // Debug.Log(string.Format("태그{0} 오브젝트 이름{1}", obj.transform.parent.tag, obj.name));
        

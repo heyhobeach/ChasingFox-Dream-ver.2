@@ -1,16 +1,8 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Net;
-using System.Text.RegularExpressions;
 using TMPro;
-using Unity.VisualScripting;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
-using static System.Net.WebRequestMethods;
-using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class UIManager : MonoBehaviour
 {

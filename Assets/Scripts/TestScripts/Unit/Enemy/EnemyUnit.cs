@@ -9,8 +9,6 @@ public class EnemyUnit : UnitBase
 {
     public float attackDistance = 1;
     [Range(0, 1)] public float attackRange = 1;
-
-    public GameObject bullet;//�Ѿ� ����
     
     public bool isAttacking 
     {
@@ -22,6 +20,11 @@ public class EnemyUnit : UnitBase
     }
 
     protected override void OnEnable() {}
+    protected override void Start()
+    {
+        base.Start();
+        unitState = UnitState.Default;
+    }
 
     public override bool Move(Vector2 dir)
     {
@@ -34,25 +37,15 @@ public class EnemyUnit : UnitBase
 
     public override bool Jump(KeyState jumpKey) => false;
 
-    public bool AttackCheck(Vector3 attackPos)
-    {
-        var pos = attackPos-transform.position;
-        float deg = Mathf.Atan2(pos.y, pos.x);//mathf.de
-        deg *= Mathf.Rad2Deg;
-        bool inAngle = Mathf.Abs(deg) <= 180;
-        bool inRange = (pos.magnitude < attackDistance) && pos.magnitude >= attackDistance*(1-attackRange);
-        bool isForword = Mathf.Sign(pos.normalized.x)>0&&!spriteRenderer.flipX ? true : Mathf.Sign(pos.normalized.x)<0&&spriteRenderer.flipX ? true : false;
-        var hit = Physics2D.Raycast(transform.position, pos, pos.magnitude, 1<<LayerMask.NameToLayer("Map"));
-        if(ControllerChecker() || hit || !inRange || !inAngle || !isForword) return false;
-        else return true;
-    }
+    public virtual bool AttackCheck(Vector3 attackPos) => true;
 
-    public override bool Attack(Vector3 attackPos)
+    public void SetAni(bool b)
     {
-        GameObject _bullet = Instantiate(bullet, transform.position, transform.rotation);
-
-        GameObject gObj = this.gameObject;
-        _bullet.GetComponent<Bullet>().Set(transform.position, attackPos, Vector3.zero, 1, 1, gObj, (Vector2)(attackPos-transform.position).normalized);
-        return true;
+        if(shootingAnimationController == null) return;
+        switch(b)
+        {
+            case true: shootingAnimationController.AttackAni(); break;
+            case false: shootingAnimationController.NomalAni(); break;
+        }
     }
 }

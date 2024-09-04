@@ -60,8 +60,10 @@ namespace BehaviourTree
         protected abstract NodeState OnUpdate();
         protected abstract void OnEnd();
 
+#if UNITY_EDITOR
         public abstract void AddChild(BehaviourNode child);
         public abstract void RemoveChild(BehaviourNode child);
+#endif
         public abstract List<BehaviourNode> GetChildren();
     }
 }

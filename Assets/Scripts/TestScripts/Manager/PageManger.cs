@@ -7,11 +7,11 @@ using UnityEngine.SceneManagement;
 public class PageManger : MonoBehaviour
 {
     // Start is called before the first frame update
-    //´ÊÀº ÃÊ±âÈ­´Â ¾È ÇØµµ µÉ°Í °°¾ÒÀ½ ¾Æ·¡´Â ´ÊÀº ÃÊ±âÈ­ ¹æ½Ä
+    //ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ï¿½ï¿½ ï¿½ï¿½ ï¿½Øµï¿½ ï¿½É°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ ï¿½ï¿½ï¿½
     //private static Lazy<SceneManger> instance = new Lazy<SceneManger>(() => new SceneManger());
     //public static SceneManger Instance { get { return instance.Value; } }   
 
-    //°³¼±Á¡ : ÀÇÁ¸¼º ÁÖÀÔ ¹æ½ÄÀ¸·Î ÇØ°áÇØ¼­ ½Ì±ÛÅæ »ç¿ëÀ» ÁÙÀÏ¼ö ÀÖÀ»±î?
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ : ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ø°ï¿½ï¿½Ø¼ï¿½ ï¿½Ì±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½?
 
     private static PageManger instance;
     public static PageManger Instance
@@ -20,19 +20,23 @@ public class PageManger : MonoBehaviour
         {
             if (instance == null)
             {
-                instance = new PageManger();
+                var obj = new GameObject() { name = "PageManager" };
+                instance = obj.AddComponent<PageManger>();
             }
             return instance;
         }
     }
 
+    private Scene currentScene;
+
     private void Awake()
     {
         instance = this;
+        SceneManager.activeSceneChanged += (prv, ne)=> {currentScene = ne; };
     }
     void Start()
     {
-
+        currentScene = SceneManager.GetActiveScene();
     }
 
     // Update is called once per frame
@@ -43,6 +47,6 @@ public class PageManger : MonoBehaviour
 
     public void RoadRetry()//
     {
-        SceneManager.LoadScene("SampleScene");
+        SceneManager.LoadScene(currentScene.name);
     }
 }

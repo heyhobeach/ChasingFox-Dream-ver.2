@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.Playables;
 
@@ -12,17 +11,10 @@ namespace BehaviourTree
         public bool isCan;
 
         private PlayableDirector playableDirector;
-        private RuntimeAnimatorController ac;
 
         private void OnEnable()
         {
             playableDirector = blackboard.playableDirector;
-            if(playableDirector == null) return;
-            if(Application.isPlaying && blackboard.thisUnit != null && blackboard.thisUnit.anim != null)
-            {
-                ac = blackboard.thisUnit.anim.runtimeAnimatorController;
-                blackboard.thisUnit.anim.runtimeAnimatorController = null;
-            }
             isCan = true;
             playableDirector.stopped -= OnTimeLineStoped;
             playableDirector.stopped += OnTimeLineStoped;
@@ -41,7 +33,7 @@ namespace BehaviourTree
         {
             if(playableDirector == null || !isCan || playableDirector.state != PlayState.Playing)
             {
-                if(playableDirector.state == PlayState.Playing) TimeLineStop();
+                if(playableDirector != null && playableDirector.state == PlayState.Playing) TimeLineStop();
                 return NodeState.Failure;
             }
             else return NodeState.Success;
@@ -50,9 +42,11 @@ namespace BehaviourTree
         private void OnTimeLineStoped(PlayableDirector pd)
         {
             isCan = false;
-            blackboard.thisUnit.anim.runtimeAnimatorController = ac;
             playableDirector.enabled = false;
         }
-        [MesageTarget] public void TimeLineStop() => playableDirector.Stop();
+        [MesageTarget] public void TimeLineStop()
+        {
+            if(playableDirector != null) playableDirector.Stop();
+        }
     }
 }

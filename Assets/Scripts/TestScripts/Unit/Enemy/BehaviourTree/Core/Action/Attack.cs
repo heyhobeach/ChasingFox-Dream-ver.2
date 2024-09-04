@@ -9,42 +9,45 @@ namespace BehaviourTree
         public float aimmingTime;
         public float delayTime;
         bool canAttack;
+        bool isAttacking;
         float time;
         Vector2 aimPos;
         
-        protected override void OnEnd() { }
+        protected override void OnEnd() => blackboard.thisUnit.SetAni(false);
 
         protected override void OnStart()
         {
-            if(blackboard.thisUnit.isAttacking) return;
             time = 0;
+            isAttacking = false;
             aimPos = blackboard.target.position;
             canAttack = blackboard.thisUnit.AttackCheck(aimPos);
-            blackboard.thisUnit.Move(blackboard.thisUnit.transform.position);
+            blackboard.thisUnit.SetAni(true);
         }
 
         protected override NodeState OnUpdate()
         {
-            if(!canAttack || blackboard.thisUnit.isAttacking) return NodeState.Failure;
+            if(isAttacking && !blackboard.thisUnit.isAttacking) return NodeState.Success;
+            if(!canAttack) return NodeState.Failure;
+            blackboard.thisUnit.Move(blackboard.thisUnit.transform.position);
             if(time < aimmingTime)
             {
                 time += Time.deltaTime;
-                if(blackboard.thisUnit.AttackCheck(blackboard.target.position)) aimPos = blackboard.target.position;
-                return NodeState.Running;
+                if(blackboard.thisUnit.AttackCheck(blackboard.target.position))
+                {
+                    aimPos = blackboard.target.position;
+                    if(blackboard.thisUnit.shootingAnimationController != null) blackboard.thisUnit.shootingAnimationController.targetPosition = aimPos;
+                }
             }
             else if(time < aimmingTime+delayTime)
             {
                 time += Time.deltaTime;
-                return NodeState.Running;
             }
-            else
+            else if(!isAttacking && time >= aimmingTime+delayTime)
             {
-                switch(blackboard.thisUnit.Attack(aimPos))
-                {
-                    case true: return NodeState.Success;
-                    case false: return NodeState.Failure;
-                }
+                blackboard.thisUnit.Attack(aimPos);
+                isAttacking = true;
             }
+            return NodeState.Running;
         }
     }
 }

@@ -14,9 +14,15 @@ public class PopupManager : MonoBehaviour
         get {
             if(instance == null)
             {
-                instance = new PopupManager();
+                var obj = new GameObject() { name = "PopupManager" };
+                instance = obj.AddComponent<PopupManager>();
             }return instance;
         }
+    }
+
+    void Awake()
+    {
+        instance = this;
     }
 
 
@@ -36,7 +42,7 @@ public class PopupManager : MonoBehaviour
     }
     public void DeathPop()
     {
-        Debug.Log("Á×À½ ÆË¾÷");
+        Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½Ë¾ï¿½");
         PageManger.Instance.RoadRetry();
         //Debug.Log(gameObject.name);
         //transform.GetChild(0).gameObject.SetActive(false);

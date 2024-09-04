@@ -109,6 +109,18 @@ public class Human : PlayerUnit
         residualAmmo = maxAmmo;
     }
 
+    protected override void Update()
+    {
+        base.Update();
+        
+        var screenPoint = Input.mousePosition;
+        screenPoint.z = Camera.main.transform.position.z;
+        screenPoint = Camera.main.ScreenToWorldPoint(screenPoint);
+        screenPoint.z = 0;
+
+        shootingAnimationController.targetPosition = screenPoint;
+    }
+
     bool isAttack = false;
     Vector3 clickPos;
     public override bool Attack(Vector3 clickPos)
@@ -132,7 +144,7 @@ public class Human : PlayerUnit
             Debug.Log("여기 문제");
             base.Attack(clickPos);
             sound.PlayOneShot(soundClip, 0.3f);
-            SoundManager.Instance.CoStartBullet(userGunsoud);
+            // SoundManager.Instance.CoStartBullet(userGunsoud);
             ProCamera2DShake.Instance.Shake("GunShot ShakePreset");
             GameObject _bullet = Instantiate(bullet);//총알을 공격포지션에서 생성함
             GameObject gObj = this.gameObject;
