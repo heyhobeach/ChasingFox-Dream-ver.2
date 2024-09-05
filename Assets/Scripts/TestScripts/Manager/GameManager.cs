@@ -44,6 +44,8 @@ public partial class GameManager : MonoBehaviour
     public static BrutalData GetBrutalData() => instance.brutalDatas.brutalDatas[Brutality/10];
 
     public Player player { get; private set; }
+    
+    public List<Map> maps = new List<Map>();
 
     public void TimeScale(float t) => Time.timeScale = t;
 
@@ -51,7 +53,7 @@ public partial class GameManager : MonoBehaviour
     {
         BehaviourNode.clone.Clear();
         StopAllCoroutines();
-        CameraManager.Instance.proCamera2DRooms.OnStartedTransition.RemoveListener(CreateWallPrevRoom);
+        CameraManager.Instance.proCamera2DRooms.OnStartedTransition.RemoveListener(CreateWallRoom);
     }
 
     private void Awake()
@@ -69,7 +71,7 @@ public partial class GameManager : MonoBehaviour
     private void Start()
     {
         StartCoroutine(MapSearchStart());
-        CameraManager.Instance.proCamera2DRooms.OnStartedTransition.AddListener(CreateWallPrevRoom);
+        CameraManager.Instance.proCamera2DRooms.OnStartedTransition.AddListener(CreateWallRoom);
     }
 
     private void Update()
@@ -77,15 +79,31 @@ public partial class GameManager : MonoBehaviour
         if(controllers.Count > 0) controllers.Peek().Controller();
     }
 
-    public void CreateWallPrevRoom(int currentRoomIndex, int previousRoomIndex)
+    public void CreateWallRoom(int currentRoomIndex, int previousRoomIndex)
     {
+        Rect rect;
+        GameObject go;
+        BoxCollider2D col;
+
+        maps[currentRoomIndex].OnStart();
+
+        rect = CameraManager.Instance.proCamera2DRooms.Rooms[currentRoomIndex].Dimensions;
+        bottomLeft = new Vector2Int((int)(rect.x-rect.width*0.5f), (int)(rect.y-rect.height*0.5f));
+        topRight = new Vector2Int((int)(rect.x+rect.width*0.5f), (int)(rect.y+rect.height*0.5f));
+        // var go = new GameObject(){
+        //     name = "wall",
+        // };
+        // go.transform.position = new Vector3(rect.x, rect.y);
+        // var col = go.AddComponent<BoxCollider2D>();
+        // col.size = new Vector2(rect.width, rect.height);
+
         if(previousRoomIndex < 0) return;
-        var rect = CameraManager.Instance.proCamera2DRooms.Rooms[previousRoomIndex].Dimensions;
-        var go = new GameObject(){
+        rect = CameraManager.Instance.proCamera2DRooms.Rooms[previousRoomIndex].Dimensions;
+        go = new GameObject(){
             name = "wall",
         };
         go.transform.position = new Vector3(rect.x, rect.y);
-        var col = go.AddComponent<BoxCollider2D>();
+        col = go.AddComponent<BoxCollider2D>();
         col.size = new Vector2(rect.width, rect.height);
     }
 }
