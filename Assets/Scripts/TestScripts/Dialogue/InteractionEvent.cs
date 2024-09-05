@@ -301,6 +301,7 @@ public class InteractionEvent : MonoBehaviour
     }
 
     public void SetSkip(bool skip) => isSkip = skip;
+    public void SetSkip(Transform tf) {}
 
     private void HandleCommand()
     {
