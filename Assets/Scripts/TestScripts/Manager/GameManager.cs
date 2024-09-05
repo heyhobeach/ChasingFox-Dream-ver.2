@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using BehaviourTree;
+using Com.LuisPedroFonseca.ProCamera2D;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -50,6 +51,7 @@ public partial class GameManager : MonoBehaviour
     {
         BehaviourNode.clone.Clear();
         StopAllCoroutines();
+        CameraManager.Instance.proCamera2DRooms.OnStartedTransition.RemoveListener(CreateWallPrevRoom);
     }
 
     private void Awake()
@@ -67,10 +69,23 @@ public partial class GameManager : MonoBehaviour
     private void Start()
     {
         StartCoroutine(MapSearchStart());
+        CameraManager.Instance.proCamera2DRooms.OnStartedTransition.AddListener(CreateWallPrevRoom);
     }
 
     private void Update()
     {
         if(controllers.Count > 0) controllers.Peek().Controller();
+    }
+
+    public void CreateWallPrevRoom(int currentRoomIndex, int previousRoomIndex)
+    {
+        if(previousRoomIndex < 0) return;
+        var rect = CameraManager.Instance.proCamera2DRooms.Rooms[previousRoomIndex].Dimensions;
+        var go = new GameObject(){
+            name = "wall",
+        };
+        go.transform.position = new Vector3(rect.x, rect.y);
+        var col = go.AddComponent<BoxCollider2D>();
+        col.size = new Vector2(rect.width, rect.height);
     }
 }

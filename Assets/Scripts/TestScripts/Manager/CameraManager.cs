@@ -10,6 +10,7 @@ public class CameraManager : MonoBehaviour
 
     public ProCamera2DShake proCamera2DShake;
     public ProCamera2DPointerInfluence proCamera2DPointerInfluence;
+    public ProCamera2DRooms proCamera2DRooms;
 
     public float ChangeSize { set => ProCamera2D.Instance.UpdateScreenSize(value, 0.5f); }
 
@@ -21,5 +22,6 @@ public class CameraManager : MonoBehaviour
         if(instance == null) instance = this;
         proCamera2DShake = GetComponent<ProCamera2DShake>();
         proCamera2DPointerInfluence = GetComponent<ProCamera2DPointerInfluence>();
+        proCamera2DRooms = GetComponent<ProCamera2DRooms>();
     }
 }

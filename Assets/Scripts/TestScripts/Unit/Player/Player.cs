@@ -190,6 +190,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
             FixMove();
             return !(changedForm.GetType() == typeof(Human) && changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("Dash") && changedForm.anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.3f);
         });
+        invalidation = true;
         if(changedForm.GetType() == typeof(Human) && bulletTimeCount-- > 0)
         {
             isBulletTime = true;
@@ -208,6 +209,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
             FixMove();
             return !(changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("Dash") && changedForm.anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.95f);
         });
+        invalidation = false;
         changedForm.UnitState = UnitState.Default;
 
         changing = null;
@@ -250,6 +252,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
             FixMove();
             return !(changedForm.GetType() == typeof(Human) && changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("FormChange") && changedForm.anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.3f);
         });
+        invalidation = true;
         if(changedForm.GetType() == typeof(Human) && bulletTimeCount-- > 0)
         {
             isBulletTime = true;
@@ -272,6 +275,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
             FixMove();
             return !(changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("FormChange") && changedForm.anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.95f);
         });
+        invalidation = false;
 
         foreach(PlayerUnit form in forms) form.gameObject.SetActive(false);
         changedForm = forms[1]; // 인간 상태일 시 늑대인간으로 변경
@@ -291,10 +295,12 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     {
         var tempDir = fixedDir;
         yield return new WaitUntil(() => changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("FormChange"));
+        invalidation = true;
         yield return new WaitUntil(() => {
             FixMove();
             return !(changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("FormChange") && changedForm.anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.95f);
         });
+        invalidation = false;
         changeGage -= brutalData.frm;
         foreach(PlayerUnit form in forms) form.gameObject.SetActive(false);
         changedForm = forms[0]; // 늑대인간 상태일 시 인간으로 변경

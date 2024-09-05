@@ -280,7 +280,7 @@ public class Werewolf : PlayerUnit
     {
         if(dashCoroutine != null) StopCoroutine(dashCoroutine);
         dashCoroutine = null;
-        invalidation=false;
+        // invalidation=false;
         if(isGrounded) unitState = UnitState.Default;
         else unitState = UnitState.Air;
     }
