@@ -44,6 +44,7 @@ public class EnemyController : MonoBehaviour
     }
     void Update()
     {
+        if(blackboard.thisUnit.UnitState == UnitState.Death) return;
         CircleRay();
         behaviorTree.Update();
     }

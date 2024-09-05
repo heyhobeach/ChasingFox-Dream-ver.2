@@ -16,20 +16,18 @@ public class FixedEventTrigger : EventTrigger, IBaseController
             StartCoroutine(LockTime(eventLists[eventIdx].lockTime));
             eventIdx++;
         }
-        else if(eventIdx >= eventLists.Length) ((IBaseController)this).RemoveController();
+        if(eventIdx >= eventLists.Length)
+        {
+            ((IBaseController)this).RemoveController();
+            used = true;
+            eventIdx = 0;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        if(used || (autoTrigger ? false : !Input.GetKeyDown(keyCode)) || !collider.CompareTag(targetTag)) return;
+        if((limit ? used : false) || (autoTrigger ? false : !Input.GetKeyDown(keyCode)) || !collider.CompareTag(targetTag)) return;
         ((IBaseController)this).AddController();
-        used = false;
-    }
-    private void OnTriggerStay2D(Collider2D collider)
-    {
-        if(used || (autoTrigger ? false : !Input.GetKeyDown(keyCode)) || !collider.CompareTag(targetTag)) return;
-        ((IBaseController)this).AddController();
-        used = false;
     }
 
     private IEnumerator LockTime(float lockTime)

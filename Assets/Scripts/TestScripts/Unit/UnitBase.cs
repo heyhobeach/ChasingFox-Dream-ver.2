@@ -10,16 +10,8 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(BoxCollider2D))]
-public abstract class UnitBase : MonoBehaviour, IUnitController, IDamageable
+public abstract class UnitBase : MonoBehaviour, IUnitController
 {
-    public int _maxHealth;
-    public int maxHealth { get { return _maxHealth; } set { _maxHealth = value; } }
-
-    private int _health;
-    public int health { get { return _health; } set { _health = value; } }
-
-    private bool _invalidation;
-    public bool invalidation { get { return _invalidation; } set { _invalidation = value; } }
     /// <summary>
     /// 중력 상수
     /// </summary>
