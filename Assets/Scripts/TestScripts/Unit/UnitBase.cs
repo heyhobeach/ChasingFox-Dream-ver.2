@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -105,16 +106,20 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
 
     private bool longRangeUnit;
     [HideInInspector] public ShootingAnimationController shootingAnimationController;
+    public Action onDeath;
 
     protected virtual void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
         // 콜라이더 크기(절반) 계산
+        var ect = gameObject.activeSelf;
+        gameObject.SetActive(true);
         boxSizeX = gameObject.GetComponent<Collider2D>().bounds.extents.x;
         boxSizeY = gameObject.GetComponent<Collider2D>().bounds.extents.y;
         boxOffsetX = gameObject.GetComponent<Collider2D>().offset.x;
         boxOffsetY = gameObject.GetComponent<Collider2D>().offset.y;
+        gameObject.SetActive(ect);
         
         unitState = UnitState.Default;
         anim.SetFloat("dashMultiplier", dashDuration > 0 ? 1/dashDuration : 1);
@@ -152,7 +157,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     protected virtual void OnDisable()
     {
         unitState = UnitState.Default;
-        anim.SetBool("isDeath", false);
+        if(anim) anim.SetBool("isDeath", false);
     }
 
     public virtual bool Attack(Vector3 clickPos)
@@ -202,8 +207,9 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     {
         anim.SetTrigger("death");
         anim.SetBool("isDeath", true);
-        shootingAnimationController.NomalAni();
+        if(longRangeUnit) shootingAnimationController.NomalAni();
         unitState = UnitState.Death;
+        if(onDeath != null) onDeath.Invoke();
     }
 
     /// <summary>

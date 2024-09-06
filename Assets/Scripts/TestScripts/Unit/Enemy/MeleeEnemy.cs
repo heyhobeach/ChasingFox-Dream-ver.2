@@ -12,6 +12,7 @@ public class MeleeEnemy : EnemyUnit
         MeleeAttack.SetActive(true);
         attackDistance = MeleeAttack.GetComponent<BoxCollider2D>().bounds.extents.x + MeleeAttack.transform.localPosition.x;
         MeleeAttack.SetActive(false);
+        MeleeAttack.GetComponent<MaleeAttack>().Set(1, gameObject);
     }
 
     public override bool AttackCheck(Vector3 attackPos)

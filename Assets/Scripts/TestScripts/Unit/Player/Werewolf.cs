@@ -58,6 +58,12 @@ public class Werewolf : PlayerUnit
         StopHoldingWall();
     }
 
+    protected override void Start()
+    {
+        base.Start();
+        MeleeAttack.GetComponent<MaleeAttack>().Set(1, gameObject);
+    }
+
     protected override void Update()
     {
         base.Update();

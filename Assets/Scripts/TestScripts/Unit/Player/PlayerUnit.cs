@@ -14,6 +14,8 @@ public abstract class PlayerUnit : UnitBase
 {
     public GameObject coverBox;
 
+    public GameObject aim;
+
     protected bool isJumping;
 
     protected float hzVel;
@@ -133,7 +135,11 @@ public abstract class PlayerUnit : UnitBase
         Movement();
     }
 
-    protected override void OnEnable() => coroutine = StartCoroutine(DownJump());
+    protected override void OnEnable()
+    {
+        coroutine = StartCoroutine(DownJump());
+        aim.SetActive(true);
+    }
     protected override void OnDisable()
     {
         base.OnDisable();
@@ -141,6 +147,7 @@ public abstract class PlayerUnit : UnitBase
         coroutine = null;
         ResetForce();
         SetHorizontalVelocity(0);
+        aim.SetActive(false);
     }
 
     private float jumpingHight;
