@@ -56,6 +56,7 @@ public partial class GameManager : MonoBehaviour
         int sizeX = topRight.x - bottomLeft.x + 1;
         int sizeY = topRight.y - bottomLeft.y + 1;
         NodeArray = new Node[sizeX, sizeY];
+        Debug.Log(sizeX + ", " + sizeY);
 
         for (int i = 0; i < sizeX; i++)//��κ� �ѹ��� ������
         {
@@ -79,10 +80,11 @@ public partial class GameManager : MonoBehaviour
     }
     public List<Node> PathFinding(Vector3 startPosV3, Vector3 targetPosV3)
     {
-        if(NodeArray == null)
+        if(NodeArray == null || isLoad)
         {
             isLoad = true;
-            return null;
+            NodeArray = null;
+            return new List<Node>();
         }
         Vector2Int startPos = new Vector2Int((int)startPosV3.x, (int)startPosV3.y);
         Vector2Int targetPos = new Vector2Int((int)targetPosV3.x, (int)targetPosV3.y);

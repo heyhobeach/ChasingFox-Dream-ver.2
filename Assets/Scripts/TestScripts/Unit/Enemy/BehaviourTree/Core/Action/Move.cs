@@ -28,7 +28,7 @@ namespace BehaviourTree
             }
             if(blackboard.FinalNodeList == null || blackboard.FinalNodeList.Count <= blackboard.nodeIdx) 
             {
-                if(blackboard.FinalNodeList.Count > 2)
+                if(blackboard.FinalNodeList != null && blackboard.FinalNodeList.Count > 2)
                 {
                     while(blackboard.FinalNodeList != null && blackboard.FinalNodeList.Count <= blackboard.nodeIdx) blackboard.nodeIdx--;
                     // if(blackboard.nodeIdx > 0) blackboard.nodeIdx--;

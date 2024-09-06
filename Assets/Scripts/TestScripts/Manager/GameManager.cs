@@ -85,22 +85,38 @@ public partial class GameManager : MonoBehaviour
         GameObject go;
         BoxCollider2D col;
 
-        maps[currentRoomIndex].OnStart();
-
         rect = CameraManager.Instance.proCamera2DRooms.Rooms[currentRoomIndex].Dimensions;
-        bottomLeft = new Vector2Int((int)(rect.x-rect.width*0.5f), (int)(rect.y-rect.height*0.5f));
-        topRight = new Vector2Int((int)(rect.x+rect.width*0.5f), (int)(rect.y+rect.height*0.5f));
-        // var go = new GameObject(){
-        //     name = "wall",
-        // };
-        // go.transform.position = new Vector3(rect.x, rect.y);
-        // var col = go.AddComponent<BoxCollider2D>();
-        // col.size = new Vector2(rect.width, rect.height);
+        var bl = new Vector2(rect.x-(rect.width*0.5f), rect.y-(rect.height*0.5f));
+        var tr = new Vector2(rect.x+(rect.width*0.5f), rect.y+(rect.height*0.5f));
 
+        go = new GameObject(){
+            name = "wall",
+            layer = LayerMask.NameToLayer("Map"),
+            tag = "Map"
+        };
+        var edge = go.AddComponent<EdgeCollider2D>();
+        edge.SetPoints(new List<Vector2>{
+            new Vector2(bl.x, bl.y),
+            new Vector2(bl.x, tr.y),
+            new Vector2(tr.x, tr.y),
+            new Vector2(tr.x, bl.y)
+        });
+
+        maps[currentRoomIndex].edgeCollider2D = edge;
+
+        bottomLeft = new Vector2Int((int)(rect.x-(rect.width*0.5f)), (int)(rect.y-(rect.height*0.5f)));
+        topRight = new Vector2Int((int)(rect.x+(rect.width*0.5f)), (int)(rect.y+(rect.height*0.5f)));
+        isLoad = true;
+
+        maps[currentRoomIndex].OnStart();
         if(previousRoomIndex < 0) return;
+        maps[previousRoomIndex].OnEnd();
+
         rect = CameraManager.Instance.proCamera2DRooms.Rooms[previousRoomIndex].Dimensions;
         go = new GameObject(){
             name = "wall",
+            layer = LayerMask.NameToLayer("Map"),
+            tag = "Map"
         };
         go.transform.position = new Vector3(rect.x, rect.y);
         col = go.AddComponent<BoxCollider2D>();

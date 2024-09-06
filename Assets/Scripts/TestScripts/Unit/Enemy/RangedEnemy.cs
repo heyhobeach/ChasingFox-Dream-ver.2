@@ -6,6 +6,12 @@ public class RangedEnemy : EnemyUnit
 {
     public GameObject bullet;//�Ѿ� ����
 
+    protected override void Start()
+    {
+        base.Start();
+        if(bullet == null) bullet = Resources.Load<GameObject>("Prefabs/Bullet.prefab");
+    }
+
     public override bool AttackCheck(Vector3 attackPos)
     {
         var pos = attackPos-transform.position;
