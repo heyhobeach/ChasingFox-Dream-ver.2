@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.U2D.Animation;
 
 /// <summary>
 /// 유닛의 기본적인 동작을 정의하는 추상 클래스
@@ -107,10 +108,16 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     private bool longRangeUnit;
     [HideInInspector] public ShootingAnimationController shootingAnimationController;
     public Action onDeath;
+    public Action onEnable;
+    public Action onDisable;
+    private SpriteResolver spriteResolver;
+
+    public void Init() => Start();
 
     protected virtual void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteResolver = GetComponent<SpriteResolver>();
         anim = GetComponent<Animator>();
         // 콜라이더 크기(절반) 계산
         var ect = gameObject.activeSelf;
@@ -148,8 +155,17 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         }
         anim.SetFloat("dashMultiplier", dashDuration > 0 ? 1/dashDuration : 1);
     }
+
+    private void LateUpdate()
+    {
+        if(spriteResolver.enabled) spriteResolver.ResolveSpriteToSpriteRenderer();
+    }
     
-    protected abstract void OnEnable();
+    protected virtual void OnEnable()
+    {
+        Debug.Log(onEnable);
+        onEnable?.Invoke();
+    }
 
     /// <summary>
     /// 폼체인지 시 초기화 해야할 작업을 수행
@@ -157,6 +173,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     protected virtual void OnDisable()
     {
         unitState = UnitState.Default;
+        onDisable?.Invoke();
         if(anim) anim.SetBool("isDeath", false);
     }
 
@@ -262,4 +279,6 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         return new Vector3(0, 0, Vector3.SignedAngle(transform.right, dir, transform.forward)); // 유닛 기준 뱡향 벡터의 각도 계산 및 반환
     }
 
+    public void OnResolver() => spriteResolver.enabled = true;
+    public void OffResolver() => spriteResolver.enabled = false;
 }

@@ -30,26 +30,29 @@ public class Human : PlayerUnit
     /// 총알 속도
     /// </summary>
     public float bulletSpeed;
-    /// <summary>
-    /// 장탄 수
-    /// </summary>
-    public float magazine;
 
     /// <summary>
     /// 잔여 탄약 수
     /// </summary>
-    public float residualAmmo;
+    private float _residualAmmo;
+    public float residualAmmo 
+    { 
+        get => _residualAmmo;
+        set
+        {
+            _residualAmmo = value;
+            reloadGauge?.Invoke(_residualAmmo, maxAmmo);
+        }
+    }
 
     /// <summary>
     /// 최대 탄약 수
     /// </summary>
     public float maxAmmo;
 
+    public int bulletTimeCount;
 
-    /// <summary>
-    /// 재장전 진행도
-    /// </summary>
-    [HideInInspector] private float reloadProgress;
+    public GaugeBar<Human>.GaugeUpdateDel reloadGauge;
 
     /// <summary>
     /// 대쉬 코루틴을 저장하는 변수, 대쉬 중 여부 겸용
@@ -106,6 +109,7 @@ public class Human : PlayerUnit
         sound=GetComponent<AudioSource>(); 
         //sound.PlayOneShot(soundClip, 0.3f);
         base.Start();
+        bulletTimeCount = GameManager.GetHumanData();
         residualAmmo = maxAmmo;
     }
 

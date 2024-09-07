@@ -35,7 +35,11 @@ public class Map : MonoBehaviour
         gameObject.SetActive(true);
         foreach (EnemyUnit unit in enemyUnits) unit.gameObject.SetActive(true);
     }
-    public void OnEnd() => StartCoroutine(EndDeley());
+    public void OnEnd()
+    {
+        edgeCollider2D.enabled = true;
+        StartCoroutine(EndDeley());
+    }
 
     IEnumerator EndDeley()
     {

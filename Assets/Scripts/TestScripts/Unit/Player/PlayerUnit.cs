@@ -14,8 +14,6 @@ public abstract class PlayerUnit : UnitBase
 {
     public GameObject coverBox;
 
-    public GameObject aim;
-
     protected bool isJumping;
 
     protected float hzVel;
@@ -129,7 +127,6 @@ public abstract class PlayerUnit : UnitBase
         {
             SetHorizontalForce(0);
             SetHorizontalVelocity(0);
-            Debug.Log(hit.collider.gameObject.name);
         }
         if(Mathf.Abs(hzForce) <= 0.01f * movementSpeed) hzForce = 0;
         Movement();
@@ -137,8 +134,8 @@ public abstract class PlayerUnit : UnitBase
 
     protected override void OnEnable()
     {
+        base.OnEnable();
         coroutine = StartCoroutine(DownJump());
-        aim.SetActive(true);
     }
     protected override void OnDisable()
     {
@@ -147,7 +144,6 @@ public abstract class PlayerUnit : UnitBase
         coroutine = null;
         ResetForce();
         SetHorizontalVelocity(0);
-        aim.SetActive(false);
     }
 
     private float jumpingHight;
@@ -462,13 +458,13 @@ public abstract class PlayerUnit : UnitBase
     /// </summary>
     private void Movement()
     {
-        var hit = Physics2D.BoxCastAll(transform.position-new Vector3(0, boxSizeY), new Vector2(boxSizeX, 0.05f), 0, Vector2.down, boxSizeX, 1<<LayerMask.NameToLayer("OneWayPlatform") | 1<<LayerMask.NameToLayer("Ground"));
+        var hit = Physics2D.BoxCastAll(rg.transform.position-new Vector3(0, boxSizeY), new Vector2(boxSizeX, 0.05f), 0, Vector2.down, boxSizeX, 1<<LayerMask.NameToLayer("OneWayPlatform") | 1<<LayerMask.NameToLayer("Ground"));
         if(hit.Length > 0 && !canDown && Mathf.Abs(hit[0].normal.x) < 1)
         {
             var temp = Vector3.ProjectOnPlane(new Vector3(hzForce, 0), hit[0].normal);
-            rg.MovePosition(transform.position + new Vector3(temp.x, temp.y + vcForce) * Time.deltaTime);
+            rg.MovePosition(rg.transform.position + new Vector3(temp.x, temp.y + vcForce) * Time.deltaTime);
         }
-        else rg.MovePosition(transform.position + (new Vector3(hzForce, vcForce) * Time.deltaTime));
+        else rg.MovePosition(rg.transform.position + (new Vector3(hzForce, vcForce) * Time.deltaTime));
     }
 
     /// <summary>
