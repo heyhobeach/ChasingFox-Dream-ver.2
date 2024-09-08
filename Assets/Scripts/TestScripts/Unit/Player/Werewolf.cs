@@ -37,8 +37,22 @@ public class Werewolf : PlayerUnit
     /// </summary>
     private Coroutine dashCoroutine;
     public int air_attack_count = 1;
-    private bool isFormChangeReady;
+    public bool isFormChangeReady { get => changeGauge <= 0; }
 
+    /// <summary>
+    /// 늑대인간 폼 유지를 위한 게이지 변수
+    /// </summary>
+    [SerializeField] private float _changeGauge;
+    public float changeGauge { 
+        get => _changeGauge;
+        set 
+        {
+            _changeGauge = value; 
+            brutalGauge?.Invoke(_changeGauge, brutalData.maxGage);
+        }
+    }
+    public BrutalData brutalData;
+    public GaugeBar<Werewolf>.GaugeUpdateDel brutalGauge;
 
     protected override void OnEnable()
     {
@@ -48,7 +62,6 @@ public class Werewolf : PlayerUnit
         pi.MaxVerticalInfluence = 0.3f;
         pi.InfluenceSmoothness = 0.2f;
         CameraManager.Instance.ChangeSize = 5.45f;
-        isFormChangeReady = false;
     }
     protected override void OnDisable()
     {
@@ -62,6 +75,8 @@ public class Werewolf : PlayerUnit
     {
         base.Start();
         MeleeAttack.GetComponent<MaleeAttack>().Set(1, gameObject);
+        brutalData = GameManager.GetBrutalData();
+        changeGauge = brutalData.maxGage;
     }
 
     protected override void Update()
@@ -72,8 +87,7 @@ public class Werewolf : PlayerUnit
             air_attack_count = 1;
             isholded = false;
         }
-        if(Input.GetKeyDown(KeyCode.Alpha0)) Time.timeScale = 0.1f;
-        else if(Input.GetKeyDown(KeyCode.Alpha1)) Time.timeScale = 1;
+        changeGauge -= brutalData.sec * Time.deltaTime;
     }
 
     protected override void OnCollisionEnter2D(Collision2D collision)
@@ -135,6 +149,7 @@ public class Werewolf : PlayerUnit
         MeleeAttack.transform.localEulerAngles = new Vector3(0, 0, Quaternion.FromToRotation(Vector2.up, transform.position - MeleeAttack.transform.position).eulerAngles.z - 90);
 
         attackCoroutine = StartCoroutine(Attacking());
+        changeGauge -= brutalData.atk;
         base.Attack(clickPos);
         return true;
     }
@@ -293,11 +308,7 @@ public class Werewolf : PlayerUnit
 
     public override bool FormChange()
     {
-        if(unitState != UnitState.Default)
-        {
-            isFormChangeReady = true;
-            return false;
-        }
+        if(unitState != UnitState.Default) return false;
         else return base.FormChange();
     }
 

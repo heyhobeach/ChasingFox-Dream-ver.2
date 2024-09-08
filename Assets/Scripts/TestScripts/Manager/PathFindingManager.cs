@@ -56,7 +56,6 @@ public partial class GameManager : MonoBehaviour
         int sizeX = topRight.x - bottomLeft.x + 1;
         int sizeY = topRight.y - bottomLeft.y + 1;
         NodeArray = new Node[sizeX, sizeY];
-        Debug.Log(sizeX + ", " + sizeY);
 
         for (int i = 0; i < sizeX; i++)//��κ� �ѹ��� ������
         {

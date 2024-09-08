@@ -34,7 +34,7 @@ public interface IDamageable
     bool GetDamage(int dmg, Action action = null)
     {
         if (health <= 0 || invalidation) return false; 
-        if(action != null) action();
+        action?.Invoke();
         health -= dmg;
         if (health <= 0) Death();
         return true;
