@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657886, g: 0.49641275, b: 0.5748176, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -158,7 +158,7 @@ PlayableDirector:
   - key: {fileID: 4327585293352611442, guid: 2a7b359372ec4bb4ebf104d97278c254, type: 2}
     value: {fileID: 539540813}
   - key: {fileID: 3976438032987952147, guid: 2a7b359372ec4bb4ebf104d97278c254, type: 2}
-    value: {fileID: 539540813}
+    value: {fileID: 83158039}
   - key: {fileID: -8803041331261939831, guid: 2a7b359372ec4bb4ebf104d97278c254, type: 2}
     value: {fileID: 1335669020}
   - key: {fileID: -213217017767135481, guid: 2a7b359372ec4bb4ebf104d97278c254, type: 2}
@@ -1257,7 +1257,7 @@ PlayableDirector:
   - key: {fileID: 6973036297597553813, guid: 69845ef91095a1a43a52655d6b587517, type: 2}
     value: {fileID: 539540813}
   - key: {fileID: -5661588552092350830, guid: 69845ef91095a1a43a52655d6b587517, type: 2}
-    value: {fileID: 539540813}
+    value: {fileID: 83158039}
   - key: {fileID: 6086137074165401602, guid: 69845ef91095a1a43a52655d6b587517, type: 2}
     value: {fileID: 925688196}
   - key: {fileID: 8417271247113343027, guid: 69845ef91095a1a43a52655d6b587517, type: 2}
@@ -3323,7 +3323,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4210399258222090256, guid: 019c1accf40bb5341be365e384d2c644, type: 3}
       propertyPath: m_SpriteHash
-      value: 958713371
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5709927631941509340, guid: 019c1accf40bb5341be365e384d2c644, type: 3}
       propertyPath: m_Name
@@ -3483,6 +3483,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5709927631941509340, guid: 019c1accf40bb5341be365e384d2c644, type: 3}
       insertIndex: -1
       addedObject: {fileID: 539540819}
+    - targetCorrespondingSourceObject: {fileID: 5709927631941509340, guid: 019c1accf40bb5341be365e384d2c644, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 539540820}
+    - targetCorrespondingSourceObject: {fileID: 3844520560318708445, guid: 019c1accf40bb5341be365e384d2c644, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 539540817}
   m_SourcePrefab: {fileID: 100100000, guid: 019c1accf40bb5341be365e384d2c644, type: 3}
 --- !u!1 &539540812 stripped
 GameObject:
@@ -3515,6 +3521,52 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 5759083363812235255, guid: 019c1accf40bb5341be365e384d2c644, type: 3}
   m_PrefabInstance: {fileID: 539540811}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &539540815 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3844520560318708445, guid: 019c1accf40bb5341be365e384d2c644, type: 3}
+  m_PrefabInstance: {fileID: 539540811}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &539540816 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4210399258222090256, guid: 019c1accf40bb5341be365e384d2c644, type: 3}
+  m_PrefabInstance: {fileID: 539540811}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 539540815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed8b1ae4e4e52b34ea557c1c11e076fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &539540817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 539540815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Events:
+    m_Signals:
+    - {fileID: 11400000, guid: 3f523a917fe6e514881565825728fc73, type: 2}
+    m_Events:
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 539540816}
+          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+          m_MethodName: set_enabled
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!212 &539540819
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3567,6 +3619,36 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &539540820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 539540812}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Events:
+    m_Signals:
+    - {fileID: 11400000, guid: 3f523a917fe6e514881565825728fc73, type: 2}
+    m_Events:
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 539540815}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: 
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: 
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &548401575
 GameObject:
   m_ObjectHideFlags: 0
@@ -3602,7 +3684,7 @@ PlayableDirector:
   - key: {fileID: 6189214775844528827, guid: 9dfd2704d1b677149ad3910f5f23a9bf, type: 2}
     value: {fileID: 539540813}
   - key: {fileID: 451415014808712699, guid: 9dfd2704d1b677149ad3910f5f23a9bf, type: 2}
-    value: {fileID: 539540813}
+    value: {fileID: 83158039}
   - key: {fileID: -70273772646030627, guid: 9dfd2704d1b677149ad3910f5f23a9bf, type: 2}
     value: {fileID: 1743845453}
   - key: {fileID: -8947285056004225606, guid: 9dfd2704d1b677149ad3910f5f23a9bf, type: 2}
@@ -63795,7 +63877,7 @@ PlayableDirector:
   - key: {fileID: 6757399411939405035, guid: b82a145ed4fe1534c8521959f0486067, type: 2}
     value: {fileID: 539540813}
   - key: {fileID: 3194378773912239640, guid: b82a145ed4fe1534c8521959f0486067, type: 2}
-    value: {fileID: 539540813}
+    value: {fileID: 83158039}
   - key: {fileID: -4591675343091742408, guid: b82a145ed4fe1534c8521959f0486067, type: 2}
     value: {fileID: 1390635112}
   - key: {fileID: 6739658739547878320, guid: b82a145ed4fe1534c8521959f0486067, type: 2}
