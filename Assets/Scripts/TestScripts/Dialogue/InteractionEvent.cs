@@ -35,7 +35,7 @@ public class InteractionEvent : MonoBehaviour
     /// <summary>
     /// uimanager 스킬븥 접근 변수
     /// </summary>
-    UIManager _Uimanager;
+    public UIManager _Uimanager;
 
     /// <summary>
     /// 명령어 끼리 , 를 분리하는 정규식
@@ -70,6 +70,7 @@ public class InteractionEvent : MonoBehaviour
         public SizeCommand(string[] args, string str, UIManager manager)
         {
             Debug.Log("Get Sting" + str);
+            Debug.Log(string.Format("{0} {1} {2}", args[0], args[1], args[2]));
             start = int.Parse(args[0]);
             end = int.Parse(args[1]);
             size = int.Parse(args[2]);
@@ -260,10 +261,8 @@ public class InteractionEvent : MonoBehaviour
         }
         _Uimanager.content.text = "";
         command = Regex.Split(dialogue.dialouses[num].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);//이게 위로 간다면?
-        Debug.Log(string.Format("Get content {0} command{1}", dialogue.dialouses[0].context, command[1]));
+        //Debug.Log(string.Format("Get content {0} command{1}", dialogue.dialouses[0].context, command[1]));
         //Debug.Log("길이" + dialogue.dialouses.Length);
-        precommands = null;
-        postcommands = null;
         return dialogue.dialouses;
     }
 
@@ -325,6 +324,10 @@ public class InteractionEvent : MonoBehaviour
 
     private void CallCommand(ref List<Command> _commandList)
     {
+        if (_commandList == null)
+        {
+            return;
+        }
         foreach (var _command in _commandList)
         {
             if (_command is SizeCommand)
@@ -550,6 +553,7 @@ public class InteractionEvent : MonoBehaviour
                 case "size":
                     {
                         Debug.Log("Num=>" + num);//선택지 부분에서만 문제
+                        Debug.Log(dialogue.dialouses[temp].context[contentNum]);
                         precommands.Add(new SizeCommand(filteredSubstrings, dialogue.dialouses[temp].context[contentNum], _Uimanager));
                         //size(filteredSubstrings); 
                     }
