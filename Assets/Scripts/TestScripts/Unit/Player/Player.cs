@@ -29,9 +29,6 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     public int health { get; set; }
     public bool invalidation { get; set; }
 
-    private int bulletTimeCount;
-    public BrutalData brutalData;
-
     public static GameObject pObject;
 
 
@@ -39,11 +36,6 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     /// 폼 체인지 딜레이 시간
     /// </summary>
     // public float changeDelay;
-
-    /// <summary>
-    /// 늑대인간 폼 유지를 위한 게이지 변수
-    /// </summary>
-    public float changeGage;
 
     /// <summary>
     /// 입력 방향을 저장할 변수
@@ -64,6 +56,11 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         }
     }
 
+    void Awake()
+    {
+        foreach(PlayerUnit form in forms) form.Init();
+        pObject = this.gameObject;
+    }
 
     private void Start()
     {
@@ -73,9 +70,6 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         changedForm.gameObject.SetActive(true);
         health = maxHealth; // 체력 초기화
         fixedDir = 1;
-        bulletTimeCount = GameManager.GetHumanData();
-        brutalData = GameManager.GetBrutalData();
-        changeGage = brutalData.maxGage;
     }
 
     public bool Crouch(KeyState crouchKey) => changedForm.Crouch(crouchKey);
@@ -91,15 +85,11 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     public bool Attack(Vector3 clickPos)
     {
         bool temp = false;
-        if(changedForm is Human)
+        if(changedForm.UnitState == UnitState.FormChange)
         {
-            if(changedForm.UnitState == UnitState.FormChange)
-            {
-                if(isBulletTime) temp = changedForm.Attack(clickPos);
-            }
-            else temp = changedForm.Attack(clickPos);
+            if(isBulletTime) temp = changedForm.Attack(clickPos);
         }
-        else if(changedForm is Werewolf) if(temp = changedForm.Attack(clickPos)) changeGage -= brutalData.atk;
+        else temp = changedForm.Attack(clickPos);
         return temp;
     }
 
@@ -109,22 +99,13 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         return true;
     }
 
-
-    /// <summary>
-    /// 임시
-    /// </summary>
-    public IEnumerator ChangeDelay()
-    {
-        yield return new WaitUntil(() => changeGage <= 0);
-    }
-
     public void Death()
     {
         Debug.Log("유저 사망");
         ProCamera2DShake.Instance.Shake("Hit ShakePreset");
         invalidation = true;
         changedForm.Death();
-        if(changedForm.GetType() != typeof(Berserker) && brutalData.canBerserker) // 버서커 상태가 아닐 시
+        if(changedForm.GetType() != typeof(Berserker)) // 버서커 상태가 아닐 시
         {
             Debug.Log("버서커");
             StartCoroutine(Test());
@@ -161,12 +142,12 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         bool b = false;
         if(changedForm.GetType() == typeof(Human))
         {
-            if(changeGage > 0 && changedForm.FormChange())
+            if(!((Werewolf) forms[1]).isFormChangeReady && changedForm.FormChange())
             {
                 changing = StartCoroutine(ChangeWerewolf());
                 b = true;
             }
-            else if(changeGage <= 0 && bulletTimeCount > 0)
+            else if(changedForm.UnitState == UnitState.Default && ((Werewolf) forms[1]).isFormChangeReady && ((Human) forms[0]).bulletTimeCount > 0)
             {
                 changedForm.UnitState = UnitState.Default;
                 Dash();
@@ -190,7 +171,8 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
             FixMove();
             return !(changedForm.GetType() == typeof(Human) && changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("Dash") && changedForm.anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.3f);
         });
-        if(changedForm.GetType() == typeof(Human) && bulletTimeCount-- > 0)
+        invalidation = true;
+        if(changedForm.GetType() == typeof(Human) && ((Human) forms[0]).bulletTimeCount-- > 0)
         {
             isBulletTime = true;
             Time.timeScale = 0.05f;
@@ -208,6 +190,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
             FixMove();
             return !(changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("Dash") && changedForm.anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.95f);
         });
+        invalidation = false;
         changedForm.UnitState = UnitState.Default;
 
         changing = null;
@@ -250,7 +233,8 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
             FixMove();
             return !(changedForm.GetType() == typeof(Human) && changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("FormChange") && changedForm.anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.3f);
         });
-        if(changedForm.GetType() == typeof(Human) && bulletTimeCount-- > 0)
+        invalidation = true;
+        if(changedForm.GetType() == typeof(Human) && ((Human) forms[0]).bulletTimeCount-- > 0)
         {
             isBulletTime = true;
             Time.timeScale = 0.5f;
@@ -272,6 +256,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
             FixMove();
             return !(changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("FormChange") && changedForm.anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.95f);
         });
+        invalidation = false;
 
         foreach(PlayerUnit form in forms) form.gameObject.SetActive(false);
         changedForm = forms[1]; // 인간 상태일 시 늑대인간으로 변경
@@ -291,11 +276,13 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     {
         var tempDir = fixedDir;
         yield return new WaitUntil(() => changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("FormChange"));
+        invalidation = true;
         yield return new WaitUntil(() => {
             FixMove();
             return !(changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("FormChange") && changedForm.anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.95f);
         });
-        changeGage -= brutalData.frm;
+        invalidation = false;
+        ((Werewolf) forms[1]).changeGauge -= ((Werewolf) forms[1]).brutalData.frm;
         foreach(PlayerUnit form in forms) form.gameObject.SetActive(false);
         changedForm = forms[0]; // 늑대인간 상태일 시 인간으로 변경
         changedForm.gameObject.SetActive(true);
@@ -313,19 +300,10 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
 
     public bool Reload() => changedForm.Reload(); 
 
-    void Awake()
-    {
-        pObject = this.gameObject; 
-    }
-
     void Update()
     {
         pObject = this.gameObject;
-        if(changedForm.GetType() == typeof(Werewolf))
-        {
-            if(changeGage >= 0) changeGage -= brutalData.sec * Time.deltaTime;
-            else FormChange();
-        }
+        if(changedForm.GetType() == typeof(Werewolf) && ((Werewolf) changedForm).isFormChangeReady) FormChange();
         if (changedForm.UnitState == UnitState.Dash)
         {
             invalidation = true;

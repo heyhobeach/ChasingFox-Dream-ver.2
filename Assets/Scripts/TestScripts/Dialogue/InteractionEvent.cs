@@ -35,7 +35,7 @@ public class InteractionEvent : MonoBehaviour
     /// <summary>
     /// uimanager 스킬븥 접근 변수
     /// </summary>
-    public UIManager _Uimanager;
+    UIManager _Uimanager;
 
     /// <summary>
     /// 명령어 끼리 , 를 분리하는 정규식
@@ -70,7 +70,6 @@ public class InteractionEvent : MonoBehaviour
         public SizeCommand(string[] args, string str, UIManager manager)
         {
             Debug.Log("Get Sting" + str);
-            Debug.Log(string.Format("{0} {1} {2}", args[0], args[1], args[2]));
             start = int.Parse(args[0]);
             end = int.Parse(args[1]);
             size = int.Parse(args[2]);
@@ -83,7 +82,6 @@ public class InteractionEvent : MonoBehaviour
             //base.OnExecute();
             Debug.Log("onExecute테스트");
             _str = _uiManger.UpSizeText(_str, start, end, size);
-            //Debug.Log("_str" + _str);
             return _str;
         }
     }
@@ -261,7 +259,6 @@ public class InteractionEvent : MonoBehaviour
         }
         _Uimanager.content.text = "";
         command = Regex.Split(dialogue.dialouses[num].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);//이게 위로 간다면?
-        //Debug.Log(string.Format("Get content {0} command{1}", dialogue.dialouses[0].context, command[1]));
         //Debug.Log("길이" + dialogue.dialouses.Length);
         return dialogue.dialouses;
     }
@@ -284,6 +281,14 @@ public class InteractionEvent : MonoBehaviour
     private void Update()
     {
 
+        if (_Uimanager.is_closing)
+        {
+            Debug.Log("닫는중");
+        }
+        else
+        {
+            Debug.Log("열리는중");
+        }
         //if ((num <= dialogue.dialouses.Length))//line을 조절 해야함 대화가 끝나는 시점을 정하려면 line.y를 설정해야함
         {
 
@@ -296,6 +301,7 @@ public class InteractionEvent : MonoBehaviour
     }
 
     public void SetSkip(bool skip) => isSkip = skip;
+    public void SetSkip(Transform tf) {}
 
     private void HandleCommand()
     {
@@ -308,10 +314,7 @@ public class InteractionEvent : MonoBehaviour
         //명령어 호출 시점 조절 했으므로 명령어 구별해서 호출 시점 구분
         if (command.Length > 0)
         {
-            foreach(var com in command)
-            {
-                Debug.Log("명령어 확인" + com);
-            }
+            //Debug.Log("command size is " + command.Length + "command [1]" + command[1]);
 
             command = spaceremove(command);
             CallFunction(command);
@@ -324,46 +327,26 @@ public class InteractionEvent : MonoBehaviour
 
     private void CallCommand(ref List<Command> _commandList)
     {
-        if (_commandList == null)
-        {
-            return;
-        }
         foreach (var _command in _commandList)
         {
             if (_command is SizeCommand)
             {
-                Debug.Log("sizecommand 호출 테스트" + "id" + dialogue.dialouses[num].id + "이름" + dialogue.dialouses[num].name);//여기는 한
+                //Debug.Log("sizecommand 호출 테스트" + "id" + dialogue.dialouses[num].id + "이름" + dialogue.dialouses[num].name);//여기는 한번
                 string str = _command.OnExecute("");//이 str을 대입
-                Debug.Log(str);
-                dialogue.dialouses[num].context[contentNum] = str;//여기서 사이즈 문제일으킴
-                Debug.Log("size 변경후 " + str);
+                //Debug.Log(str);
+                dialogue.dialouses[num].context[contentNum] = str;
+                //Debug.Log("size 변경후 " + str);
                 continue;
             }
             _command.OnExecute();
 
         }
-
         _commandList.RemoveAll(x => true);
-
-   
-            foreach (var com in _commandList)
-            {
-                Debug.Log("삭제후 남은 명령어 테스트" + com);
-            }
-
     }
     public void SetNextContext()
     {
         //while (gameObject.GetComponentInParent<UIManager>().is_closing) { }//역시나 무한루프
         //Debug.Log("nextContext");
-
-        if (precommands != null)
-        {
-            foreach (var com in precommands)
-            {
-                Debug.Log("남은 명령어 테스트" + com);
-            }
-        }
         CallCommand(ref postcommands);//이후 실행되어야하는 명령어들
         HandleCommand();
 
@@ -372,8 +355,7 @@ public class InteractionEvent : MonoBehaviour
         {
             CallCommand(ref precommands);//이전에 실행되어야할 명령어들
                                          //이게 두번 일어나는듯?
-
-            Debug.Log(string.Format("num {3}, name {0}: content{1} , 명령어{2}", dialogue.dialouses[num].name, dialogue.dialouses[num].context[contentNum], dialogue.dialouses[num].command[contentNum], num));
+            Debug.Log("명령어 호출 테스트" + "id" + dialogue.dialouses[num].id + "이름" + dialogue.dialouses[num].name);//여기는 한번
             _Uimanager.Setname(dialogue.dialouses[num].name);//이름 변경 되는중 마찬가지로 내용도 같이 하면 될듯
                                                              //Debug.Log(dialogue.dialouses[num].context.Length);
                                                              //Debug.Log(string.Format("num => {0} contentnum ={1}", num, contentNum));
@@ -406,10 +388,9 @@ public class InteractionEvent : MonoBehaviour
 
 
 
-                Debug.Log(string.Format("id {4} num {3}, name {0}: content{1} , 명령어{2}", dialogue.dialouses[num].name, dialogue.dialouses[num].context[contentNum], dialogue.dialouses[num].command[contentNum], num, dialogue.dialouses[num].id));
+                Debug.Log(string.Format("num {3}, name {0}: content{1} , 명령어{2}", dialogue.dialouses[num].name, dialogue.dialouses[num].context[contentNum], dialogue.dialouses[num].command[contentNum],num));
                 if (++num == dialogue.dialouses.Length)
                 {
-                    //현재 여기가 문제를 일으키는 중 근데 뭐가 문제인지 모르겠음 없어도 되는문장같음
                     //command = Regex.Split(dialogue.dialouses[num-1].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);//여기까지는 순서 맞음 command받기전에 num이 증가되어야함
                     return;
                 }
@@ -425,6 +406,7 @@ public class InteractionEvent : MonoBehaviour
             EndDialogue();
         }
         contentNum = 0;
+        Debug.Log("contentNum 조욜");
 
         //num++;
     }
@@ -432,12 +414,6 @@ public class InteractionEvent : MonoBehaviour
     {
         if ((Input.GetKeyDown(KeyCode.F) || isSkip)&&!_Uimanager.is_closing)//f누를때 문제 생기는듯?
         {
-
-            //EndDialogue();
-            //if (num > dialogue.dialouses.Length+1)//지금 바로 넘어가짐
-            //{
-            //    EndDialogue();
-            //}
             isSkip = false;
             if (skipco != null)
             {
@@ -453,7 +429,6 @@ public class InteractionEvent : MonoBehaviour
             {
                 Debug.Log("닫는중");
                 StartCoroutine(_Uimanager.ClosingAnim(SetNextContext));
-                //_Uimanager.content.text = dialogue.dialouses[num].context[0];
                 //Debug.Log("실행 했음");
                 return;
                 //클로징 중이면 넘어가면 안 됨
@@ -465,7 +440,7 @@ public class InteractionEvent : MonoBehaviour
         }
         if (contentlength > 1)//선택지 부분
         {
-            //Debug.Log("선택지 부분");
+            Debug.Log("선택지 부분");
             int temp = num;
             if (num > dialogue.dialouses.Length - 1)
             {
@@ -520,7 +495,7 @@ public class InteractionEvent : MonoBehaviour
                 return;
             }
             num = 0;
-            //SetNextContext();
+            SetNextContext();
             Debug.Log(dialogue.dialouses.Length);
 
         }
@@ -553,7 +528,6 @@ public class InteractionEvent : MonoBehaviour
                 case "size":
                     {
                         Debug.Log("Num=>" + num);//선택지 부분에서만 문제
-                        Debug.Log(dialogue.dialouses[temp].context[contentNum]);
                         precommands.Add(new SizeCommand(filteredSubstrings, dialogue.dialouses[temp].context[contentNum], _Uimanager));
                         //size(filteredSubstrings); 
                     }
@@ -681,11 +655,15 @@ public class InteractionEvent : MonoBehaviour
         {
             Debug.Log(string.Format("{0} num {1} contentNum", num - 1, contentNum));    
             Debug.Log("Time over" + dialogue.dialouses[num - 1].context[0]);
+            //_Uimanager.CloseSelceet(0);
             //command = Regex.Split(dialogue.dialouses[num - 1].command[0], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);
-            //command = spaceremove(command);
-            //CallFunction(command);
-            //num++;
-            //contentNum = 0;
+            contentNum = 0;
+            foreach(var i in command)
+            {
+                Debug.Log("Command"+ i );
+
+            }
+            isSkip = true;
         }
     }
     IEnumerator ChocieTimer(float seconds, bool start, Action? act)
