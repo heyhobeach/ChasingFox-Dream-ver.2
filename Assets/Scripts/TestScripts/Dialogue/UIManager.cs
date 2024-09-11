@@ -1,9 +1,11 @@
 using JetBrains.Annotations;
 using System;
 using System.Collections;
+using System.Net.Mime;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class UIManager : MonoBehaviour
 {
@@ -23,7 +25,7 @@ public class UIManager : MonoBehaviour
     /// 텍스트 오브젝트 이동 애니메이션 시간
     /// </summary>
     [SerializeField]
-    private float duration = 3f;
+    private float duration = 0.3f;
     //public Text
     public TMP_Text namemesh;
     public TMP_Text content;
@@ -77,15 +79,16 @@ public class UIManager : MonoBehaviour
 
     // Update is called once per frame
 
+    /// <summary>
+    /// 위치를 받으면 대사창 위치가 옮겨짐
+    /// </summary>
+    /// <param name="pos"></param>
     public void setTestPosition(Vector3 pos)
     {
         Vector3 _pos;
         Transform dialogueUiTransform = this.transform.GetChild(0).GetComponent<Transform>();//스크린 좌표로 변환 필요
         //dialogueUiTransform.position = pos;
         dialogueUiTransform.position=Camera.main.WorldToScreenPoint(new Vector3(pos.x,pos.y+1,pos.z));//타겟 오브젝트 위치에 대사 오브젝트 위치 움직임
-        //_pos = pos;
-        //_pos = GetComponentInChildren<Transform>().position;
-        //_pos = pos;
         Debug.Log(pos);
     }
     public void Setname(string name)
@@ -93,15 +96,79 @@ public class UIManager : MonoBehaviour
         namemesh.text = name;
     }
 
+
+    /// <summary>
+    /// 글자 수 받아오는곳
+    /// </summary>
+    /// <param name="strings"></param>
+    /// <param name="br_count">br개수 리턴</param>
+    /// <returns>글자수</returns>
+    public int GetContentLength(string[] strings,ref int br_count)
+    {
+        int max = 0;
+        string str = "";
+        foreach(string s in strings)
+        {
+            int str_count_temp = 0;
+            int br_count_temp = 0;
+            string tag = "";
+            for(int i=0;i< s.Length; i++)
+            {
+                if (s[i] == '<')
+                {
+                    while (true)
+                    {
+                        tag += s[i];
+                        if (s[i++] == '>')
+                        {
+                            tag += s[i];
+                            if (tag == "<br>")//태그가 끝난시점에 br이라면 br_count증가
+                            {
+                                br_count_temp++;
+                            }
+                            break;
+                        }
+                    }
+                }
+                str += s[i];
+                str_count_temp++;
+            }
+            if(str_count_temp > max)
+            {
+                max= str_count_temp;
+            }
+            if (br_count_temp > br_count)
+            {
+                br_count=br_count_temp;
+            }
+        }
+        Debug.Log("내용: "+str+"글자수 :" + max);
+        return max;
+    }
+
+    public int GetContentLength(string str, ref int br_count)
+    {
+        return GetContentLength(new string[] { str },ref br_count) ; 
+    }
+
     public void SetContent(string _content)
     {
         StopCoroutine(co);
+        int br_count = 0;
+        float width=content.fontSize* GetContentLength(_content, ref br_count);
+        float hight = content.fontSize + (content.fontSize * br_count);
+        content.rectTransform.sizeDelta = new Vector2(width, hight);
         co = Typing(_content,isTyping);
         StartCoroutine(co);
     }
     public void SetContent(string[] _contentArr)//배열로 받을 예정
     {
         StopCoroutine(co);
+        int br_count = 0;
+        float width = content.fontSize * GetContentLength(_contentArr, ref br_count);//여기부분은 수정 해야하는데 아마 선택지에 br이 안들어갈거같아서 방치
+        float hight = content.fontSize + (content.fontSize * br_count);              //
+        content.rectTransform.sizeDelta = new Vector2(width, hight);                 //
+        GetContentLength(_contentArr, ref br_count);
         CreatSelect(_contentArr);
         co = TextSliding(_contentArr);
         StartCoroutine(co);
@@ -252,25 +319,15 @@ public class UIManager : MonoBehaviour
     public void CloseSelceet(int choseIndex)
     {
         if (ContentArr.Length == 1) return;
-        //Debug.Log("선택번호"+choseIndex);
-        //int childs = this.gameObject.transform.parent.transform.childCount;
         int childs = content.transform.parent.transform.childCount;
-        //Debug.Log("자식수"+childs);
         is_closing = true;
-        //Debug.Log("선택 자식"+content.transform.parent.GetChild(choseIndex).GetComponent<TMP_Text>().text);
         GameObject selectobj = content.transform.parent.GetChild(choseIndex).gameObject;
         string tmpstr = selectobj.GetComponent<TMP_Text>().text;
-        //content.text = tmpstr;//여기가 문제 발생중
         start_pos=selectobj.transform.position;
         end_pos =content.transform.parent.GetChild(childs-1).transform.position;
         Debug.Log(string.Format("start_pos {0} end_pos{1}",start_pos,end_pos));
         DestroySelectBox();
-        //StartCoroutine(ClosingAnim(()=>{}));
-        //StartCoroutine(ClosingAnim(testDel));
-        //0 1 2 아래로 -50x
-        //선택한 번호의 위치 계산 
-        //해당 위치로 스무스하게 이동
-        //enumerator를 이용해 보간 이동을 아래로 하도록 위치는 텍스트 3번째 기본 텍스트 위치 기준
+        content.text = tmpstr;
     }
 
     public string UpSizeText(string _str,int start,int end, int size)//리턴으로 진행하는게 맞을듯 함 그런데 이제 텍스트 삽입이 여러개가 되어야한다면 해당 부분
