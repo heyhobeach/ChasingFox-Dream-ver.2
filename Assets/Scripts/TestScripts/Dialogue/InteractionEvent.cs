@@ -65,14 +65,14 @@ public class InteractionEvent : MonoBehaviour
     {
         public int start;
         public int end;
-        public int size;
+        public float size;
         public string _str;
         public SizeCommand(string[] args, string str, UIManager manager)
         {
             Debug.Log("Get Sting" + str);
             start = int.Parse(args[0]);
             end = int.Parse(args[1]);
-            size = int.Parse(args[2]);
+            size = float.Parse(args[2]);
             _uiManger = manager;
             _str = str;
 

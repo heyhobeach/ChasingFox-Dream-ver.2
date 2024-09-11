@@ -69,7 +69,7 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-        // setTestPosition(targetTransform.position);
+
     }
     private void Awake()
     {
@@ -83,7 +83,7 @@ public class UIManager : MonoBehaviour
     /// 위치를 받으면 대사창 위치가 옮겨짐
     /// </summary>
     /// <param name="pos"></param>
-    public void setTestPosition(Vector3 pos)
+    public void SetTextPosition(Vector3 pos)//추후 대사 2개이상 발생시 가운데값
     {
         Vector3 _pos;
         Transform dialogueUiTransform = this.transform.GetChild(0).GetComponent<Transform>();//스크린 좌표로 변환 필요
@@ -155,9 +155,9 @@ public class UIManager : MonoBehaviour
     {
         StopCoroutine(co);
         int br_count = 0;
-        float width=content.fontSize* GetContentLength(_content, ref br_count);
-        float hight = content.fontSize + (content.fontSize * br_count);
-        content.rectTransform.sizeDelta = new Vector2(width, hight);
+        //float width=content.fontSize* GetContentLength(_content, ref br_count);
+        //float hight = content.fontSize + (content.fontSize * br_count);
+        //content.rectTransform.sizeDelta = new Vector2(width, hight);
         co = Typing(_content,isTyping);
         StartCoroutine(co);
     }
@@ -165,9 +165,9 @@ public class UIManager : MonoBehaviour
     {
         StopCoroutine(co);
         int br_count = 0;
-        float width = content.fontSize * GetContentLength(_contentArr, ref br_count);//여기부분은 수정 해야하는데 아마 선택지에 br이 안들어갈거같아서 방치
-        float hight = content.fontSize + (content.fontSize * br_count);              //
-        content.rectTransform.sizeDelta = new Vector2(width, hight);                 //
+        //float width = content.fontSize * GetContentLength(_contentArr, ref br_count);//여기부분은 수정 해야하는데 아마 선택지에 br이 안들어갈거같아서 방치
+        //float hight = content.fontSize + (content.fontSize * br_count);              //
+        //content.rectTransform.sizeDelta = new Vector2(width, hight);                 //
         GetContentLength(_contentArr, ref br_count);
         CreatSelect(_contentArr);
         co = TextSliding(_contentArr);
@@ -330,7 +330,7 @@ public class UIManager : MonoBehaviour
         content.text = tmpstr;
     }
 
-    public string UpSizeText(string _str,int start,int end, int size)//리턴으로 진행하는게 맞을듯 함 그런데 이제 텍스트 삽입이 여러개가 되어야한다면 해당 부분
+    public string UpSizeText(string _str,int start,int end, float size)//리턴으로 진행하는게 맞을듯 함 그런데 이제 텍스트 삽입이 여러개가 되어야한다면 해당 부분
     {
         Debug.Log("UpsizeText 실행");
         string headtag = string.Format("<size={0}>", size);
