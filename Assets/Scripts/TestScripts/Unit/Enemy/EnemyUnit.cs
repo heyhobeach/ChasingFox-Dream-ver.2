@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Com.LuisPedroFonseca.ProCamera2D;
+using Damageables;
 using UnityEngine;
 
 [RequireComponent(typeof(EnemyController))]
