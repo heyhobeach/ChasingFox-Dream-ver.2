@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Damageables;
 using UnityEngine;
 
 public class MaleeAttack : MonoBehaviour
