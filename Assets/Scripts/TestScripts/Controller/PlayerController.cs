@@ -7,8 +7,8 @@ public class PlayerController : MonoBehaviour, IBaseController
     private IUnitController unitController;
     private bool isKeyDown;
 
+    void Awake() => ((IBaseController)this).AddController();
     void Start() => unitController = GetComponent<IUnitController>();
-    void OnEnable() => ((IBaseController)this).AddController();
     void OnDestroy() => ((IBaseController)this).RemoveController();
 
     public void Controller()
