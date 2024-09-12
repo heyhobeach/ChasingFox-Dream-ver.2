@@ -65,14 +65,14 @@ public class InteractionEvent : MonoBehaviour
     {
         public int start;
         public int end;
-        public int size;
+        public float size;
         public string _str;
         public SizeCommand(string[] args, string str, UIManager manager)
         {
             Debug.Log("Get Sting" + str);
             start = int.Parse(args[0]);
             end = int.Parse(args[1]);
-            size = int.Parse(args[2]);
+            size = float.Parse(args[2]);
             _uiManger = manager;
             _str = str;
 
@@ -347,12 +347,14 @@ public class InteractionEvent : MonoBehaviour
     {
         //while (gameObject.GetComponentInParent<UIManager>().is_closing) { }//역시나 무한루프
         //Debug.Log("nextContext");
+        //
         CallCommand(ref postcommands);//이후 실행되어야하는 명령어들
         HandleCommand();
 
         //Thread.Sleep(1000);
         if (num < dialogue.dialouses.Length)
         {
+            _Uimanager.EnableUI();
             CallCommand(ref precommands);//이전에 실행되어야할 명령어들
                                          //이게 두번 일어나는듯?
             Debug.Log("명령어 호출 테스트" + "id" + dialogue.dialouses[num].id + "이름" + dialogue.dialouses[num].name);//여기는 한번
@@ -481,6 +483,13 @@ public class InteractionEvent : MonoBehaviour
     private void EndDialogue()
     {
         Debug.Log("대화끝");
+        if (_Uimanager.GetTextActive())
+        {
+            _Uimanager.DisableUI();
+            Debug.Log("비활성화");
+            isSkip = false;
+            return;
+        }
         if ( (indexNum < DatabaseManager.instance.indexList.Count))
         //if (Input.GetKeyDown(KeyCode.X) & (indexNum < DatabaseManager.instance.indexList.Count))
         {

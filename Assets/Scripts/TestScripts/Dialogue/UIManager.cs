@@ -9,15 +9,23 @@ using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class UIManager : MonoBehaviour
 {
+
+    public GameObject Vertical;
+
     public Transform targetTransform;
     /// <summary>
     /// 선택지 생성한 오브젝트 담는 배열
     /// </summary>
-    TMP_Text[] ContentArr = null;
+    TMP_Text[] contentArr = null;
     /// <summary>
     /// 다이얼로그 상자 크기
     /// </summary>
     float size;
+
+    /// <summary>
+    /// 선택지 배열로 받을시 최대 크기 찾기
+    /// </summary>
+    float max_widht;
 
     int select_count;
     //string test_str;
@@ -25,7 +33,7 @@ public class UIManager : MonoBehaviour
     /// 텍스트 오브젝트 이동 애니메이션 시간
     /// </summary>
     [SerializeField]
-    private float duration = 0.3f;
+    private float duration = 3f;
     //public Text
     public TMP_Text namemesh;
     public TMP_Text content;
@@ -62,14 +70,14 @@ public class UIManager : MonoBehaviour
     {
         //testDel = ActTest;
         co = Typing("",isTyping);
-        ContentArr = new TMP_Text[1];
+        contentArr = new TMP_Text[1];
         size= content.rectTransform.rect.size.y;
         // setTestPosition(targetTransform.position);
     }
 
     private void Update()
     {
-        // setTestPosition(targetTransform.position);
+
     }
     private void Awake()
     {
@@ -83,7 +91,7 @@ public class UIManager : MonoBehaviour
     /// 위치를 받으면 대사창 위치가 옮겨짐
     /// </summary>
     /// <param name="pos"></param>
-    public void setTestPosition(Vector3 pos)
+    public void SetTextPosition(Vector3 pos)//추후 대사 2개이상 발생시 가운데값
     {
         Vector3 _pos;
         Transform dialogueUiTransform = this.transform.GetChild(0).GetComponent<Transform>();//스크린 좌표로 변환 필요
@@ -155,9 +163,9 @@ public class UIManager : MonoBehaviour
     {
         StopCoroutine(co);
         int br_count = 0;
-        float width=content.fontSize* GetContentLength(_content, ref br_count);
-        float hight = content.fontSize + (content.fontSize * br_count);
-        content.rectTransform.sizeDelta = new Vector2(width, hight);
+        //float width=content.fontSize* GetContentLength(_content, ref br_count);
+        //float hight = content.fontSize + (content.fontSize * br_count);
+        //content.rectTransform.sizeDelta = new Vector2(width, hight);
         co = Typing(_content,isTyping);
         StartCoroutine(co);
     }
@@ -165,10 +173,10 @@ public class UIManager : MonoBehaviour
     {
         StopCoroutine(co);
         int br_count = 0;
-        float width = content.fontSize * GetContentLength(_contentArr, ref br_count);//여기부분은 수정 해야하는데 아마 선택지에 br이 안들어갈거같아서 방치
-        float hight = content.fontSize + (content.fontSize * br_count);              //
-        content.rectTransform.sizeDelta = new Vector2(width, hight);                 //
-        GetContentLength(_contentArr, ref br_count);
+        //float width = content.fontSize * GetContentLength(_contentArr, ref br_count);//여기부분은 수정 해야하는데 아마 선택지에 br이 안들어갈거같아서 방치
+        //float hight = content.fontSize + (content.fontSize * br_count);              //
+        //content.rectTransform.sizeDelta = new Vector2(width, hight);                 //
+
         CreatSelect(_contentArr);
         co = TextSliding(_contentArr);
         StartCoroutine(co);
@@ -234,7 +242,7 @@ public class UIManager : MonoBehaviour
             typing_speed = DEFAULT_SPEED;
         }
         isTyping = true;
-        if (ContentArr.Length>1)//사유 오브젝트 없음
+        if (contentArr.Length>1)//사유 오브젝트 없음
         {
           DestroySelectBox();
         }
@@ -304,21 +312,43 @@ public class UIManager : MonoBehaviour
             }
         }
     }
-
+    public void EnableUI()
+    {
+        Vertical.SetActive(true);
+    }
+    public void DisableUI()
+    {
+        Vertical.SetActive(false);
+    }
+    public bool GetTextActive()//수정 필요할듯 이상함
+    {
+        //GameObject g = gameObject.transform.GetChild(0).transform.GetChild(0).gameObject;
+        Debug.Log(Vertical.name);
+        if (Vertical.activeSelf)
+        {
+            Debug.Log("켜져있음");
+            return true;
+        }
+        else
+        {
+            Debug.Log("꺼져있음");
+            return false;
+        }
+    }
     void DestroySelectBox()
     {
         //Debug.Log("선택 위치"+c)
         Debug.Log("파괴");
-        for(int i = 1; i < ContentArr.Length; i++)
+        for(int i = 1; i < contentArr.Length; i++)
         {
-            Destroy(ContentArr[i].transform.gameObject);
+            Destroy(contentArr[i].transform.gameObject);
         }
-        ContentArr = new TMP_Text[1];
+        contentArr = new TMP_Text[1];
         //ContentArr = null;
     }
     public void CloseSelceet(int choseIndex)
     {
-        if (ContentArr.Length == 1) return;
+        if (contentArr.Length == 1) return;
         int childs = content.transform.parent.transform.childCount;
         is_closing = true;
         GameObject selectobj = content.transform.parent.GetChild(choseIndex).gameObject;
@@ -330,7 +360,7 @@ public class UIManager : MonoBehaviour
         content.text = tmpstr;
     }
 
-    public string UpSizeText(string _str,int start,int end, int size)//리턴으로 진행하는게 맞을듯 함 그런데 이제 텍스트 삽입이 여러개가 되어야한다면 해당 부분
+    public string UpSizeText(string _str,int start,int end, float size)//리턴으로 진행하는게 맞을듯 함 그런데 이제 텍스트 삽입이 여러개가 되어야한다면 해당 부분
     {
         Debug.Log("UpsizeText 실행");
         string headtag = string.Format("<size={0}>", size);
@@ -409,39 +439,76 @@ public class UIManager : MonoBehaviour
         //for(int i=0;i<strArr.Length;i++)
         content.text = strArr[0];
         content.color = Color.black;
-        ContentArr = new TMP_Text[strArr.Length];
-        ContentArr[0] = content;
+        contentArr = new TMP_Text[strArr.Length];
+        contentArr[0] = content;
+        Debug.Log("Content 위치" + content.transform.localPosition);
+        max_widht = content.rectTransform.sizeDelta.x;
         for (int i = 1; i < select_count; i++)//오브젝트 생성과 텍스트 배치
         {
             Debug.Log(content.transform.parent.name);
-            TMP_Text select = Instantiate(content, this.transform.position-new Vector3(this.transform.position.x-100,this.transform.position.y,this.transform.position.z), Quaternion.identity);
-            ContentArr[i] = select;
+            TMP_Text select = Instantiate(content, content.transform.localPosition - new Vector3(content.transform.localPosition.x-1, content.transform.localPosition.y, content.transform.localPosition.z), Quaternion.identity);
+            Debug.Log(select.transform.localScale);
+            contentArr[i] = select;
             select.transform.SetParent(content.transform.parent);
+            float height = content.rectTransform.sizeDelta.y;
+            select.transform.localPosition = new Vector3(content.transform.localPosition.x - 1, content.transform.localPosition.y-(height*i), content.transform.localPosition.z);
+            Debug.Log("선택지 위치" + select.transform.localPosition + "content 높이"+content.rectTransform.sizeDelta);
+
+            select.transform.localScale = new Vector3(1, 2, 1);
             //      select.transform.parent = content.transform.parent;
             select.text = strArr[i];
             select.color = Color.gray;
+            if (max_widht < select.rectTransform.sizeDelta.x)
+            {
+                max_widht=select.rectTransform.sizeDelta.x;
+            }
+            select.gameObject.SetActive(false);
         }
+        Debug.Log("최대 크기" + max_widht);
+        //content.gameObject.SetActive(false);
     }
 
     IEnumerator TextSliding(string[] strArr)//배열로 받을 예정
     {
         //is_select_show = true;
+        int a = 0;
+        Debug.Log("maxSize" + max_widht);
+        GetContentLength(strArr, ref a);
+        float endPos = contentArr[0].transform.localPosition.x;//이미지 내려가는 애니메이션
+        content.gameObject.SetActive(false);
+        Vector2 verticalSize = Vertical.GetComponent<RectTransform>().sizeDelta;
+        float currentSize = verticalSize.y;
+        int count_increase = contentArr.Length - 1;
+        float height = content.rectTransform.sizeDelta.y;
         float delta = 0;
-        GameObject fixedVertical = content.transform.parent.gameObject;
-        fixedVertical.GetComponent<VerticalLayoutGroup>().enabled = false;
-        Debug.Log("여기" + ContentArr[0]);
-        Debug.Log("여기" + ContentArr[1]);
+        float ver_y = 0;
+        while (delta<=duration)
+        {
+            float t = delta / duration;
+            ver_y = Mathf.Lerp(currentSize, currentSize + (height * count_increase), t);
+            Vertical.GetComponent<RectTransform>().sizeDelta = new Vector2(max_widht, ver_y);
+            delta += Time.deltaTime;
+            yield return null;
+        }
+        delta = 0;
 
-        Debug.Log("여기" + ContentArr[2]);
-        float endPos = ContentArr[0].transform.position.x;
+
+        GameObject fixedVertical = content.transform.parent.gameObject;//텍스트 슬라이딩 해 오는 애니메이션
+        fixedVertical.GetComponent<VerticalLayoutGroup>().enabled = false;
+        Debug.Log("여기" + contentArr[0]);
+        Debug.Log("여기" + contentArr[1]);
+
+        Debug.Log("여기" + contentArr[2]);
+
         int count = 0;
-        Debug.Log("size" + size);
+        Debug.Log("height" + height);
         while (delta <= duration&(count<3))
         {
             float t = delta / duration;
             t = 1 - Mathf.Pow(1 - t, 3);
-            float current = Mathf.Lerp(this.transform.position.x - 100, endPos, t);//시작위치,도착위치,t
-            ContentArr[count].transform.position = new Vector3(current, ContentArr[0].transform.position.y-(size*count), ContentArr[count].transform.position.z);//여기 문제
+            contentArr[count].gameObject.SetActive(true);
+            float current = Mathf.Lerp(content.transform.localPosition.x - 1, endPos, t);//시작위치,도착위치,t
+            contentArr[count].transform.localPosition = new Vector3(current, contentArr[0].transform.localPosition.y-((height) *count), contentArr[count].transform.localPosition.z);//여기 문제
             delta += Time.deltaTime;
             if(delta> duration)
             {
@@ -454,8 +521,10 @@ public class UIManager : MonoBehaviour
             yield return null;
         }
         fixedVertical.GetComponent<VerticalLayoutGroup>().enabled = true;
+        fixedVertical.GetComponent<ContentSizeFitter>().verticalFit=ContentSizeFitter.FitMode.PreferredSize;
         is_select_show = false;
 
 
     }
+
 }
