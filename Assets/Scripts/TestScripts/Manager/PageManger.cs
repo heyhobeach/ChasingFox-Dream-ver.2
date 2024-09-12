@@ -22,6 +22,7 @@ public class PageManger : MonoBehaviour
             {
                 var obj = new GameObject() { name = "PageManager" };
                 instance = obj.AddComponent<PageManger>();
+                DontDestroyOnLoad(obj);
             }
             return instance;
         }
@@ -38,15 +39,10 @@ public class PageManger : MonoBehaviour
     {
         currentScene = SceneManager.GetActiveScene();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void RoadRetry()//
     {
         SceneManager.LoadScene(currentScene.name);
     }
+
+    public void LoadScene(string sceneName) => SceneManager.LoadScene(sceneName);
 }
