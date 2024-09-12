@@ -7,6 +7,8 @@ public class Bullet : MonoBehaviour
 {
     public const float lifeTime = 4;
 
+    public GameObject effectObj;
+
     private int damage;
     private float speed;
 
@@ -59,12 +61,13 @@ public class Bullet : MonoBehaviour
         {
             this.gameObject.GetComponent<Collider2D>().isTrigger = true;
         }
+
+        bool isDamaged = false;
         if (collision.gameObject.tag == "Player" && !parentGo.CompareTag("Player"))//레이어 설정한 것 때문에 적군 총알만 플레이어 에게 충돌일어남
         {
             // Debug.Log("플레이어 충돌");
             var temp = collision.gameObject.GetComponent<IDamageable>();
             if(temp == null) temp = collision.gameObject.GetComponentInParent<IDamageable>();
-            bool isDamaged = false;
             if(temp != null)
             {
                 Debug.Log("Work");
@@ -82,7 +85,6 @@ public class Bullet : MonoBehaviour
             Debug.Log("적 충돌");
             //Destroy(this.gameObject);
             var temp = collision.gameObject.GetComponent<IDamageable>();
-            bool isDamaged = false;
             if(temp != null) isDamaged = temp.GetDamage(damage);//이거 작동안함
             if (isDamaged)
             {
@@ -93,6 +95,15 @@ public class Bullet : MonoBehaviour
             {
                 Debug.Log("작동안함");
             }
+        }
+
+        if(isDamaged)
+        {
+            var effect = Instantiate(effectObj, transform.position, Quaternion.identity);
+            var sprite = effect.GetComponent<SpriteRenderer>();
+            var dir = transform.position - collision.transform.position;
+            if(dir.x >= 0) sprite.flipX = true;
+            else sprite.flipX = false;
         }
     }
     // private void OnTriggerStay2D(Collider2D collision)
