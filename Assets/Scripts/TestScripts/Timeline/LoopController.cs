@@ -6,19 +6,33 @@ using UnityEngine.Playables;
 public class LoopController : MonoBehaviour
 {
     PlayableDirector playableDirector;
-    void SetLoop()
+    PlayableDirector LoopDir;
+    public void SetLoop(PlayableDirector dir)
     {
-        playableDirector.Stop();
+        Debug.Log("TEstLoop");
+        LoopDir = dir;
+        playableDirector.Pause();
+        playableDirector.playableGraph.GetRootPlayable(0).SetSpeed(0);
+        LoopDir.Play();
     }
+
+    public void EndLoop()
+    {
+        LoopDir.Stop();
+        playableDirector.playableGraph.GetRootPlayable(0).SetSpeed(1);
+        playableDirector.Play();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         playableDirector=GetComponent<PlayableDirector>();
     }
-
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            EndLoop();
+        }
     }
 }

@@ -75,10 +75,6 @@ public class UIManager : MonoBehaviour
         // setTestPosition(targetTransform.position);
     }
 
-    private void Update()
-    {
-
-    }
     private void Awake()
     {
         is_closing = false;

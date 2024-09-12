@@ -16,7 +16,7 @@ public class DatabaseManager : MonoBehaviour
     [SerializeField]
     Lang eLang = Lang.KOR;
 
-    public int chapter = 1;//추후 0으로 수정 필요 이유 튜토리얼이 0부터 시작하기에
+    public int chapter = 0;//추후 0으로 수정 필요 이유 튜토리얼이 0부터 시작하기에
 
     Dictionary<int, Dialogue> dialogueDic =new Dictionary<int, Dialogue>();
     DialogueParser theParser;
@@ -35,8 +35,8 @@ public class DatabaseManager : MonoBehaviour
         {
             instance = this;
             theParser = GetComponent<DialogueParser>();
-            if(csv_FileName.Equals("")) csv_FileName = "테스트파일";
-            //csv_FileName= string.Format("{0}\\{1}\\Chapter{2}\\Chapter{3}", "FindTest", CheckLangugea(eLang), chapter,chapter);
+            //if(csv_FileName.Equals("")) csv_FileName = "테스트파일";
+            csv_FileName= string.Format("{0}\\{1}\\Chapter{2}\\Chapter{3}", "FindTest", CheckLangugea(eLang), chapter,chapter);
             //Dialogue[] dialogues =theParser.Parse(csv_FileName);//여기서 지금 대화 모든 내용을 다 파싱 한 상태//주석 풀고 사용 하면 됨
             Dialogue[] dialogues =theParser.Parse(csv_FileName);//여기서 지금 대화 모든 내용을 다 파싱 한 상태//주석 풀고 사용 하면 됨
             for (int i =0;i<dialogues.Length;i++)
