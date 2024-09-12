@@ -1,3 +1,4 @@
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
@@ -7,13 +8,28 @@ public class PauseAnimatorPlayable : PlayableBehaviour
     public Animator animator;
     public AnimationTrack animationTrack;
 
-    public override void OnBehaviourPlay(Playable playable, FrameData info)
+    private RuntimeAnimatorController animatorController;
+
+    public override void OnGraphStart(Playable playable)
     {
-        if (animator != null) animator.speed = 0f;
+        base.OnGraphStart(playable);
+        if (animator != null)
+        {
+            animator.speed = 0f;
+            animatorController = animator.runtimeAnimatorController;
+            animator.runtimeAnimatorController = null;
+            ShootingAnimationController sac = null;
+            if(animator.TryGetComponent<ShootingAnimationController>(out sac)) sac.NomalAni();
+        }
     }
 
-    public override void OnBehaviourPause(Playable playable, FrameData info)
+    public override void OnGraphStop(Playable playable)
     {
-        if (animator != null) animator.speed = 1f;
+        base.OnGraphStop(playable);
+        if (animator != null)
+        {
+            animator.runtimeAnimatorController = animatorController;
+            animator.speed = 1f;
+        }
     }
 }

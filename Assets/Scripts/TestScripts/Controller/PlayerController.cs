@@ -7,9 +7,9 @@ public class PlayerController : MonoBehaviour, IBaseController
     private IUnitController unitController;
     private bool isKeyDown;
 
+    void Awake() => ((IBaseController)this).AddController();
     void Start() => unitController = GetComponent<IUnitController>();
-    void OnEnable() => ((IBaseController)this).AddController();
-    void OnDisable() => ((IBaseController)this).RemoveController();
+    void OnDestroy() => ((IBaseController)this).RemoveController();
 
     public void Controller()
     {
@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour, IBaseController
         return true;
     }
 
-    public void Move(Vector2 dir) => unitController.Move(dir);
+    public void Move(float dir) => unitController.Move(Vector2.right * dir);
     public void Attack(float angle) => unitController.Attack(new Vector3(Mathf.Sin(Mathf.Deg2Rad * angle) * 10000, Mathf.Cos(Mathf.Deg2Rad * angle) * 10000));
     public void Reload() => unitController.Reload();
 
