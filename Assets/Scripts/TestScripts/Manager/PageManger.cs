@@ -55,7 +55,7 @@ public class PageManger : MonoBehaviour
         var currentScene = SceneManager.GetActiveScene();
         loadAo.completed += (ao) => { 
             var unloadAo = SceneManager.UnloadSceneAsync(currentScene);
-            unloadAo.completed += (uao) => SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+            unloadAo.completed += (uao) => SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
         };
     }
 }
