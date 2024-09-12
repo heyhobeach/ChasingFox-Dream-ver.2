@@ -32,6 +32,11 @@ public class PageManger : MonoBehaviour
 
     private void Awake()
     {
+        if(instance != null)
+        {
+            Destroy(this);
+            return;
+        }
         instance = this;
         SceneManager.activeSceneChanged += (prv, ne)=> {currentScene = ne; };
     }
@@ -44,5 +49,13 @@ public class PageManger : MonoBehaviour
         SceneManager.LoadScene(currentScene.name);
     }
 
-    public void LoadScene(string sceneName) => SceneManager.LoadScene(sceneName);
+    public void LoadScene(string sceneName)
+    {
+        var loadAo = SceneManager.LoadSceneAsync("Loading", LoadSceneMode.Additive);
+        var currentScene = SceneManager.GetActiveScene();
+        loadAo.completed += (ao) => { 
+            var unloadAo = SceneManager.UnloadSceneAsync(currentScene);
+            unloadAo.completed += (uao) => SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+        };
+    }
 }

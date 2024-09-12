@@ -65,36 +65,16 @@ public class Bullet : MonoBehaviour
         bool isDamaged = false;
         if (collision.gameObject.tag == "Player" && !parentGo.CompareTag("Player"))//레이어 설정한 것 때문에 적군 총알만 플레이어 에게 충돌일어남
         {
-            // Debug.Log("플레이어 충돌");
             var temp = collision.gameObject.GetComponent<IDamageable>();
             if(temp == null) temp = collision.gameObject.GetComponentInParent<IDamageable>();
-            if(temp != null)
-            {
-                Debug.Log("Work");
-                isDamaged = temp.GetDamage(damage);
-            }
-            if (isDamaged)
-            {
-                Destroy(this.gameObject);
-                Destroy(gameObject);
-            }
-            else Debug.Log("Not Work");
+            if(temp != null) isDamaged = temp.GetDamage(damage);
+            if (isDamaged) Destroy(gameObject);
         }
         if(collision.gameObject.tag == "Enemy" && !parentGo.CompareTag("Enemy"))//플레이어 총알이 적군에게 충돌시
         {
-            Debug.Log("적 충돌");
-            //Destroy(this.gameObject);
             var temp = collision.gameObject.GetComponent<IDamageable>();
-            if(temp != null) isDamaged = temp.GetDamage(damage);//이거 작동안함
-            if (isDamaged)
-            {
-                Debug.Log("데미지 받음");
-                Destroy(gameObject);
-            }
-            else
-            {
-                Debug.Log("작동안함");
-            }
+            if(temp != null) isDamaged = temp.GetDamage(damage);
+            if (isDamaged) Destroy(gameObject);
         }
 
         if(isDamaged)
@@ -105,6 +85,15 @@ public class Bullet : MonoBehaviour
             if(dir.x >= 0) sprite.flipX = true;
             else sprite.flipX = false;
         }
+    }
+
+    private void BulletSound()
+    {
+        Destroy(this.gameObject);
+        GameObject obj = SoundManager.Instance.bullet.standbyBullet.Dequeue();
+        obj.transform.position = this.transform.position;
+        // Debug.Log(string.Format("queue name => " + obj));
+        SoundManager.Instance.CoStartBullet(obj);
     }
     // private void OnTriggerStay2D(Collider2D collision)
     // {
@@ -208,13 +197,4 @@ public class Bullet : MonoBehaviour
     //         this.gameObject.GetComponent<Collider2D>().isTrigger = false;
     //     }
     // }
-
-    private void BulletSound()
-    {
-        Destroy(this.gameObject);
-        GameObject obj = SoundManager.Instance.bullet.standbyBullet.Dequeue();
-        obj.transform.position = this.transform.position;
-        // Debug.Log(string.Format("queue name => " + obj));
-        SoundManager.Instance.CoStartBullet(obj);
-    }
 }

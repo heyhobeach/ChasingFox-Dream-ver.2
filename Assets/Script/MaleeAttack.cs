@@ -38,30 +38,12 @@ public class MaleeAttack : MonoBehaviour
             // Debug.Log("플레이어 충돌");
             var temp = collision.gameObject.GetComponent<IDamageable>();
             if(temp == null) temp = collision.gameObject.GetComponentInParent<IDamageable>();
-            if(temp != null)
-            {
-                Debug.Log("Work");
-                isDamaged = temp.GetDamage(damage);
-            }
-            if (isDamaged)
-            {
-            }
-            else Debug.Log("Not Work");
+            if(temp != null) isDamaged = temp.GetDamage(damage);
         }
         if(collision.gameObject.tag == "Enemy" && !parentGo.CompareTag("Enemy"))//플레이어 총알이 적군에게 충돌시
         {
-            Debug.Log("적 충돌");
-            //Destroy(this.gameObject);
             var temp = collision.gameObject.GetComponent<IDamageable>();
-            if(temp != null) isDamaged = temp.GetDamage(damage);//이거 작동안함
-            if (isDamaged)
-            {
-                Debug.Log("데미지 받음");
-            }
-            else
-            {
-                Debug.Log("작동안함");
-            }
+            if(temp != null) isDamaged = temp.GetDamage(damage);
         }
 
         if(isDamaged)
