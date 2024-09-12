@@ -7,6 +7,7 @@ public class MaleeAttack : MonoBehaviour
 {
     private int damage;
     private GameObject parentGo;
+    public GameObject effectObj;
 
     public void Set(int damage, GameObject go)
     {
