@@ -76433,18 +76433,24 @@ PlayableDirector:
     m_References:
     - a2a77ed9d3aa58946b2446dbc5f8b694: {fileID: 664535366}
     - 9954a63eedbb00445ba20816df7d13a1: {fileID: 1391490711}
+    - f1fb1e3342c3fda428d4bf11792f7a75: {fileID: 2093980138}
     - 30bcfdada2beb8a448a324c719b9c938: {fileID: 1391490711}
     - 6f2261a83f10c9c4da6a8bd2c8d288ae: {fileID: 664535366}
+    - 611cf17ee28003c42878db17f25d2f07: {fileID: 2079044478}
     - f8e16f07949c5274fb51bb01fbd3d396: {fileID: 1391490711}
     - 2b8daf63b37c20f4d95372e7568eed03: {fileID: 664535366}
     - 45e0121a2989dff46aade653cf8ce2b6: {fileID: 664535366}
+    - 74cb826d58e351941abcc8b592256138: {fileID: 2079044478}
     - 0a8a8b6a8243352449181d3ccef5c970: {fileID: 664535366}
     - 2c750404e838d1e41bc14b880fb10a3d: {fileID: 664535366}
+    - 01c82887c2d4cab4ab86ff53e5ea5836: {fileID: 2093980138}
     - ed947fdb9ffe68948a9e3b8a9ecbac31: {fileID: 1391490711}
     - 7a343b6dde8cd514db3be31f55560a21: {fileID: 664535366}
+    - 2e429076f1bc3264e8217056d4d73755: {fileID: 2079044478}
     - 89b86815b219d5c4ab4aef1feb0c96d7: {fileID: 1391490711}
     - 8248da44480a2374c9f339f7506a6586: {fileID: 664535366}
     - fd68e2f3d986e0b4d862e23a0624fd14: {fileID: 664535366}
+    - 530a9f0f15bae614fbaeda0192d79df8: {fileID: 2079044478}
     - 927a9c0ab52dbb949a3badf438befbfc: {fileID: 1391490711}
     - a19c4b135e5ef8c47be5264596a2afd3: {fileID: 664535366}
 --- !u!4 &1017276236
@@ -85999,6 +86005,59 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1381247729
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1381247730}
+  - component: {fileID: 1381247731}
+  m_Layer: 0
+  m_Name: Loop1-1Player
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1381247730
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1381247729}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1533455062}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!320 &1381247731
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1381247729}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 11400000, guid: a939b74be3d44c04b81675dec8c84865, type: 2}
+  m_InitialState: 1
+  m_WrapMode: 2
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings:
+  - key: {fileID: -3685977475363487581, guid: a939b74be3d44c04b81675dec8c84865, type: 2}
+    value: {fileID: 401323891}
+  - key: {fileID: -605532923235498506, guid: a939b74be3d44c04b81675dec8c84865, type: 2}
+    value: {fileID: 2030884504}
+  m_ExposedReferences:
+    m_References: []
 --- !u!1 &1391490710
 GameObject:
   m_ObjectHideFlags: 0
@@ -87355,11 +87414,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8300456215666465491, guid: 019c1accf40bb5341be365e384d2c644, type: 3}
       propertyPath: m_Size.x
-      value: 1.5645756
+      value: 1.5638543
       objectReference: {fileID: 0}
     - target: {fileID: 8300456215666465491, guid: 019c1accf40bb5341be365e384d2c644, type: 3}
       propertyPath: m_Size.y
-      value: 1.6562499
+      value: 1.65625
       objectReference: {fileID: 0}
     - target: {fileID: 8300456215666465491, guid: 019c1accf40bb5341be365e384d2c644, type: 3}
       propertyPath: m_Sprite
@@ -87653,6 +87712,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1953604243}
+  - {fileID: 1381247730}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1537783616
@@ -88422,6 +88482,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 03f7d70279ab35f4691284cc718b6338, type: 2}
     - {fileID: 11400000, guid: 10dd97de6687c81408a2a76b7d3825cf, type: 2}
     - {fileID: 11400000, guid: d60935d66f5c5ba448e14d5e39e9f4f9, type: 2}
+    - {fileID: 11400000, guid: f76d1dcef6fee4d4bb4d5c483248e4ee, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -88456,7 +88517,7 @@ MonoBehaviour:
           m_MethodName: SetLoop
           m_Mode: 2
           m_Arguments:
-            m_ObjectArgument: {fileID: 1953604244}
+            m_ObjectArgument: {fileID: 1381247731}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Playables.PlayableDirector,
               UnityEngine
             m_IntArgument: 0
@@ -88477,6 +88538,21 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 1
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1017276238}
+          m_TargetAssemblyTypeName: LoopController, Assembly-CSharp
+          m_MethodName: SetLoop
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1381247731}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Playables.PlayableDirector,
+              UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
           m_CallState: 2
 --- !u!114 &1592486991
 MonoBehaviour:
@@ -111404,6 +111480,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed8b1ae4e4e52b34ea557c1c11e076fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &2093980138 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8988096535382874963, guid: 019c1accf40bb5341be365e384d2c644, type: 3}
+  m_PrefabInstance: {fileID: 1477461387}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2100107341
 GameObject:
   m_ObjectHideFlags: 0
