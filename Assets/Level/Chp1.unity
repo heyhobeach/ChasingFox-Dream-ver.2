@@ -51639,6 +51639,72 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &489990303
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 489990306}
+  - component: {fileID: 489990305}
+  - component: {fileID: 489990304}
+  m_Layer: 0
+  m_Name: LoopController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!320 &489990304
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 489990303}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 11400000, guid: acad81aba9397e945a543facff48551d, type: 2}
+  m_InitialState: 0
+  m_WrapMode: 1
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings:
+  - key: {fileID: 1233171782715695011, guid: acad81aba9397e945a543facff48551d, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: 2570256240172040903, guid: acad81aba9397e945a543facff48551d, type: 2}
+    value: {fileID: 0}
+  m_ExposedReferences:
+    m_References: []
+--- !u!114 &489990305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 489990303}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1a04371ec0fd014399b3963d7075aab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &489990306
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 489990303}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -12.668577, y: 1.8087449, z: -2.1561532}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &511464780
 GameObject:
   m_ObjectHideFlags: 0
@@ -76280,6 +76346,7 @@ GameObject:
   - component: {fileID: 1017276236}
   - component: {fileID: 1017276235}
   - component: {fileID: 1017276237}
+  - component: {fileID: 1017276238}
   m_Layer: 0
   m_Name: Timeline_1-1 (intro)
   m_TagString: Untagged
@@ -76362,7 +76429,17 @@ PlayableDirector:
     value: {fileID: 1592486988}
   m_ExposedReferences:
     m_References:
+    - a2a77ed9d3aa58946b2446dbc5f8b694: {fileID: 1391490711}
+    - 9954a63eedbb00445ba20816df7d13a1: {fileID: 664535366}
+    - 30bcfdada2beb8a448a324c719b9c938: {fileID: 664535366}
+    - 2b8daf63b37c20f4d95372e7568eed03: {fileID: 664535366}
+    - 45e0121a2989dff46aade653cf8ce2b6: {fileID: 1391490711}
+    - 0a8a8b6a8243352449181d3ccef5c970: {fileID: 1391490711}
     - 2c750404e838d1e41bc14b880fb10a3d: {fileID: 664535366}
+    - ed947fdb9ffe68948a9e3b8a9ecbac31: {fileID: 1391490711}
+    - 7a343b6dde8cd514db3be31f55560a21: {fileID: 664535366}
+    - 89b86815b219d5c4ab4aef1feb0c96d7: {fileID: 1391490711}
+    - 8248da44480a2374c9f339f7506a6586: {fileID: 1391490711}
     - fd68e2f3d986e0b4d862e23a0624fd14: {fileID: 664535366}
 --- !u!4 &1017276236
 Transform:
@@ -76389,6 +76466,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fa1ee43abf03ee242a7eb89a698bfae0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1017276238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1017276234}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1a04371ec0fd014399b3963d7075aab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1024969175
@@ -87230,7 +87319,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4210399258222090256, guid: 019c1accf40bb5341be365e384d2c644, type: 3}
       propertyPath: m_SpriteHash
-      value: 554778324
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4210399258222090256, guid: 019c1accf40bb5341be365e384d2c644, type: 3}
       propertyPath: m_CategoryHash
@@ -87258,11 +87347,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8300456215666465491, guid: 019c1accf40bb5341be365e384d2c644, type: 3}
       propertyPath: m_Size.x
-      value: 1.5625
+      value: 1.5645756
       objectReference: {fileID: 0}
     - target: {fileID: 8300456215666465491, guid: 019c1accf40bb5341be365e384d2c644, type: 3}
       propertyPath: m_Size.y
-      value: 1.65625
+      value: 1.6562499
       objectReference: {fileID: 0}
     - target: {fileID: 8300456215666465491, guid: 019c1accf40bb5341be365e384d2c644, type: 3}
       propertyPath: m_Sprite
@@ -88292,6 +88381,7 @@ MonoBehaviour:
     m_Signals:
     - {fileID: 11400000, guid: 03f7d70279ab35f4691284cc718b6338, type: 2}
     - {fileID: 11400000, guid: 10dd97de6687c81408a2a76b7d3825cf, type: 2}
+    - {fileID: 11400000, guid: d60935d66f5c5ba448e14d5e39e9f4f9, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -88321,18 +88411,32 @@ MonoBehaviour:
           m_CallState: 2
     - m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
+        - m_Target: {fileID: 1017276238}
           m_TargetAssemblyTypeName: LoopController, Assembly-CSharp
           m_MethodName: SetLoop
           m_Mode: 2
           m_Arguments:
-            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgument: {fileID: 489990304}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Playables.PlayableDirector,
               UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1592486991}
+          m_TargetAssemblyTypeName: InteractionEvent, Assembly-CSharp
+          m_MethodName: SetSkip
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
           m_CallState: 2
 --- !u!114 &1592486991
 MonoBehaviour:
@@ -88350,7 +88454,6 @@ MonoBehaviour:
     name: 
     line: {x: 0, y: 0}
     dialouses: []
-  isSkip: 1
 --- !u!1001 &1593183909
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -112350,3 +112453,4 @@ SceneRoots:
   - {fileID: 918575947}
   - {fileID: 970380533}
   - {fileID: 390419020}
+  - {fileID: 489990306}

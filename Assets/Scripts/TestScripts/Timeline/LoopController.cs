@@ -7,20 +7,13 @@ public class LoopController : MonoBehaviour
 {
     PlayableDirector playableDirector;
     PlayableDirector LoopDir;
-    public void SetLoop(PlayableDirector dir)
-    {
-        Debug.Log("TEstLoop");
-        LoopDir = dir;
-        playableDirector.Pause();
-        playableDirector.playableGraph.GetRootPlayable(0).SetSpeed(0);
-        LoopDir.Play();
-    }
+
 
     public void EndLoop()
     {
         LoopDir.Stop();
         playableDirector.playableGraph.GetRootPlayable(0).SetSpeed(1);
-        playableDirector.Play();
+        playableDirector.Resume();
     }
 
     // Start is called before the first frame update
@@ -35,4 +28,5 @@ public class LoopController : MonoBehaviour
             EndLoop();
         }
     }
+
 }
