@@ -22,6 +22,7 @@ public class PageManger : MonoBehaviour
             {
                 var obj = new GameObject() { name = "PageManager" };
                 instance = obj.AddComponent<PageManger>();
+                DontDestroyOnLoad(obj);
             }
             return instance;
         }
@@ -31,6 +32,11 @@ public class PageManger : MonoBehaviour
 
     private void Awake()
     {
+        if(instance != null)
+        {
+            Destroy(this);
+            return;
+        }
         instance = this;
         SceneManager.activeSceneChanged += (prv, ne)=> {currentScene = ne; };
     }
@@ -38,15 +44,18 @@ public class PageManger : MonoBehaviour
     {
         currentScene = SceneManager.GetActiveScene();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void RoadRetry()//
     {
         SceneManager.LoadScene(currentScene.name);
+    }
+
+    public void LoadScene(string sceneName)
+    {
+        var loadAo = SceneManager.LoadSceneAsync("Loading", LoadSceneMode.Additive);
+        var currentScene = SceneManager.GetActiveScene();
+        loadAo.completed += (ao) => { 
+            var unloadAo = SceneManager.UnloadSceneAsync(currentScene);
+            unloadAo.completed += (uao) => SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
+        };
     }
 }
