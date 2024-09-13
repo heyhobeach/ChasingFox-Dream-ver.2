@@ -11,7 +11,7 @@ public class Map : MonoBehaviour
     void Awake()
     {
         enemyCount= enemyUnits.Count;
-        gameObject.SetActive(false);
+        // gameObject.SetActive(false);
         foreach (EnemyUnit unit in enemyUnits)
         {
             unit.gameObject.SetActive(false);
@@ -32,7 +32,7 @@ public class Map : MonoBehaviour
     public void OnStart()
     {
         if(enemyCount <= 0) edgeCollider2D.enabled = false;
-        gameObject.SetActive(true);
+        // gameObject.SetActive(true);
         foreach (EnemyUnit unit in enemyUnits) unit.gameObject.SetActive(true);
     }
     public void OnEnd()
@@ -44,7 +44,7 @@ public class Map : MonoBehaviour
     IEnumerator EndDeley()
     {
         yield return new WaitForSeconds(1);
-        gameObject.SetActive(false);
+        // gameObject.SetActive(false);
         foreach (EnemyUnit unit in enemyUnits) unit.gameObject.SetActive(false);
     }
 }
