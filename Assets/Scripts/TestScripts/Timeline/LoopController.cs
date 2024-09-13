@@ -8,6 +8,24 @@ public class LoopController : MonoBehaviour
     PlayableDirector playableDirector;
     PlayableDirector LoopDir;
 
+    [SerializeField] private float targetFrameRate = 1 / 60f;
+    [SerializeField] private PlayableDirector director;
+
+
+    public void SetLoop(PlayableDirector dir)
+    {
+        Debug.Log($"SetLoop - Current Frame: {playableDirector.time}");
+        LoopDir = dir;
+        Time.timeScale = 0;
+
+        //playableDirector.time=
+        playableDirector.playableGraph.GetRootPlayable(0).SetSpeed(0);
+
+        playableDirector.Pause();
+        LoopDir.Play();
+        Time.timeScale = 1;
+
+    }
 
     public void EndLoop()
     {
@@ -28,5 +46,4 @@ public class LoopController : MonoBehaviour
             EndLoop();
         }
     }
-
 }
