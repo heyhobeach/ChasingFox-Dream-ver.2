@@ -7,20 +7,31 @@ public class LoopController : MonoBehaviour
 {
     PlayableDirector playableDirector;
     PlayableDirector LoopDir;
+
+    [SerializeField] private float targetFrameRate = 1 / 60f;
+    [SerializeField] private PlayableDirector director;
+
+
     public void SetLoop(PlayableDirector dir)
     {
-        Debug.Log("TEstLoop");
+        Debug.Log($"SetLoop - Current Frame: {playableDirector.time}");
         LoopDir = dir;
-        playableDirector.Pause();
+        Time.timeScale = 0;
+
+        //playableDirector.time=
         playableDirector.playableGraph.GetRootPlayable(0).SetSpeed(0);
+
+        playableDirector.Pause();
         LoopDir.Play();
+        Time.timeScale = 1;
+
     }
 
     public void EndLoop()
     {
         LoopDir.Stop();
         playableDirector.playableGraph.GetRootPlayable(0).SetSpeed(1);
-        playableDirector.Play();
+        playableDirector.Resume();
     }
 
     // Start is called before the first frame update
@@ -30,7 +41,7 @@ public class LoopController : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.H))
+        if (Input.GetKeyDown(KeyCode.F))
         {
             EndLoop();
         }
