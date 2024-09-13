@@ -44,7 +44,6 @@ public class EnemyController : MonoBehaviour
     }
     void Update()
     {
-        if(blackboard.thisUnit.UnitState == UnitState.Death) return;
         CircleRay();
         behaviorTree.Update();
     }
@@ -67,6 +66,11 @@ public class EnemyController : MonoBehaviour
 
     private void CircleRay()//유저 탐색할 레이 관련 함수
     {
+        if(blackboard.thisUnit.UnitState == UnitState.Death)
+        {
+            blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Default;
+            return;
+        }
         int layerMask = 1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("GunSound") | 1 << LayerMask.NameToLayer("Player");//enemy와 gunsound 객체 총알이 만약 바닥에 박히면 gunsound객체를 생성했다가 일정시간 이후 지우는식
         hits = Physics2D.CircleCastAll(transform.position, distance, Vector2.zero, 0, layerMask);//죽은 적군 찾는 변수
 

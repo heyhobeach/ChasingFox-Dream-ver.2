@@ -5,6 +5,7 @@ using UnityEngine;
 public class MeleeEnemy : EnemyUnit
 {
     public GameObject MeleeAttack;//�Ѿ� ����
+    private SpriteRenderer effectRenderer;
 
     protected override void Start()
     {
@@ -13,6 +14,7 @@ public class MeleeEnemy : EnemyUnit
         attackDistance = MeleeAttack.GetComponent<BoxCollider2D>().bounds.extents.x + MeleeAttack.transform.localPosition.x;
         MeleeAttack.SetActive(false);
         MeleeAttack.GetComponent<MaleeAttack>().Set(1, gameObject);
+        effectRenderer = MeleeAttack.transform.GetChild(0).GetComponent<SpriteRenderer>();
     }
 
     public override bool AttackCheck(Vector3 attackPos)
@@ -32,7 +34,9 @@ public class MeleeEnemy : EnemyUnit
         //deg*=Mathf.Deg2Rad;//라디안으로 바꿔주기는 하는데 이렇게 하면 좀 문제생김
         //Debug.Log(deg);
         MeleeAttack.transform.localPosition = new Vector3(Mathf.Cos(deg), Mathf.Sin(deg)*2,transform.localPosition.z);
-        MeleeAttack.transform.localEulerAngles = new Vector3(0, 0, Quaternion.FromToRotation(Vector2.up, transform.position - MeleeAttack.transform.position).eulerAngles.z - 90);
+        if(subvec.x < 0) effectRenderer.flipX = true;
+        else effectRenderer.flipX = false;
+        // MeleeAttack.transform.localEulerAngles = new Vector3(0, 0, Quaternion.FromToRotation(Vector2.up, transform.position - MeleeAttack.transform.position).eulerAngles.z - 90);
 
         return base.Attack(attackPos);
     }
