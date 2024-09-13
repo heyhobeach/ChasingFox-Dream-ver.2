@@ -90,20 +90,22 @@ public class InteractionEvent : MonoBehaviour
     {
         public int start;
         public int end;
-        public int size;
-        public SpeedCommand(string[] args, UIManager manager)
+        public int _speed;
+        public string _str;
+        public SpeedCommand(string[] args,string str, UIManager manager)
         {
             start = int.Parse(args[0]);
             end = int.Parse(args[1]);
-            size = int.Parse(args[2]);
+            _speed = int.Parse(args[2]);
             _uiManger = manager;
+            _str = str;
 
         }
         public override void OnExecute()
         {
             //base.OnExecute();
             Debug.Log("onExecute테스트");
-            _uiManger.TypingSpeed(start, end, size);
+            _uiManger.TypingSpeed(_str, start, end, _speed);
         }
     }
 
@@ -537,7 +539,7 @@ public class InteractionEvent : MonoBehaviour
                     break;
                 case "speed":
                     {
-                        precommands.Add(new SpeedCommand(filteredSubstrings, _Uimanager));
+                        precommands.Add(new SpeedCommand(filteredSubstrings, dialogue.dialouses[temp].context[contentNum], _Uimanager));
                         //speed(filteredSubstrings); 
                     }
                     break;
@@ -616,7 +618,7 @@ public class InteractionEvent : MonoBehaviour
     public void speed(string[] command_args)//시작 끝 수치
     {
         Debug.Log(string.Format("switch_speed {0} {1} {2}", command_args[0], command_args[1], command_args[2]));
-        _Uimanager.TypingSpeed(int.Parse(command_args[0]), int.Parse(command_args[1]), int.Parse(command_args[2]));
+        //_Uimanager.TypingSpeed(int.Parse(command_args[0]), int.Parse(command_args[1]), int.Parse(command_args[2]));
     }
     public void time()
     {
