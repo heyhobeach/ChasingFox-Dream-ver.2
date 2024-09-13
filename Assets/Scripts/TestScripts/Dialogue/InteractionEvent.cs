@@ -19,9 +19,12 @@ public class InteractionEvent : MonoBehaviour
     [SerializeField] DialogueEvent dialogue;
     //UIManager ui;
 
+
+
     public static bool isSkip = false;
 
-    int num = 0;
+    [Tooltip("해당 아이디로 이동")]
+    public int num = 0;
     int contentNum = 0;
 
     int indexNum = 0;
