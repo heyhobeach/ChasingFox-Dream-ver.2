@@ -14,4 +14,7 @@ public class TimeLineEnd : QTE_Prerequisites
         playableDirector = GetComponent<PlayableDirector>();
         playableDirector.stopped += (x) => isPlaying = true;
     }
+
+    [ContextMenu("PDPlay")]
+    public void PDPLay() => playableDirector.Play();
 }
