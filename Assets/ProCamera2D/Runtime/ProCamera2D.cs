@@ -261,6 +261,27 @@ namespace Com.LuisPedroFonseca.ProCamera2D
             }
         }
 
+        IEnumerator MyFixedUpdate()
+        {
+            while(true)
+            {
+                yield return new WaitUntil(() => Time.timeScale != 1);
+                if (UpdateType == UpdateType.FixedUpdate)
+                    Move(IgnoreTimeScale ? Time.fixedUnscaledDeltaTime : Time.fixedDeltaTime);
+                yield return new WaitForEndOfFrame();
+            }
+        }
+
+        void OnEnable()
+        {
+            StartCoroutine(MyFixedUpdate());
+        }
+
+        void OnDisable()
+        {
+            StopAllCoroutines();
+        }
+
         void LateUpdate()
         {
             if (UpdateType == UpdateType.LateUpdate)
@@ -269,7 +290,7 @@ namespace Com.LuisPedroFonseca.ProCamera2D
 
         void FixedUpdate()
         {
-            if (UpdateType == UpdateType.FixedUpdate)
+            if (UpdateType == UpdateType.FixedUpdate && Time.timeScale == 1)
                 Move(IgnoreTimeScale ? Time.fixedUnscaledDeltaTime : Time.fixedDeltaTime);
         }
 
@@ -299,7 +320,7 @@ namespace Com.LuisPedroFonseca.ProCamera2D
         /// <param name="influence">The vector representing the influence to be applied</param>
         public void ApplyInfluence(Vector2 influence)
         {
-            if (!isActiveAndEnabled || Time.deltaTime < .0001f || float.IsNaN(influence.x) || float.IsNaN(influence.y))
+            if (!isActiveAndEnabled || (Time.deltaTime < .0001f && !IgnoreTimeScale) || float.IsNaN(influence.x) || float.IsNaN(influence.y))
                 return;
 
             _influences.Add(VectorHV(influence.x, influence.y));

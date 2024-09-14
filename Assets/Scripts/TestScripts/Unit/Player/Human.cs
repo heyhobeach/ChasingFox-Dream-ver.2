@@ -141,13 +141,13 @@ public class Human : PlayerUnit
             yield return new WaitUntil(() => isAttack);
             shootingAnimationController.AttackAni();
             yield return null;
-            Debug.Log("공격");
-            Debug.Log("문제 이전");
+            // Debug.Log("공격");
+            // Debug.Log("문제 이전");
             //sound.GetComponent<AudioSource>().Play();
 
-            Debug.Log("여기 문제");
+            // Debug.Log("여기 문제");
             base.Attack(clickPos);
-            sound.PlayOneShot(soundClip, 0.3f);
+            sound?.PlayOneShot(soundClip, 0.3f);
             // SoundManager.Instance.CoStartBullet(userGunsoud);
             ProCamera2DShake.Instance.Shake("GunShot ShakePreset");
             GameObject _bullet = Instantiate(bullet);//총알을 공격포지션에서 생성함
