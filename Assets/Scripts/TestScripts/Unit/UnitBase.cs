@@ -100,6 +100,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     /// 바닥 체크
     /// </summary>
     protected bool isGrounded;
+    public bool IsGrounded { get => isGrounded; }
 
     protected SpriteRenderer spriteRenderer;
 

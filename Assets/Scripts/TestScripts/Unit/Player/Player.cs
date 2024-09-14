@@ -137,6 +137,14 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     }
     private Coroutine changing;
     private bool isBulletTime;
+    public void FormChange(int i)
+    {
+        for(int j = 0; j < forms.Length; j++)
+        {
+            forms[j].gameObject.SetActive(false);
+            if(i == j) forms[j].gameObject.SetActive(true);
+        }
+    }
     public bool FormChange()
     {
         if(changedForm.GetType() == typeof(Berserker) || changing != null) return false; // 대쉬 중이거나 제어가 불가능한 상태일 경우 동작을 수행하지 않음
@@ -315,6 +323,21 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
             invalidation = false;
             Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Bullet"), false);
         }
+    }
+
+    public void FormPostitionReset()
+    {
+        foreach(var form in forms) form.transform.localPosition = Vector2.zero;
+    }
+    public void PlayerPositionSet(Transform transform)
+    {
+        this.transform.position = transform.position;
+        changedForm.ResetForce();
+    }
+    public void FreezePostion(bool isFreeze)
+    {
+        if(isFreeze) GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePosition;
+        else GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 
     // public bool FormChange()
