@@ -481,12 +481,17 @@ public class InteractionEvent : MonoBehaviour
         }
     }
 
+    public void _DisableUI()
+    {
+        _Uimanager.DisableUI();
+    }
+
     private void EndDialogue()
     {
         Debug.Log("대화끝");
         if (_Uimanager.GetTextActive())
         {
-            _Uimanager.DisableUI();
+            _DisableUI();
             Debug.Log("비활성화");
             isSkip = false;
             return;
