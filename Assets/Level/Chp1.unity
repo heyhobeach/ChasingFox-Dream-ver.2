@@ -70890,7 +70890,13 @@ PlayableDirector:
     value: {fileID: 1592486988}
   m_ExposedReferences:
     m_References:
+    - 6839fba214fc4244f82cae3542f506fd: {fileID: 871359341}
+    - 23833ef228e70d641acfe2554f68d5de: {fileID: 2004169967}
+    - 798ca7a22dc9cf24c8ff93a4d8e338bb: {fileID: 2004169967}
+    - c1c1f7c835ca8324693cb9ab60f2991a: {fileID: 2004169967}
+    - 0317adb8803d0334686d57322be752d3: {fileID: 871359341}
     - 2b11aa700784bd24580c50fd28ef7cdb: {fileID: 871359341}
+    - e0ef4fc0a837f3645b0f8e04361da7dc: {fileID: 2004169967}
     - 690336f52d1e2114c9090671b5497f81: {fileID: 871359341}
 --- !u!1 &857991750
 GameObject:
@@ -75275,6 +75281,59 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1 &912109285
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 912109286}
+  - component: {fileID: 912109287}
+  m_Layer: 0
+  m_Name: Loop1-2Enemy
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &912109286
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 912109285}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1533455062}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!320 &912109287
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 912109285}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 11400000, guid: 545eca8c2fb94e64588e0934cac6b830, type: 2}
+  m_InitialState: 1
+  m_WrapMode: 2
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings:
+  - key: {fileID: -5749801215991837636, guid: 545eca8c2fb94e64588e0934cac6b830, type: 2}
+    value: {fileID: 871359342}
+  - key: {fileID: 6143579161303173327, guid: 545eca8c2fb94e64588e0934cac6b830, type: 2}
+    value: {fileID: 2004169968}
+  m_ExposedReferences:
+    m_References: []
 --- !u!1 &918575945
 GameObject:
   m_ObjectHideFlags: 0
@@ -87717,6 +87776,7 @@ Transform:
   m_Children:
   - {fileID: 1953604243}
   - {fileID: 1381247730}
+  - {fileID: 912109286}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1537783616
@@ -88487,6 +88547,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 10dd97de6687c81408a2a76b7d3825cf, type: 2}
     - {fileID: 11400000, guid: d60935d66f5c5ba448e14d5e39e9f4f9, type: 2}
     - {fileID: 11400000, guid: f76d1dcef6fee4d4bb4d5c483248e4ee, type: 2}
+    - {fileID: 11400000, guid: ad179815f5952fb4faf6a20fd4a1dae8, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -88558,6 +88619,20 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1592486987}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: 
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: 
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!114 &1592486991
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88574,6 +88649,7 @@ MonoBehaviour:
     name: 
     line: {x: 0, y: 0}
     dialouses: []
+  num: 0
 --- !u!1001 &1593183909
 PrefabInstance:
   m_ObjectHideFlags: 0

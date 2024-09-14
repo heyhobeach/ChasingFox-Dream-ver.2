@@ -27,7 +27,8 @@ public class InteractionEvent : MonoBehaviour
     public int num = 0;
     int contentNum = 0;
 
-    int indexNum = 0;
+    [Tooltip("대화 뭉텅이 번호")]
+    public int indexNum = 0;
     int contentlength = 0;
 
     string[] command = new string[1];
@@ -236,6 +237,7 @@ public class InteractionEvent : MonoBehaviour
         }
     }
 
+    [ContextMenu("GetDialogue")]
     public Dialogue[] GetDialogue()
     {
 
