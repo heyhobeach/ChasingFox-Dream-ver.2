@@ -161,11 +161,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         if(spriteResolver.enabled) spriteResolver.ResolveSpriteToSpriteRenderer();
     }
     
-    protected virtual void OnEnable()
-    {
-        Debug.Log(onEnable);
-        onEnable?.Invoke();
-    }
+    protected virtual void OnEnable() => onEnable?.Invoke();
 
     /// <summary>
     /// 폼체인지 시 초기화 해야할 작업을 수행
