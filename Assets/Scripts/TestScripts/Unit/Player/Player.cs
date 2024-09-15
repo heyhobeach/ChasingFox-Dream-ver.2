@@ -144,6 +144,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
             forms[j].gameObject.SetActive(false);
             if(i == j) forms[j].gameObject.SetActive(true);
         }
+        changedForm = forms[i];
     }
     public bool FormChange()
     {
