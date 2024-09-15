@@ -157,10 +157,10 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         anim.SetFloat("dashMultiplier", dashDuration > 0 ? 1/dashDuration : 1);
     }
 
-    private void LateUpdate()
-    {
-        if(spriteResolver.enabled) spriteResolver.ResolveSpriteToSpriteRenderer();
-    }
+    // private void LateUpdate()
+    // {
+    //     if(spriteResolver.enabled) spriteResolver.ResolveSpriteToSpriteRenderer();
+    // }
     
     protected virtual void OnEnable() => onEnable?.Invoke();
 
