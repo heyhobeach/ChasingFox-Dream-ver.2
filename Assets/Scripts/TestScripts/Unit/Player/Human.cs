@@ -228,7 +228,6 @@ public class Human : PlayerUnit
     public override bool Reload()
     {
         if(reloadCoroutine != null) return false;
-        base.Reload();
         reloadCoroutine = StartCoroutine(Reloading());
         base.Reload();
         return true;
@@ -239,11 +238,12 @@ public class Human : PlayerUnit
         yield return new WaitUntil(() => shootingAnimationController.isReloadAni);
         yield return new WaitUntil(() => !shootingAnimationController.isReloadAni);
         residualAmmo = maxAmmo;
-        reloadCoroutine = null;
+        ReloadCancel();
     }
     private void ReloadCancel()
     {
         if(reloadCoroutine != null) StopCoroutine(reloadCoroutine);
         shootingAnimationController.NomalAni();
+        reloadCoroutine = null;
     }
 }
