@@ -371,11 +371,12 @@ public class UIManager : MonoBehaviour
         Debug.Log(change_string + "targetstring");
         return _str.Replace(targetstring, change_string); 
     }
-    public void TypingSpeed(int start,int end,int speed)
+    public void TypingSpeed(string _str, int start, int end, int speed)
     {
-        Debug.Log(string.Format("TypingSpeed start{0} end{1}, speed{2}", content.text[start], content.text[end], speed));
+        Debug.Log(_str.Length);
+        Debug.Log(string.Format("TypingSpeed start{0} end{1}, speed{2}", _str[start], _str[end], speed));
         isTyping = false;
-        SetTypingSpeed(start,end,speed);
+        SetTypingSpeed(start,end, speed);
     }
 
     public IEnumerator ClosingAnim(Action Act=null)

@@ -16,14 +16,12 @@ public class LoopController : MonoBehaviour
     {
         Debug.Log($"SetLoop - Current Frame: {playableDirector.time}");
         LoopDir = dir;
-        Time.timeScale = 0;
 
         //playableDirector.time=
         playableDirector.playableGraph.GetRootPlayable(0).SetSpeed(0);
 
         playableDirector.Pause();
         LoopDir.Play();
-        Time.timeScale = 1;
 
     }
 
