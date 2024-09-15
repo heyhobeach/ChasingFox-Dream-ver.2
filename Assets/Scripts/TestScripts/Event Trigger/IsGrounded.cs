@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class IsGrounded : QTE_Prerequisites
 {
-    public override bool isSatisfySatisfy { get => isGrounded; set => isGrounded = value; }
+    public override bool isSatisfySatisfy { get => playerUnit.IsGrounded; set => isGrounded = value; }
 
     private bool isGrounded;
     private PlayerUnit playerUnit;
