@@ -176,9 +176,8 @@ public class Human : PlayerUnit
 
     public override bool Dash()
     {
-        if(unitState != UnitState.Default || dashCoroutine != null) return false; // 조작이 불가능한 상태일 경우 동작을 수행하지 않음
+        if((unitState != UnitState.Default && unitState != UnitState.Reload) || dashCoroutine != null) return false; // 조작이 불가능한 상태일 경우 동작을 수행하지 않음
         base.Dash();
-        if(reloadCoroutine != null) ReloadCancel();
         dashCoroutine = StartCoroutine(DashAffterInput());
         return true;
     }
@@ -201,10 +200,8 @@ public class Human : PlayerUnit
     private IEnumerator DashAffterInput()
     {
         unitState = UnitState.Dash;
-        ReloadCancel();
         ResetForce();
         var tempVel = fixedDir.x == 0 ? spriteRenderer.flipX ? -1 : 1 : Mathf.Sign(fixedDir.x);
-        SetHorizontalVelocity(tempVel);
         yield return new WaitUntil(() => anim.GetCurrentAnimatorStateInfo(0).IsName("Dash"));
         while(anim.GetCurrentAnimatorStateInfo(0).IsName("Dash")) // 대쉬 지속 시간 동안
         {
@@ -227,21 +224,28 @@ public class Human : PlayerUnit
 
     public override bool Reload()
     {
-        if(reloadCoroutine != null) return false;
-        reloadCoroutine = StartCoroutine(Reloading());
+        if(reloadCoroutine != null || residualAmmo >= maxAmmo) return false;
         base.Reload();
+        reloadCoroutine = StartCoroutine(Reloading());
         return true;
     }
 
     private IEnumerator Reloading()
     {
+        if(unitState != UnitState.Dash) unitState = UnitState.Reload;
         yield return new WaitUntil(() => shootingAnimationController.isReloadAni);
-        yield return new WaitUntil(() => !shootingAnimationController.isReloadAni);
+        yield return new WaitUntil(() => {
+            Debug.Log("AAA" + unitState.ToString());
+            if(unitState == UnitState.Dash) shootingAnimationController.NomalAni();
+            return !shootingAnimationController.isReloadAni;
+        });
         residualAmmo = maxAmmo;
         ReloadCancel();
     }
     private void ReloadCancel()
     {
+        if(isGrounded) unitState = UnitState.Default;
+        else unitState = UnitState.Air;
         if(reloadCoroutine != null) StopCoroutine(reloadCoroutine);
         shootingAnimationController.NomalAni();
         reloadCoroutine = null;
