@@ -206,7 +206,7 @@ public class Werewolf : PlayerUnit
                 StopHoldingWall();
                 isJumping = false;
                 SetVerticalForce(jumpImpulse); // 윗 방향 힘 추가
-                base.Move(fixedDir * 40);
+                AddHorizontalVelocity(fixedDir.x * 20);
                 return true;
             }
             else return base.Jump(jumpKey);
@@ -287,7 +287,7 @@ public class Werewolf : PlayerUnit
         yield return new WaitUntil(() => anim.GetCurrentAnimatorStateInfo(0).IsName("Dash"));
         while(anim.GetCurrentAnimatorStateInfo(0).IsName("Dash")) // 대쉬 지속 시간 동안
         {
-            SetHorizontalForce(tempVel * movementSpeed * 1.2f);
+            AddHorizontalVelocity(tempVel * movementSpeed * 1.2f);
             anim.SetFloat("hzForce", -0.5f);
             yield return null;
         }

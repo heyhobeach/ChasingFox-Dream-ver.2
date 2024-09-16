@@ -212,8 +212,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
 
         void FixMove()
         {
-            changedForm.SetHorizontalForce(tempDir * changedForm.movementSpeed); // 자연스러운 대쉬 동작을 위한 부분
-            changedForm.SetHorizontalVelocity(tempDir * Time.deltaTime * changedForm.movementSpeed);
+            changedForm.SetHorizontalVelocity(tempDir * changedForm.movementSpeed);
         }
     }
     private IEnumerator ChangeWerewolf()
@@ -283,8 +282,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
 
         void FixMove()
         {
-            changedForm.SetHorizontalForce(tempDir * changedForm.movementSpeed); // 자연스러운 대쉬 동작을 위한 부분
-            changedForm.SetHorizontalVelocity(tempDir * Time.deltaTime * changedForm.movementSpeed);
+            changedForm.SetHorizontalVelocity(tempDir * changedForm.movementSpeed);
         }
     }
     private IEnumerator ChangeHuman()
@@ -308,8 +306,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
 
         void FixMove()
         {
-            changedForm.SetHorizontalForce(tempDir * changedForm.movementSpeed); // 자연스러운 대쉬 동작을 위한 부분
-            changedForm.SetHorizontalVelocity(tempDir * Time.deltaTime * changedForm.movementSpeed);
+            changedForm.SetHorizontalVelocity(tempDir * changedForm.movementSpeed);
         }
     }
 
