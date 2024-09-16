@@ -139,6 +139,11 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     private bool isBulletTime;
     public void FormChange(int i)
     {
+        if(changing != null)
+        {
+            StopCoroutine(changing);
+            Time.timeScale = 1;
+        }
         for(int j = 0; j < forms.Length; j++)
         {
             forms[j].gameObject.SetActive(false);
