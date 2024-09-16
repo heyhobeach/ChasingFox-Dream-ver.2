@@ -11,7 +11,7 @@ using UnityEngine.U2D.Animation;
 /// </summary>
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(SpriteRenderer))]
-[RequireComponent(typeof(BoxCollider2D))]
+[RequireComponent(typeof(CapsuleCollider2D))]
 public abstract class UnitBase : MonoBehaviour, IUnitController
 {
     /// <summary>
