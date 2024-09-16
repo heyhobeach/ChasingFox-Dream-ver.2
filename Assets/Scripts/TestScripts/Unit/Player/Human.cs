@@ -67,7 +67,7 @@ public class Human : PlayerUnit
     {
         base.OnEnable();
         var pi = CameraManager.Instance.proCamera2DPointerInfluence;
-        pi.MaxHorizontalInfluence = 4.75f;
+        pi.MaxHorizontalInfluence = 5.15f;
         pi.MaxVerticalInfluence = 0.35f;
         pi.InfluenceSmoothness = 0.275f;
         CameraManager.Instance.ChangeSize = 5.15f;
