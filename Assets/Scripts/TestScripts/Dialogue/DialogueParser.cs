@@ -40,7 +40,8 @@ public class DialogueParser : MonoBehaviour
             List<string> commandList = new List<string>();
             List<string> testarr = new List<string>();
             row = Regex.Split(data[i], SPLIT_RE);
-            //foreach(var txt in row)
+            //Debug.Log(i + "번째 파싱중");//에러 발견 위치용 디버깅
+            //foreach (var txt in row)
             //{
             //    Debug.Log(txt);
             //}
