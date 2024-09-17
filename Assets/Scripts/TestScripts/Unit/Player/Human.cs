@@ -257,5 +257,6 @@ public class Human : PlayerUnit
     public override void StopAllC()
     {
         StopDash();
+        ReloadCancel();
     }
 }

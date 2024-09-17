@@ -27,11 +27,11 @@ public class PauseAnimatorPlayable : PlayableBehaviour
             animator.runtimeAnimatorController = null;
             ShootingAnimationController sac = null;
             if(animator.TryGetComponent<ShootingAnimationController>(out sac)) sac.NomalAni();
-            spriteRenderer = animator.GetComponent<SpriteRenderer>();
-            spriteResolver = animator.GetComponent<SpriteResolver>();
-            previousCategory =  spriteResolver.GetCategory();
-            previousLabel = spriteResolver.GetLabel();
-            previousSprite = spriteRenderer.sprite;
+        //     spriteRenderer = animator.GetComponent<SpriteRenderer>();
+        //     spriteResolver = animator.GetComponent<SpriteResolver>();
+        //     previousCategory =  spriteResolver.GetCategory();
+        //     previousLabel = spriteResolver.GetLabel();
+        //     previousSprite = spriteRenderer.sprite;
         }
     }
 
