@@ -166,8 +166,7 @@ public class Werewolf : PlayerUnit
         if(air_attack_count >= 0)
         {
             SetHorizontalVelocity(tempDir.x);
-            SetHorizontalForce(tempDir.x * attackImpulse);
-            SetVerticalForce(tempDir.y * attackImpulse * 0.25f);
+            SetHorizontalVelocity(tempDir.x * attackImpulse);
         }
         float t = 0;
         while(t < attackDuration)
@@ -282,12 +281,11 @@ public class Werewolf : PlayerUnit
         if(unitState == UnitState.HoldingWall) StopHoldingWall();
         unitState = UnitState.Dash; // 대쉬 상태로 변경
         var tempVel = fixedDir.x == 0 ? spriteRenderer.flipX ? -1 : 1 : Mathf.Sign(fixedDir.x);
-        SetHorizontalVelocity(tempVel);
         SetVerticalForce(0);
         yield return new WaitUntil(() => anim.GetCurrentAnimatorStateInfo(0).IsName("Dash"));
         while(anim.GetCurrentAnimatorStateInfo(0).IsName("Dash")) // 대쉬 지속 시간 동안
         {
-            AddHorizontalVelocity(tempVel * movementSpeed * 1.2f);
+            SetHorizontalVelocity(tempVel * movementSpeed * 1.2f);
             anim.SetFloat("hzForce", -0.5f);
             yield return null;
         }

@@ -123,7 +123,7 @@ public abstract class PlayerUnit : UnitBase
         AddFrictional();
         
         SetHorizontalForce(hzVel);
-        //여기부분확인
+        
         var hit = Physics2D.BoxCast(transform.position + new Vector3(boxOffsetX, boxOffsetY), new Vector2(boxSizeX*1.8f, boxSizeY), 0, Vector2.right*Mathf.Sign(hzForce), 0.05f, 1<<LayerMask.NameToLayer("Map"));
         if(hit)
         {
