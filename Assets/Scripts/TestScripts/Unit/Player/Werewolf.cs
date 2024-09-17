@@ -205,7 +205,7 @@ public class Werewolf : PlayerUnit
                 StopHoldingWall();
                 isJumping = false;
                 SetVerticalForce(jumpImpulse); // 윗 방향 힘 추가
-                AddHorizontalVelocity(fixedDir.x * 20);
+                SetHorizontalVelocity(fixedDir.x * 20);
                 return true;
             }
             else return base.Jump(jumpKey);
