@@ -65,7 +65,7 @@ public class SoundManager:MonoBehaviour
 
     public IEnumerator CoBulletSound(GameObject obj)
     {
-        GameObject _obj=bullet.standbyBullet.Dequeue();
+        //GameObject _obj=bullet.standbyBullet.Dequeue();
         //Debug.Log("코루틴 호출");
         
         obj.SetActive(true);
@@ -84,11 +84,11 @@ public class SoundManager:MonoBehaviour
             // Debug.Log("유저 총 소리");
             yield return null;
         }
-        else
-        {
-           Debug.Log("성공적 삽입"+obj.name);
-           bullet.standbyBullet.Enqueue(obj);
-        }
+        //else
+        //{
+        //    Debug.Log("성공적 삽입"+obj.name);
+        //    bullet.standbyBullet.Enqueue(obj);
+        //}
         
     }
 
