@@ -84,11 +84,11 @@ public class SoundManager:MonoBehaviour
             // Debug.Log("유저 총 소리");
             yield return null;
         }
-        //else
-        //{
-        //    Debug.Log("성공적 삽입"+obj.name);
-        //    bullet.standbyBullet.Enqueue(obj);
-        //}
+        else
+        {
+           Debug.Log("성공적 삽입"+obj.name);
+           bullet.standbyBullet.Enqueue(obj);
+        }
         
     }
 
