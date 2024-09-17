@@ -121,6 +121,8 @@ public abstract class PlayerUnit : UnitBase
     {
         AddGravity();
         AddFrictional();
+        
+        SetHorizontalForce(hzVel);
         //여기부분확인
         var hit = Physics2D.BoxCast(transform.position + new Vector3(boxOffsetX, boxOffsetY), new Vector2(boxSizeX*1.8f, boxSizeY), 0, Vector2.right*Mathf.Sign(hzForce), 0.05f, 1<<LayerMask.NameToLayer("Map"));
         if(hit)
@@ -183,7 +185,7 @@ public abstract class PlayerUnit : UnitBase
     public override bool Move(Vector2 dir)
     {
         if(ControllerChecker()) return false;
-        hzVel += dir.x == 0 ? -hzVel * accelerate * Time.deltaTime : (dir.x-hzForce/movementSpeed) * accelerate * Time.deltaTime; // 가속도만큼 입력 방향에 힘을 추가
+        AddHorizontalVelocity(dir.x * movementSpeed * accelerate * Time.deltaTime);  // 가속도만큼 입력 방향에 힘을 추가
         if(dir.x == 0 && Mathf.Abs(hzVel) < 0.01f) hzVel = 0;
         if(unitState == UnitState.FormChange || dir.x == 0) // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
         {
@@ -191,7 +193,7 @@ public abstract class PlayerUnit : UnitBase
             return false;
         }
         else base.Move(dir);
-        return SetHorizontalForce(hzVel * movementSpeed);
+        return true;
         // if(Mathf.Abs(hzForce) >= Mathf.Abs(hzVel * movementSpeed) && MathF.Sign(hzForce) == Mathf.Sign(hzVel)) return false;
         // else return SetHorizontalForce(hzVel * movementSpeed);
     }
@@ -416,9 +418,9 @@ public abstract class PlayerUnit : UnitBase
     /// </summary>
     private void AddFrictional() // 수평힘에 마찰력 추가
     {
-        if(Mathf.Abs(hzForce) > 1) AddHorizontalForce(-hzForce * accelerate * Time.fixedDeltaTime);
-        else if(Mathf.Abs(hzForce) > 0.01f) AddHorizontalForce(-Mathf.Sign(hzForce) * accelerate * Time.fixedDeltaTime);
-        else AddHorizontalForce(0);
+        if(Mathf.Abs(hzVel) > 1) AddHorizontalVelocity(-hzVel * accelerate * Time.fixedDeltaTime);
+        else if(Mathf.Abs(hzVel) > 0.1f) AddHorizontalVelocity(-Mathf.Sign(hzVel) * accelerate * Time.fixedDeltaTime);
+        else SetHorizontalVelocity(0);
     }
 
     /// <summary>
@@ -452,6 +454,7 @@ public abstract class PlayerUnit : UnitBase
     }
 
     public void SetHorizontalVelocity(float vel) => hzVel = vel;
+    public void AddHorizontalVelocity(float vel) => hzVel += vel;
 
     /// <summary>
     /// 플레이어 유닛 힘을 리지드바디로 전달

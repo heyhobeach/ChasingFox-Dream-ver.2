@@ -12,6 +12,10 @@ public class LoopController : MonoBehaviour
     [SerializeField] private PlayableDirector director;
 
 
+    public void SetNone()
+    {
+        this.playableDirector.extrapolationMode = DirectorWrapMode.None;
+    }
     public void SetLoop(PlayableDirector dir)
     {
         Debug.Log($"SetLoop - Current Frame: {playableDirector.time}");
