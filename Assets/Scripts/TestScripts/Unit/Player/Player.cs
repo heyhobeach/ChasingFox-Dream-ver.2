@@ -102,21 +102,22 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
 
     public void Death()
     {
-        Debug.Log("유저 사망");
+        // Debug.Log("유저 사망");
         ProCamera2DShake.Instance.Shake("Hit ShakePreset");
         invalidation = true;
         changedForm.Death();
-        if(changedForm.GetType() != typeof(Berserker)) // 버서커 상태가 아닐 시
-        {
-            Debug.Log("버서커");
-            StartCoroutine(Test());
-        }
-        else
-        {
-            Debug.Log("진짜 죽음");
-            StartCoroutine(Test2());
-            //PageManger.Instance.RoadRetry();
-        }
+        StartCoroutine(Test2());
+        // if(changedForm.GetType() != typeof(Berserker)) // 버서커 상태가 아닐 시
+        // {
+        //     Debug.Log("버서커");
+        //     StartCoroutine(Test());
+        // }
+        // else
+        // {
+        //     Debug.Log("진짜 죽음");
+        //     StartCoroutine(Test2());
+        //     //PageManger.Instance.RoadRetry();
+        // }
     }
     
     IEnumerator Test()
@@ -155,19 +156,29 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     {
         if(changedForm.GetType() == typeof(Berserker) || changing != null) return false; // 대쉬 중이거나 제어가 불가능한 상태일 경우 동작을 수행하지 않음
         bool b = false;
-        if(changedForm.GetType() == typeof(Human))
+        // if(changedForm.GetType() == typeof(Human))
+        // {
+        //     if(!((Werewolf) forms[1]).isFormChangeReady && changedForm.FormChange())
+        //     {
+        //         changing = StartCoroutine(ChangeWerewolf());
+        //         b = true;
+        //     }
+        //     else if(changedForm.UnitState == UnitState.Default && ((Werewolf) forms[1]).isFormChangeReady && ((Human) forms[0]).bulletTimeCount > 0)
+        //     {
+        //         changedForm.UnitState = UnitState.Default;
+        //         Dash();
+        //         changing = StartCoroutine(BulletTime());
+        //     }
+        // }
+        // else if(changedForm.GetType() == typeof(Werewolf) && changedForm.FormChange())
+        // {
+        //     changing = StartCoroutine(ChangeHuman());
+        //     b = true;
+        // }
+        if(changedForm.GetType() == typeof(Human) && !((Werewolf) forms[1]).isFormChangeReady && changedForm.FormChange())
         {
-            if(!((Werewolf) forms[1]).isFormChangeReady && changedForm.FormChange())
-            {
-                changing = StartCoroutine(ChangeWerewolf());
-                b = true;
-            }
-            else if(changedForm.UnitState == UnitState.Default && ((Werewolf) forms[1]).isFormChangeReady && ((Human) forms[0]).bulletTimeCount > 0)
-            {
-                changedForm.UnitState = UnitState.Default;
-                Dash();
-                changing = StartCoroutine(BulletTime());
-            }
+            changing = StartCoroutine(ChangeWerewolf());
+            b = true;
         }
         else if(changedForm.GetType() == typeof(Werewolf) && changedForm.FormChange())
         {
@@ -248,24 +259,24 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
             return !(changedForm.GetType() == typeof(Human) && changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("FormChange") && changedForm.anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.3f);
         });
         invalidation = true;
-        if(changedForm.GetType() == typeof(Human) && ((Human) forms[0]).bulletTimeCount-- > 0)
-        {
-            isBulletTime = true;
-            Time.timeScale = 0.5f;
-            Time.fixedDeltaTime = 0.5f * 0.02f;
-            changedForm.anim.speed = 0;
-            float t = 0;
-            while((t += Time.unscaledDeltaTime) < bulletTime)
-            {
-                FixMove();
-                yield return null;
-            }
-            isBulletTime = false;
-            changedForm.shootingAnimationController.NomalAni();
-            changedForm.anim.speed = 1;
-            Time.timeScale = 1;
-            Time.fixedDeltaTime = 1 * 0.02f;
-        }
+        // if(changedForm.GetType() == typeof(Human) && ((Human) forms[0]).bulletTimeCount-- > 0)
+        // {
+        //     isBulletTime = true;
+        //     Time.timeScale = 0.5f;
+        //     Time.fixedDeltaTime = 0.5f * 0.02f;
+        //     changedForm.anim.speed = 0;
+        //     float t = 0;
+        //     while((t += Time.unscaledDeltaTime) < bulletTime)
+        //     {
+        //         FixMove();
+        //         yield return null;
+        //     }
+        //     isBulletTime = false;
+        //     changedForm.shootingAnimationController.NomalAni();
+        //     changedForm.anim.speed = 1;
+        //     Time.timeScale = 1;
+        //     Time.fixedDeltaTime = 1 * 0.02f;
+        // }
         yield return new WaitUntil(() => {
             FixMove();
             return !(changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("FormChange") && changedForm.anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.95f);

@@ -123,7 +123,7 @@ public abstract class PlayerUnit : UnitBase
         AddFrictional();
         
         SetHorizontalForce(hzVel);
-        //여기부분확인
+        
         var hit = Physics2D.BoxCast(transform.position + new Vector3(boxOffsetX, boxOffsetY), new Vector2(boxSizeX*1.8f, boxSizeY), 0, Vector2.right*Mathf.Sign(hzForce), 0.05f, 1<<LayerMask.NameToLayer("Map"));
         if(hit)
         {
@@ -209,17 +209,17 @@ public abstract class PlayerUnit : UnitBase
         {
             case KeyState.KeyDown:
             case KeyState.KeyStay:
-                //canDown = true;
-                if (currentOneWayPlatform != null)//밑 아래 점프 가능한 오브젝트와 닿아있을때 ,우선순위 따라서 위로 올리고 return이 필요할듯 
-                {
-                    // Debug.Log("hello");
-                    // canDown = !isHide;
-                    canDown = true;
-                }
-                else
-                {
-                    // Debug.Log("여기에 걸림");
-                }
+                canDown = true; 
+                // if (currentOneWayPlatform != null)//밑 아래 점프 가능한 오브젝트와 닿아있을때 ,우선순위 따라서 위로 올리고 return이 필요할듯 
+                // {
+                //     // Debug.Log("hello");
+                //     // canDown = !isHide;
+                //     canDown = true;
+                // }
+                // else
+                // {
+                //     // Debug.Log("여기에 걸림");
+                // }
                 return true;
             case KeyState.KeyUp:
                 return true;
@@ -229,31 +229,31 @@ public abstract class PlayerUnit : UnitBase
 
     public void GetCurrenttPlatform(RaycastHit2D ray)
     {
-        switch (CheckMapType(ray))
+        // Debug.Log("플랫폼 들어옴");
+        currentOneWayPlatform = ray.transform.gameObject;//플랫폼이라면 현재 플렛폼을 담음
+        // Debug.Log(collision.gameObject.GetComponent<PlatformScript>().dObject);//다운 오브젝트 타입확인용 로그
+        switch (ray.transform.gameObject.GetComponent<PlatformScript>().dObject)//대각선 직선 오브젝트 마다 떨어지는 시간이 다를수도 있으니  
         {
-            case MapType.Platform:
-                // Debug.Log("플랫폼 들어옴");
-                currentOneWayPlatform = ray.transform.gameObject;//플랫폼이라면 현재 플렛폼을 담음
-                // Debug.Log(collision.gameObject.GetComponent<PlatformScript>().dObject);//다운 오브젝트 타입확인용 로그
-                switch (ray.transform.gameObject.GetComponent<PlatformScript>().dObject)//대각선 직선 오브젝트 마다 떨어지는 시간이 다를수도 있으니  
-                {
-                    case PlatformScript.downJumpObject.STRAIGHT://직선
-                        downTime = 1f;//떨어지는 시간 다르게 하기 위함
-                        break;
-                    case PlatformScript.downJumpObject.DIAGONAL://대각선
-                        downTime = 0.8f;//떨어지는 시간 다르게 하기 위함 , 0.7초까지도 1칸에 대해서는 가능하지만 만약에 쭉 앞으로 가면서 떨어진다고 하면 안전한 시간은 0.75~0.8사이임
-                        break;
-                }
-                //canDown = true;
+            case PlatformScript.downJumpObject.STRAIGHT://직선
+                downTime = 1f;//떨어지는 시간 다르게 하기 위함
                 break;
-            case MapType.Floor:
-                isJumping = false;
-                SetVerticalForce(gravity * Time.fixedDeltaTime);
+            case PlatformScript.downJumpObject.DIAGONAL://대각선
+                downTime = 0.8f;//떨어지는 시간 다르게 하기 위함 , 0.7초까지도 1칸에 대해서는 가능하지만 만약에 쭉 앞으로 가면서 떨어진다고 하면 안전한 시간은 0.75~0.8사이임
                 break;
-                //default:
-                //    
-                //    break;
         }
+        // switch (CheckMapType(ray))
+        // {
+        //     case MapType.Platform:
+        //         //canDown = true;
+        //         break;
+        //     case MapType.Floor:
+        //         isJumping = false;
+        //         SetVerticalForce(gravity * Time.fixedDeltaTime);
+        //         break;
+        //         //default:
+        //         //    
+        //         //    break;
+        // }
     }
 
     private void CrouchUpdate()
@@ -393,11 +393,19 @@ public abstract class PlayerUnit : UnitBase
                 Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), true);//원리는 그냥 설정한 시간동안 해당 플렛폼들을 그냥 무시하는식으로 설정했음 근데 지금 생각해보면 지금 플렛폼을 받아와서 플렛폼의 네임을 무시하는식으로 해도 되지않을까 하는 영감이 떠오름
                 SetVerticalForce(gravity * Time.deltaTime);
                 // Debug.Log("무시중");
-                currentOneWayPlatform.GetComponent<PlatformEffector2D>().useColliderMask = false;
-                yield return new WaitForSeconds(downTime);//downtime변수는 나중에 중력 설정시 이질감이 든다면 변경필요
+                if(currentOneWayPlatform != null)currentOneWayPlatform.GetComponent<PlatformEffector2D>().useColliderMask = false;
+                float t = 0;
+                var tempP = currentOneWayPlatform;
+                yield return new WaitUntil(() => {
+                    t += Time.deltaTime;
+                    if(currentOneWayPlatform == null || t >= downTime) return true;
+                    else return false;
+                });
+                // yield return new WaitForSeconds(downTime);//downtime변수는 나중에 중력 설정시 이질감이 든다면 변경필요
                 // Debug.Log("무시 끝");
                 findRayPlatform = false;
-                currentOneWayPlatform.GetComponent<PlatformEffector2D>().useColliderMask = true;
+                if(currentOneWayPlatform != null)currentOneWayPlatform.GetComponent<PlatformEffector2D>().useColliderMask = true;
+                currentOneWayPlatform = null;
                 //Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), false);
                 canDown = false;
             }
@@ -513,7 +521,7 @@ public abstract class PlayerUnit : UnitBase
     }
     protected MapType CheckMapType(RaycastHit2D collision, ref float angle)
     {
-        if (!(collision.collider.CompareTag("Map") || collision.collider.CompareTag("platform")) ) return MapType.None;
+        if (!(collision.collider.CompareTag("Map") || collision.collider.CompareTag("platform"))) return MapType.None;
         if (collision.collider.CompareTag("platform")) return MapType.Platform;
         angle = Mathf.Abs(Vector2.Angle(Vector2.up, collision.normal));
         if (angle <= 45) return MapType.Ground;

@@ -217,8 +217,10 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         return true;
     }
     
+    public abstract void StopAllC();
     public void Death()
     {
+        StopAllC();
         anim.SetTrigger("death");
         anim.SetBool("isDeath", true);
         if(longRangeUnit) shootingAnimationController.NomalAni();

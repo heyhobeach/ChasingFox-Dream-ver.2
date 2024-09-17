@@ -55,4 +55,8 @@ public class EnemyUnit : UnitBase, IDamageable
             case false: shootingAnimationController.NomalAni(); break;
         }
     }
+
+    public override void StopAllC()
+    {
+    }
 }
