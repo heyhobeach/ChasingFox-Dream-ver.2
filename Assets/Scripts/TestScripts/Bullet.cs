@@ -56,7 +56,7 @@ public class Bullet : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.CompareTag("Map")) BulletSound();
-        if(collision.CompareTag("ground") || collision.CompareTag("Wall") || collision.CompareTag("Map")) Destroy(gameObject);
+        if (collision.CompareTag("ground") || collision.CompareTag("Wall") || collision.CompareTag("Map")) { Destroy(gameObject); BulletSound(); }
         if (collision.gameObject.tag == "guard")//필요없어보임
         {
             this.gameObject.GetComponent<Collider2D>().isTrigger = true;
@@ -131,47 +131,48 @@ public class Bullet : MonoBehaviour
     // {
     //     if (collision.gameObject.tag == "guard")
     //     {
-            
+
     //     }
     // }
-    // private void OnCollisionEnter2D(Collision2D collision)
-    // {
-    //     if (collision.gameObject.tag == "Map")
-    //     {
-    //         BulletSound();
-    //         Destroy(this.gameObject);
-    //         //GameObject obj = SoundManager.Instance.bullet.standbyBullet.Dequeue();
-    //         //obj.transform.position = this.transform.position;
-    //         //Debug.Log(string.Format("queue name => " + obj));
-    //         //SoundManager.Instance.CoStartBullet(obj);
-    //         //StartCoroutine(SoundManager.Instance.CoBulletSound(obj));//해당 객체가 사라져서 그런듯 이 부분을 soundManager로 옮겨야함
-    //         //SoundManager.Instance.bullet.standbyBullet.Enqueue(obj);
-    //     }
-    //     if (collision.gameObject.CompareTag("ground") || collision.gameObject.CompareTag("Wall")) Destroy(gameObject);
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Map")
+        {
+            BulletSound();
+            Destroy(this.gameObject);
+            //GameObject obj = SoundManager.Instance.bullet.standbyBullet.Dequeue();
+            //obj.transform.position = this.transform.position;
+            //Debug.Log(string.Format("queue name => " + obj));
+            //SoundManager.Instance.CoStartBullet(obj);
+            //StartCoroutine(SoundManager.Instance.CoBulletSound(obj));//해당 객체가 사라져서 그런듯 이 부분을 soundManager로 옮겨야함
+            //SoundManager.Instance.bullet.standbyBullet.Enqueue(obj);
+        }
+        if (collision.gameObject.CompareTag("ground") || collision.gameObject.CompareTag("Wall")) Destroy(gameObject);
 
-    //     if (collision.gameObject.tag == "guard")//가드 만날겨우 trigger를 켜서 collision이 안일어나도록함
-    //     {
-    //         this.gameObject.GetComponent<Collider2D>().isTrigger = true;
-    //     }
-    //     if (collision.gameObject.tag == "Player" && !parentGo.CompareTag("Player"))//레이어 설정한 것 때문에 적군 총알만 플레이어 에게 충돌일어남
-    //     {
-    //         // Debug.Log("플레이어 충돌");
-    //         var temp = collision.gameObject.GetComponent<IDamageable>();
-    //         bool isDamaged = false;
-    //         Debug.Log(collision.gameObject.name);
-    //         if(temp != null) isDamaged = temp.GetDamage(damage);
-    //         if (isDamaged)
-    //         {
-    //             Destroy(this.gameObject);
-    //             //Destroy(gameObject);
-    //         }
-    //         else Debug.Log("Not Work");
-    //     }
-    //     if (collision.gameObject.tag == "Enemy")//플레이어 총알이 적군에게 충돌시 적이 trigger로 설정되어있어서 안 쓸것 같음
-    //     {
-    //         //Debug.Log("적 충돌");
-    //         //Destroy(this.gameObject);
-    //     }
+        if (collision.gameObject.tag == "guard")//가드 만날겨우 trigger를 켜서 collision이 안일어나도록함
+        {
+            this.gameObject.GetComponent<Collider2D>().isTrigger = true;
+        }
+        if (collision.gameObject.tag == "Player" && !parentGo.CompareTag("Player"))//레이어 설정한 것 때문에 적군 총알만 플레이어 에게 충돌일어남
+        {
+            // Debug.Log("플레이어 충돌");
+            var temp = collision.gameObject.GetComponent<IDamageable>();
+            bool isDamaged = false;
+            Debug.Log(collision.gameObject.name);
+            if (temp != null) isDamaged = temp.GetDamage(damage);
+            if (isDamaged)
+            {
+                Destroy(this.gameObject);
+                //Destroy(gameObject);
+            }
+            else Debug.Log("Not Work");
+        }
+        if (collision.gameObject.tag == "Enemy")//플레이어 총알이 적군에게 충돌시 적이 trigger로 설정되어있어서 안 쓸것 같음
+        {
+            //Debug.Log("적 충돌");
+            //Destroy(this.gameObject);
+        }
+    }
 
 
     // }
