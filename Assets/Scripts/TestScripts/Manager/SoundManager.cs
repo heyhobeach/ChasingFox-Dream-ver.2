@@ -75,11 +75,11 @@ public class SoundManager:MonoBehaviour
             bullet.standbyBullet.Enqueue(obj);
         }
 
-        yield return null;
+        yield return new WaitForSeconds(bulletTime);
         obj.SetActive(false);
         // Debug.Log(string.Format("태그{0} 오브젝트 이름{1}", obj.transform.parent.tag, obj.name));
        
-        if (obj.transform.parent.tag == "Player")
+        if (obj.transform.parent != null && obj.transform.parent.tag == "Player")
         {
             // Debug.Log("유저 총 소리");
             yield return null;

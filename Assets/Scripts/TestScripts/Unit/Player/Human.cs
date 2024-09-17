@@ -148,7 +148,7 @@ public class Human : PlayerUnit
             // Debug.Log("여기 문제");
             base.Attack(clickPos);
             sound?.PlayOneShot(soundClip, 0.3f);
-            // SoundManager.Instance.CoStartBullet(userGunsoud);
+            SoundManager.Instance.CoStartBullet(userGunsoud);
             ProCamera2DShake.Instance.Shake("GunShot ShakePreset");
             GameObject _bullet = Instantiate(bullet);//총알을 공격포지션에서 생성함
             GameObject gObj = this.gameObject;
@@ -234,11 +234,14 @@ public class Human : PlayerUnit
     {
         if(unitState != UnitState.Dash) unitState = UnitState.Reload;
         yield return new WaitUntil(() => shootingAnimationController.isReloadAni);
-        yield return new WaitUntil(() => {
-            Debug.Log("AAA" + unitState.ToString());
+        float animTime = shootingAnimationController.armAnim.GetCurrentAnimatorStateInfo(0).length;
+        float t = 0;
+        while(animTime >= t)
+        {
             if(unitState == UnitState.Dash) shootingAnimationController.NomalAni();
-            return !shootingAnimationController.isReloadAni;
-        });
+            t += Time.deltaTime;
+            yield return null;
+        }
         residualAmmo = maxAmmo;
         ReloadCancel();
     }
@@ -249,5 +252,10 @@ public class Human : PlayerUnit
         if(reloadCoroutine != null) StopCoroutine(reloadCoroutine);
         shootingAnimationController.NomalAni();
         reloadCoroutine = null;
+    }
+
+    public override void StopAllC()
+    {
+        StopDash();
     }
 }

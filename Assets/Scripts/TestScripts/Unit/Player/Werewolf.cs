@@ -311,4 +311,11 @@ public class Werewolf : PlayerUnit
     }
 
     public override bool Reload() => false;
+
+    public override void StopAllC()
+    {
+        StopAttack();
+        StopDash();
+        StopHoldingWall();
+    }
 }

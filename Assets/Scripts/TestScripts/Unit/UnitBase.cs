@@ -217,13 +217,17 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         return true;
     }
     
+    public abstract void StopAllC();
     public void Death()
     {
+        Debug.Log("AAA" + unitState.ToString());
+        StopAllC();
         anim.SetTrigger("death");
         anim.SetBool("isDeath", true);
         if(longRangeUnit) shootingAnimationController.NomalAni();
         unitState = UnitState.Death;
         if(onDeath != null) onDeath.Invoke();
+        Debug.Log("AAA" + unitState.ToString());
     }
 
     /// <summary>
