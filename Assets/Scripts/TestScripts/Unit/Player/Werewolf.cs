@@ -184,6 +184,7 @@ public class Werewolf : PlayerUnit
     {
         if(isGrounded) unitState = UnitState.Default;
         else unitState = UnitState.Air;
+        if(attackCoroutine != null) StopCoroutine(attackCoroutine);
         MeleeAttack.SetActive(false);
         attackCoroutine = null;
     }

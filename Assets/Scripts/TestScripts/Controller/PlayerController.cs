@@ -19,7 +19,6 @@ public class PlayerController : MonoBehaviour, IBaseController
     }
 
     private IUnitController unitController;
-    private bool isKeyDown;
     public PlayerControllerMask pcm;
 
     void Awake() => ((IBaseController)this).AddController();
@@ -28,26 +27,32 @@ public class PlayerController : MonoBehaviour, IBaseController
 
     public void Controller()
     {
-        if(Input.GetKeyDown(KeyCode.Mouse1) && KeyControll() && (pcm & PlayerControllerMask.FormChange) == PlayerControllerMask.FormChange) unitController.FormChange();
-        if(Input.GetKeyDown(KeyCode.R) && KeyControll() && (pcm & PlayerControllerMask.Reload) == PlayerControllerMask.Reload) unitController.Reload();
-        if(Input.GetKeyDown(KeyCode.Mouse0) && KeyControll() && (pcm & PlayerControllerMask.Attack) == PlayerControllerMask.Attack) unitController.Attack(ClickPos());
-        if(Input.GetKeyDown(KeyCode.Space) && KeyControll() && (pcm & PlayerControllerMask.Dash) == PlayerControllerMask.Dash) unitController.Dash();
+        bool isKeyDown = false;
+        if(Input.GetKeyDown(KeyCode.Mouse1) && KeyControll(PlayerControllerMask.FormChange, ref isKeyDown)) unitController.FormChange();
+        if(Input.GetKeyDown(KeyCode.R) && KeyControll(PlayerControllerMask.Reload, ref isKeyDown)) unitController.Reload();
+        if(Input.GetKeyDown(KeyCode.Mouse0) && KeyControll(PlayerControllerMask.Attack, ref isKeyDown)) unitController.Attack(ClickPos());
+        if(Input.GetKeyDown(KeyCode.Space) && KeyControll(PlayerControllerMask.Dash, ref isKeyDown)) unitController.Dash();
         
-        if (Input.GetKey(KeyCode.S) && KeyControll() && (pcm & PlayerControllerMask.Crouch) == PlayerControllerMask.Crouch) unitController.Crouch(KeyState.KeyDown);//GetKeyDown -> GetKey
-        else if(Input.GetKey(KeyCode.S) && (pcm & PlayerControllerMask.Crouch) == PlayerControllerMask.Crouch) unitController.Crouch(KeyState.KeyUp);
-        if(Input.GetKeyDown(KeyCode.W) && KeyControll() && (pcm & PlayerControllerMask.Jump) == PlayerControllerMask.Jump) unitController.Jump(KeyState.KeyDown);
-        else if(Input.GetKey(KeyCode.W) && (pcm & PlayerControllerMask.Jump) == PlayerControllerMask.Jump) unitController.Jump(KeyState.KeyStay);
-        else if(Input.GetKeyUp(KeyCode.W) && (pcm & PlayerControllerMask.Jump) == PlayerControllerMask.Jump) unitController.Jump(KeyState.KeyUp);
+        if (Input.GetKey(KeyCode.S) && KeyControll(PlayerControllerMask.Crouch, ref isKeyDown)) unitController.Crouch(KeyState.KeyDown);//GetKeyDown -> GetKey
+        else if(Input.GetKey(KeyCode.S) && KeyControll(PlayerControllerMask.Crouch)) unitController.Crouch(KeyState.KeyUp);
+        if(Input.GetKeyDown(KeyCode.W) && KeyControll(PlayerControllerMask.Jump, ref isKeyDown)) unitController.Jump(KeyState.KeyDown);
+        else if(Input.GetKey(KeyCode.W) && KeyControll(PlayerControllerMask.Jump)) unitController.Jump(KeyState.KeyStay);
+        else if(Input.GetKeyUp(KeyCode.W) && KeyControll(PlayerControllerMask.Jump)) unitController.Jump(KeyState.KeyUp);
         else unitController.Jump(KeyState.None);
-        if (Input.GetAxisRaw("Horizontal") != 0 && KeyControll() && (pcm & PlayerControllerMask.Move) == PlayerControllerMask.Move) unitController.Move(Vector2.right * Input.GetAxisRaw("Horizontal"));
-        isKeyDown = false;
+        if (Input.GetAxisRaw("Horizontal") != 0 && KeyControll(PlayerControllerMask.Move)) unitController.Move(Vector2.right * Input.GetAxisRaw("Horizontal"));
+        else unitController.Move(Vector2.zero);
     }
 
-    private bool KeyControll()
+    private bool KeyControll(PlayerControllerMask mask, ref bool isKeyDown)
     {
-        if(isKeyDown) return false;
+        if(isKeyDown || ((pcm & mask) != mask)) return false;
         isKeyDown = true;
         return true;
+    }
+    private bool KeyControll(PlayerControllerMask mask)
+    {
+        if((pcm & mask) == mask) return true;
+        return false;
     }
 
     public void AddControl(int mask) => AddControl((PlayerControllerMask) (1<<mask));

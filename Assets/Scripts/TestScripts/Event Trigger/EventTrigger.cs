@@ -6,9 +6,7 @@ using UnityEngine;
 public class EventTrigger : MonoBehaviour
 {
     public string targetTag;
-    public bool autoTrigger;
     public bool limit;
-    public KeyCode keyCode;
     public EventList[] eventLists;
     protected int eventIdx = 0;
     protected bool used = false;
@@ -34,10 +32,21 @@ public class EventTrigger : MonoBehaviour
         }
     }
 
+    public void OnTrigger()
+    {
+        if(limit ? used : false) return;
+        ((IBaseController)this).AddController();
+    }
+
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        if((limit ? used : false) || (autoTrigger ? false : !Input.GetKeyDown(keyCode)) || !collider.CompareTag(targetTag)) return;
+        if((limit ? used : false) || !collider.CompareTag(targetTag)) return;
         action = Controller;
+    }
+    private void OnTriggerExit2D(Collider2D collider)
+    {
+        if(!collider.CompareTag(targetTag)) return;
+        action = null;
     }
 
     private void Update()

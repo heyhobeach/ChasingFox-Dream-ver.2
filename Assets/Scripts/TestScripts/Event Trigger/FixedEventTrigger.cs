@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class FixedEventTrigger : EventTrigger, IBaseController
 {
+    public bool autoTrigger;
+    public KeyCode keyCode;
 
     public new void Controller()
     {
@@ -19,14 +21,21 @@ public class FixedEventTrigger : EventTrigger, IBaseController
         if(eventIdx >= eventLists.Length)
         {
             ((IBaseController)this).RemoveController();
-            used = true;
             eventIdx = 0;
         }
+    }
+
+    public new void OnTrigger()
+    {
+        if(limit ? used : false) return;
+        used = true;
+        ((IBaseController)this).AddController();
     }
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
         if((limit ? used : false) || (autoTrigger ? false : !Input.GetKeyDown(keyCode)) || !collider.CompareTag(targetTag)) return;
+        used = true;
         ((IBaseController)this).AddController();
     }
 
