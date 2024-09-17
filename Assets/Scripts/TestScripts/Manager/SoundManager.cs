@@ -65,7 +65,7 @@ public class SoundManager:MonoBehaviour
 
     public IEnumerator CoBulletSound(GameObject obj)
     {
-        //GameObject _obj=bullet.standbyBullet.Dequeue();
+        GameObject _obj=bullet.standbyBullet.Dequeue();
         //Debug.Log("코루틴 호출");
         
         obj.SetActive(true);
