@@ -129,7 +129,7 @@ public class Human : PlayerUnit
     Vector3 clickPos;
     public override bool Attack(Vector3 clickPos)
     {
-        if (ControllerChecker() || unitState == UnitState.Dash || unitState == UnitState.Reload || shootingAnimationController.isAttackAni || residualAmmo <= 0) return false;
+        if (ControllerChecker() || unitState == UnitState.FormChange || unitState == UnitState.Dash || unitState == UnitState.Reload || shootingAnimationController.isAttackAni || residualAmmo <= 0) return false;
         isAttack = true;
         this.clickPos = clickPos;
         return true;
@@ -176,7 +176,7 @@ public class Human : PlayerUnit
 
     public override bool Dash()
     {
-        if((unitState != UnitState.Default && unitState != UnitState.Reload) || dashCoroutine != null) return false; // 조작이 불가능한 상태일 경우 동작을 수행하지 않음
+        if(unitState != UnitState.Default || dashCoroutine != null) return false; // 조작이 불가능한 상태일 경우 동작을 수행하지 않음
         base.Dash();
         dashCoroutine = StartCoroutine(DashAffterInput());
         return true;

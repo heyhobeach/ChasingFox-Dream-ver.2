@@ -248,24 +248,24 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
             return !(changedForm.GetType() == typeof(Human) && changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("FormChange") && changedForm.anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.3f);
         });
         invalidation = true;
-        if(changedForm.GetType() == typeof(Human) && ((Human) forms[0]).bulletTimeCount-- > 0)
-        {
-            isBulletTime = true;
-            Time.timeScale = 0.5f;
-            Time.fixedDeltaTime = 0.5f * 0.02f;
-            changedForm.anim.speed = 0;
-            float t = 0;
-            while((t += Time.unscaledDeltaTime) < bulletTime)
-            {
-                FixMove();
-                yield return null;
-            }
-            isBulletTime = false;
-            changedForm.shootingAnimationController.NomalAni();
-            changedForm.anim.speed = 1;
-            Time.timeScale = 1;
-            Time.fixedDeltaTime = 1 * 0.02f;
-        }
+        // if(changedForm.GetType() == typeof(Human) && ((Human) forms[0]).bulletTimeCount-- > 0)
+        // {
+        //     isBulletTime = true;
+        //     Time.timeScale = 0.5f;
+        //     Time.fixedDeltaTime = 0.5f * 0.02f;
+        //     changedForm.anim.speed = 0;
+        //     float t = 0;
+        //     while((t += Time.unscaledDeltaTime) < bulletTime)
+        //     {
+        //         FixMove();
+        //         yield return null;
+        //     }
+        //     isBulletTime = false;
+        //     changedForm.shootingAnimationController.NomalAni();
+        //     changedForm.anim.speed = 1;
+        //     Time.timeScale = 1;
+        //     Time.fixedDeltaTime = 1 * 0.02f;
+        // }
         yield return new WaitUntil(() => {
             FixMove();
             return !(changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("FormChange") && changedForm.anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.95f);
