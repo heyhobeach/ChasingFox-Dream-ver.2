@@ -391,7 +391,7 @@ public abstract class PlayerUnit : UnitBase
                 // Debug.Log("hi");
                 findRayPlatform = true;
                 Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), true);//원리는 그냥 설정한 시간동안 해당 플렛폼들을 그냥 무시하는식으로 설정했음 근데 지금 생각해보면 지금 플렛폼을 받아와서 플렛폼의 네임을 무시하는식으로 해도 되지않을까 하는 영감이 떠오름
-                SetVerticalForce(gravity * Time.deltaTime);
+                AddVerticalForce(gravity * Time.deltaTime);
                 // Debug.Log("무시중");
                 if(currentOneWayPlatform != null)currentOneWayPlatform.GetComponent<PlatformEffector2D>().useColliderMask = false;
                 float t = 0;
@@ -515,7 +515,7 @@ public abstract class PlayerUnit : UnitBase
         if(!(collision.gameObject.CompareTag("Map") || collision.gameObject.CompareTag("platform")) || collision.contactCount <= 0) return MapType.None;
         if(collision.gameObject.CompareTag("platform")) return MapType.Platform;
         angle = Mathf.Abs(Vector2.Angle(Vector2.up, collision.contacts[0].normal));
-        if(angle <= 45) return MapType.Ground;
+        if(angle <= 45 || collision.gameObject.tag.Equals("ground")) return MapType.Ground;
         else if(angle >= 135) return MapType.Floor;
         else return MapType.Wall;
     }
@@ -524,7 +524,7 @@ public abstract class PlayerUnit : UnitBase
         if (!(collision.collider.CompareTag("Map") || collision.collider.CompareTag("platform"))) return MapType.None;
         if (collision.collider.CompareTag("platform")) return MapType.Platform;
         angle = Mathf.Abs(Vector2.Angle(Vector2.up, collision.normal));
-        if (angle <= 45) return MapType.Ground;
+        if (angle <= 45 || collision.transform.tag.Equals("ground")) return MapType.Ground;
         else if (angle >= 135) return MapType.Floor;
         else return MapType.Wall;
     }

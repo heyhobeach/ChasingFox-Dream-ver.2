@@ -30,6 +30,9 @@ public class PageManger : MonoBehaviour
 
     private Scene currentScene;
 
+    private List<Map.MapData> clearedMaps = new();
+    private List<EventTrigger.EventTriggerData> clearedTriggers = new();
+
     private void Awake()
     {
         if(instance != null)
@@ -38,7 +41,20 @@ public class PageManger : MonoBehaviour
             return;
         }
         instance = this;
-        SceneManager.activeSceneChanged += (prv, ne)=> {currentScene = ne; };
+        SceneManager.activeSceneChanged += (prv, ne)=> {
+            currentScene = ne; 
+            if(prv != null && !prv.name.Equals(ne.name))
+            {
+                foreach(var map in clearedMaps)
+                {
+                    map.position = Vector3.zero;
+                    map.used = false;
+                }
+                foreach(var trigger in clearedTriggers) trigger.used = false;
+                clearedMaps.Clear();
+                clearedTriggers.Clear();
+            }
+        };
     }
     void Start()
     {
@@ -57,5 +73,16 @@ public class PageManger : MonoBehaviour
             var unloadAo = SceneManager.UnloadSceneAsync(currentScene);
             unloadAo.completed += (uao) => SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
         };
+    }
+
+    public void AddClearList(Map.MapData map)
+    {
+        if(clearedMaps.Contains(map)) return;
+        clearedMaps.Add(map);
+    }
+    public void AddClearList(EventTrigger.EventTriggerData trigger)
+    {
+        if(clearedTriggers.Contains(trigger)) return;
+        clearedTriggers.Add(trigger);
     }
 }

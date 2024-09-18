@@ -1,15 +1,35 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 [RequireComponent(typeof(BoxCollider2D))]
 public class EventTrigger : MonoBehaviour
 {
+    public class EventTriggerData : ScriptableObject
+    {
+        public bool used;
+
+
+#if UNITY_EDITOR
+        void OnEnable()
+        {
+            EditorApplication.playModeStateChanged += (playModeStateChange) => {
+                if(playModeStateChange == PlayModeStateChange.ExitingPlayMode) used = false;
+            };
+        }
+#endif
+    }
+    protected EventTriggerData eventTriggerData;
     public string targetTag;
     public bool limit;
     public EventList[] eventLists;
     protected int eventIdx = 0;
-    protected bool used = false;
+    protected bool used { get => eventTriggerData.used; set => eventTriggerData.used = value; }
     protected bool eventLock;
     private Action action;
 
@@ -29,6 +49,7 @@ public class EventTrigger : MonoBehaviour
             used = true;
             eventIdx = 0;
             action = null;
+            PageManger.Instance.AddClearList(eventTriggerData);
         }
     }
 
@@ -47,6 +68,21 @@ public class EventTrigger : MonoBehaviour
     {
         if(!collider.CompareTag(targetTag)) return;
         action = null;
+    }
+
+    void Awake()
+    {
+        var path = $"ScriptableObject Datas/{SceneManager.GetActiveScene().name}_{gameObject.name}";
+        eventTriggerData = Resources.Load<EventTriggerData>(path);
+#if UNITY_EDITOR
+        if(!eventTriggerData)
+        {
+            var asset = ScriptableObject.CreateInstance<EventTriggerData>();
+            AssetDatabase.CreateAsset(asset, "Assets/Resources/" + path + ".asset");
+            AssetDatabase.SaveAssets();
+            eventTriggerData = asset;
+        }
+#endif
     }
 
     private void Update()
