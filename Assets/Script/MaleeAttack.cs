@@ -21,6 +21,14 @@ public class MaleeAttack : MonoBehaviour
         Debug.Log(collision.gameObject.name);
     }
 
+    private void OntriggerStay(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Hatch")
+        {
+            collision.gameObject.SetActive(false);
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Hatch")
