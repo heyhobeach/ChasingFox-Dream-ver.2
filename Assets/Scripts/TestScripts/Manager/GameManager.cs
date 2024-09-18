@@ -13,6 +13,8 @@ public partial class GameManager : MonoBehaviour
     private static GameManager instance;
     public static GameManager Instance { get => instance; }
 
+    private PopupManager popupManager;
+
     private Stack<IBaseController> controllers = new();
     public static void PushController(IBaseController @base)
     {
@@ -66,6 +68,7 @@ public partial class GameManager : MonoBehaviour
         instance = this;
         if(controllers == null) controllers = new();
         player = FindObjectOfType<Player>();
+        popupManager = PopupManager.Instance;
     }
 
     private void Start()
