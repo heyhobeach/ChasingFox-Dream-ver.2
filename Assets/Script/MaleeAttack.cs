@@ -31,16 +31,19 @@ public class MaleeAttack : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        bool isDamaged = false;
         if (collision.gameObject.tag == "Hatch")
         {
-            collision.gameObject.SetActive(false);
+            // collision.gameObject.SetActive(false);
+            var temp = collision.gameObject.GetComponent<IDamageable>();
+            if(temp == null) temp = collision.gameObject.GetComponentInParent<IDamageable>();
+            if(temp != null) isDamaged = temp.GetDamage(damage);
         }
         // if(collision.CompareTag("ground") || collision.CompareTag("Wall") || collision.CompareTag("Map")) return;
         // if (collision.gameObject.tag == "guard")//필요없어보임
         // {
         //     this.gameObject.GetComponent<Collider2D>().isTrigger = true;
         // }
-        bool isDamaged = false;
         if (collision.gameObject.tag == "Player" && !parentGo.CompareTag("Player"))//레이어 설정한 것 때문에 적군 총알만 플레이어 에게 충돌일어남
         {
             // Debug.Log("플레이어 충돌");

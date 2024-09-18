@@ -165,7 +165,7 @@ public class Werewolf : PlayerUnit
         var tempDir = MeleeAttack.transform.localPosition.normalized;
         if(air_attack_count >= 0)
         {
-            SetHorizontalVelocity(tempDir.x);
+            SetVerticalForce(tempDir.y * attackImpulse * 0.5f);
             SetHorizontalVelocity(tempDir.x * attackImpulse);
         }
         float t = 0;
@@ -176,6 +176,7 @@ public class Werewolf : PlayerUnit
             else base.Crouch(KeyState.KeyUp);
             yield return null;
         }
+            SetVerticalForce(0);
         base.Crouch(KeyState.KeyUp);
         StopAttack();
     }

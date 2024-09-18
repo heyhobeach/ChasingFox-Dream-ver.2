@@ -119,5 +119,7 @@ public partial class GameManager : MonoBehaviour
 
         maps[currentRoomIndex].OnStart();
         if(previousRoomIndex >= 0) maps[previousRoomIndex].OnEnd();
+        if(maps[currentRoomIndex].used && maps.Count > currentRoomIndex+1) player.transform.position = maps[currentRoomIndex+1].position;
+        else maps[currentRoomIndex].position = player.transform.position;
     }
 }
