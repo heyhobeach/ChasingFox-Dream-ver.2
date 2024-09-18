@@ -71,7 +71,7 @@ public class SoundManager:MonoBehaviour
         obj.SetActive(true);
         if (obj.gameObject.layer == LayerMask.NameToLayer("GunSound"))
         {
-            // Debug.Log("총 소리 레이어");
+            Debug.Log("총 소리 레이어");
             bullet.standbyBullet.Enqueue(obj);
         }
 
@@ -81,7 +81,7 @@ public class SoundManager:MonoBehaviour
        
         if (obj.transform.parent != null && obj.transform.parent.tag == "Player")
         {
-            // Debug.Log("유저 총 소리");
+            Debug.Log("유저 총 소리");
             yield return null;
         }
         //else
