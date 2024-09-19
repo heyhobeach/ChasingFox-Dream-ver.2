@@ -258,5 +258,6 @@ public class Human : PlayerUnit
     {
         StopDash();
         ReloadCancel();
+        unitState = UnitState.Death;
     }
 }

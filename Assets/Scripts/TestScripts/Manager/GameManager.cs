@@ -98,8 +98,8 @@ public partial class GameManager : MonoBehaviour
         {
             go = new GameObject(){
                 name = "wall",
-                layer = LayerMask.NameToLayer("Map"),
-                tag = "Map"
+                // layer = LayerMask.NameToLayer("Map"),
+                // tag = "Map"
             };
             var edge = go.AddComponent<EdgeCollider2D>();
             edge.SetPoints(new List<Vector2>{

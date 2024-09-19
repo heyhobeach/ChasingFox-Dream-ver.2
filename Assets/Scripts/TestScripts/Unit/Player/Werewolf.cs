@@ -319,5 +319,6 @@ public class Werewolf : PlayerUnit
         StopAttack();
         StopDash();
         StopHoldingWall();
+        unitState = UnitState.Death;
     }
 }
