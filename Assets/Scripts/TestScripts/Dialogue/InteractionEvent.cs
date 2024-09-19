@@ -652,11 +652,27 @@ public class InteractionEvent : MonoBehaviour
     }
     public void move(int id)//호출 순서? 조금 수정 필요
     {
-        Debug.Log(string.Format("switch_move {0}", id));
-        num = id;//그냥 변환이 안 되는중
+        Debug.Log(string.Format("switch_move {0} current {1} ", id, dialogue.dialouses[num].id));
+        while (num != id)
+        {
+            if (id > int.Parse(dialogue.dialouses[num].id))
+            {
+                num++;
+            }
+            else if (id < int.Parse(dialogue.dialouses[num].id))
+            {
+                num--;
+            }
+            else
+            {
+                break;
+            }
+        }
+
+        //num = id-DatabaseManager.instance.startLine;//그냥 변환이 안 되는중
         //Debug.Log("자료형"+command_args)
 
-        num--;
+        //num--;
         Debug.Log(num + "변환 테스트");
         contentNum = 0;
     }
