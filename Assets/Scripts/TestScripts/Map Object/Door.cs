@@ -15,9 +15,17 @@ public class Door : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if((other.collider.CompareTag("Player") && other.transform.GetComponent<Player>().ChagedForm.UnitState == UnitState.Default) || 
-           (other.collider.CompareTag("Enemy") && other.transform.GetComponent<UnitBase>().UnitState == UnitState.Default))
-           StartCoroutine(Open());
+        if(other.collider.CompareTag("Player") && other.transform.GetComponent<Player>().ChagedForm.UnitState == UnitState.Default)
+            StartCoroutine(Open());
+    }
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if(other.transform.CompareTag("Enemy"))
+        {
+            var unit = other.transform.GetComponent<UnitBase>();
+            if(unit.UnitState == UnitState.Default || unit.UnitState == UnitState.Air)
+                StartCoroutine(Open());
+        }
     }
 
     IEnumerator Open()

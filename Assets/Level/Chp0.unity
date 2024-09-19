@@ -10305,11 +10305,11 @@ Transform:
   m_GameObject: {fileID: 670576701}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.09, y: 1.6469998, z: 0}
+  m_LocalPosition: {x: -0.09000015, y: 1.6469998, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 852734173}
+  m_Father: {fileID: 1006315916}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &670576703
 SpriteRenderer:
@@ -64288,9 +64288,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 670576702}
-  - {fileID: 1491999292}
-  - {fileID: 1866845252}
+  - {fileID: 1006315916}
   m_Father: {fileID: 2002226818}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &852734174
@@ -64342,7 +64340,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.5628814, y: 1.8749999}
+    oldSize: {x: 1.5625, y: 1.875}
     newSize: {x: 1.5628814, y: 1.8749999}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -67064,6 +67062,40 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1 &1006315915
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1006315916}
+  m_Layer: 10
+  m_Name: Img
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1006315916
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006315915}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 670576702}
+  - {fileID: 1491999292}
+  - {fileID: 1866845252}
+  m_Father: {fileID: 852734173}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1012746338
 GameObject:
   m_ObjectHideFlags: 0
@@ -73286,6 +73318,18 @@ MonoBehaviour:
             m_StringArgument: 0
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 1006315915}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 0
+            m_BoolArgument: 1
+          m_CallState: 2
     lockTime: 0
   - prerequisites: {fileID: 852734176}
     keyCode: 323
@@ -73308,6 +73352,18 @@ MonoBehaviour:
           m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
           m_MethodName: Attack
           m_Mode: 4
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 270
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 1006315915}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -73485,17 +73541,17 @@ PlayableDirector:
     value: {fileID: 0}
   - key: {fileID: 3935882738072326830, guid: b82a145ed4fe1534c8521959f0486067, type: 2}
     value: {fileID: 1705891307}
-  - key: {fileID: 4603566148303671040, guid: b82a145ed4fe1534c8521959f0486067, type: 2}
+  - key: {fileID: 0}
     value: {fileID: 670576704}
-  - key: {fileID: 3703494478423540637, guid: b82a145ed4fe1534c8521959f0486067, type: 2}
+  - key: {fileID: 0}
     value: {fileID: 1491999294}
-  - key: {fileID: 4573035344224919738, guid: b82a145ed4fe1534c8521959f0486067, type: 2}
+  - key: {fileID: 0}
     value: {fileID: 1866845254}
-  - key: {fileID: -2874888701454474407, guid: b82a145ed4fe1534c8521959f0486067, type: 2}
+  - key: {fileID: 0}
     value: {fileID: 670576701}
-  - key: {fileID: -3493006812452154102, guid: b82a145ed4fe1534c8521959f0486067, type: 2}
+  - key: {fileID: 0}
     value: {fileID: 1491999291}
-  - key: {fileID: -6517260432268800588, guid: b82a145ed4fe1534c8521959f0486067, type: 2}
+  - key: {fileID: 0}
     value: {fileID: 1866845251}
   m_ExposedReferences:
     m_References:
@@ -73847,7 +73903,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 852734173}
+  m_Father: {fileID: 1006315916}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1491999293
 SpriteRenderer:
@@ -82535,7 +82591,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 852734173}
+  m_Father: {fileID: 1006315916}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1866845253
 SpriteRenderer:
