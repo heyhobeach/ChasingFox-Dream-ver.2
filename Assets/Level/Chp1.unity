@@ -79230,6 +79230,18 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
+        - m_Target: {fileID: 1477461396}
+          m_TargetAssemblyTypeName: Player, Assembly-CSharp
+          m_MethodName: PlayerPositionSet
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1791849695}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
     lockTime: 0
   autoTrigger: 1
   keyCode: 0
@@ -89437,7 +89449,7 @@ PrefabInstance:
     - target: {fileID: 1580578807521142113, guid: 019c1accf40bb5341be365e384d2c644, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 9100000, guid: 19825cabb9c235241a2ca837fed1b28c, type: 2}
     - target: {fileID: 4210399258222090256, guid: 019c1accf40bb5341be365e384d2c644, type: 3}
       propertyPath: m_labelHash
       value: 6.616165e-19
@@ -101252,6 +101264,37 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1 &1791849694
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1791849695}
+  m_Layer: 0
+  m_Name: StartPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1791849695
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1791849694}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
+  m_LocalPosition: {x: -14.2, y: -2.2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1808902700
 GameObject:
   m_ObjectHideFlags: 0
@@ -112947,7 +112990,7 @@ MonoBehaviour:
   bottomLeft: {x: 0, y: 0}
   topRight: {x: 0, y: 0}
   startPos: {x: 0, y: 0}
-  allowDiagonal: 0
+  allowDiagonal: 1
   dontCrossCorner: 0
 --- !u!4 &1952601965
 Transform:
@@ -116243,6 +116286,7 @@ SpriteRenderer:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1791849695}
   - {fileID: 550329932}
   - {fileID: 942573538}
   - {fileID: 1016148644}
