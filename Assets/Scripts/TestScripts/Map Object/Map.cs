@@ -16,26 +16,6 @@ public class Map : MonoBehaviour
     public bool used { get => mapData.used; set => mapData.used = value; }
     public Vector3 position { get => mapData.position; set => mapData.position = value; }
 
-    public class MapData : ScriptableObject
-    {
-        public Vector3 position;
-        public bool used;
-
-
-#if UNITY_EDITOR
-        void OnEnable()
-        {
-            EditorApplication.playModeStateChanged += (playModeStateChange) => {
-                if(playModeStateChange == PlayModeStateChange.ExitingPlayMode)
-                {
-                    used = false;
-                    position = Vector3.zero;
-                }
-            };
-        }
-#endif
-    }
-
     protected MapData mapData;
 
 
@@ -43,15 +23,16 @@ public class Map : MonoBehaviour
     {
         var path = $"ScriptableObject Datas/{SceneManager.GetActiveScene().name}_{gameObject.name}";
         mapData = Resources.Load<MapData>(path);
-#if UNITY_EDITOR
         if(!mapData)
         {
-            var asset = ScriptableObject.CreateInstance<MapData>();
+            MapData asset = ScriptableObject.CreateInstance<MapData>();
+#if UNITY_EDITOR
             AssetDatabase.CreateAsset(asset, "Assets/Resources/" + path + ".asset");
             AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+#endif
             mapData = asset;
         }
-#endif
 
         enemyCount= enemyUnits.Count;
         // gameObject.SetActive(false);

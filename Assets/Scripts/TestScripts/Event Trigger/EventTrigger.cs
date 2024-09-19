@@ -7,23 +7,10 @@ using UnityEngine.SceneManagement;
 using UnityEditor;
 #endif
 
+
 [RequireComponent(typeof(BoxCollider2D))]
 public class EventTrigger : MonoBehaviour
 {
-    public class EventTriggerData : ScriptableObject
-    {
-        public bool used;
-
-
-#if UNITY_EDITOR
-        void OnEnable()
-        {
-            EditorApplication.playModeStateChanged += (playModeStateChange) => {
-                if(playModeStateChange == PlayModeStateChange.ExitingPlayMode) used = false;
-            };
-        }
-#endif
-    }
     protected EventTriggerData eventTriggerData;
     public string targetTag;
     public bool limit;
@@ -74,15 +61,16 @@ public class EventTrigger : MonoBehaviour
     {
         var path = $"ScriptableObject Datas/{SceneManager.GetActiveScene().name}_{gameObject.name}";
         eventTriggerData = Resources.Load<EventTriggerData>(path);
-#if UNITY_EDITOR
         if(!eventTriggerData)
         {
-            var asset = ScriptableObject.CreateInstance<EventTriggerData>();
+            EventTriggerData asset = ScriptableObject.CreateInstance<EventTriggerData>();
+#if UNITY_EDITOR
             AssetDatabase.CreateAsset(asset, "Assets/Resources/" + path + ".asset");
             AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+#endif
             eventTriggerData = asset;
         }
-#endif
     }
 
     private void Update()

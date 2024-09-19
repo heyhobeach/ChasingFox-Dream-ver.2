@@ -30,8 +30,8 @@ public class PageManger : MonoBehaviour
 
     private Scene currentScene;
 
-    private List<Map.MapData> clearedMaps = new();
-    private List<EventTrigger.EventTriggerData> clearedTriggers = new();
+    private List<MapData> clearedMaps = new();
+    private List<EventTriggerData> clearedTriggers = new();
 
     private void Awake()
     {
@@ -75,12 +75,12 @@ public class PageManger : MonoBehaviour
         };
     }
 
-    public void AddClearList(Map.MapData map)
+    public void AddClearList(MapData map)
     {
         if(clearedMaps.Contains(map)) return;
         clearedMaps.Add(map);
     }
-    public void AddClearList(EventTrigger.EventTriggerData trigger)
+    public void AddClearList(EventTriggerData trigger)
     {
         if(clearedTriggers.Contains(trigger)) return;
         clearedTriggers.Add(trigger);
