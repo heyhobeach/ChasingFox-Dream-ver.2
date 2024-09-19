@@ -24161,7 +24161,7 @@ Camera:
   far clip plane: 1000
   field of view: 152.1
   orthographic: 1
-  orthographic size: 3.1664762
+  orthographic size: 2.5
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -83557,6 +83557,7 @@ Transform:
   - {fileID: 1865539640}
   - {fileID: 967857778}
   - {fileID: 277167568}
+  - {fileID: 1576807247}
   m_Father: {fileID: 211597366}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1455124837
@@ -88557,6 +88558,65 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1576807246
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1576807247}
+  - component: {fileID: 1576807248}
+  m_Layer: 0
+  m_Name: 2_1_11_TimeLineLoopAimSmile
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1576807247
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1576807246}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1453728023}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!320 &1576807248
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1576807246}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 11400000, guid: f1d968d5c1ebb674097f8bc93275634a, type: 2}
+  m_InitialState: 1
+  m_WrapMode: 2
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings:
+  - key: {fileID: -7969926666881288084, guid: f1d968d5c1ebb674097f8bc93275634a, type: 2}
+    value: {fileID: 7535830021338084939}
+  - key: {fileID: 1950205683793716038, guid: f1d968d5c1ebb674097f8bc93275634a, type: 2}
+    value: {fileID: 832321034274690606}
+  - key: {fileID: 8859779910900189759, guid: f1d968d5c1ebb674097f8bc93275634a, type: 2}
+    value: {fileID: 0}
+  - key: {fileID: 3145805008037306738, guid: f1d968d5c1ebb674097f8bc93275634a, type: 2}
+    value: {fileID: 434250720}
+  - key: {fileID: 113798433938123685, guid: f1d968d5c1ebb674097f8bc93275634a, type: 2}
+    value: {fileID: 434250720}
+  m_ExposedReferences:
+    m_References: []
 --- !u!1 &1578973344
 GameObject:
   m_ObjectHideFlags: 0
@@ -98266,6 +98326,8 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 5d4c1ecb22cb28a4287fbb9abb5fa235, type: 2}
     - {fileID: 11400000, guid: 1ab74747091a0a84c97b2e9afaa0e4df, type: 2}
     - {fileID: 11400000, guid: 0bd4cd30801ed9448bbd3c9131a7d07f, type: 2}
+    - {fileID: 11400000, guid: d3a9224794fa76c4d9a1c29ed6b0422e, type: 2}
+    - {fileID: 11400000, guid: 0603a3b8d4d52e640a3d0798b38b7265, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -99026,6 +99088,35 @@ MonoBehaviour:
             m_ObjectArgument: {fileID: 277167569}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Playables.PlayableDirector,
               UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 492111922}
+          m_TargetAssemblyTypeName: LoopController, Assembly-CSharp
+          m_MethodName: SetLoop
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 1576807248}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Playables.PlayableDirector,
+              UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 492111922}
+          m_TargetAssemblyTypeName: LoopController, Assembly-CSharp
+          m_MethodName: SetNone
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
