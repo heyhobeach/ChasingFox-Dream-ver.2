@@ -14,6 +14,7 @@ public partial class GameManager : MonoBehaviour
     public static GameManager Instance { get => instance; }
 
     private PopupManager popupManager;
+    public InteractionEvent interactionEvent;
 
     private Stack<IBaseController> controllers = new();
     public static void PushController(IBaseController @base)
@@ -68,6 +69,7 @@ public partial class GameManager : MonoBehaviour
         instance = this;
         if(controllers == null) controllers = new();
         player = FindObjectOfType<Player>();
+        interactionEvent = FindObjectOfType<InteractionEvent>();
         popupManager = PopupManager.Instance;
     }
 
@@ -113,8 +115,8 @@ public partial class GameManager : MonoBehaviour
             maps[currentRoomIndex].edgeCollider2D = edge;
         }
 
-        bottomLeft = new Vector2Int((int)(rect.x-(rect.width*0.5f)), (int)(rect.y-(rect.height*0.5f)));
-        topRight = new Vector2Int((int)(rect.x+(rect.width*0.5f)), (int)(rect.y+(rect.height*0.5f)));
+        bottomLeft = new Vector2Int((int)(rect.x-(int)(rect.width*0.5f))-1, (int)(rect.y-(int)(rect.height*0.5f))-1);
+        topRight = new Vector2Int((int)(rect.x+(int)(rect.width*0.5f))+1, (int)(rect.y+(int)(rect.height*0.5f))+1);
         isLoad = true;
 
         maps[currentRoomIndex].OnStart();

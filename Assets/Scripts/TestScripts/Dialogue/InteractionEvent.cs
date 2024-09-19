@@ -481,6 +481,18 @@ public class InteractionEvent : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 라인 불러오기
+    /// </summary>
+    /// <param name="nums">[Num IndexNum Line]</param>
+    public void CallLine(string nums)
+    {
+        var numarr = Array.ConvertAll(nums.Split(), int.Parse);
+        num = numarr[0];
+        indexNum = numarr[1];
+        dialogue.line.x = numarr[2];
+    }
+
     public void _DisableUI()
     {
         _Uimanager.DisableUI();
