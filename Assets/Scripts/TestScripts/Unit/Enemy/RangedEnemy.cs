@@ -10,7 +10,7 @@ public class RangedEnemy : EnemyUnit
     protected override void Start()
     {
         base.Start();
-        if(bullet == null) bullet = Resources.Load<GameObject>("Prefabs/Bullet.prefab");
+        if(bullet == null) bullet = Resources.Load<GameObject>("Prefabs/Bullet");
     }
 
     public override bool AttackCheck(Vector3 attackPos)
