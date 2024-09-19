@@ -35,6 +35,7 @@ namespace Damageables
         /// <returns>데미지가 성공적으로 적용되었는지 여부를 반환</returns>
         bool GetDamage(int dmg, Action action = null)
         {
+            Debug.Log("AAA : " + health + ", " + invalidation);
             if (health <= 0 || invalidation) return false; 
             action?.Invoke();
             health -= dmg;

@@ -55,6 +55,7 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if(parentGo.tag.Equals(collision.tag)) return;
         if(collision.CompareTag("Map")) BulletSound();
         if(collision.CompareTag("ground") || collision.CompareTag("Wall") || collision.CompareTag("Map")) Destroy(gameObject);
         if (collision.gameObject.tag == "guard")//필요없어보임
@@ -75,6 +76,7 @@ public class Bullet : MonoBehaviour
             var temp = collision.gameObject.GetComponent<IDamageable>();
             if(temp != null) isDamaged = temp.GetDamage(damage);
             if (isDamaged) Destroy(gameObject);
+            BulletSound();
         }
 
         if(isDamaged)
@@ -97,6 +99,7 @@ public class Bullet : MonoBehaviour
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
+        if(parentGo.tag.Equals(collision.tag)) return;
         if(collision.CompareTag("Map")) BulletSound();
         if(collision.CompareTag("ground") || collision.CompareTag("Wall") || collision.CompareTag("Map")) Destroy(gameObject);
         if (collision.gameObject.tag == "guard")//필요없어보임

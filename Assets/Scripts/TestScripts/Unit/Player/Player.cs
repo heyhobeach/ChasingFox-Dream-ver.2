@@ -71,6 +71,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         changedForm.gameObject.SetActive(true);
         health = maxHealth; // 체력 초기화
         fixedDir = 1;
+        invalidation = false;
     }
 
     public bool Crouch(KeyState crouchKey) => changedForm.Crouch(crouchKey);
@@ -94,10 +95,24 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         return temp;
     }
 
+    Coroutine dashCoroutine;
     public bool Dash() 
     {
         changedForm.Dash();
+        dashCoroutine = StartCoroutine(Dashing());
         return true;
+    }
+    IEnumerator Dashing()
+    {
+        invalidation = true;
+        yield return new WaitForSeconds(changedForm.dashDuration);
+        invalidation = false;
+        StopDash();
+    }
+    private void StopDash()
+    {
+        if(dashCoroutine != null) StopCoroutine(dashCoroutine);
+        dashCoroutine = null;
     }
 
     public void Death()
@@ -107,6 +122,9 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         invalidation = true;
         changedForm.Death();
         StartCoroutine(Test2());
+        StopDash();
+        StopCoroutine(changing);
+        changing = null;
         // if(changedForm.GetType() != typeof(Berserker)) // 버서커 상태가 아닐 시
         // {
         //     Debug.Log("버서커");
@@ -253,12 +271,12 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         //     yield return null;
         // }
         var tempDir = fixedDir;
+        invalidation = true;
         yield return new WaitUntil(() => changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("FormChange"));
         yield return new WaitUntil(() => {
             FixMove();
             return !(changedForm.GetType() == typeof(Human) && changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("FormChange") && changedForm.anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.3f);
         });
-        invalidation = true;
         // if(changedForm.GetType() == typeof(Human) && ((Human) forms[0]).bulletTimeCount-- > 0)
         // {
         //     isBulletTime = true;
@@ -299,8 +317,8 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     private IEnumerator ChangeHuman()
     {
         var tempDir = fixedDir;
-        yield return new WaitUntil(() => changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("FormChange"));
         invalidation = true;
+        yield return new WaitUntil(() => changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("FormChange"));
         yield return new WaitUntil(() => {
             FixMove();
             return !(changedForm.anim.GetCurrentAnimatorStateInfo(0).IsName("FormChange") && changedForm.anim.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.95f);
@@ -329,12 +347,10 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         if(changedForm.GetType() == typeof(Werewolf) && ((Werewolf) changedForm).isFormChangeReady) FormChange();
         if (changedForm.UnitState == UnitState.Dash)
         {
-            invalidation = true;
             Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Bullet"), true);
         }
         else
         {
-            invalidation = false;
             Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Bullet"), false);
         }
     }
