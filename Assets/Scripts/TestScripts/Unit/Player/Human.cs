@@ -224,7 +224,7 @@ public class Human : PlayerUnit
 
     public override bool Reload()
     {
-        if(reloadCoroutine != null || residualAmmo >= maxAmmo) return false;
+        if(ControllerChecker() || reloadCoroutine != null || residualAmmo >= maxAmmo) return false;
         base.Reload();
         reloadCoroutine = StartCoroutine(Reloading());
         return true;
