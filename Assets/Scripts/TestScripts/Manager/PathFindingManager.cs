@@ -65,12 +65,16 @@ public partial class GameManager : MonoBehaviour
                 bool isRoad = false;
                 bool isPoint = false;
                 bool isplatform = false;
-                foreach (Collider2D col in Physics2D.OverlapCircleAll(new Vector2(i + bottomLeft.x+0.5f, j + bottomLeft.y-0.5f), 0.4f))
+                foreach (Collider2D col in Physics2D.OverlapCircleAll(new Vector2(i + bottomLeft.x-0.5f, j + bottomLeft.y-0.5f), 0.1f))
                 {
-                    if (col.gameObject.layer == 1<<LayerMask.NameToLayer("Wall")) isWall = true;
-                    if (col.gameObject.layer == 1<<LayerMask.NameToLayer("Ground")) isRoad = true;
-                    if (col.gameObject.layer == 1<<LayerMask.NameToLayer("Point")) isPoint = true;
-                    if (col.gameObject.layer == 1<<LayerMask.NameToLayer("OneWayPlatform") && col.CompareTag("Untagged")) isplatform = true;
+                    if (col.gameObject.layer == LayerMask.NameToLayer("Wall")) isWall = true;
+                    if (col.gameObject.layer == LayerMask.NameToLayer("Ground")) isRoad = true;
+                    if (col.gameObject.layer == LayerMask.NameToLayer("Point")) isPoint = true;
+                    if (col.gameObject.layer == LayerMask.NameToLayer("OneWayPlatform") && col.CompareTag("Untagged"))
+                    {
+                        isplatform = true;
+                        isLoad = false;
+                    }
                 }
 
                 NodeArray[i, j] = new Node(isWall, isRoad, isPoint, isplatform, i + bottomLeft.x, j + bottomLeft.y);
@@ -85,6 +89,8 @@ public partial class GameManager : MonoBehaviour
             NodeArray = null;
             return new List<Node>();
         }
+        lock (this)
+        {
         Vector2Int startPos = new Vector2Int((int)startPosV3.x, (int)startPosV3.y);
         Vector2Int targetPos = new Vector2Int((int)targetPosV3.x, (int)targetPosV3.y);
         StartNode = NodeArray[startPos.x - bottomLeft.x, startPos.y - bottomLeft.y];//���� �� �κ� ������ �߱��� �۵����� ������ ����
@@ -249,6 +255,7 @@ public partial class GameManager : MonoBehaviour
             }
         }
         return null;
+        }
     }
 
     private void OpenListAdd(int checkX, int checkY)

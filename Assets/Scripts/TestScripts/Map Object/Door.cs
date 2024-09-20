@@ -5,12 +5,12 @@ using UnityEngine;
 public class Door : MonoBehaviour
 {
     private Animator animator;
-    private Collider2D col;
+    private Collider2D[] cols;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        col = GetComponent<Collider2D>();
+        cols = GetComponents<Collider2D>();
     }
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -33,6 +33,6 @@ public class Door : MonoBehaviour
         animator.SetTrigger("open");
         yield return null;
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1);
-        col.enabled = false;
+       foreach(var col in cols) col.enabled = false;
     }
 }
