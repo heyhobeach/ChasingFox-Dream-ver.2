@@ -57,9 +57,13 @@ public abstract class PlayerUnit : UnitBase
                 }
                 //canDown = true;
                 break;
-                case MapType.Floor:
-                    isJumping = false;
-                    SetVerticalForce(gravity * Time.fixedDeltaTime);
+            case MapType.Floor:
+                isJumping = false;
+                SetVerticalForce(gravity * Time.fixedDeltaTime);
+                break;
+            case MapType.Wall:
+                SetHorizontalForce(0);
+                SetHorizontalVelocity(0);
                 break;
             //default:
             //    
@@ -80,6 +84,10 @@ public abstract class PlayerUnit : UnitBase
                 }
                 //currentOneWayPlatform = null;//platform에서 벗어난거라면 플랫폼 변수를 비움
                 break;
+            case MapType.Wall:
+                SetHorizontalForce(0);
+                SetHorizontalVelocity(0);
+                break;
         }
         // if(collision.gameObject.CompareTag("ground") || collision.gameObject.CompareTag("platform")) isGrounded = false;
     }
@@ -95,8 +103,12 @@ public abstract class PlayerUnit : UnitBase
             case MapType.Platform:
             //    currentOneWayPlatform = collision.gameObject;
                 break;
+            case MapType.Wall:
+                SetHorizontalForce(0);
+                SetHorizontalVelocity(0);
+                break;
         }
-        if(CheckMapType(collision) == MapType.Floor) isJumping = false;
+        // if(CheckMapType(collision) == MapType.Floor) isJumping = false;
         // if(collision.gameObject.CompareTag("ground") || collision.gameObject.CompareTag("platform")) isGrounded = true;
     }
 
@@ -123,13 +135,6 @@ public abstract class PlayerUnit : UnitBase
         AddFrictional();
         
         SetHorizontalForce(hzVel);
-        
-        var hit = Physics2D.BoxCast(transform.position + new Vector3(boxOffsetX, boxOffsetY), new Vector2(boxSizeX*1.8f, boxSizeY), 0, Vector2.right*Mathf.Sign(hzForce), 0.05f, 1<<LayerMask.NameToLayer("Map"));
-        if(hit)
-        {
-            SetHorizontalForce(0);
-            SetHorizontalVelocity(0);
-        }
         if(Mathf.Abs(hzForce) <= 0.01f * movementSpeed) hzForce = 0;
         Movement();
     }
@@ -469,11 +474,17 @@ public abstract class PlayerUnit : UnitBase
     /// </summary>
     private void Movement()
     {
-        var hit = Physics2D.BoxCastAll(rg.transform.position-new Vector3(0, boxSizeY), new Vector2(boxSizeX, 0.05f), 0, Vector2.down, boxSizeX, 1<<LayerMask.NameToLayer("OneWayPlatform") | 1<<LayerMask.NameToLayer("Ground"));
-        if(hit.Length > 0 && !canDown && Mathf.Abs(hit[0].normal.x) < 1)
+        var hit = Physics2D.BoxCastAll(rg.transform.position-new Vector3(-boxOffsetX, boxSizeY), new Vector2(boxSizeX*2+0.05f, 0.1f), 0, Vector2.down, 0, 1<<LayerMask.NameToLayer("OneWayPlatform") | 1<<LayerMask.NameToLayer("Map"));
+        if(hit.Length > 0)
         {
-            var temp = Vector3.ProjectOnPlane(new Vector3(hzForce, 0), hit[0].normal);
-            rg.MovePosition(rg.transform.position + new Vector3(temp.x, temp.y + vcForce) * Time.deltaTime);
+            var angle = Mathf.Abs(hit[0].normal.x);
+            Debug.Log("AAA" + angle);
+            if(!canDown && angle > 0.1f && angle < 0.9f && !(angle > 0.4f && angle < 0.6f))
+            {
+                var temp = Vector3.ProjectOnPlane(new Vector3(hzForce, 0), hit[0].normal);
+                rg.MovePosition(rg.transform.position + new Vector3(temp.x*1.42f, temp.y*1.42f + vcForce) * Time.deltaTime);
+            }
+            else rg.MovePosition(rg.transform.position + (new Vector3(hzForce, vcForce) * Time.deltaTime));
         }
         else rg.MovePosition(rg.transform.position + (new Vector3(hzForce, vcForce) * Time.deltaTime));
     }

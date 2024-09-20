@@ -82,28 +82,6 @@ public class Human : PlayerUnit
         if(attackCoroutine != null) StopCoroutine(attackCoroutine);
     }
 
-    protected override void OnCollisionEnter2D(Collision2D collision)
-    {
-        base.OnCollisionEnter2D(collision);
-        switch(CheckMapType(collision))
-        {
-            case MapType.Wall:
-                SetHorizontalForce(0);
-                break;
-        }
-    }
-
-    protected override void OnCollisionStay2D(Collision2D collision)
-    {
-        base.OnCollisionEnter2D(collision);
-        switch(CheckMapType(collision))
-        {
-            case MapType.Wall:
-                SetHorizontalForce(0);
-                break;
-        }
-    }
-
     protected override void Start()
     {
         sound=GetComponent<AudioSource>(); 
