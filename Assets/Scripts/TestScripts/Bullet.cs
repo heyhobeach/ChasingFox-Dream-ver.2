@@ -56,7 +56,7 @@ public class Bullet : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(parentGo.tag.Equals(collision.tag)) return;
-        if(collision.CompareTag("Map")) BulletSound();
+        if(collision.CompareTag("Map") && parentGo.tag.Equals("Player")) BulletSound();
         if(collision.CompareTag("ground") || collision.CompareTag("Wall") || collision.CompareTag("Map")) Destroy(gameObject);
         if (collision.gameObject.tag == "guard")//필요없어보임
         {

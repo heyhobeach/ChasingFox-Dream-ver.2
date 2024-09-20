@@ -29,6 +29,8 @@ public class PageManger : MonoBehaviour
     }
 
     private Scene currentScene;
+    private string prevSceneName;
+    private string newSceneName;
 
     private List<MapData> clearedMaps = new();
     private List<EventTriggerData> clearedTriggers = new();
@@ -43,8 +45,11 @@ public class PageManger : MonoBehaviour
         instance = this;
         SceneManager.activeSceneChanged += (prv, ne)=> {
             currentScene = ne; 
-            if(prv != null && !prv.name.Equals(ne.name))
+            if(!prv.name.Equals("Loading")) prevSceneName = prv.name;
+            if(!ne.name.Equals("Loading")) newSceneName = ne.name;
+            if(!newSceneName.Equals(prevSceneName))
             {
+                Debug.Log("AAA : " + prevSceneName + ", " + newSceneName);
                 foreach(var map in clearedMaps)
                 {
                     map.position = Vector3.zero;
