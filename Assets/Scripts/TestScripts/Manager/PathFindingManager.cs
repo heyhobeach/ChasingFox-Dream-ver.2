@@ -70,7 +70,7 @@ public partial class GameManager : MonoBehaviour
                     if (col.gameObject.layer == LayerMask.NameToLayer("Wall")) isWall = true;
                     if (col.gameObject.layer == LayerMask.NameToLayer("Ground")) isRoad = true;
                     if (col.gameObject.layer == LayerMask.NameToLayer("Point")) isPoint = true;
-                    if (col.gameObject.layer == LayerMask.NameToLayer("OneWayPlatform") && col.CompareTag("Untagged"))
+                    if (col.gameObject.layer == LayerMask.NameToLayer("EnemyPlatform"))
                     {
                         isplatform = true;
                         isLoad = false;
