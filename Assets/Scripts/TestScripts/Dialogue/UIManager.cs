@@ -492,14 +492,10 @@ public class UIManager : MonoBehaviour
 
         GameObject fixedVertical = content.transform.parent.gameObject;//텍스트 슬라이딩 해 오는 애니메이션
         fixedVertical.GetComponent<VerticalLayoutGroup>().enabled = false;
-        Debug.Log("여기" + contentArr[0]);
-        Debug.Log("여기" + contentArr[1]);
-
-        Debug.Log("여기" + contentArr[2]);
 
         int count = 0;
         Debug.Log("height" + height);
-        while (delta <= duration&(count<3))
+        while (delta <= duration&(count<strArr.Length))
         {
             float t = delta / duration;
             t = 1 - Mathf.Pow(1 - t, 3);
