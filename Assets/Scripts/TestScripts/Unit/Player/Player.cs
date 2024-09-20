@@ -123,7 +123,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         changedForm.Death();
         StartCoroutine(Test2());
         StopDash();
-        StopCoroutine(changing);
+        if(changing != null) StopCoroutine(changing);
         changing = null;
         // if(changedForm.GetType() != typeof(Berserker)) // 버서커 상태가 아닐 시
         // {
