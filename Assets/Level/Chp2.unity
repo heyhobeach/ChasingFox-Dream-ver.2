@@ -11998,7 +11998,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &211597366
 Transform:
   m_ObjectHideFlags: 0
@@ -14035,11 +14035,11 @@ MonoBehaviour:
   - {fileID: 555748126}
   - {fileID: 668554517}
   - {fileID: 1734473656}
-  correctionPos: {x: 0, y: 0}
+  correctionPos: {x: -0.5, y: -0.5}
   bottomLeft: {x: 0, y: 0}
   topRight: {x: 0, y: 0}
   startPos: {x: 0, y: 0}
-  allowDiagonal: 0
+  allowDiagonal: 1
   dontCrossCorner: 0
 --- !u!4 &246163908
 Transform:
@@ -55846,7 +55846,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &930012477
 Transform:
   m_ObjectHideFlags: 0
@@ -98852,7 +98852,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b8c96e2cdc154e848a3d9fe62464d42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CameraTargets: []
+  CameraTargets:
+  - TargetTransform: {fileID: 7535830021338084941}
+    TargetInfluenceH: 1
+    TargetInfluenceV: 1
+    TargetOffset: {x: 0, y: 0}
   CenterTargetOnStart: 0
   Axis: 0
   UpdateType: 1

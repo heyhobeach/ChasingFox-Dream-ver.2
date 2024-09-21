@@ -35,8 +35,8 @@ namespace BehaviourTree
                 }
                 return NodeState.Failure;
             }
-            blackboard.thisUnit.Move(new Vector2(blackboard.FinalNodeList[blackboard.nodeIdx].x-0.5f, blackboard.FinalNodeList[blackboard.nodeIdx].y+(blackboard.thisUnit.BoxSizeY*2)+1f));
-            if((blackboard.thisUnit.transform.position - new Vector3(blackboard.FinalNodeList[blackboard.nodeIdx].x-0.5f, blackboard.FinalNodeList[blackboard.nodeIdx].y+(blackboard.thisUnit.BoxSizeY*2)+1f, blackboard.thisUnit.transform.position.z)).magnitude < 0.1f) blackboard.nodeIdx++;
+            blackboard.thisUnit.Move(new Vector2(blackboard.FinalNodeList[blackboard.nodeIdx].x, blackboard.FinalNodeList[blackboard.nodeIdx].y+(blackboard.thisUnit.BoxSizeY*2)+1f));
+            if((blackboard.thisUnit.transform.position - new Vector3(blackboard.FinalNodeList[blackboard.nodeIdx].x, blackboard.FinalNodeList[blackboard.nodeIdx].y+(blackboard.thisUnit.BoxSizeY*2)+1f, blackboard.thisUnit.transform.position.z)).magnitude < 0.1f) blackboard.nodeIdx++;
             return NodeState.Success;
         }
 
@@ -46,8 +46,8 @@ namespace BehaviourTree
             isRunning = true;
             try
             {
-                Vector2 startPos = blackboard.thisUnit.transform.position + (Vector3)(Vector2.one * + 0.5f);
-                if(blackboard.FinalNodeList != null) startPos = new Vector2(blackboard.FinalNodeList[blackboard.nodeIdx].x, blackboard.FinalNodeList[blackboard.nodeIdx].y) + (Vector2.one * +0.5f);
+                Vector2 startPos = blackboard.thisUnit.transform.position - (Vector3.down * (blackboard.thisUnit.BoxSizeY + 0.1f));
+                if(blackboard.FinalNodeList != null) startPos = new Vector2(blackboard.FinalNodeList[blackboard.nodeIdx].x, blackboard.FinalNodeList[blackboard.nodeIdx].y);
                 var targetPos = blackboard.target.position;
                 List<GameManager.Node> nodes = null;
                 await Task.Run(() => {

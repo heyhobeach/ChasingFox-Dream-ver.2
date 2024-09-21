@@ -32,7 +32,7 @@ public partial class GameManager : MonoBehaviour
     }
     public Vector2 correctionPos;
     public Vector2Int bottomLeft, topRight, startPos;
-    public bool allowDiagonal, dontCrossCorner;
+    // public bool allowDiagonal, dontCrossCorner;
     Node StartNode, TargetNode, CurNode;
     List<Node> OpenList, ClosedList;
     private List<Node> FinalNodeList;
@@ -49,7 +49,6 @@ public partial class GameManager : MonoBehaviour
             isLoad = false;
         }
     }
-
     public void MapSearch()
     {
         // NodeArray�� ũ�� �����ְ�, isWall, x, y ����
@@ -68,7 +67,11 @@ public partial class GameManager : MonoBehaviour
                 foreach (Collider2D col in Physics2D.OverlapCircleAll(new Vector2(i + bottomLeft.x + correctionPos.x, j + bottomLeft.y + correctionPos.y), 0.4f))
                 {
                     if (col.gameObject.layer == LayerMask.NameToLayer("Wall")) isWall = true;
-                    if (col.gameObject.layer == LayerMask.NameToLayer("Ground")) isRoad = true;
+                    if (col.gameObject.layer == LayerMask.NameToLayer("Ground"))
+                    {
+                        isRoad = true;
+                        try{ if(NodeArray[i, j-1].isplatform) isRoad = false; } catch {}
+                    }
                     if (col.gameObject.layer == LayerMask.NameToLayer("Point")) isPoint = true;
                     if (col.gameObject.layer == LayerMask.NameToLayer("EnemyPlatform"))
                     {
@@ -236,13 +239,13 @@ public partial class GameManager : MonoBehaviour
 
 
             // �֢آע�
-            if (allowDiagonal)
-            {
+            // if (allowDiagonal)
+            // {
+            // }
                 OpenListAdd(CurNode.x + 1, CurNode.y + 1);
                 OpenListAdd(CurNode.x - 1, CurNode.y + 1);
                 OpenListAdd(CurNode.x - 1, CurNode.y - 1);
                 OpenListAdd(CurNode.x + 1, CurNode.y - 1);
-            }
 
             // �� �� �� ��
             OpenListAdd(CurNode.x, CurNode.y + 1);
@@ -271,10 +274,10 @@ public partial class GameManager : MonoBehaviour
         if (checkX >= bottomLeft.x && checkX < topRight.x + 1 && checkY >= bottomLeft.y && checkY < topRight.y + 1 && !NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y].isWall && !ClosedList.Contains(NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y]))
         {
             // �밢�� ����, �� ���̷� ��� �ȵ�
-            if (allowDiagonal) if (NodeArray[CurNode.x - bottomLeft.x, checkY - bottomLeft.y].isWall && NodeArray[checkX - bottomLeft.x, CurNode.y - bottomLeft.y].isWall) return;
+            // if (allowDiagonal) if (NodeArray[CurNode.x - bottomLeft.x, checkY - bottomLeft.y].isWall && NodeArray[checkX - bottomLeft.x, CurNode.y - bottomLeft.y].isWall) return;
 
             // �ڳʸ� �������� ���� ������, �̵� �߿� �������� ��ֹ��� ������ �ȵ�
-            if (dontCrossCorner) if (NodeArray[CurNode.x - bottomLeft.x, checkY - bottomLeft.y].isWall || NodeArray[checkX - bottomLeft.x, CurNode.y - bottomLeft.y].isWall) return;
+            // if (dontCrossCorner) if (NodeArray[CurNode.x - bottomLeft.x, checkY - bottomLeft.y].isWall || NodeArray[checkX - bottomLeft.x, CurNode.y - bottomLeft.y].isWall) return;
 
             if (NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y].isRoad)//checkx�� checky���� �˾ƾ���
             {
