@@ -195,7 +195,7 @@ public class UIManager : MonoBehaviour
         }
     }
     /// <summary>
-    /// 두 값을 비교해서 num이 더 크다면 num을 증가시킴
+    /// 태그의 내용 <size></size>처럼 안의 내용을 피하기 위함
     /// </summary>
     /// <param name="num">태그에서 start,end숫자</param>
     /// <param name="pivot">for문 에서 i숫자</param>
@@ -255,6 +255,7 @@ public class UIManager : MonoBehaviour
         for (int i = 0; i < str.Length; i++)
         {
             IgnoreTag(str, ref i, ref typing_speed_arr);
+            if (str[i]=='>') { continue; }
 
             if (i >= typing_speed_arr[0] && i <= typing_speed_arr[1])
             {
@@ -301,8 +302,9 @@ public class UIManager : MonoBehaviour
                     Increase(ref start_end_arr[0], i);
                     Increase(ref start_end_arr[1], i);
                     Debug.Log("Tag = " + tag);
+                    //tag += '>';
                     content.text += tag;
-                    i++;
+                    //i++;
                     break;
                 }
             }
