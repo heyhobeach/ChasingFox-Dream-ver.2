@@ -751,6 +751,8 @@ GameObject:
   - component: {fileID: 1164853812028802132}
   - component: {fileID: 1752966743555042286}
   - component: {fileID: 6121723361591469928}
+  - component: {fileID: 97190448331563107}
+  - component: {fileID: 8790361121632034024}
   m_Layer: 7
   m_Name: Werewolf
   m_TagString: Player
@@ -1024,6 +1026,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c78c723597a59c54ca45ecc4e4949583, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &97190448331563107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2781975490806170647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e63c61a68d23f66428cf587f30781713, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8790361121632034024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2781975490806170647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c78c723597a59c54ca45ecc4e4949583, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3844520560318708445
 GameObject:
   m_ObjectHideFlags: 0
@@ -1045,6 +1071,8 @@ GameObject:
   - component: {fileID: 3319128646844605754}
   - component: {fileID: 411369782865024374}
   - component: {fileID: 2465792149193346533}
+  - component: {fileID: 9011277862652105505}
+  - component: {fileID: 7000734976210764545}
   m_Layer: 7
   m_Name: Human
   m_TagString: Player
@@ -1186,7 +1214,7 @@ Animator:
   m_GameObject: {fileID: 3844520560318708445}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 19825cabb9c235241a2ca837fed1b28c, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1355,6 +1383,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c78c723597a59c54ca45ecc4e4949583, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &9011277862652105505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3844520560318708445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e63c61a68d23f66428cf587f30781713, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7000734976210764545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3844520560318708445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c78c723597a59c54ca45ecc4e4949583, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4354810165194635558
 GameObject:
   m_ObjectHideFlags: 0
@@ -1474,7 +1526,7 @@ GameObject:
   - component: {fileID: 6734788339055909496}
   - component: {fileID: 4569844339092855339}
   - component: {fileID: 8058911590280256695}
-  - component: {fileID: 6085638960144896239}
+  - component: {fileID: 1816047162833194900}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -1560,7 +1612,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 679e78b1d5eb9244680f6433f5c0706e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pcm: -1
+  pcm: 252
 --- !u!114 &8058911590280256695
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1630,7 +1682,7 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
---- !u!95 &6085638960144896239
+--- !u!95 &1816047162833194900
 Animator:
   serializedVersion: 5
   m_ObjectHideFlags: 0
@@ -1640,7 +1692,7 @@ Animator:
   m_GameObject: {fileID: 5709927631941509340}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 19825cabb9c235241a2ca837fed1b28c, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -2327,8 +2379,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 22012113
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}

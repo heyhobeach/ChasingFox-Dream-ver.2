@@ -488,9 +488,10 @@ public class InteractionEvent : MonoBehaviour
     public void CallLine(string nums)
     {
         var numarr = Array.ConvertAll(nums.Split(), int.Parse);
-        num = numarr[0];
         indexNum = numarr[1];
         dialogue.line.x = numarr[2];
+        GetDialogue();
+        num = numarr[0];
     }
 
     public void _DisableUI()
