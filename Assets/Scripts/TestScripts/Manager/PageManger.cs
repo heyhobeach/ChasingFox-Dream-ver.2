@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -60,6 +61,7 @@ public class PageManger : MonoBehaviour
                 clearedMaps.Clear();
                 clearedTriggers.Clear();
                 prevSceneName = newSceneName;
+                if(prevSceneName.Equals("")) prevSceneName = newSceneName;
             }
         };
     }
