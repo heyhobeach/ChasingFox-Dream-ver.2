@@ -32,6 +32,8 @@ public class PageManger : MonoBehaviour
     private Scene currentScene;
     private string prevSceneName = "";
     private string newSceneName = "";
+    public int formIdx = -1;
+    public PlayerController.PlayerControllerMask playerControllerMask;
 
     private List<MapData> clearedMaps = new();
     private List<EventTriggerData> clearedTriggers = new();
@@ -52,7 +54,6 @@ public class PageManger : MonoBehaviour
             if(prevSceneName.Equals("")) prevSceneName = newSceneName;
             if(!newSceneName.Equals(prevSceneName))
             {
-                Debug.Log("AAA : " + prevSceneName + ", " + newSceneName);
                 foreach(var map in clearedMaps)
                 {
                     map.position = Vector3.zero;
@@ -62,6 +63,7 @@ public class PageManger : MonoBehaviour
                 clearedMaps.Clear();
                 clearedTriggers.Clear();
                 prevSceneName = newSceneName;
+                formIdx = -1;
             }
         };
     }
