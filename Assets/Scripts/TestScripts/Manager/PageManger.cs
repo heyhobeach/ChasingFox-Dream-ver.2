@@ -30,8 +30,8 @@ public class PageManger : MonoBehaviour
     }
 
     private Scene currentScene;
-    private string prevSceneName;
-    private string newSceneName;
+    private string prevSceneName = "";
+    private string newSceneName = "";
 
     private List<MapData> clearedMaps = new();
     private List<EventTriggerData> clearedTriggers = new();
@@ -49,6 +49,7 @@ public class PageManger : MonoBehaviour
             currentScene = ne; 
             if(prv.name != null && !prv.name.Equals("Loading")) prevSceneName = prv.name;
             if(ne.name != null && !ne.name.Equals("Loading")) newSceneName = ne.name;
+            if(prevSceneName.Equals("")) prevSceneName = newSceneName;
             if(!newSceneName.Equals(prevSceneName))
             {
                 Debug.Log("AAA : " + prevSceneName + ", " + newSceneName);
@@ -61,7 +62,6 @@ public class PageManger : MonoBehaviour
                 clearedMaps.Clear();
                 clearedTriggers.Clear();
                 prevSceneName = newSceneName;
-                if(prevSceneName.Equals("")) prevSceneName = newSceneName;
             }
         };
     }
