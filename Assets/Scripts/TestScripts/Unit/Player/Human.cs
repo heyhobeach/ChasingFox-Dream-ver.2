@@ -66,13 +66,13 @@ public class Human : PlayerUnit
     protected override void OnEnable()
     {
         base.OnEnable();
+        attackCoroutine = StartCoroutine(AttackDelay());
+        isAttack = false;
         var pi = CameraManager.Instance.proCamera2DPointerInfluence;
         pi.MaxHorizontalInfluence = 5.15f;
         pi.MaxVerticalInfluence = 0.35f;
         pi.InfluenceSmoothness = 0.275f;
         CameraManager.Instance.ChangeSize = 5.15f;
-        attackCoroutine = StartCoroutine(AttackDelay());
-        isAttack = false;
     }
     protected override void OnDisable()
     {
