@@ -43,10 +43,11 @@ public class PageManger : MonoBehaviour
             return;
         }
         instance = this;
+        DontDestroyOnLoad(Instance);
         SceneManager.activeSceneChanged += (prv, ne)=> {
             currentScene = ne; 
-            if(!prv.name.Equals("Loading")) prevSceneName = prv.name;
-            if(!ne.name.Equals("Loading")) newSceneName = ne.name;
+            if(prv.name != null && !prv.name.Equals("Loading")) prevSceneName = prv.name;
+            if(ne.name != null && !ne.name.Equals("Loading")) newSceneName = ne.name;
             if(!newSceneName.Equals(prevSceneName))
             {
                 Debug.Log("AAA : " + prevSceneName + ", " + newSceneName);
@@ -58,6 +59,7 @@ public class PageManger : MonoBehaviour
                 foreach(var trigger in clearedTriggers) trigger.used = false;
                 clearedMaps.Clear();
                 clearedTriggers.Clear();
+                prevSceneName = newSceneName;
             }
         };
     }

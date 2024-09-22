@@ -46,7 +46,7 @@ public partial class GameManager : MonoBehaviour
     public static int GetHumanData() => instance.humanDatas.counts[Humanity/10];
     public static BrutalData GetBrutalData() => instance.brutalDatas.brutalDatas[Brutality/10];
 
-    public Player player { get; private set; }
+    public Player player;
     
     public List<Map> maps = new List<Map>();
 
@@ -112,8 +112,8 @@ public partial class GameManager : MonoBehaviour
             maps[currentRoomIndex].edgeCollider2D = edge;
         }
 
-        bottomLeft = new Vector2Int((int)(rect.x-(int)(rect.width*0.5f))-1, (int)(rect.y-(int)(rect.height*0.5f))-1);
-        topRight = new Vector2Int((int)(rect.x+(int)(rect.width*0.5f))+1, (int)(rect.y+(int)(rect.height*0.5f))+1);
+        bottomLeft = new Vector2Int(Mathf.RoundToInt(rect.x-(rect.width*0.5f)-2), Mathf.RoundToInt(rect.y-(rect.height*0.5f)-2));
+        topRight = new Vector2Int(Mathf.RoundToInt(rect.x+(rect.width*0.5f)+2), Mathf.RoundToInt(rect.y+(rect.height*0.5f)+2));
         isLoad = true;
 
         maps[currentRoomIndex].OnStart();

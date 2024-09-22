@@ -478,7 +478,6 @@ public abstract class PlayerUnit : UnitBase
         if(hit.Length > 0)
         {
             var angle = Mathf.Abs(hit[0].normal.x);
-            Debug.Log("AAA" + angle);
             if(!canDown && angle > 0.1f && angle < 0.9f && !(angle > 0.4f && angle < 0.6f))
             {
                 var temp = Vector3.ProjectOnPlane(new Vector3(hzForce, 0), hit[0].normal);

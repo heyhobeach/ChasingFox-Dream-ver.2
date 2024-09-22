@@ -30,9 +30,9 @@ public partial class GameManager : MonoBehaviour
             y = _y; 
         }
     }
-
+    public Vector2 correctionPos;
     public Vector2Int bottomLeft, topRight, startPos;
-    public bool allowDiagonal, dontCrossCorner;
+    // public bool allowDiagonal, dontCrossCorner;
     Node StartNode, TargetNode, CurNode;
     List<Node> OpenList, ClosedList;
     private List<Node> FinalNodeList;
@@ -49,7 +49,6 @@ public partial class GameManager : MonoBehaviour
             isLoad = false;
         }
     }
-
     public void MapSearch()
     {
         // NodeArray�� ũ�� �����ְ�, isWall, x, y ����
@@ -65,17 +64,26 @@ public partial class GameManager : MonoBehaviour
                 bool isRoad = false;
                 bool isPoint = false;
                 bool isplatform = false;
-                foreach (Collider2D col in Physics2D.OverlapCircleAll(new Vector2(i + bottomLeft.x-0.5f, j + bottomLeft.y-0.5f), 0.5f))
+                foreach (Collider2D col in Physics2D.OverlapCircleAll(new Vector2(i + bottomLeft.x + correctionPos.x, j + bottomLeft.y + correctionPos.y), 0.4f))
                 {
                     if (col.gameObject.layer == LayerMask.NameToLayer("Wall")) isWall = true;
-                    if (col.gameObject.layer == LayerMask.NameToLayer("Ground")) isRoad = true;
+                    if (col.gameObject.layer == LayerMask.NameToLayer("Ground"))
+                    {
+                        isRoad = true;
+                        try{ if(NodeArray[i, j-1].isplatform) isRoad = false; } catch {}
+                    }
                     if (col.gameObject.layer == LayerMask.NameToLayer("Point")) isPoint = true;
                     if (col.gameObject.layer == LayerMask.NameToLayer("EnemyPlatform"))
                     {
                         isplatform = true;
-                        isLoad = false;
+                        isRoad = false;
+                    }
+                    if(col.gameObject.layer == LayerMask.NameToLayer("Map"))
+                    {
+                        isWall = !isRoad && !isplatform;
                     }
                 }
+                isWall = !isRoad && !isplatform;
 
                 NodeArray[i, j] = new Node(isWall, isRoad, isPoint, isplatform, i + bottomLeft.x, j + bottomLeft.y);
             }
@@ -132,6 +140,7 @@ public partial class GameManager : MonoBehaviour
                     _cnt++;
                     if (_cnt > 2000)//Ȥ�ó� ���� �ݺ��� ��� ���� 
                     {
+                        Debug.LogError("Path Cant Find Erorr");
                         return null;
                     }
                     if (TargetCurNode.isplatform||TargetCurNode.ParentNode.isplatform)
@@ -230,13 +239,13 @@ public partial class GameManager : MonoBehaviour
 
 
             // �֢آע�
-            if (allowDiagonal)
-            {
+            // if (allowDiagonal)
+            // {
+            // }
                 OpenListAdd(CurNode.x + 1, CurNode.y + 1);
                 OpenListAdd(CurNode.x - 1, CurNode.y + 1);
                 OpenListAdd(CurNode.x - 1, CurNode.y - 1);
                 OpenListAdd(CurNode.x + 1, CurNode.y - 1);
-            }
 
             // �� �� �� ��
             OpenListAdd(CurNode.x, CurNode.y + 1);
@@ -254,6 +263,7 @@ public partial class GameManager : MonoBehaviour
                 Debug.Log("üũ");
             }
         }
+        Debug.LogError("Path lost Erorr");
         return null;
         }
     }
@@ -264,10 +274,10 @@ public partial class GameManager : MonoBehaviour
         if (checkX >= bottomLeft.x && checkX < topRight.x + 1 && checkY >= bottomLeft.y && checkY < topRight.y + 1 && !NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y].isWall && !ClosedList.Contains(NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y]))
         {
             // �밢�� ����, �� ���̷� ��� �ȵ�
-            if (allowDiagonal) if (NodeArray[CurNode.x - bottomLeft.x, checkY - bottomLeft.y].isWall && NodeArray[checkX - bottomLeft.x, CurNode.y - bottomLeft.y].isWall) return;
+            // if (allowDiagonal) if (NodeArray[CurNode.x - bottomLeft.x, checkY - bottomLeft.y].isWall && NodeArray[checkX - bottomLeft.x, CurNode.y - bottomLeft.y].isWall) return;
 
             // �ڳʸ� �������� ���� ������, �̵� �߿� �������� ��ֹ��� ������ �ȵ�
-            if (dontCrossCorner) if (NodeArray[CurNode.x - bottomLeft.x, checkY - bottomLeft.y].isWall || NodeArray[checkX - bottomLeft.x, CurNode.y - bottomLeft.y].isWall) return;
+            // if (dontCrossCorner) if (NodeArray[CurNode.x - bottomLeft.x, checkY - bottomLeft.y].isWall || NodeArray[checkX - bottomLeft.x, CurNode.y - bottomLeft.y].isWall) return;
 
             if (NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y].isRoad)//checkx�� checky���� �˾ƾ���
             {
@@ -287,11 +297,27 @@ public partial class GameManager : MonoBehaviour
             }
         }
     }
-// #if UNITY_EDITOR
-//     void OnDrawGizmos()
-//     {
-//         if (FinalNodeList.Count != 0) for (int i = 0; i < FinalNodeList.Count - 1; i++)
-//                 Gizmos.DrawLine(new Vector2(FinalNodeList[i].x, FinalNodeList[i].y), new Vector2(FinalNodeList[i + 1].x, FinalNodeList[i + 1].y));
-//     }
-// #endif
+#if UNITY_EDITOR
+    void OnDrawGizmos()
+    {
+        if(NodeArray == null) return;
+        foreach(var node in NodeArray)
+        {
+            Gizmos.color = Color.green;
+            if(node.isRoad) Gizmos.DrawWireCube(new Vector3(node.x+0.5f, node.y-0.5f), Vector3.one*0.95f);
+            Gizmos.color = Color.blue;
+            if(node.isplatform) Gizmos.DrawWireCube(new Vector3(node.x+0.5f, node.y-0.5f), Vector3.one*0.95f);
+            Gizmos.color = Color.red;
+            if(node.isWall) Gizmos.DrawWireCube(new Vector3(node.x+0.5f, node.y-0.5f), Vector3.one*0.95f);
+        }
+        Gizmos.color = Color.white;
+        Node prv = null;
+        if(FinalNodeList == null) return;
+        foreach(var node in FinalNodeList)
+        {
+            if(prv != null) Gizmos.DrawLine(new Vector3(prv.x+0.5f, prv.y-0.5f), new Vector3(node.x+0.5f, node.y-0.5f));
+            prv = node;
+        }
+    }
+#endif
 }
