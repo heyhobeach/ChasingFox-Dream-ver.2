@@ -32,6 +32,7 @@ public partial class GameManager : MonoBehaviour
         }
         if(instance.controllers.Count > 0) instance.controllers.Pop();
     }
+    public static IBaseController GetTopController() => instance.controllers.Peek();
 
     public BrutalDatas brutalDatas;
     public HumanDatas humanDatas;
@@ -124,9 +125,8 @@ public partial class GameManager : MonoBehaviour
         isLoad = true;
 
         maps[currentRoomIndex].OnStart();
-        Debug.Log("AAA" + previousRoomIndex);
         if(previousRoomIndex >= 0) maps[previousRoomIndex].OnEnd();
-        if(currentRoomIndex > 0 && previousRoomIndex == -1) maps[0].OnEnd();
+        if(currentRoomIndex > 0 && previousRoomIndex == -1 && !maps[0].used) maps[0].OnEnd();
         if(maps[currentRoomIndex].used && maps.Count > currentRoomIndex+1) player.transform.position = maps[currentRoomIndex+1].position;
         else maps[currentRoomIndex].position = player.transform.position;
     }
