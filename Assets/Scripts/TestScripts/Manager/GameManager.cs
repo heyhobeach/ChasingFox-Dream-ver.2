@@ -121,4 +121,6 @@ public partial class GameManager : MonoBehaviour
         if(maps[currentRoomIndex].used && maps.Count > currentRoomIndex+1) player.transform.position = maps[currentRoomIndex+1].position;
         else maps[currentRoomIndex].position = player.transform.position;
     }
+
+    public void LoadScene(string name) => PageManger.Instance.LoadScene(name);
 }
