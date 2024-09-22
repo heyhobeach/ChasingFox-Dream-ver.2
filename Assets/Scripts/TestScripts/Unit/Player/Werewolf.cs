@@ -92,7 +92,7 @@ public class Werewolf : PlayerUnit
 
     protected override void OnCollisionEnter2D(Collision2D collision)
     {
-        base.OnCollisionEnter2D(collision);
+        // base.OnCollisionEnter2D(collision);
         switch(CheckMapType(collision))
         {
             case MapType.Wall:
@@ -105,7 +105,7 @@ public class Werewolf : PlayerUnit
     }
     protected override void OnCollisionStay2D(Collision2D collision)
     {
-        base.OnCollisionStay2D(collision);
+        // base.OnCollisionStay2D(collision);
         switch(CheckMapType(collision))
         {
             case MapType.Wall:
@@ -119,7 +119,7 @@ public class Werewolf : PlayerUnit
 
     protected override void OnCollisionExit2D(Collision2D collision)
     {
-        base.OnCollisionExit2D(collision);
+        // base.OnCollisionExit2D(collision);
         switch(CheckMapType(collision))
         {
             case MapType.Wall:
@@ -208,6 +208,7 @@ public class Werewolf : PlayerUnit
                 isJumping = false;
                 SetVerticalForce(jumpImpulse); // 윗 방향 힘 추가
                 SetHorizontalVelocity(fixedDir.x * 20);
+                SetHorizontalForce(fixedDir.x * 20);
                 return true;
             }
             else return base.Jump(jumpKey);
