@@ -16,6 +16,18 @@ public class DialogueParser : MonoBehaviour
     string[] testarr;
     //public int start = 0, end = 0;
     //테스트
+
+    string splitsign(string text)
+    {
+        if (row[0]=="") return "";
+        Debug.Log(text);
+        if (text[0] == '\"')
+        {
+            string newtext=text.Substring(1, text.Length - 2);
+            return newtext;
+        }
+        return text;
+    }
     public Dialogue[] Parse(string _CSVFileName)
     {
         int chap = 1;
@@ -64,6 +76,7 @@ public class DialogueParser : MonoBehaviour
                 commandList.Add(row[4]);
                 testarr.Add(row[5]);//메모 넣는부분
                 //dialogue.command[command_num++] = command;
+                row[3] = splitsign(row[3]);
                 contextList.Add(row[3]);//content
                 if (row[3].ToString() == "")//대화가 끝난 경우 대화창 공백
                 {

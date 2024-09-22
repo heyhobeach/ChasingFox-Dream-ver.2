@@ -298,26 +298,26 @@ public partial class GameManager : MonoBehaviour
         }
     }
 #if UNITY_EDITOR
-    void OnDrawGizmos()
-    {
-        if(NodeArray == null) return;
-        foreach(var node in NodeArray)
-        {
-            Gizmos.color = Color.green;
-            if(node.isRoad) Gizmos.DrawWireCube(new Vector3(node.x+0.5f, node.y-0.5f), Vector3.one*0.95f);
-            Gizmos.color = Color.blue;
-            if(node.isplatform) Gizmos.DrawWireCube(new Vector3(node.x+0.5f, node.y-0.5f), Vector3.one*0.95f);
-            Gizmos.color = Color.red;
-            if(node.isWall) Gizmos.DrawWireCube(new Vector3(node.x+0.5f, node.y-0.5f), Vector3.one*0.95f);
-        }
-        Gizmos.color = Color.white;
-        Node prv = null;
-        if(FinalNodeList == null) return;
-        foreach(var node in FinalNodeList)
-        {
-            if(prv != null) Gizmos.DrawLine(new Vector3(prv.x+0.5f, prv.y-0.5f), new Vector3(node.x+0.5f, node.y-0.5f));
-            prv = node;
-        }
-    }
+    //void OnDrawGizmos()
+    //{
+    //    if(NodeArray == null) return;
+    //    foreach(var node in NodeArray)
+    //    {
+    //        Gizmos.color = Color.green;
+    //        if(node.isRoad) Gizmos.DrawWireCube(new Vector3(node.x+0.5f, node.y-0.5f), Vector3.one*0.95f);
+    //        Gizmos.color = Color.blue;
+    //        if(node.isplatform) Gizmos.DrawWireCube(new Vector3(node.x+0.5f, node.y-0.5f), Vector3.one*0.95f);
+    //        Gizmos.color = Color.red;
+    //        if(node.isWall) Gizmos.DrawWireCube(new Vector3(node.x+0.5f, node.y-0.5f), Vector3.one*0.95f);
+    //    }
+    //    Gizmos.color = Color.white;
+    //    Node prv = null;
+    //    if(FinalNodeList == null) return;
+    //    foreach(var node in FinalNodeList)
+    //    {
+    //        if(prv != null) Gizmos.DrawLine(new Vector3(prv.x+0.5f, prv.y-0.5f), new Vector3(node.x+0.5f, node.y-0.5f));
+    //        prv = node;
+    //    }
+    //}
 #endif
 }
