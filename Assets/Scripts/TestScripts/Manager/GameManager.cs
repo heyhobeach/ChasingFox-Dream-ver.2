@@ -76,6 +76,7 @@ public partial class GameManager : MonoBehaviour
     private void Start()
     {
         StartCoroutine(MapSearchStart());
+        if(maps[0].position != Vector3.zero) player.transform.position = maps[0].position;
         CameraManager.Instance.proCamera2DRooms.OnStartedTransition.AddListener(CreateWallRoom);
     }
 
