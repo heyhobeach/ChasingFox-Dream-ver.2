@@ -45,6 +45,10 @@ public class LoopController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
+            if(LoopDir==null){
+                //Debug.Log("왤케 급하냐 게이야 으하하하");
+                return;
+            }
             EndLoop();
         }
     }

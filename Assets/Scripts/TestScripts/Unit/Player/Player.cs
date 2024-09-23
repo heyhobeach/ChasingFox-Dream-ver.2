@@ -65,10 +65,10 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
 
     private void Start()
     {
-        foreach(PlayerUnit form in forms) form.gameObject.SetActive(false);
-        // 인간 상태를 현재 상태로 변경
-        changedForm = forms[0]; 
-        changedForm.gameObject.SetActive(true);
+        // foreach(PlayerUnit form in forms) form.gameObject.SetActive(false);
+        // // 인간 상태를 현재 상태로 변경
+        // changedForm = forms[0]; 
+        // changedForm.gameObject.SetActive(true);
         health = maxHealth; // 체력 초기화
         fixedDir = 1;
         invalidation = false;
@@ -151,6 +151,8 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     {
         yield return new WaitForSeconds(3f);
         // changedForm.gameObject.SetActive(false);
+        PageManger.Instance.formIdx = Array.FindIndex(forms, (form) => form == changedForm);
+        PageManger.Instance.playerControllerMask = GetComponent<PlayerController>().pcm;
         PopupManager.Instance.DeathPop();
 
     }

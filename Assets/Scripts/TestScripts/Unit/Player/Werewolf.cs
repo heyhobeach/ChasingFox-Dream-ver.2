@@ -73,10 +73,13 @@ public class Werewolf : PlayerUnit
 
     protected override void Start()
     {
+        gameObject.SetActive(true);
         base.Start();
         MeleeAttack.GetComponent<MaleeAttack>().Set(1, gameObject);
         brutalData = GameManager.GetBrutalData();
         changeGauge = brutalData.maxGage;
+        
+        anim.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("PlayerAnim/WereWolf/WereWolf Lib Ani");
     }
 
     protected override void Update()

@@ -32,6 +32,7 @@ public partial class GameManager : MonoBehaviour
         }
         if(instance.controllers.Count > 0) instance.controllers.Pop();
     }
+    public static IBaseController GetTopController() => instance.controllers.Peek();
 
     public BrutalDatas brutalDatas;
     public HumanDatas humanDatas;
@@ -76,6 +77,13 @@ public partial class GameManager : MonoBehaviour
     private void Start()
     {
         StartCoroutine(MapSearchStart());
+        player = FindObjectOfType<Player>();
+        int i = 0;
+        while(maps[i].used) if(maps[i].used) player.transform.position = maps[i++].position;
+        if(!maps[0].used && maps[0].position != Vector3.zero) player.transform.position = maps[0].position;
+        if(PageManger.Instance.formIdx != -1) player.FormChange(PageManger.Instance.formIdx);
+        else player.FormChange(0);
+        if(PageManger.Instance.playerControllerMask != PlayerController.PlayerControllerMask.None) player.GetComponent<PlayerController>().pcm = PageManger.Instance.playerControllerMask;
         CameraManager.Instance.proCamera2DRooms.OnStartedTransition.AddListener(CreateWallRoom);
     }
 
@@ -118,6 +126,7 @@ public partial class GameManager : MonoBehaviour
 
         maps[currentRoomIndex].OnStart();
         if(previousRoomIndex >= 0) maps[previousRoomIndex].OnEnd();
+        if(currentRoomIndex > 0 && previousRoomIndex == -1 && !maps[0].used) maps[0].OnEnd();
         if(maps[currentRoomIndex].used && maps.Count > currentRoomIndex+1) player.transform.position = maps[currentRoomIndex+1].position;
         else maps[currentRoomIndex].position = player.transform.position;
     }
