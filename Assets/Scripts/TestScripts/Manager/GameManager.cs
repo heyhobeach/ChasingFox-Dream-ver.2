@@ -128,7 +128,10 @@ public partial class GameManager : MonoBehaviour
         if(previousRoomIndex >= 0) maps[previousRoomIndex].OnEnd();
         if(currentRoomIndex > 0 && previousRoomIndex == -1 && !maps[0].used) maps[0].OnEnd();
         if(maps[currentRoomIndex].used && maps.Count > currentRoomIndex+1) player.transform.position = maps[currentRoomIndex+1].position;
-        else maps[currentRoomIndex].position = player.transform.position;
+        else 
+        {
+            if(maps[currentRoomIndex].position == Vector3.zero) maps[currentRoomIndex].position = player.transform.position;
+        }
     }
 
     public void LoadScene(string name) => PageManger.Instance.LoadScene(name);

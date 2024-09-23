@@ -48,7 +48,6 @@ public class PageManger : MonoBehaviour
         instance = this;
         DontDestroyOnLoad(Instance);
         SceneManager.activeSceneChanged += (prv, ne)=> {
-            currentScene = ne; 
             if(prv.name != null && !prv.name.Equals("Loading")) prevSceneName = prv.name;
             if(ne.name != null && !ne.name.Equals("Loading")) newSceneName = ne.name;
             if(prevSceneName.Equals("")) prevSceneName = newSceneName;
@@ -73,7 +72,7 @@ public class PageManger : MonoBehaviour
     }
     public void RoadRetry()//
     {
-        SceneManager.LoadScene(currentScene.name);
+        LoadScene(newSceneName);
     }
 
     public void LoadScene(string sceneName)
