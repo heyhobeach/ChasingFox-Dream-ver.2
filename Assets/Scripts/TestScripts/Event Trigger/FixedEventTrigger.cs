@@ -14,7 +14,7 @@ public class FixedEventTrigger : EventTrigger, IBaseController
             (eventLists[eventIdx].prerequisites == null || eventLists[eventIdx].prerequisites.isSatisfySatisfy) &&
             (eventLists[eventIdx].keyCode == KeyCode.None || Input.GetKeyDown(eventLists[eventIdx].keyCode)))
         {
-            if(eventLists[eventIdx].action != null) eventLists[eventIdx].action.Invoke();
+            eventLists[eventIdx].action?.Invoke();
             StartCoroutine(LockTime(eventLists[eventIdx].lockTime));
             eventIdx++;
         }

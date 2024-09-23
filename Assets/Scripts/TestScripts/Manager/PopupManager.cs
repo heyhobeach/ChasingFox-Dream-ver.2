@@ -55,7 +55,7 @@ public class PopupManager : MonoBehaviour
         var temp = deathPopup.GetComponent<TempDeathPopup>();
         temp.info = "Press to Continue";
         temp.unityEvent.RemoveAllListeners();
-        temp.unityEvent.AddListener(PageManger.Instance.RoadRetry);
+        temp.unityEvent.AddListener(GameManager.Instance.RetryScene);
         deathPopup.SetActive(true);
         //Debug.Log(gameObject.name);
         //transform.GetChild(0).gameObject.SetActive(false);
