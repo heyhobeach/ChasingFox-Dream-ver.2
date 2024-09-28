@@ -7,7 +7,7 @@ public class TimeLineEnd : QTE_Prerequisites
 {
     PlayableDirector playableDirector;
     bool isPlaying;
-    public override bool isSatisfySatisfy { get => isPlaying; set => isPlaying = value; }
+    public override bool isSatisfied { get => isPlaying; set => isPlaying = value; }
 
     void Start()
     {

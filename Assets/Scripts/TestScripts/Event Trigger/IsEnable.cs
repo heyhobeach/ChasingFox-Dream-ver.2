@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class IsEnable : QTE_Prerequisites
 {
-    public override bool isSatisfySatisfy { get => isEnable; set => isEnable = value; }
+    public override bool isSatisfied { get => isEnable; set => isEnable = value; }
 
     private bool isEnable;
 

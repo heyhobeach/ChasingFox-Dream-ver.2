@@ -8,7 +8,7 @@ namespace BehaviourTree
 {
     public class RunTimeLine : ActionNode
     {
-        public bool isCan;
+        private bool isCan;
 
         private PlayableDirector playableDirector;
 

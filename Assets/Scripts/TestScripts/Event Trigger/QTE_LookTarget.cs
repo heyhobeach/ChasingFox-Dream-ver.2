@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class QTE_LookTarget : QTE_Prerequisites
 {
-    public override bool isSatisfySatisfy { get => isLook; set => isLook = value; }
+    public override bool isSatisfied { get => isLook; set => isLook = value; }
 
     private bool isLook;
     private Vector3 colSize;

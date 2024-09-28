@@ -12,7 +12,16 @@ using UnityEditor;
 public class EventTrigger : MonoBehaviour
 {
     protected EventTriggerData eventTriggerData;
+    /// <summary>
+    /// 이벤트를 작동시킬 대상의 태그
+    /// </summary>
     public string targetTag;
+
+    /// <summary>
+    /// <para>이벤트 작동 횟수 제한 여부</para>
+    /// <para>True == 1회 제한</para>
+    /// <para>False == 무제한</para>
+    /// </summary>
     public bool limit;
     public EventList[] eventLists;
     protected int eventIdx = 0;
@@ -20,14 +29,17 @@ public class EventTrigger : MonoBehaviour
     protected bool eventLock;
     private Action action;
 
+    /// <summary>
+    /// 이벤트 작동부
+    /// </summary>
     public void Controller()
     {
         if(eventLock) return;
         if(eventIdx < eventLists.Length && 
-            (eventLists[eventIdx].prerequisites == null || eventLists[eventIdx].prerequisites.isSatisfySatisfy) &&
+            (eventLists[eventIdx].prerequisites == null || eventLists[eventIdx].prerequisites.isSatisfied) &&
             (eventLists[eventIdx].keyCode == KeyCode.None || Input.GetKeyDown(eventLists[eventIdx].keyCode)))
         {
-            if(eventLists[eventIdx].action != null) eventLists[eventIdx].action.Invoke();
+            eventLists[eventIdx].action?.Invoke();
             if(eventLists[eventIdx].lockTime > 0) StartCoroutine(LockTime(eventLists[eventIdx].lockTime));
             eventIdx++;
         }
@@ -36,14 +48,15 @@ public class EventTrigger : MonoBehaviour
             used = true;
             eventIdx = 0;
             action = null;
-            PageManger.Instance.AddClearList(eventTriggerData);
         }
     }
 
+    /// <summary>
+    /// 트리거를 작동시키는 메서드
+    /// </summary>
     public void OnTrigger()
     {
         if(limit ? used : false) return;
-        ((IBaseController)this).AddController();
     }
 
     private void OnTriggerEnter2D(Collider2D collider)
@@ -71,6 +84,7 @@ public class EventTrigger : MonoBehaviour
 #endif
             eventTriggerData = asset;
         }
+        GetComponent<BoxCollider2D>().isTrigger = true;
     }
 
     private void Update()

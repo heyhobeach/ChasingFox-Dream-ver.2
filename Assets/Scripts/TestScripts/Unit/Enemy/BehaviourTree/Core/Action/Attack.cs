@@ -6,7 +6,7 @@ namespace BehaviourTree
 {
     public class Attack : ActionNode
     {
-        public float aimmingTime;
+        public float aimingTime;
         public float delayTime;
         bool canAttack;
         bool isAttacking;
@@ -29,7 +29,7 @@ namespace BehaviourTree
             if(isAttacking && !blackboard.thisUnit.isAttacking) return NodeState.Success;
             if(!canAttack) return NodeState.Failure;
             blackboard.thisUnit.Move(blackboard.thisUnit.transform.position);
-            if(time < aimmingTime)
+            if(time < aimingTime)
             {
                 time += Time.deltaTime;
                 if(blackboard.thisUnit.AttackCheck(blackboard.target.position))
@@ -38,11 +38,11 @@ namespace BehaviourTree
                     if(blackboard.thisUnit.shootingAnimationController != null) blackboard.thisUnit.shootingAnimationController.targetPosition = aimPos;
                 }
             }
-            else if(time < aimmingTime+delayTime)
+            else if(time < aimingTime+delayTime)
             {
                 time += Time.deltaTime;
             }
-            else if(!isAttacking && time >= aimmingTime+delayTime)
+            else if(!isAttacking && time >= aimingTime+delayTime)
             {
                 blackboard.thisUnit.Attack(aimPos);
                 isAttacking = true;
