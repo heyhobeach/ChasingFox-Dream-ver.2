@@ -337,6 +337,61 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &862796177
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 862796179}
+  - component: {fileID: 862796178}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &862796178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 862796177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0522f97873de74345b09fe1321b2896b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundManager: {fileID: 0}
+  interactionEvent: {fileID: 0}
+  brutalDatas: {fileID: 0}
+  humanDatas: {fileID: 0}
+  karmaRatio: 65
+  player: {fileID: 0}
+  maps: []
+  correctionPos: {x: 0, y: 0}
+  bottomLeft: {x: 0, y: 0}
+  topRight: {x: 0, y: 0}
+  startPos: {x: 0, y: 0}
+--- !u!4 &862796179
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 862796177}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -56.37513, y: 32.034233, z: -10.923257}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &985045505
 GameObject:
   m_ObjectHideFlags: 0
@@ -368,6 +423,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2911a236e93606a42b3cb36d5238d42f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  formIdx: -1
+  playerControllerMask: 0
 --- !u!114 &985045507
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -605,42 +662,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4503453643912182334, guid: 03f8b3a529bff084699c2b6156c2b110, type: 3}
-      propertyPath: info
-      value: Press to Start
-      objectReference: {fileID: 0}
-    - target: {fileID: 4503453643912182334, guid: 03f8b3a529bff084699c2b6156c2b110, type: 3}
-      propertyPath: unityEvent.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4503453643912182334, guid: 03f8b3a529bff084699c2b6156c2b110, type: 3}
-      propertyPath: unityEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4503453643912182334, guid: 03f8b3a529bff084699c2b6156c2b110, type: 3}
-      propertyPath: unityEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 985045506}
-    - target: {fileID: 4503453643912182334, guid: 03f8b3a529bff084699c2b6156c2b110, type: 3}
-      propertyPath: unityEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4503453643912182334, guid: 03f8b3a529bff084699c2b6156c2b110, type: 3}
-      propertyPath: unityEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: LoadScene
-      objectReference: {fileID: 0}
-    - target: {fileID: 4503453643912182334, guid: 03f8b3a529bff084699c2b6156c2b110, type: 3}
-      propertyPath: unityEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: PageManger, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 4503453643912182334, guid: 03f8b3a529bff084699c2b6156c2b110, type: 3}
-      propertyPath: unityEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
-      value: Chp0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4503453643912182334, guid: 03f8b3a529bff084699c2b6156c2b110, type: 3}
-      propertyPath: unityEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -826,3 +847,4 @@ SceneRoots:
   - {fileID: 2103944561}
   - {fileID: 985045508}
   - {fileID: 1939768325}
+  - {fileID: 862796179}

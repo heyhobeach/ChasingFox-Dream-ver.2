@@ -9,7 +9,14 @@ public class TempDeathPopup : MonoBehaviour, IPointerClickHandler, IBaseControll
 {
     public TMP_Text text;
 
-    public void Controller() {}
+    public void Controller() 
+    {
+        if (Input.anyKeyDown&&!Input.GetKeyDown(KeyCode.Escape)) 
+        {
+            unityEvent?.Invoke();
+            transform.gameObject.SetActive(false);
+        }
+    }
 
     void OnEnable()
     {

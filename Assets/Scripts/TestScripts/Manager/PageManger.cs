@@ -51,6 +51,7 @@ public class PageManger : MonoBehaviour
             if(prv.name != null && !prv.name.Equals("Loading")) prevSceneName = prv.name;
             if(ne.name != null && !ne.name.Equals("Loading")) newSceneName = ne.name;
             if(prevSceneName.Equals("")) prevSceneName = newSceneName;
+            Debug.Log("AAA : " + prevSceneName + ", " + newSceneName);
             if(!newSceneName.Equals(prevSceneName))
             {
                 foreach(var map in clearedMaps)
@@ -70,10 +71,10 @@ public class PageManger : MonoBehaviour
     {
         currentScene = SceneManager.GetActiveScene();
     }
-    public void RoadRetry()//
-    {
-        LoadScene(newSceneName);
-    }
+    // public void RoadRetry()//
+    // {
+    //     LoadScene(SceneManager.GetActiveScene().name);
+    // }
 
     public void LoadScene(string sceneName)
     {
