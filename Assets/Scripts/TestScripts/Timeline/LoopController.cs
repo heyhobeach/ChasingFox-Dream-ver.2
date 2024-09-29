@@ -43,7 +43,7 @@ public class LoopController : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.anyKeyDown&&!Input.GetKeyDown(KeyCode.Escape))
         {
             if(LoopDir==null){
                 //Debug.Log("왤케 급하냐 게이야 으하하하");

@@ -87,11 +87,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     public bool Attack(Vector3 clickPos)
     {
         bool temp = false;
-        if(changedForm.UnitState == UnitState.FormChange)
-        {
-            if(isBulletTime) temp = changedForm.Attack(clickPos);
-        }
-        else temp = changedForm.Attack(clickPos);
+        changedForm.Attack(clickPos);
         return temp;
     }
 

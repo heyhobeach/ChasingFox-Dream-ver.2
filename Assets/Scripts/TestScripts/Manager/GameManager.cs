@@ -5,6 +5,7 @@ using BehaviourTree;
 using Com.LuisPedroFonseca.ProCamera2D;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public partial class GameManager : MonoBehaviour
 {
@@ -55,6 +56,7 @@ public partial class GameManager : MonoBehaviour
 
     private void OnDestroy()
     {
+        instance = null;
         BehaviourNode.clone.Clear();
         StopAllCoroutines();
         CameraManager.Instance.proCamera2DRooms.OnStartedTransition.RemoveListener(CreateWallRoom);
@@ -125,11 +127,15 @@ public partial class GameManager : MonoBehaviour
         isLoad = true;
 
         maps[currentRoomIndex].OnStart();
-        if(previousRoomIndex >= 0) maps[previousRoomIndex].OnEnd();
+        if(previousRoomIndex >= 0 && previousRoomIndex != currentRoomIndex) maps[previousRoomIndex].OnEnd();
         if(currentRoomIndex > 0 && previousRoomIndex == -1 && !maps[0].used) maps[0].OnEnd();
         if(maps[currentRoomIndex].used && maps.Count > currentRoomIndex+1) player.transform.position = maps[currentRoomIndex+1].position;
-        else maps[currentRoomIndex].position = player.transform.position;
+        else 
+        {
+            if(maps[currentRoomIndex].position == Vector3.zero) maps[currentRoomIndex].position = player.transform.position;
+        }
     }
 
     public void LoadScene(string name) => PageManger.Instance.LoadScene(name);
+    public void RetryScene() => PageManger.Instance.LoadScene(SceneManager.GetActiveScene().name);
 }

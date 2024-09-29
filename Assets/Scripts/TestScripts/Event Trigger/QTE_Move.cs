@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class QTE_Move : QTE_Prerequisites
 {
-    public override bool isSatisfySatisfy { get => isArrival; set => isArrival = value; }
+    public override bool isSatisfied { get => isArrival; set => isArrival = value; }
 
     private bool isArrival;
     public Vector3 targetPos;
