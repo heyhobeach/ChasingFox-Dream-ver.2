@@ -1,406 +1,413 @@
-using JetBrains.Annotations;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Tilemaps;
-using UnityEngine;
-using UnityEngine.UIElements;
-
-[System.Serializable]
-public class Node
-{
-    public bool isWall;
-    public bool isRoad;
-    public bool isPoint;
-    public bool isplatform;
-    public Node ParentNode;
-
-    public int x, y, G, H;
-    //public int x, y, G, H;
-
-    public int F { get { return G + H; } }
-    public Node(bool _isWall, bool _isRoad, bool _isPoint, bool _isPlatform, int _x, int _y) { 
-        isWall = _isWall; 
-        isRoad = _isRoad; 
-        isPoint = _isPoint; 
-        isplatform = _isPlatform;
-        if (isplatform)
-        {
-            isRoad = true;
-        }
-        x = _x; 
-        y = _y; 
-    }
-}
-public partial class Dumy : MonoBehaviour
-{
-    public Rigidbody2D rg2d;
-
-    public Vector2Int bottomLeft, topRight, startPos, targetPos;
-    public List<Node> FinalNodeList;
-    public bool allowDiagonal, dontCrossCorner;
-
-    int sizeX, sizeY;
-    Node[,] NodeArray;
-    Node StartNode, TargetNode, CurNode;
-    List<Node> OpenList, ClosedList;
-    List<string> NodeDistanceList;
-
-    bool PointCheck = false;
-
-    public Transform _startPos, _targetPos;
+// using JetBrains.Annotations;
+// using System;
+// using System.Collections;
+// using System.Collections.Generic;
+// using UnityEditor.Tilemaps;
+// using UnityEngine;
+// using UnityEngine.UIElements;
 
 
-    public void test()
-    {
-        Debug.Log("hello");
-    }
+// public partial class Dumy : MonoBehaviour
+// {
+//     [System.Serializable]
+//     public class Node
+//     {
+//         public bool isWall;
+//         public bool isRoad;
+//         public bool isPoint;
+//         public bool isplatform;
+//         public Node ParentNode;
 
-    public void PathFinding()
-    {
-        // NodeArrayÀÇ Å©±â Á¤ÇØÁÖ°í, isWall, x, y ´ëÀÔ
-        sizeX = topRight.x - bottomLeft.x + 1;
-        sizeY = topRight.y - bottomLeft.y + 1;
-        NodeArray = new Node[sizeX, sizeY];
+//         public int x, y, G, H;
+//         //public int x, y, G, H;
 
-        for (int i = 0; i < sizeX; i++)//¿äºÎºÐ ÇÑ¹ø¸¸ µ¹¸®°Ô
-        {
-            for (int j = 0; j < sizeY; j++)
-            {
-                bool isWall = false;//ÀÌ°Å ¶§¹®¿¡ ±âº»ÀûÀ¸·Î Áö³ª°¥¼öÀÖ´Ù°í »ý°¢
-                bool isRoad = false;
-                bool isPoint = false;
-                bool isplatform = false;
-                foreach (Collider2D col in Physics2D.OverlapCircleAll(new Vector2(i + bottomLeft.x, j + bottomLeft.y), 0.4f))
-                {
-                    if (col.gameObject.layer == LayerMask.NameToLayer("Wall")) isWall = true;
-                    if (col.gameObject.layer == LayerMask.NameToLayer("Ground")) isRoad = true;
-                    if (col.gameObject.layer == LayerMask.NameToLayer("Point")) isPoint = true;
-                    if (col.gameObject.layer == LayerMask.NameToLayer("OneWayPlatform")) isplatform = true;
-                }
+//         public int F { get { return G + H; } }
+//         public Node(bool _isWall, bool _isRoad, bool _isPoint, bool _isPlatform, int _x, int _y) { 
+//             isWall = _isWall; 
+//             isRoad = _isRoad; 
+//             isPoint = _isPoint; 
+//             isplatform = _isPlatform;
+//             if (isplatform)
+//             {
+//                 isRoad = true;
+//             }
+//             x = _x; 
+//             y = _y; 
+//         }
+//     }
+//     public Rigidbody2D rg2d;
 
-                NodeArray[i, j] = new Node(isWall, isRoad, isPoint, isplatform, i + bottomLeft.x, j + bottomLeft.y);
-            }
-        }
+//     public Vector2Int bottomLeft, topRight, startPos, targetPos;
+//     public List<Node> FinalNodeList;
+//     public bool allowDiagonal, dontCrossCorner;
+
+//     int sizeX, sizeY;
+//     Node[,] NodeArray;
+//     Node StartNode, TargetNode, CurNode;
+//     List<Node> OpenList, ClosedList;
+//     List<string> NodeDistanceList;
+
+//     // bool PointCheck = false;
+
+//     public Transform _startPos, _targetPos;
 
 
-        Debug.Log(string.Format("{0},{1}", startPos.x - bottomLeft.x, startPos.y - bottomLeft.y));//-bottomleft.x,bottomleft.yÀÇ °è»êÀÌ ÇÑ¹ø¸¸ ÀÌ·ïÁö°í ¾È ÀÌ·ïÁö´Â°Í °°À½
-        Debug.Log(string.Format("{0},{1}", targetPos.x - bottomLeft.x, targetPos.y - bottomLeft.y));//¿©±âµµ ¸¶Ä£°¡Áö
-        // ½ÃÀÛ°ú ³¡ ³ëµå, ¿­¸°¸®½ºÆ®¿Í ´ÝÈù¸®½ºÆ®, ¸¶Áö¸·¸®½ºÆ® ÃÊ±âÈ­
-        StartNode = NodeArray[startPos.x - bottomLeft.x, startPos.y - bottomLeft.y];//Áö±Ý ÀÌ ºÎºÐ »¡°£»ö ¶ß±äÇÔ ÀÛµ¿¿¡´Â ¹®Á¦´Â ¾øÀ½
+//     public void test()
+//     {
+//         Debug.Log("hello");
+//     }
+
+//     public void PathFinding()
+//     {
+//         // NodeArrayï¿½ï¿½ Å©ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö°ï¿½, isWall, x, y ï¿½ï¿½ï¿½ï¿½
+//         sizeX = topRight.x - bottomLeft.x + 1;
+//         sizeY = topRight.y - bottomLeft.y + 1;
+//         NodeArray = new Node[sizeX, sizeY];
+
+//         for (int i = 0; i < sizeX; i++)//ï¿½ï¿½Îºï¿½ ï¿½Ñ¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//         {
+//             for (int j = 0; j < sizeY; j++)
+//             {
+//                 bool isWall = false;//ï¿½Ì°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½âº»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö´Ù°ï¿½ ï¿½ï¿½ï¿½ï¿½
+//                 bool isRoad = false;
+//                 bool isPoint = false;
+//                 bool isplatform = false;
+//                 foreach (Collider2D col in Physics2D.OverlapCircleAll(new Vector2(i + bottomLeft.x, j + bottomLeft.y), 0.4f))
+//                 {
+//                     if (col.gameObject.layer == LayerMask.NameToLayer("Wall")) isWall = true;
+//                     if (col.gameObject.layer == LayerMask.NameToLayer("Ground")) isRoad = true;
+//                     if (col.gameObject.layer == LayerMask.NameToLayer("Point")) isPoint = true;
+//                     if (col.gameObject.layer == LayerMask.NameToLayer("OneWayPlatform")) isplatform = true;
+//                 }
+
+//                 NodeArray[i, j] = new Node(isWall, isRoad, isPoint, isplatform, i + bottomLeft.x, j + bottomLeft.y);
+//             }
+//         }
+
+
+//         //Debug.Log(string.Format("{0},{1}", startPos.x - bottomLeft.x, startPos.y - bottomLeft.y));//-bottomleft.x,bottomleft.yï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ¹ï¿½ï¿½ï¿½ ï¿½Ì·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ì·ï¿½ï¿½ï¿½ï¿½Â°ï¿½ ï¿½ï¿½ï¿½ï¿½
+//         //Debug.Log(string.Format("{0},{1}", targetPos.x - bottomLeft.x, targetPos.y - bottomLeft.y));//ï¿½ï¿½ï¿½âµµ ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½
+//         // ï¿½ï¿½ï¿½Û°ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ê±ï¿½È­
+//         StartNode = NodeArray[startPos.x - bottomLeft.x, startPos.y - bottomLeft.y];//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Îºï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß±ï¿½ï¿½ï¿½ ï¿½Ûµï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         
-        TargetNode = NodeArray[targetPos.x - bottomLeft.x, targetPos.y - bottomLeft.y];
-        //if (!NodeArray[TargetNode.x - bottomLeft.x, TargetNode.y - bottomLeft.y].isRoad)
-        //{
-        //    Debug.Log("¾îÄ³ Ã£´© À¸ÇÏÇÏÇÏ");
-        //}
-        int tempNum = 0;
-        while(!NodeArray[TargetNode.x - bottomLeft.x, TargetNode.y - bottomLeft.y+tempNum].isRoad)
-        {
-            tempNum--;
-            Debug.Log(string.Format("{0}Ä­ ",tempNum));
-        }
-        TargetNode = NodeArray[TargetNode.x - bottomLeft.x, TargetNode.y - bottomLeft.y + tempNum];
+//         TargetNode = NodeArray[targetPos.x - bottomLeft.x, targetPos.y - bottomLeft.y];
+//         //if (!NodeArray[TargetNode.x - bottomLeft.x, TargetNode.y - bottomLeft.y].isRoad)
+//         //{
+//         //    Debug.Log("ï¿½ï¿½Ä³ Ã£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
+//         //}
+//         int tempNum = 0;
+//         while(!NodeArray[TargetNode.x - bottomLeft.x, TargetNode.y - bottomLeft.y+tempNum].isRoad)
+//         {
+//             tempNum--;
+//             // Debug.Log(string.Format("{0}Ä­ ",tempNum));
+//         }
+//         TargetNode = NodeArray[TargetNode.x - bottomLeft.x, TargetNode.y - bottomLeft.y + tempNum];
 
-        //Debug.Log((int)_startPos.position.x + ":" + (int)_startPos.position.y);
-        //Debug.Log((int)_targetPos.position.x + ":" + (int)_targetPos.position.y);
-        //StartNode = NodeArray[(int)_startPos.position.x,(int)_startPos.position.y];
-        //TargetNode = NodeArray[(int)_targetPos.position.x, (int)_targetPos.position.y];
-        //StartNode = NodeArray[-7,-4];
-        //TargetNode = NodeArray[3, -4];
+//         //Debug.Log((int)_startPos.position.x + ":" + (int)_startPos.position.y);
+//         //Debug.Log((int)_targetPos.position.x + ":" + (int)_targetPos.position.y);
+//         //StartNode = NodeArray[(int)_startPos.position.x,(int)_startPos.position.y];
+//         //TargetNode = NodeArray[(int)_targetPos.position.x, (int)_targetPos.position.y];
+//         //StartNode = NodeArray[-7,-4];
+//         //TargetNode = NodeArray[3, -4];
 
-        OpenList = new List<Node>() { StartNode };
-        ClosedList = new List<Node>();
-        FinalNodeList = new List<Node>();
-        NodeDistanceList = new List<string>();
+//         OpenList = new List<Node>() { StartNode };
+//         ClosedList = new List<Node>();
+//         FinalNodeList = new List<Node>();
+//         NodeDistanceList = new List<string>();
 
-        int check = 0;
+//         // int check = 0;
 
-        while (OpenList.Count > 0)
-        {
+//         while (OpenList.Count > 0)
+//         {
             
-            //Debug.Log("while" + check);
-            //check++;
-            // ¿­¸°¸®½ºÆ® Áß °¡Àå F°¡ ÀÛ°í F°¡ °°´Ù¸é H°¡ ÀÛÀº °É ÇöÀç³ëµå·Î ÇÏ°í ¿­¸°¸®½ºÆ®¿¡¼­ ´ÝÈù¸®½ºÆ®·Î ¿Å±â±â
-            CurNode = OpenList[0];
-            string leftright = "";
-            for (int i = 1; i < OpenList.Count; i++)
-                if (OpenList[i].F <= CurNode.F && OpenList[i].H < CurNode.H)
-                {//°¡ÁßÄ¡ °è»êÇØ¼­ ³Ö´Â ½ÇÁúÀûÀÎ ºÎºÐ
-                    CurNode = OpenList[i];
+//             //Debug.Log("while" + check);
+//             //check++;
+//             // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Fï¿½ï¿½ ï¿½Û°ï¿½ Fï¿½ï¿½ ï¿½ï¿½ï¿½Ù¸ï¿½ Hï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Å±ï¿½ï¿½
+//             CurNode = OpenList[0];
+//             // string leftright = "";
+//             for (int i = 1; i < OpenList.Count; i++)
+//                 if (OpenList[i].F <= CurNode.F && OpenList[i].H < CurNode.H)
+//                 {//ï¿½ï¿½ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½
+//                     CurNode = OpenList[i];
                     
-                }
+//                 }
 
-            OpenList.Remove(CurNode);
-            ClosedList.Add(CurNode);
+//             OpenList.Remove(CurNode);
+//             ClosedList.Add(CurNode);
 
 
-            // ¸¶Áö¸·
-            if (CurNode == TargetNode)//¿©±â ¸ø°¨
-            {
-                Node TargetCurNode = TargetNode;
-                int _cnt = 0;
-                Debug.Log("³¡ºÎºÐ");
-                while (TargetCurNode != StartNode)//ÀÌ°Ô ¼º¸³ÇÏÁö ¾ÊÀ¸¸é Ç×»ó ¹«ÇÑ ¹Ýº¹Áß ±×·¸´Ù¸é startnode¿Í ¿«¾î¾ßÇÔ
-                {
+//             // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//             if (CurNode == TargetNode)//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+//             {
+//                 Node TargetCurNode = TargetNode;
+//                 int _cnt = 0;
+//                 // Debug.Log("ï¿½ï¿½ï¿½Îºï¿½");
+//                 while (TargetCurNode != StartNode)//ï¿½Ì°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½×»ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ýºï¿½ï¿½ï¿½ ï¿½×·ï¿½ï¿½Ù¸ï¿½ startnodeï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//                 {
                     
-                    _cnt++;
-                    if (_cnt > 2000)//È¤½Ã³ª ¹«ÇÑ ¹Ýº¹ÇÒ °æ¿ì ¿¹¿Ü 
-                    {
-                        Debug.Log("¹«ÇÑ ¹Ýº¹");
-                        return;
-                    }
+//                     _cnt++;
+//                     if (_cnt > 2000)//È¤ï¿½Ã³ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ýºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
+//                     {
+//                         // Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½Ýºï¿½");
+//                         return;
+//                     }
 
-                    //target.parentnode.isplatformÃß°¡
-                    if (TargetCurNode.isplatform||TargetCurNode.ParentNode.isplatform)
-                    {
-                        if (targetPos.y > startPos.y)//À§·Î
-                        {
-                            if ((//Debug.Log("ÁÂÃø »ó´Ü Æ÷ÀÎÆ®");
-                                NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x - 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].isplatform
-                                && NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x - 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].isPoint
-                                && !TargetCurNode.isPoint))
-                            {//ÁÂ
+//                     //target.parentnode.isplatformï¿½ß°ï¿½
+//                     if (TargetCurNode.isplatform||TargetCurNode.ParentNode.isplatform)
+//                     {
+//                         if (targetPos.y > startPos.y)//ï¿½ï¿½ï¿½ï¿½
+//                         {
+//                             if ((//Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®");
+//                                 NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x - 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].isplatform
+//                                 && NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x - 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].isPoint
+//                                 && !TargetCurNode.isPoint))
+//                             {//ï¿½ï¿½
                                 
-                                Node temp;
-                                temp = TargetCurNode.ParentNode;
-                                NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y].ParentNode = temp;
-                                TargetCurNode.ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y];
-                            }
-                            if ((//NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].isplatform && NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].isPoint||//¿ì
+//                                 Node temp;
+//                                 temp = TargetCurNode.ParentNode;
+//                                 NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y].ParentNode = temp;
+//                                 TargetCurNode.ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y];
+//                             }
+//                             if ((//NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].isplatform && NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].isPoint||//ï¿½ï¿½
 
-                                NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].isplatform
-                                && NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].isPoint
-                                && !TargetCurNode.isPoint))
-                            {//ÁÂ
-                                //Debug.Log("¿ìÃø »ó´Ü Æ÷ÀÎÆ®");
-                                Node temp;
-                                temp = TargetCurNode.ParentNode;
-                                NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y].ParentNode = temp;
-                                TargetCurNode.ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y];
-                            }
+//                                 NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].isplatform
+//                                 && NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].isPoint
+//                                 && !TargetCurNode.isPoint))
+//                             {//ï¿½ï¿½
+//                                 //Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®");
+//                                 Node temp;
+//                                 temp = TargetCurNode.ParentNode;
+//                                 NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y].ParentNode = temp;
+//                                 TargetCurNode.ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y];
+//                             }
 
-                            if (NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y - 1].isplatform
-                               && NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y - 1].isPoint
-                               && !TargetCurNode.ParentNode.isPoint)
+//                             if (NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y - 1].isplatform
+//                                && NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y - 1].isPoint
+//                                && !TargetCurNode.ParentNode.isPoint)
 
-                            {
-                                //
-                                //Debug.Log("¿ìÃøÇÏ´Ü Æ÷ÀÎÆ®");
-                                Node temp;
-                                temp = TargetCurNode.ParentNode;
-                                NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y - 1].ParentNode = temp;
-                                TargetCurNode.ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y - 1];
-                            }
+//                             {
+//                                 //
+//                                 //Debug.Log("ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®");
+//                                 Node temp;
+//                                 temp = TargetCurNode.ParentNode;
+//                                 NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y - 1].ParentNode = temp;
+//                                 TargetCurNode.ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y - 1];
+//                             }
 
-                            if (NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y - 1].isplatform
-       && NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y - 1].isPoint
-       && !TargetCurNode.ParentNode.isPoint)
+//                             if (NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y - 1].isplatform
+//        && NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y - 1].isPoint
+//        && !TargetCurNode.ParentNode.isPoint)
 
-                            {
-                                //Debug.Log("ÁÂÃøÇÏ´Ü Æ÷ÀÎÆ®");
-                                Node temp;
-                                temp = TargetCurNode.ParentNode;
-                                NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y - 1].ParentNode = temp;
-                                TargetCurNode.ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y - 1];
-                            }
+//                             {
+//                                 //Debug.Log("ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®");
+//                                 Node temp;
+//                                 temp = TargetCurNode.ParentNode;
+//                                 NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y - 1].ParentNode = temp;
+//                                 TargetCurNode.ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y - 1];
+//                             }
 
 
 
-                        }
-                        else if (targetPos.y < startPos.y)//¾Æ·¡ 
-                        {
-                            //Debug.Log(string.Format("{0},{1}//{2},{3}", TargetCurNode.x, TargetCurNode.y, NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x, TargetCurNode.ParentNode.y - bottomLeft.y ].x, NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x, TargetCurNode.ParentNode.y - bottomLeft.y ].y));
-                            if ((//NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].isplatform && NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].isPoint||//¿ì
+//                         }
+//                         else if (targetPos.y < startPos.y)//ï¿½Æ·ï¿½ 
+//                         {
+//                             //Debug.Log(string.Format("{0},{1}//{2},{3}", TargetCurNode.x, TargetCurNode.y, NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x, TargetCurNode.ParentNode.y - bottomLeft.y ].x, NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x, TargetCurNode.ParentNode.y - bottomLeft.y ].y));
+//                             if ((//NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].isplatform && NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].isPoint||//ï¿½ï¿½
 
-                                NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y + 1].isplatform
-                                && NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y + 1].isPoint
-                                && !TargetCurNode.ParentNode.isPoint))
-                            {//ÁÂ
-                               // Debug.Log("ÁÂÃø »ó´Ü Æ÷ÀÎÆ®");
-                                int sub = TargetCurNode.ParentNode.x-NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y + 1].x ;
-                                TargetCurNode.ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y + 1];
+//                                 NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y + 1].isplatform
+//                                 && NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y + 1].isPoint
+//                                 && !TargetCurNode.ParentNode.isPoint))
+//                             {//ï¿½ï¿½
+//                                // Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®");
+//                                 int sub = TargetCurNode.ParentNode.x-NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y + 1].x ;
+//                                 TargetCurNode.ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y + 1];
 
-                                for(int i = 0; i < sub; i++)
-                                {
-                                    NodeArray[TargetCurNode.x - bottomLeft.x - 1 + i, TargetCurNode.y - bottomLeft.y + 1].ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x + i, TargetCurNode.y - bottomLeft.y + 1];
-                                }
-                            }
+//                                 for(int i = 0; i < sub; i++)
+//                                 {
+//                                     NodeArray[TargetCurNode.x - bottomLeft.x - 1 + i, TargetCurNode.y - bottomLeft.y + 1].ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x + i, TargetCurNode.y - bottomLeft.y + 1];
+//                                 }
+//                             }
 
-                            if ((//NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].isplatform && NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].isPoint||//¿ì
+//                             if ((//NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].isplatform && NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].isPoint||//ï¿½ï¿½
 
-                                NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y + 1].isplatform
-                                && NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y + 1].isPoint
-                                && !TargetCurNode.ParentNode.isPoint))
-                            {//ÁÂ
-                                //Debug.Log(NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y].x + "," + NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y + 1].y);
-                                Debug.Log("¿ìÃø »ó´Ü Æ÷ÀÎÆ®");
-                                int sub = NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y + 1].x - TargetCurNode.ParentNode.x;
-                                TargetCurNode.ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y + 1];
+//                                 NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y + 1].isplatform
+//                                 && NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y + 1].isPoint
+//                                 && !TargetCurNode.ParentNode.isPoint))
+//                             {//ï¿½ï¿½
+//                                 //Debug.Log(NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y].x + "," + NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y + 1].y);
+//                                 // Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®");
+//                                 int sub = NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y + 1].x - TargetCurNode.ParentNode.x;
+//                                 TargetCurNode.ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y + 1];
                                 
 
-                                for(int i = 0; i < sub; i++)
-                                {
-                                    NodeArray[TargetCurNode.x - bottomLeft.x + 1-i, TargetCurNode.y - bottomLeft.y + 1].ParentNode= NodeArray[TargetCurNode.x - bottomLeft.x -i, TargetCurNode.y - bottomLeft.y + 1];
-                                }
-                            }
+//                                 for(int i = 0; i < sub; i++)
+//                                 {
+//                                     NodeArray[TargetCurNode.x - bottomLeft.x + 1-i, TargetCurNode.y - bottomLeft.y + 1].ParentNode= NodeArray[TargetCurNode.x - bottomLeft.x -i, TargetCurNode.y - bottomLeft.y + 1];
+//                                 }
+//                             }
 
-                            if (NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x - 1, TargetCurNode.ParentNode.y - bottomLeft.y - 1].isplatform//parentÁ¢±Ù x ÇÃ·§Æû ¹®Á¦
-                               && NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x - 1, TargetCurNode.ParentNode.y - bottomLeft.y - 1].isPoint
-                               && !TargetCurNode.isPoint)
+//                             if (NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x - 1, TargetCurNode.ParentNode.y - bottomLeft.y - 1].isplatform//parentï¿½ï¿½ï¿½ï¿½ x ï¿½Ã·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+//                                && NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x - 1, TargetCurNode.ParentNode.y - bottomLeft.y - 1].isPoint
+//                                && !TargetCurNode.isPoint)
 
-                            {
-                                //
-                                //Debug.Log("ÁÂÃøÇÏ´Ü Æ÷ÀÎÆ®");
-                                TargetCurNode.ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y];
-                                //NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x-1, TargetCurNode.ParentNode.y - bottomLeft.y-1 ].ParentNode = NodeArray;
-                                Debug.Log(FinalNodeList.Contains(NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y - 1]));
+//                             {
+//                                 //
+//                                 //Debug.Log("ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®");
+//                                 TargetCurNode.ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y];
+//                                 //NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x-1, TargetCurNode.ParentNode.y - bottomLeft.y-1 ].ParentNode = NodeArray;
+//                                 Debug.Log(FinalNodeList.Contains(NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y - 1]));
 
-                                //TargetCurNode.ParentNode = NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x - 1, TargetCurNode.ParentNode.y - bottomLeft.y - 1];
-                                //for(int i=1;FinalNodeList.Contains(NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + i, TargetCurNode.ParentNode.y - bottomLeft.y - 1]);i++)
-                                //{
-                                //    nodear
-                                //}
-                                //TargetCurNode.ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x -1, TargetCurNode.y - bottomLeft.y-1];
-                            }
+//                                 //TargetCurNode.ParentNode = NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x - 1, TargetCurNode.ParentNode.y - bottomLeft.y - 1];
+//                                 //for(int i=1;FinalNodeList.Contains(NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + i, TargetCurNode.ParentNode.y - bottomLeft.y - 1]);i++)
+//                                 //{
+//                                 //    nodear
+//                                 //}
+//                                 //TargetCurNode.ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x -1, TargetCurNode.y - bottomLeft.y-1];
+//                             }
 
-                            if (NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y - 1].isplatform
-       && NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y - 1].isPoint
-        && !TargetCurNode.isPoint)
+//                             if (NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y - 1].isplatform
+//        && NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y - 1].isPoint
+//         && !TargetCurNode.isPoint)
 
-                            {
-                                Debug.Log("¿ìÃø ÇÏ´Ü Æ÷ÀÎÆ®");
+//                             {
+//                                 // Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®");
 
-                                TargetCurNode.ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y];                                               
-                            }
-
-
+//                                 TargetCurNode.ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y];                                               
+//                             }
 
 
-                        }
-                    }
-                    FinalNodeList.Add(TargetCurNode);
-                    //NodeDistanceList.Add(leftright);
-                    TargetCurNode = TargetCurNode.ParentNode;//ºÎ¸ð ¼³Á¤ºÎºÐ
-                }
-
-                FinalNodeList.Add(StartNode);
-                FinalNodeList.Reverse();
-                //NodeDistanceList.Add("none");
-                //NodeDistanceList.Reverse();
-                //int cnt = FinalNodeList.Count;
-                //for (int i = 0; i < cnt; i++)
-                //{
-                //    print(i + "¹øÂ°´Â " + FinalNodeList[i].x + ", " + FinalNodeList[i].y + NodeDistanceList[i]); 
-                //}
-                //    
-                //Debug.Log(cnt);
-                return;
-            }
 
 
-            // ¢Ö¢Ø¢×¢Ù
-            if (allowDiagonal)
-            {
-                OpenListAdd(CurNode.x + 1, CurNode.y + 1);
-                OpenListAdd(CurNode.x - 1, CurNode.y + 1);
-                OpenListAdd(CurNode.x - 1, CurNode.y - 1);
-                OpenListAdd(CurNode.x + 1, CurNode.y - 1);
-            }
+//                         }
+//                     }
+//                     FinalNodeList.Add(TargetCurNode);
+//                     //NodeDistanceList.Add(leftright);
+//                     TargetCurNode = TargetCurNode.ParentNode;//ï¿½Î¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Îºï¿½
+//                 }
 
-            // ¡è ¡æ ¡é ¡ç
-            OpenListAdd(CurNode.x, CurNode.y + 1);
-            OpenListAdd(CurNode.x + 1, CurNode.y);
-            OpenListAdd(CurNode.x, CurNode.y - 1);
-            OpenListAdd(CurNode.x - 1, CurNode.y);
-        }
-        Debug.Log("³¡³¯ ¶§ ¸ñÇ¥ ³ëµå À§Ä¡" + (TargetNode.y));
-        if (OpenList.Count == 0)
-        {
-
-            //Debug.Log(CurNode.x-bottomLeft.x);
-            if (CurNode == TargetNode)
-            {
-                Debug.Log("Ã¼Å©");
-            }
-        }
-    }
-
-    void OpenListAdd(int checkX, int checkY)
-    {
-       // Debug.Log("test");
-        // »óÇÏÁÂ¿ì ¹üÀ§¸¦ ¹þ¾î³ªÁö ¾Ê°í, º®ÀÌ ¾Æ´Ï¸é¼­, ´ÝÈù¸®½ºÆ®¿¡ ¾ø´Ù¸é
-        if (checkX >= bottomLeft.x && checkX < topRight.x + 1 && checkY >= bottomLeft.y && checkY < topRight.y + 1 && !NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y].isWall && !ClosedList.Contains(NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y]))
-        {
-            // ´ë°¢¼± Çã¿ë½Ã, º® »çÀÌ·Î Åë°ú ¾ÈµÊ
-            if (allowDiagonal) if (NodeArray[CurNode.x - bottomLeft.x, checkY - bottomLeft.y].isWall && NodeArray[checkX - bottomLeft.x, CurNode.y - bottomLeft.y].isWall) return;
-
-            // ÄÚ³Ê¸¦ °¡·ÎÁú·¯ °¡Áö ¾ÊÀ»½Ã, ÀÌµ¿ Áß¿¡ ¼öÁ÷¼öÆò Àå¾Ö¹°ÀÌ ÀÖÀ¸¸é ¾ÈµÊ
-            if (dontCrossCorner) if (NodeArray[CurNode.x - bottomLeft.x, checkY - bottomLeft.y].isWall || NodeArray[checkX - bottomLeft.x, CurNode.y - bottomLeft.y].isWall) return;
-
-            if (NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y].isRoad)//checkx¿Í checky°ªÀ» ¾Ë¾Æ¾ßÇÔ
-            {
-                Node NeighborNode = NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y];
-                int MoveCost = CurNode.G + (CurNode.x - checkX == 0 || CurNode.y - checkY == 0 ? 10 : 14);
+//                 FinalNodeList.Add(StartNode);
+//                 FinalNodeList.Reverse();
+//                 //NodeDistanceList.Add("none");
+//                 //NodeDistanceList.Reverse();
+//                 //int cnt = FinalNodeList.Count;
+//                 //for (int i = 0; i < cnt; i++)
+//                 //{
+//                 //    print(i + "ï¿½ï¿½Â°ï¿½ï¿½ " + FinalNodeList[i].x + ", " + FinalNodeList[i].y + NodeDistanceList[i]); 
+//                 //}
+//                 //    
+//                 //Debug.Log(cnt);
+//                 return;
+//             }
 
 
-                // ÀÌµ¿ºñ¿ëÀÌ ÀÌ¿ô³ëµåGº¸´Ù ÀÛ°Å³ª ¶Ç´Â ¿­¸°¸®½ºÆ®¿¡ ÀÌ¿ô³ëµå°¡ ¾ø´Ù¸é G, H, ParentNode¸¦ ¼³Á¤ ÈÄ ¿­¸°¸®½ºÆ®¿¡ Ãß°¡
-                if (MoveCost < NeighborNode.G || !OpenList.Contains(NeighborNode))
-                {
-                    NeighborNode.G = MoveCost;
-                    NeighborNode.H = (Mathf.Abs(NeighborNode.x - TargetNode.x) + Mathf.Abs(NeighborNode.y - TargetNode.y)) * 10;
-                    NeighborNode.ParentNode = CurNode;
+//             // ï¿½Ö¢Ø¢×¢ï¿½
+//             if (allowDiagonal)
+//             {
+//                 OpenListAdd(CurNode.x + 1, CurNode.y + 1);
+//                 OpenListAdd(CurNode.x - 1, CurNode.y + 1);
+//                 OpenListAdd(CurNode.x - 1, CurNode.y - 1);
+//                 OpenListAdd(CurNode.x + 1, CurNode.y - 1);
+//             }
 
-                    OpenList.Add(NeighborNode);
-                }
-            }
+//             // ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½
+//             OpenListAdd(CurNode.x, CurNode.y + 1);
+//             OpenListAdd(CurNode.x + 1, CurNode.y);
+//             OpenListAdd(CurNode.x, CurNode.y - 1);
+//             OpenListAdd(CurNode.x - 1, CurNode.y);
+//         }
+//         // Debug.Log("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡" + (TargetNode.y));
+//         if (OpenList.Count == 0)
+//         {
+
+//             //Debug.Log(CurNode.x-bottomLeft.x);
+//             if (CurNode == TargetNode)
+//             {
+//                 Debug.Log("Ã¼Å©");
+//             }
+//         }
+//     }
+
+//     void OpenListAdd(int checkX, int checkY)
+//     {
+//        // Debug.Log("test");
+//         // ï¿½ï¿½ï¿½ï¿½ï¿½Â¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½î³ªï¿½ï¿½ ï¿½Ê°ï¿½, ï¿½ï¿½ï¿½ï¿½ ï¿½Æ´Ï¸é¼­, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½Ù¸ï¿½
+//         if (checkX >= bottomLeft.x && checkX < topRight.x + 1 && checkY >= bottomLeft.y && checkY < topRight.y + 1 && !NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y].isWall && !ClosedList.Contains(NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y]))
+//         {
+//             // ï¿½ë°¢ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ ï¿½ï¿½ï¿½Ì·ï¿½ ï¿½ï¿½ï¿½ ï¿½Èµï¿½
+//             if (allowDiagonal) if (NodeArray[CurNode.x - bottomLeft.x, checkY - bottomLeft.y].isWall && NodeArray[checkX - bottomLeft.x, CurNode.y - bottomLeft.y].isWall) return;
+
+//             // ï¿½Ú³Ê¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½Ìµï¿½ ï¿½ß¿ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ö¹ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Èµï¿½
+//             if (dontCrossCorner) if (NodeArray[CurNode.x - bottomLeft.x, checkY - bottomLeft.y].isWall || NodeArray[checkX - bottomLeft.x, CurNode.y - bottomLeft.y].isWall) return;
+
+//             if (NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y].isRoad)//checkxï¿½ï¿½ checkyï¿½ï¿½ï¿½ï¿½ ï¿½Ë¾Æ¾ï¿½ï¿½ï¿½
+//             {
+//                 Node NeighborNode = NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y];
+//                 int MoveCost = CurNode.G + (CurNode.x - checkX == 0 || CurNode.y - checkY == 0 ? 10 : 14);
 
 
-            // ÀÌ¿ô³ëµå¿¡ ³Ö°í, Á÷¼±Àº 10, ´ë°¢¼±Àº 14ºñ¿ë
+//                 // ï¿½Ìµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½ï¿½ï¿½Gï¿½ï¿½ï¿½ï¿½ ï¿½Û°Å³ï¿½ ï¿½Ç´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½ï¿½å°¡ ï¿½ï¿½ï¿½Ù¸ï¿½ G, H, ParentNodeï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ß°ï¿½
+//                 if (MoveCost < NeighborNode.G || !OpenList.Contains(NeighborNode))
+//                 {
+//                     NeighborNode.G = MoveCost;
+//                     NeighborNode.H = (Mathf.Abs(NeighborNode.x - TargetNode.x) + Mathf.Abs(NeighborNode.y - TargetNode.y)) * 10;
+//                     NeighborNode.ParentNode = CurNode;
 
-        }
-    }
-
-    void OnDrawGizmos()
-    {
-        if (FinalNodeList.Count != 0) for (int i = 0; i < FinalNodeList.Count - 1; i++)
-                Gizmos.DrawLine(new Vector2(FinalNodeList[i].x, FinalNodeList[i].y), new Vector2(FinalNodeList[i + 1].x, FinalNodeList[i + 1].y));
-    }
-
-    IEnumerator cMove()
-    {
-        for (int i = 1; i < FinalNodeList.Count; )
-        {
-            Debug.Log("ÀÌµ¿Áß");
-            transform.position = Vector2.MoveTowards(transform.position, new Vector2(FinalNodeList[i].x, FinalNodeList[i].y + 1), Time.deltaTime);
-            if(transform.position== new Vector3(FinalNodeList[i].x, FinalNodeList[i].y + 1, transform.position.z))
-            {
-                i++;
-            }
-            //transform.position = new Vector2(FinalNodeList[i].x, FinalNodeList[i].y + 1);
-            //transform.position = Vector3.Lerp(transform.position, new Vector2(FinalNodeList[i].x, FinalNodeList[i].y + 1), Time.deltaTime);
-            //yield return null;
-            yield return null;
-        }
-    }
+//                     OpenList.Add(NeighborNode);
+//                 }
+//             }
 
 
-    //private void Update()
-    //{
-    //    startPos.x = (int)_startPos.position.x;
-    //    startPos.y = (int)_startPos.position.y;
-    //    targetPos.x = (int)_targetPos.position.x;
-    //    targetPos.y = (int)_targetPos.position.y;
-    //    if (Input.GetKeyDown(KeyCode.F))
-    //    {
-    //        FinalNodeList.Clear();
-    //
-    //        PathFinding();
-    //        //Debug.Log(NodeArray[8 - bottomLeft.x, -2 - bottomLeft.y].ParentNode.x+"," +NodeArray[8 - bottomLeft.x, -2 - bottomLeft.y].ParentNode.y);    
-    //    }
-    //    //if (Input.GetKeyDown(KeyCode.A))
-    //    //{
-    //    //    StartCoroutine(cMove());
-    //    //}
-    //}
-}
+//             // ï¿½Ì¿ï¿½ï¿½ï¿½å¿¡ ï¿½Ö°ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 10, ï¿½ë°¢ï¿½ï¿½ï¿½ï¿½ 14ï¿½ï¿½ï¿½
+
+//         }
+//     }
+
+//     void OnDrawGizmos()
+//     {
+//         if (FinalNodeList.Count != 0) for (int i = 0; i < FinalNodeList.Count - 1; i++)
+//                 Gizmos.DrawLine(new Vector2(FinalNodeList[i].x, FinalNodeList[i].y), new Vector2(FinalNodeList[i + 1].x, FinalNodeList[i + 1].y));
+//     }
+
+//     IEnumerator cMove()
+//     {
+//         for (int i = 1; i < FinalNodeList.Count; )
+//         {
+//             // Debug.Log("ï¿½Ìµï¿½ï¿½ï¿½");
+//             if (attacking)
+//             {
+//                 break;
+//             }
+//             transform.position = Vector2.MoveTowards(transform.position, new Vector2(FinalNodeList[i].x, FinalNodeList[i].y + 1), Time.deltaTime);
+//             // Debug.Log("ï¿½Ìµï¿½ï¿½ï¿½ï¿½ï¿½");
+//             if(transform.position== new Vector3(FinalNodeList[i].x, FinalNodeList[i].y + 1, transform.position.z))
+//             {
+//                 // Debug.Log("ï¿½ï¿½ï¿½ï¿½");
+//                 i++;
+//             }
+//             //transform.position = new Vector2(FinalNodeList[i].x, FinalNodeList[i].y + 1);
+//             //transform.position = Vector3.Lerp(transform.position, new Vector2(FinalNodeList[i].x, FinalNodeList[i].y + 1), Time.deltaTime);
+//             //yield return null;
+//             yield return null;
+//         }
+//     }
+
+
+//     private void Update()
+//     {
+//        startPos.x = (int)_startPos.position.x;
+//        startPos.y = (int)_startPos.position.y;
+//        targetPos.x = (int)_targetPos.position.x;
+//        targetPos.y = (int)_targetPos.position.y;
+//        if (Input.GetKeyDown(KeyCode.F))
+//        {
+//            FinalNodeList.Clear();
+    
+//            PathFinding();
+//            //Debug.Log(NodeArray[8 - bottomLeft.x, -2 - bottomLeft.y].ParentNode.x+"," +NodeArray[8 - bottomLeft.x, -2 - bottomLeft.y].ParentNode.y);    
+//        }
+//        //if (Input.GetKeyDown(KeyCode.A))
+//        //{
+//        //    StartCoroutine(cMove());
+//        //}
+//     }
+// }

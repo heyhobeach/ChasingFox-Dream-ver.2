@@ -1,11 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.U2D.Animation;
 
 /// <summary>
 /// 유닛의 기본적인 동작을 정의하는 추상 클래스
 /// MonoBehaviour, IUnitController를 상속함
 /// </summary>
+[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(CapsuleCollider2D))]
 public abstract class UnitBase : MonoBehaviour, IUnitController
 {
     /// <summary>
@@ -29,9 +35,9 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     public float dashDuration;
 
     /// <summary>
-    /// 점프력
+    /// 점프 유지력
     /// </summary>
-    public float jumpHight;
+    public float jumpForce;
 
     /// <summary>
     /// 점프 추진력
@@ -39,9 +45,9 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     public float jumpImpulse;
 
     /// <summary>
-    /// 점프 유지력
+    /// 점프 유지 시간
     /// </summary>
-    public float jumpForce;
+    public float jumpTime;
 
     /// <summary>
     /// 유닛상태 열거형
@@ -51,8 +57,9 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     /// <summary>
     /// 유닛의 현재 상태를 가져옴
     /// </summary>
-    public UnitState UnitState { get; set; }
+    public UnitState UnitState { get => unitState; set => unitState = value; }
 
+    protected float boxOffsetX;
     /// <summary>
     /// 유닛 콜라이더 가로 크기
     /// </summary>
@@ -63,6 +70,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     /// </summary>
     public float BoxSizeX { get; private set; }
 
+    protected float boxOffsetY;
     /// <summary>
     /// 유닛 콜라이더 세로 크기
     /// </summary>
@@ -88,27 +96,74 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     /// </summary>
     public Vector2 Force { get { return new Vector2(hzForce, vcForce); } private set {  } }
 
-    private SpriteRenderer spriteRenderer;
+    /// <summary>
+    /// 바닥 체크
+    /// </summary>
+    protected bool isGrounded;
+    public bool IsGrounded { get => isGrounded; }
 
-    public Animator anim;
+    protected SpriteRenderer spriteRenderer;
+
+    [HideInInspector] public Animator anim;
+    public void SetAni(RuntimeAnimatorController runtimeAnimatorController) => anim.runtimeAnimatorController = runtimeAnimatorController;
+
+    private bool longRangeUnit;
+    [HideInInspector] public ShootingAnimationController shootingAnimationController;
+    public Action onDeath;
+    public Action onEnable;
+    public Action onDisable;
+    private SpriteResolver spriteResolver;
+
+    public void Init() => Start();
 
     protected virtual void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteResolver = GetComponent<SpriteResolver>();
         anim = GetComponent<Animator>();
         // 콜라이더 크기(절반) 계산
+        var ect = gameObject.activeSelf;
+        gameObject.SetActive(true);
         boxSizeX = gameObject.GetComponent<Collider2D>().bounds.extents.x;
         boxSizeY = gameObject.GetComponent<Collider2D>().bounds.extents.y;
+        boxOffsetX = gameObject.GetComponent<Collider2D>().offset.x;
+        boxOffsetY = gameObject.GetComponent<Collider2D>().offset.y;
+        gameObject.SetActive(ect);
         
         unitState = UnitState.Default;
+        anim.SetFloat("dashMultiplier", dashDuration > 0 ? 1/dashDuration : 1);
+
+        shootingAnimationController = GetComponent<ShootingAnimationController>();
+        if(shootingAnimationController != null) longRangeUnit = true;
     }
     protected virtual void Update()
     {
-        if(ControllerChecker()) return;
         // 힘의 방향에 따라 이미지를 좌우 반전
         if(hzForce < -0.1f) spriteRenderer.flipX = true;
         else if(hzForce > 0.1f) spriteRenderer.flipX = false;
+        if(!isGrounded) anim.SetBool("isAir", true);
+        else anim.SetBool("isAir", false);
+        if(Mathf.Abs(vcForce) > 0.2f) anim.SetFloat("vcForce", vcForce);
+        else anim.SetFloat("vcForce", 0);
+        if(Mathf.Abs(hzForce) < 0.1f || Physics2D.Raycast(transform.position, Vector2.right*Mathf.Sign(hzForce), boxSizeX*1.1f, 1<<LayerMask.NameToLayer("Map")))
+        {
+            anim.SetFloat("hzForce", 0);
+            anim.SetBool("isRun", false);
+        }
+        else
+        {
+            anim.SetFloat("hzForce", Mathf.Sign(hzForce) * (Mathf.Clamp(hzForce / movementSpeed, -1, 1) - fixDir * 1.5f));
+            anim.SetBool("isRun", true);
+        }
+        anim.SetFloat("dashMultiplier", dashDuration > 0 ? 1/dashDuration : 1);
     }
+
+    private void LateUpdate()
+    {
+        if(spriteResolver.enabled) spriteResolver.ResolveSpriteToSpriteRenderer();
+    }
+    
+    protected virtual void OnEnable() => onEnable?.Invoke();
 
     /// <summary>
     /// 폼체인지 시 초기화 해야할 작업을 수행
@@ -116,32 +171,64 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     protected virtual void OnDisable()
     {
         unitState = UnitState.Default;
+        onDisable?.Invoke();
+        if(anim) anim.SetBool("isDeath", false);
     }
 
-    public abstract bool Attack(Vector3 clickPos);
+    public virtual bool Attack(Vector3 clickPos)
+    {
+        anim.SetTrigger("attack");
+        if(!longRangeUnit) return false;
+        shootingAnimationController.AttackAni();
+        shootingAnimationController.Shoot();
+        return true;
+    }
 
-    public abstract bool Dash();
+    public virtual bool Dash()
+    {
+        if(longRangeUnit) shootingAnimationController.NomalAni();
+        anim.SetTrigger("dash");
+        return true;
+    }
 
     public abstract bool Jump(KeyState jumpKey);
 
     public abstract bool Crouch(KeyState crouchKey);
 
-    public virtual bool Move(float dir)
+    private float fixDir;
+    public virtual bool Move(Vector2 dir)
     {
-        if (dir == 0)
-        {
-            anim.SetBool("isRun", false);
-        }
-        else
-        {
-            anim.SetBool("isRun", true);
-        }
+        fixDir = dir.x;
         return true;
     }
 
-    public abstract bool FormChange();
+    public virtual bool FormChange()
+    {
+        anim.SetBool("formChange", true);
+        unitState = UnitState.FormChange;
+        return true;
+    }
 
-    public abstract bool Reload();
+    public virtual bool Reload()
+    {
+        if(!longRangeUnit) return false;
+        anim.SetTrigger("reload");
+        shootingAnimationController.AttackAni();
+        shootingAnimationController.Reload();
+        return true;
+    }
+    
+    public abstract void StopAllC();
+    public void Death()
+    {
+        StopAllC();
+        anim.SetTrigger("death");
+        anim.SetBool("isDeath", true);
+        GetComponent<Collider2D>().enabled = false;
+        if(longRangeUnit) shootingAnimationController.NomalAni();
+        unitState = UnitState.Death;
+        if(onDeath != null) onDeath.Invoke();
+    }
 
     /// <summary>
     /// 현재 플레이어 유닛의 제어 가능 여부 확인
@@ -157,10 +244,16 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     public static bool ControllerChecker(UnitBase unitBase)
     {
         var unitState = unitBase.UnitState;
-        if(unitState == UnitState.KnockBack || unitState == UnitState.Stiffen || 
-            unitState == UnitState.Stiffen_er || unitState == UnitState.Death || 
-            unitState == UnitState.Pause) return true;
-        else return false;
+        switch(unitState)
+        {
+            case UnitState.KnockBack:
+            case UnitState.Stiffen:
+            case UnitState.Stiffen_er:
+            case UnitState.Death:
+            case UnitState.Pause:
+            return true;
+            default: return false;
+        }
     }
 
     /// <summary>
@@ -186,4 +279,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         dir = (to - from).normalized; // 시작 벡터에서 목표 벡터까지의 방향 계산
         return new Vector3(0, 0, Vector3.SignedAngle(transform.right, dir, transform.forward)); // 유닛 기준 뱡향 벡터의 각도 계산 및 반환
     }
+
+    public void OnResolver() => spriteResolver.enabled = true;
+    public void OffResolver() => spriteResolver.enabled = false;
 }

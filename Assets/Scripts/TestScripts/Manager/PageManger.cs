@@ -1,17 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PageManger : MonoBehaviour
 {
     // Start is called before the first frame update
-    //´ÊÀº ÃÊ±âÈ­´Â ¾È ÇØµµ µÉ°Í °°¾ÒÀ½ ¾Æ·¡´Â ´ÊÀº ÃÊ±âÈ­ ¹æ½Ä
+    //ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ï¿½ï¿½ ï¿½ï¿½ ï¿½Øµï¿½ ï¿½É°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Æ·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ ï¿½ï¿½ï¿½
     //private static Lazy<SceneManger> instance = new Lazy<SceneManger>(() => new SceneManger());
     //public static SceneManger Instance { get { return instance.Value; } }   
 
-    //°³¼±Á¡ : ÀÇÁ¸¼º ÁÖÀÔ ¹æ½ÄÀ¸·Î ÇØ°áÇØ¼­ ½Ì±ÛÅæ »ç¿ëÀ» ÁÙÀÏ¼ö ÀÖÀ»±î?
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ : ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ø°ï¿½ï¿½Ø¼ï¿½ ï¿½Ì±ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½?
 
     private static PageManger instance;
     public static PageManger Instance
@@ -20,29 +21,79 @@ public class PageManger : MonoBehaviour
         {
             if (instance == null)
             {
-                instance = new PageManger();
+                var obj = new GameObject() { name = "PageManager" };
+                instance = obj.AddComponent<PageManger>();
+                DontDestroyOnLoad(obj);
             }
             return instance;
         }
     }
 
+    private Scene currentScene;
+    private string prevSceneName = "";
+    private string newSceneName = "";
+    public int formIdx = -1;
+    public PlayerController.PlayerControllerMask playerControllerMask;
+
+    private List<MapData> clearedMaps = new();
+    private List<EventTriggerData> clearedTriggers = new();
+
     private void Awake()
     {
+        if(instance != null)
+        {
+            Destroy(this);
+            return;
+        }
         instance = this;
+        DontDestroyOnLoad(Instance);
+        SceneManager.activeSceneChanged += (prv, ne)=> {
+            if(prv.name != null && !prv.name.Equals("Loading")) prevSceneName = prv.name;
+            if(ne.name != null && !ne.name.Equals("Loading")) newSceneName = ne.name;
+            if(prevSceneName.Equals("")) prevSceneName = newSceneName;
+            Debug.Log("AAA : " + prevSceneName + ", " + newSceneName);
+            if(!newSceneName.Equals(prevSceneName))
+            {
+                foreach(var map in clearedMaps)
+                {
+                    map.position = Vector3.zero;
+                    map.used = false;
+                }
+                foreach(var trigger in clearedTriggers) trigger.used = false;
+                clearedMaps.Clear();
+                clearedTriggers.Clear();
+                prevSceneName = newSceneName;
+                formIdx = -1;
+            }
+        };
     }
     void Start()
     {
+        currentScene = SceneManager.GetActiveScene();
+    }
+    // public void RoadRetry()//
+    // {
+    //     LoadScene(SceneManager.GetActiveScene().name);
+    // }
 
+    public void LoadScene(string sceneName)
+    {
+        var loadAo = SceneManager.LoadSceneAsync("Loading", LoadSceneMode.Additive);
+        var currentScene = SceneManager.GetActiveScene();
+        loadAo.completed += (ao) => { 
+            var unloadAo = SceneManager.UnloadSceneAsync(currentScene);
+            unloadAo.completed += (uao) => SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
+        };
     }
 
-    // Update is called once per frame
-    void Update()
+    public void AddClearList(MapData map)
     {
-        
+        if(clearedMaps.Contains(map)) return;
+        clearedMaps.Add(map);
     }
-
-    public void RoadRetry()//
+    public void AddClearList(EventTriggerData trigger)
     {
-        SceneManager.LoadScene("SampleScene");
+        if(clearedTriggers.Contains(trigger)) return;
+        clearedTriggers.Add(trigger);
     }
 }

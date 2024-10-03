@@ -12,6 +12,9 @@ public class Berserker : PlayerUnit
     /// </summary>
     private Coroutine dashCoroutine;
 
+    AudioSource sound;
+    public AudioClip soundClip;
+
     protected override void OnDisable()
     {
         base.OnDisable();
@@ -50,6 +53,7 @@ public class Berserker : PlayerUnit
         float t = 0;
         while(t < dashDuration)
         {
+            Debug.Log("구르기중");
             t += Time.deltaTime;
             AddHorizontalForce(hzVel * movementSpeed * 2f);
             yield return null;
@@ -58,5 +62,10 @@ public class Berserker : PlayerUnit
     }
 
     public override bool FormChange() => false;
+
     public override bool Reload() => false;
+
+    public override void StopAllC()
+    {
+    }
 }
