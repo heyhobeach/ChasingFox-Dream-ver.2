@@ -52,7 +52,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     /// <summary>
     /// 유닛상태 열거형
     /// </summary>
-    protected UnitState unitState;
+    [SerializeField, DisableInspector] protected UnitState unitState;
 
     /// <summary>
     /// 유닛의 현재 상태를 가져옴
@@ -224,7 +224,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         StopAllC();
         anim.SetTrigger("death");
         anim.SetBool("isDeath", true);
-        GetComponent<Collider2D>().enabled = false;
+        GetComponent<Collider2D>().isTrigger = true;
         if(longRangeUnit) shootingAnimationController.NomalAni();
         unitState = UnitState.Death;
         if(onDeath != null) onDeath.Invoke();

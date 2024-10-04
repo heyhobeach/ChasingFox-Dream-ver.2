@@ -12,7 +12,8 @@ public class InnerCheckFloat : DecoratorNode
     protected override void OnStart() { }
     protected override NodeState OnUpdate()
     {
-        if(targetFlaot > (blackboard.thisUnit.transform.position-blackboard.target.position).magnitude) return child.Update();
+        var dir = blackboard.target.transform.position - blackboard.thisUnit.transform.position;
+        if(Mathf.Abs(dir.x) < targetFlaot && dir.y < 3 && dir.y > -2) return child.Update();
         else return NodeState.Failure;
     }
 }

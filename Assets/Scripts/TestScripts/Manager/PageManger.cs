@@ -47,11 +47,15 @@ public class PageManger : MonoBehaviour
         }
         instance = this;
         DontDestroyOnLoad(Instance);
-        SceneManager.activeSceneChanged += (prv, ne)=> {
+        SceneManager.activeSceneChanged -= SceneInit;
+        SceneManager.activeSceneChanged += SceneInit;
+        void SceneInit(Scene prv, Scene ne)
+        {
             if(prv.name != null && !prv.name.Equals("Loading")) prevSceneName = prv.name;
+            else return;
             if(ne.name != null && !ne.name.Equals("Loading")) newSceneName = ne.name;
+            else return;
             if(prevSceneName.Equals("")) prevSceneName = newSceneName;
-            Debug.Log("AAA : " + prevSceneName + ", " + newSceneName);
             if(!newSceneName.Equals(prevSceneName))
             {
                 foreach(var map in clearedMaps)

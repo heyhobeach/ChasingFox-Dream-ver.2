@@ -12,20 +12,18 @@ public class EnemyController : MonoBehaviour
 
     private RaycastHit2D[] hits = new RaycastHit2D[0];
 
-    public float layDistance;
     public float _viewOuterRange;
-    public float viewOuterRange
-    {
-        get => _viewOuterRange+(blackboard.enemy_state.Increase_Sight*appendDistance);
-    }
+    public float viewOuterRange { get => _viewOuterRange+(blackboard.enemy_state.Increase_Sight*appendDistance); }
     public float _viewInnerRange;
     public float viewInnerRange
     {
         get => _viewInnerRange+(blackboard.enemy_state.Increase_Sight*appendDistance);
     }
+    public float _hearRange;
+    public float hearRange { get => _hearRange+(blackboard.enemy_state.Increase_Sight*appendDistance); }
     public float viewAngle;
     public float appendDistance;
-    private float distance { get => layDistance+(blackboard.enemy_state.Increase_Sight*appendDistance); }
+    private float distance { get => _viewOuterRange+(blackboard.enemy_state.Increase_Sight*appendDistance); }
 
     void Start()
     {
@@ -105,7 +103,7 @@ public class EnemyController : MonoBehaviour
                 blackboard.target = null;
                 isTrigger = true;
             }
-            else if(ViewCheck(index_player) && blackboard.target!= hits[index_player].transform)
+            else if(!isTrigger && ViewCheck(index_player) && blackboard.target!= hits[index_player].transform)
             {                
                 blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Chase;
                 blackboard.target = hits[index_player].transform;
@@ -120,7 +118,7 @@ public class EnemyController : MonoBehaviour
             blackboard.enemy_state.Increase_Sight++;
             isTrigger = true;
         }
-        if(!isTrigger && index_gunsound>-1 && blackboard.enemy_state.stateCase != Blackboard.Enemy_State.StateCase.Chase)
+        if(!isTrigger && index_gunsound>-1 && hearRange > (hits[index_gunsound].transform.position-blackboard.thisUnit.transform.position).magnitude && blackboard.enemy_state.stateCase != Blackboard.Enemy_State.StateCase.Chase)
         {
             var subvec = (Vector2)hits[index_gunsound].transform.position - (Vector2)transform.position;
             if(subvec.magnitude <= viewInnerRange + hits[index_gunsound].collider.bounds.extents.x)

@@ -22,7 +22,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     /// <summary>
     /// 현재 폼을 담는 변수
     /// </summary>
-    private PlayerUnit changedForm;
+    [SerializeField, DisableInspector] private PlayerUnit changedForm;
     public PlayerUnit ChagedForm { get => changedForm; }
 
     [SerializeField] private int _maxHealth;    //?private아닌가 A : 맞음
