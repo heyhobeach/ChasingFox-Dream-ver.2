@@ -8,11 +8,16 @@ public class LoopController : MonoBehaviour
 {
     PlayableDirector playableDirector;
     PlayableDirector LoopDir;
+    public double time = 0;
 
     [SerializeField] private float targetFrameRate = 1 / 60f;
     [SerializeField] private PlayableDirector director;
 
 
+    public void setTime(float t)
+    {
+        time = (double)t;
+    }
 
     public void SetNone()
     {
@@ -22,6 +27,7 @@ public class LoopController : MonoBehaviour
     {
         Debug.Log($"SetLoop - Current Frame: {playableDirector.time}");
         double timeLineT = playableDirector.time;
+        Debug.Log("Time test" + timeLineT + "arg Time" + time);
         LoopDir = dir;
 
         //playableDirector.time=
@@ -29,7 +35,7 @@ public class LoopController : MonoBehaviour
         var a =playableDirector.duration;
         Debug.Log("길이 " + a);
         //SetNone();
-        playableDirector.playableGraph.GetRootPlayable(0).SetDuration(timeLineT);
+        playableDirector.playableGraph.GetRootPlayable(0).SetDuration(time);
         Debug.Log("테스트 후 길이 " + a);
         //playableDirector.Pause();
         //LoopDir.Play();
