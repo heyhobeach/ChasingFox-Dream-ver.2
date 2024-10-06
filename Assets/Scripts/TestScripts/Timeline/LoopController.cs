@@ -29,6 +29,7 @@ public class LoopController : MonoBehaviour
         double timeLineT = playableDirector.time;
         Debug.Log("Time test" + timeLineT + "arg Time" + time);
         LoopDir = dir;
+        //SignalAsset.
 
         //playableDirector.time=
 
