@@ -83,7 +83,7 @@ public class LoopController : MonoBehaviour
     }
     private void Awake()
     {
-        Application.targetFrameRate = 60;
+        Application.targetFrameRate = 120;
         playableDirector = GetComponent<PlayableDirector>();
         foreach (var track in timeline.GetOutputTracks())
         {
