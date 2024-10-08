@@ -44,13 +44,14 @@ public class LoopController : MonoBehaviour
         var a =playableDirector.duration;
         Debug.Log("길이 " + a);
         //SetNone();
-        playableDirector.time = timeLineT;
-        playableDirector.playableGraph.GetRootPlayable(0).SetDuration(timeLineT);
+        //playableDirector.time = timeLineT;
+        //playableDirector.playableGraph.GetRootPlayable(0).SetDuration(timeLineT);
 
         Debug.Log("테스트 후 길이 " + timeLineT);
 
         //playableDirector.Pause();
         //LoopDir.Play();
+        
 
     }
     //public override double duration
@@ -67,6 +68,7 @@ public class LoopController : MonoBehaviour
 
     public void EndLoop()
     {
+        Debug.Log("end loop");
         LoopDir.Stop();
         timeListNum++;
         //playableDirector.playableGraph.GetRootPlayable(0).SetSpeed(1);
@@ -78,7 +80,11 @@ public class LoopController : MonoBehaviour
     void Start()
     {
 
-        playableDirector =GetComponent<PlayableDirector>();
+    }
+    private void Awake()
+    {
+        Application.targetFrameRate = 60;
+        playableDirector = GetComponent<PlayableDirector>();
         foreach (var track in timeline.GetOutputTracks())
         {
             // 트랙에서 마커를 찾습니다.
@@ -109,9 +115,16 @@ public class LoopController : MonoBehaviour
             }
         }
         stop_time.Sort();
-        foreach(var time in stop_time)//테스트용
+    }
+    private void FixedUpdate()
+    {
+        if (playableDirector.time >= stop_time[timeListNum])
         {
-            //Debug.Log("Retroactive Signal Found at Time: " + time);//딱 정지해야하는 부분을 찾을수는 있
+            double timeLineT = stop_time[timeListNum];
+            Debug.Log(timeLineT);
+            var a = playableDirector.duration;
+            playableDirector.time = timeLineT;
+            playableDirector.playableGraph.GetRootPlayable(0).SetDuration(timeLineT);
         }
     }
     private void Update()
@@ -124,5 +137,7 @@ public class LoopController : MonoBehaviour
             }
             EndLoop();
         }
+        Debug.Log(timeListNum);
+
     }
 }
