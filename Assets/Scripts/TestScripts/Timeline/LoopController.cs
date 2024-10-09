@@ -19,6 +19,10 @@ public class LoopController : MonoBehaviour
     /// 정지할 시간
     /// </summary>
     [SerializeField] private List<double> stop_time = new List<double>();
+    /// <summary>
+    /// 루프 시작 시간
+    /// </summary>
+    [SerializeField] private List<double> loop_time=new List<double>();
 
     public void setTime(float t)
     {
@@ -83,7 +87,7 @@ public class LoopController : MonoBehaviour
     }
     private void Awake()
     {
-        Application.targetFrameRate = 120;
+        Application.targetFrameRate = 60;
         playableDirector = GetComponent<PlayableDirector>();
         foreach (var track in timeline.GetOutputTracks())
         {
@@ -91,6 +95,17 @@ public class LoopController : MonoBehaviour
             foreach (var marker in track.GetMarkers())
             {
 
+                if (marker is SignalEmitter _signalEmitter)
+                {
+                    // 마커의 시간을 가져옵니다.
+
+                    double markerTime = _signalEmitter.time;
+                    //Debug.Log("Marker Time: " + markerTime);
+                    if (_signalEmitter.name == "StartPoint")
+                    {
+                        loop_time.Add(_signalEmitter.time);
+                    }
+                }
 
                 if (marker is SignalEmitter signalEmitter)
                 {
@@ -103,28 +118,29 @@ public class LoopController : MonoBehaviour
                         //Debug.Log("Retroactive Signal Found at Time: " + signalEmitter.time);//딱 정지해야하는 부분을 찾을수는 있음
                         stop_time.Add(signalEmitter.time);
                     }
-                    if (signalEmitter.retroactive)
-                    {
-                        //Debug.Log("Retroactive Signal Found at Time: " + signalEmitter.time);//딱 정지해야하는 부분을 찾을수는 있음
-                    }
-                }
-                else
-                {
-                    //Debug.Log("can't find marker");
                 }
             }
         }
         stop_time.Sort();
+        loop_time.Sort();
+
+
+        foreach(var i in loop_time)
+        {
+            Debug.Log("point is" + i);
+        }
     }
     private void FixedUpdate()
     {
         if (playableDirector.time >= stop_time[timeListNum])
         {
             double timeLineT = stop_time[timeListNum];
+            double loopLineT = loop_time[0];
             Debug.Log(timeLineT);
             var a = playableDirector.duration;
-            playableDirector.time = timeLineT;
-            playableDirector.playableGraph.GetRootPlayable(0).SetDuration(timeLineT);
+            playableDirector.time = loopLineT;
+            //playableDirector.time = timeLineT;
+            //playableDirector.playableGraph.GetRootPlayable(0).SetDuration(timeLineT);
         }
     }
     private void Update()
@@ -137,7 +153,6 @@ public class LoopController : MonoBehaviour
             }
             EndLoop();
         }
-        Debug.Log(timeListNum);
 
     }
 }
