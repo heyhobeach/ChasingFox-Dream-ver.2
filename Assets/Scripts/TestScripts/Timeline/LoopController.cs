@@ -15,6 +15,8 @@ public class LoopController : MonoBehaviour
     public TimelineAsset timeline;
     static int timeListNum = 0;
 
+    static int loopListNum = 0;
+
     /// <summary>
     /// 정지할 시간
     /// </summary>
@@ -75,6 +77,7 @@ public class LoopController : MonoBehaviour
         Debug.Log("end loop");
         LoopDir.Stop();
         timeListNum++;
+        loopListNum++;
         //playableDirector.playableGraph.GetRootPlayable(0).SetSpeed(1);
         playableDirector.playableGraph.GetRootPlayable(0).SetDuration(23.116666666666);
         //playableDirector.Resume();
@@ -87,7 +90,7 @@ public class LoopController : MonoBehaviour
     }
     private void Awake()
     {
-        Application.targetFrameRate = 60;
+        Application.targetFrameRate = 30;
         playableDirector = GetComponent<PlayableDirector>();
         foreach (var track in timeline.GetOutputTracks())
         {
@@ -135,7 +138,7 @@ public class LoopController : MonoBehaviour
         if (playableDirector.time >= stop_time[timeListNum])
         {
             double timeLineT = stop_time[timeListNum];
-            double loopLineT = loop_time[0];
+            double loopLineT = loop_time[loopListNum];
             Debug.Log(timeLineT);
             var a = playableDirector.duration;
             playableDirector.time = loopLineT;
