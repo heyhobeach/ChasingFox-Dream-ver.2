@@ -34,6 +34,7 @@ public class LoopController : MonoBehaviour
     public void SetNone()
     {
         this.playableDirector.extrapolationMode = DirectorWrapMode.None;
+        QualitySettings.vSyncCount = 1;
     }
     public void SetLoop(PlayableDirector dir)
     {
@@ -90,7 +91,9 @@ public class LoopController : MonoBehaviour
     }
     private void Awake()
     {
+        QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 30;
+
         playableDirector = GetComponent<PlayableDirector>();
         foreach (var track in timeline.GetOutputTracks())
         {
