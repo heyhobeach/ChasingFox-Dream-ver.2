@@ -10,7 +10,8 @@ public class LoopController : MonoBehaviour
     PlayableDirector LoopDir;
     public double time = 0;
 
-    [SerializeField] private float targetFrameRate = 1 / 60f;
+
+    public int fixed_timeline_frame = 30;
     [SerializeField] private PlayableDirector director;
     public TimelineAsset timeline;
     static int timeListNum = 0;
@@ -92,7 +93,7 @@ public class LoopController : MonoBehaviour
     private void Awake()
     {
         QualitySettings.vSyncCount = 0;
-        Application.targetFrameRate = 30;
+        Application.targetFrameRate = fixed_timeline_frame;
 
         playableDirector = GetComponent<PlayableDirector>();
         foreach (var track in timeline.GetOutputTracks())
@@ -138,7 +139,7 @@ public class LoopController : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (playableDirector.time >= stop_time[timeListNum])
+        if (playableDirector.time >= stop_time[timeListNum] - (1 / fixed_timeline_frame/2))//
         {
             double timeLineT = stop_time[timeListNum];
             double loopLineT = loop_time[loopListNum];
