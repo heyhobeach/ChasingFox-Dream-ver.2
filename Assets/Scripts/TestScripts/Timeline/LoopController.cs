@@ -94,8 +94,10 @@ public class LoopController : MonoBehaviour
     {
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = fixed_timeline_frame;
-
         playableDirector = GetComponent<PlayableDirector>();
+        //playableDirector.Evaluate();
+        //playableDirector.RebuildGraph();
+        //playableDirector.playableGraph.SetTimeUpdateMode(DirectorUpdateMode.Manual);
         foreach (var track in timeline.GetOutputTracks())
         {
             // 트랙에서 마커를 찾습니다.
@@ -139,6 +141,10 @@ public class LoopController : MonoBehaviour
     }
     private void FixedUpdate()
     {
+
+        Debug.Log("deltaTime" + Time.deltaTime);
+        //playableDirector.time += Time.deltaTime;
+        //playableDirector.Evaluate();
         if (playableDirector.time >= stop_time[timeListNum] - (1 / fixed_timeline_frame/2))//
         {
             double timeLineT = stop_time[timeListNum];
