@@ -48,8 +48,14 @@ public class Bullet : MonoBehaviour
         startTime += Time.unscaledDeltaTime;
         if(startTime >= lifeTime)
         {
-            Destroy(gameObject);
-            return;
+            Destroy(gameObject);            
+            BulletSound();
+            GameObject obj = SoundManager.Instance.bullet.standbyBullet.Dequeue();
+            obj.transform.position = this.transform.position;
+            Debug.Log(string.Format("queue name => " + obj));
+            SoundManager.Instance.CoStartBullet(obj);
+            StartCoroutine(SoundManager.Instance.CoBulletSound(obj));//해당 객체가 사라져서 그런듯 이 부분을 soundManager로 옮겨야함
+            SoundManager.Instance.bullet.standbyBullet.Enqueue(obj);
         }
     } 
     private void FixedUpdate() => rg.velocity = destination * speed;
@@ -57,7 +63,17 @@ public class Bullet : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(parentGo.tag.Equals(collision.tag)) return;
-        if(collision.CompareTag("Map") && parentGo.tag.Equals("Player")) BulletSound();
+        if(collision.CompareTag("Map") && parentGo.tag.Equals("Player"))
+        {
+            BulletSound();
+            Destroy(this.gameObject);
+            GameObject obj = SoundManager.Instance.bullet.standbyBullet.Dequeue();
+            obj.transform.position = this.transform.position;
+            Debug.Log(string.Format("queue name => " + obj));
+            SoundManager.Instance.CoStartBullet(obj);
+            StartCoroutine(SoundManager.Instance.CoBulletSound(obj));//해당 객체가 사라져서 그런듯 이 부분을 soundManager로 옮겨야함
+            SoundManager.Instance.bullet.standbyBullet.Enqueue(obj);
+        }
         if(collision.CompareTag("ground") || collision.CompareTag("Wall") || collision.CompareTag("Map")) Destroy(gameObject);
         if (collision.gameObject.tag == "guard")//필요없어보임
         {
@@ -102,7 +118,11 @@ public class Bullet : MonoBehaviour
     private void OnTriggerStay2D(Collider2D collision)
     {
         if(parentGo.tag.Equals(collision.tag)) return;
-        if(collision.CompareTag("Map")) BulletSound();
+        if(collision.CompareTag("Map"))
+        {
+            BulletSound();
+            Destroy(gameObject);
+        }
         if(collision.CompareTag("ground") || collision.CompareTag("Wall") || collision.CompareTag("Map")) Destroy(gameObject);
         if (collision.gameObject.tag == "guard")//필요없어보임
         {
