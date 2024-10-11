@@ -49,6 +49,19 @@ public class LoopController : MonoBehaviour
     public void SetNone()
     {
         this.playableDirector.extrapolationMode = DirectorWrapMode.None;
+        Application.targetFrameRate = 60;
+        QualitySettings.vSyncCount = 1;
+    }
+
+    public void ResetValue()
+    {
+        stopListNum = 0;
+        loopListNum = 0;
+        holdListNum = 0;
+        stop_time.Clear();
+        loop_time.Clear();
+        hold_time.Clear();  
+        Application.targetFrameRate = 60;
         QualitySettings.vSyncCount = 1;
     }
 
@@ -78,10 +91,6 @@ public class LoopController : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {
-
-    }
-    private void Awake()
     {
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = fixed_timeline_frame;
@@ -121,6 +130,10 @@ public class LoopController : MonoBehaviour
         }
         stop_time.Sort();
         loop_time.Sort();
+    }
+    private void Awake()
+    {
+
     }
     private void FixedUpdate()
     {
