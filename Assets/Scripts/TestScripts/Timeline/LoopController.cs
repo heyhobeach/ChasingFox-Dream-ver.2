@@ -10,7 +10,8 @@ public class LoopController : MonoBehaviour
     PlayableDirector LoopDir;
     public double time = 0;
 
-    [SerializeField] private float targetFrameRate = 1 / 60f;
+
+    public int fixed_timeline_frame = 30;
     [SerializeField] private PlayableDirector director;
     public TimelineAsset timeline;
 
@@ -83,9 +84,11 @@ public class LoopController : MonoBehaviour
     private void Awake()
     {
         QualitySettings.vSyncCount = 0;
-        Application.targetFrameRate = 30;
-
+        Application.targetFrameRate = fixed_timeline_frame;
         playableDirector = GetComponent<PlayableDirector>();
+        //playableDirector.Evaluate();
+        //playableDirector.RebuildGraph();
+        //playableDirector.playableGraph.SetTimeUpdateMode(DirectorUpdateMode.Manual);
         foreach (var track in timeline.GetOutputTracks())
         {
             // 트랙에서 마커를 찾습니다.
@@ -122,6 +125,11 @@ public class LoopController : MonoBehaviour
     private void FixedUpdate()
     {
         if (playableDirector.time >= stop_time[stopListNum])
+
+        Debug.Log("deltaTime" + Time.deltaTime);
+        //playableDirector.time += Time.deltaTime;
+        //playableDirector.Evaluate();
+        if (playableDirector.time >= stop_time[timeListNum] - (1 / fixed_timeline_frame/2))//
         {
             isHold = 1;
             double loopLineT = loop_time[loopListNum];//루프 시작 시간
