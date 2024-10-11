@@ -129,7 +129,7 @@ public class LoopController : MonoBehaviour
         Debug.Log("deltaTime" + Time.deltaTime);
         //playableDirector.time += Time.deltaTime;
         //playableDirector.Evaluate();
-        if (playableDirector.time >= stop_time[timeListNum] - (1 / fixed_timeline_frame/2))//
+        if (playableDirector.time >= stop_time[stopListNum] - (1 / fixed_timeline_frame/2))//
         {
             isHold = 1;
             double loopLineT = loop_time[loopListNum];//루프 시작 시간
