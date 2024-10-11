@@ -13,9 +13,18 @@ public class LoopController : MonoBehaviour
     [SerializeField] private float targetFrameRate = 1 / 60f;
     [SerializeField] private PlayableDirector director;
     public TimelineAsset timeline;
-    static int timeListNum = 0;
 
-    static int loopListNum = 0;
+    /// <summary>
+    /// 각각 리스트별로 인덱스
+    /// </summary>
+    private int stopListNum = 0;
+    private int loopListNum = 0;
+    private int holdListNum = 0;
+
+    /// <summary>
+    /// 현재 상태가 홀드인지 루프인지 판단위한 변수
+    /// </summary>
+    [SerializeField] private int isHold = 0;
 
     /// <summary>
     /// 정지할 시간
@@ -24,7 +33,12 @@ public class LoopController : MonoBehaviour
     /// <summary>
     /// 루프 시작 시간
     /// </summary>
-    [SerializeField] private List<double> loop_time=new List<double>();
+    [SerializeField] private List<double> loop_time = new List<double>();
+
+    /// <summary>
+    /// 루프 정지아닌 hold 포인트 해당 포인트는 다른 타임라인으로 이동시 메인 타임라인의 진행상황을 잡고 있기위함
+    /// </summary>
+    [SerializeField] private List<double> hold_time = new List<double>();
 
     public void setTime(float t)
     {
@@ -36,52 +50,29 @@ public class LoopController : MonoBehaviour
         this.playableDirector.extrapolationMode = DirectorWrapMode.None;
         QualitySettings.vSyncCount = 1;
     }
-    public void SetLoop(PlayableDirector dir)
-    {
-        Debug.Log($"SetLoop - Current Frame: {playableDirector.time}");
-        double timeLineT = stop_time[timeListNum];
-        Debug.Log("Time test" + timeLineT + "arg Time" + time);
-        LoopDir = dir;
-
-        //mark
-        //SignalAsset.
-
-        //playableDirector.time=
-
-        var a =playableDirector.duration;
-        Debug.Log("길이 " + a);
-        //SetNone();
-        //playableDirector.time = timeLineT;
-        //playableDirector.playableGraph.GetRootPlayable(0).SetDuration(timeLineT);
-
-        Debug.Log("테스트 후 길이 " + timeLineT);
-
-        //playableDirector.Pause();
-        //LoopDir.Play();
-        
-
-    }
-    //public override double duration
-    //{
-    //    get
-    //    {
-    //        if (playableDirector == null)
-    //            return base.duration;
-    //
-    //        // use this instead of length to avoid rounding precision errors,
-    //        return (double)m_Clip.samples / (double)m_Clip.frequency;
-    //    }
-    //}
 
     public void EndLoop()
     {
-        Debug.Log("end loop");
-        LoopDir.Stop();
-        timeListNum++;
-        loopListNum++;
-        //playableDirector.playableGraph.GetRootPlayable(0).SetSpeed(1);
-        playableDirector.playableGraph.GetRootPlayable(0).SetDuration(23.116666666666);
-        //playableDirector.Resume();
+        if (isHold == 2)
+        {
+            Debug.Log("isHold");
+            isHold = 0;
+            holdListNum++;
+            playableDirector.playableGraph.GetRootPlayable(0).SetDuration(playableDirector.duration);
+            return;
+        }
+        if (isHold == 1)
+        {
+            Debug.Log("end loop");
+            //LoopDir.Stop();
+            isHold = 0;
+            stopListNum++;
+            loopListNum++;
+            //playableDirector.playableGraph.GetRootPlayable(0).SetSpeed(1);
+            playableDirector.playableGraph.GetRootPlayable(0).SetDuration(playableDirector.duration);
+            //playableDirector.Resume();
+        }
+
     }
 
     // Start is called before the first frame update
@@ -101,60 +92,56 @@ public class LoopController : MonoBehaviour
             foreach (var marker in track.GetMarkers())
             {
 
-                if (marker is SignalEmitter _signalEmitter)
+                if (marker is SignalEmitter pointSignal)
                 {
-                    // 마커의 시간을 가져옵니다.
-
-                    double markerTime = _signalEmitter.time;
-                    //Debug.Log("Marker Time: " + markerTime);
-                    if (_signalEmitter.name == "StartPoint")
+                    if (pointSignal.name == "StartPoint")
                     {
-                        loop_time.Add(_signalEmitter.time);
+                        loop_time.Add(pointSignal.time);
                     }
                 }
 
-                if (marker is SignalEmitter signalEmitter)
+                if (marker is SignalEmitter stopSignal)
                 {
-                    // 마커의 시간을 가져옵니다.
-
-                    double markerTime = signalEmitter.time;
-                    //Debug.Log("Marker Time: " + markerTime);
-                    if (signalEmitter.name == "Stop")
+                    if (stopSignal.name == "Stop")
                     {
-                        //Debug.Log("Retroactive Signal Found at Time: " + signalEmitter.time);//딱 정지해야하는 부분을 찾을수는 있음
-                        stop_time.Add(signalEmitter.time);
+                        stop_time.Add(stopSignal.time);
+                    }
+                }
+                if (marker is SignalEmitter holdSignal)
+                {
+                    if (holdSignal.name == "Hold")
+                    {
+                        hold_time.Add(holdSignal.time);
                     }
                 }
             }
         }
         stop_time.Sort();
         loop_time.Sort();
-
-
-        foreach(var i in loop_time)
-        {
-            Debug.Log("point is" + i);
-        }
     }
     private void FixedUpdate()
     {
-        if (playableDirector.time >= stop_time[timeListNum])
+        if (playableDirector.time >= stop_time[stopListNum])
         {
-            double timeLineT = stop_time[timeListNum];
-            double loopLineT = loop_time[loopListNum];
-            Debug.Log(timeLineT);
+            isHold = 1;
+            double loopLineT = loop_time[loopListNum];//루프 시작 시간
             var a = playableDirector.duration;
             playableDirector.time = loopLineT;
-            //playableDirector.time = timeLineT;
-            //playableDirector.playableGraph.GetRootPlayable(0).SetDuration(timeLineT);
+        }
+        if (playableDirector.time >= hold_time[holdListNum])
+        {
+            isHold = 2;
+            playableDirector.playableGraph.GetRootPlayable(0).SetDuration(hold_time[holdListNum]);
+            //playableDirector.time = hold_time[holdListNum];
         }
     }
     private void Update()
     {
-        if (Input.anyKeyDown&&!Input.GetKeyDown(KeyCode.Escape))
+        if (Input.anyKeyDown && !Input.GetKeyDown(KeyCode.Escape))
         {
-            if(LoopDir==null){
-                //Debug.Log("왤케 급하냐 게이야 으하하하");
+            Debug.Log("anyKeyDonw");
+            if (isHold > 2 || isHold < 1)
+            {//해당부분은 int로 수정해서 int로 진행할까함 0 = null, 1 = loop, 2 = hold, else error
                 return;
             }
             EndLoop();
