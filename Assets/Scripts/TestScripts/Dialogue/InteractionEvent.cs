@@ -287,12 +287,10 @@ public class InteractionEvent : MonoBehaviour
 
     private void Update()
     {
-
+        //Debug.Log("size"+this.transform.parent.GetComponent<RectTransform>().rect.size);
         //if ((num <= dialogue.dialouses.Length))//line을 조절 해야함 대화가 끝나는 시점을 정하려면 line.y를 설정해야함
-        {
 
-            HandleDialogue();
-        }
+        HandleDialogue();
         //if (num > dialogue.dialouses.Length)
         //{
         //    EndDialogue();

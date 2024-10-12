@@ -41,6 +41,8 @@ public class UIManager : MonoBehaviour
     public bool is_select_show = false;
     public bool is_closing = false;
 
+    public float BoxSizeRatio = 0.1f;
+
     /// <summary>
     /// start,end,speed
     /// </summary>
@@ -58,6 +60,8 @@ public class UIManager : MonoBehaviour
     bool isTyping = false;
 
     private delegate void delayDelegeate();
+
+    private RectTransform intRect;
 
 
     [SerializeField]
@@ -77,11 +81,28 @@ public class UIManager : MonoBehaviour
 
     private void Awake()
     {
+        intRect=this.transform.GetChild(0).GetComponent<RectTransform>();
         is_closing = false;
         //co_closeAinm = ClosingAnim();
     }
 
     // Update is called once per frame
+    private void Update()
+    {
+        Debug.Log("자식 사이즈" + this.transform.GetChild(0).GetComponent<RectTransform>().rect.size);
+        TextBoxSizeChange();
+    }
+
+    private void TextBoxSizeChange()
+    {
+        //int크기 스케일링
+        intRect.sizeDelta = new Vector2(transform.GetComponent<RectTransform>().rect.width, transform.GetComponent<RectTransform>().rect.height* BoxSizeRatio);
+        intRect.position = new Vector3(0, intRect.sizeDelta.y/2,intRect.position.z);
+
+        //아래는 ver을 맞추기위해
+        Vertical.GetComponent<RectTransform>().sizeDelta = intRect.sizeDelta * 0.75f;//해당 0.75는 intRect크기에 비례한 intRect의 크기
+        Vertical.GetComponent<RectTransform>().position = new Vector3(intRect.sizeDelta.x/2,intRect.sizeDelta.y/2,intRect.position.z);
+    }
 
     /// <summary>
     /// 위치를 받으면 대사창 위치가 옮겨짐
