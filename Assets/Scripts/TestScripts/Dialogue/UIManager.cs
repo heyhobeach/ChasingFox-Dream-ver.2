@@ -108,14 +108,14 @@ public class UIManager : MonoBehaviour
 
     private void CharactorImageSizeChange()
     {
-
+        float yPox;//y값 정해서 넣어주면 됨
         for (int i = 0; i < this.transform.GetChild(1).childCount; i++)
         {
             string ch = "";
             transform.GetChild(1).GetChild(i).GetComponent<RectTransform>().sizeDelta = new Vector2(transform.GetComponent<RectTransform>().rect.width*0.3f, transform.GetComponent<RectTransform>().rect.width * 0.3f);
             //Vector2 Right = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height * 0.5f));
             //Vector2 Left = -Right;
-
+                
 
             if (i == 0)
             {
