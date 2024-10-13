@@ -46,8 +46,8 @@ public class InteractionEvent : MonoBehaviour
     /// </summary>
     string SPLIT_COMMAND_PASER = @"[""!,]";//명령어 분리 정규식
 
-    private delegate void delayDelegeate();
-    private delayDelegeate _nextDelegate;
+    //private delegate void delayDelegeate();//문제없이 돌아갈경우 삭제
+    //private delayDelegeate _nextDelegate;
 
     /// <summary>
     /// 이전에 실행될 명령어 리스트

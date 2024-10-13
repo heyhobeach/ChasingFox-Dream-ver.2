@@ -90,7 +90,9 @@ public class UIManager : MonoBehaviour
     private void Update()
     {
         Debug.Log("자식 사이즈" + this.transform.GetChild(0).GetComponent<RectTransform>().rect.size);
+
         TextBoxSizeChange();
+        CharactorImageSizeChange();
     }
 
     private void TextBoxSizeChange()
@@ -102,6 +104,31 @@ public class UIManager : MonoBehaviour
         //아래는 ver을 맞추기위해
         Vertical.GetComponent<RectTransform>().sizeDelta = intRect.sizeDelta * 0.75f;//해당 0.75는 intRect크기에 비례한 intRect의 크기
         Vertical.GetComponent<RectTransform>().position = new Vector3(intRect.sizeDelta.x/2,intRect.sizeDelta.y/2,intRect.position.z);
+    }
+
+    private void CharactorImageSizeChange()
+    {
+
+        for (int i = 0; i < this.transform.GetChild(1).childCount; i++)
+        {
+            string ch = "";
+            transform.GetChild(1).GetChild(i).GetComponent<RectTransform>().sizeDelta = new Vector2(transform.GetComponent<RectTransform>().rect.width*0.3f, transform.GetComponent<RectTransform>().rect.width * 0.3f);
+            //Vector2 Right = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height * 0.5f));
+            //Vector2 Left = -Right;
+
+
+            if (i == 0)
+            {
+                ch = "main charactor";
+                transform.GetChild(1).GetChild(i).GetComponent<RectTransform>().position = new Vector3(transform.GetComponent<RectTransform>().rect.width * 0.3f / 2, 0, 0); 
+            }
+            else
+            {
+                ch = "sub charactor";
+                transform.GetChild(1).GetChild(i).GetComponent<RectTransform>().position = new Vector3(Screen.width- transform.GetComponent<RectTransform>().rect.width * 0.3f/2, 0, 0);
+            }
+            Debug.Log(string.Format("{0} 이름 확인 {1} ", ch, transform.GetChild(1).transform.GetChild(i).name));
+        }
     }
 
     /// <summary>
