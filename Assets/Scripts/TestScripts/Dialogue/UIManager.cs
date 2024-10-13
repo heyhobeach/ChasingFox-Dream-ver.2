@@ -108,7 +108,7 @@ public class UIManager : MonoBehaviour
 
     private void CharactorImageSizeChange()
     {
-        float yPox;//y값 정해서 넣어주면 됨
+        float yPox = transform.GetChild(1).GetChild(0).transform.GetComponent<RectTransform>().rect.height;
         for (int i = 0; i < this.transform.GetChild(1).childCount; i++)
         {
             string ch = "";
@@ -120,12 +120,12 @@ public class UIManager : MonoBehaviour
             if (i == 0)
             {
                 ch = "main charactor";
-                transform.GetChild(1).GetChild(i).GetComponent<RectTransform>().position = new Vector3(transform.GetComponent<RectTransform>().rect.width * 0.3f / 2, 0, 0); 
+                transform.GetChild(1).GetChild(i).GetComponent<RectTransform>().position = new Vector3(transform.GetComponent<RectTransform>().rect.width * 0.3f / 2, yPox/2, 0); 
             }
             else
             {
                 ch = "sub charactor";
-                transform.GetChild(1).GetChild(i).GetComponent<RectTransform>().position = new Vector3(Screen.width- transform.GetComponent<RectTransform>().rect.width * 0.3f/2, 0, 0);
+                transform.GetChild(1).GetChild(i).GetComponent<RectTransform>().position = new Vector3(Screen.width- transform.GetComponent<RectTransform>().rect.width * 0.3f/2, yPox/2, 0);
             }
             Debug.Log(string.Format("{0} 이름 확인 {1} ", ch, transform.GetChild(1).transform.GetChild(i).name));
         }
