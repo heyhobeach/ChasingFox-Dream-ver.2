@@ -68,7 +68,7 @@ public class UIManager : MonoBehaviour
     public float typing_speed = 0.05f;
     private const float DEFAULT_SPEED= 0.05f;
     //public InteractionEvent interactionEvent;
-
+    private RectTransform name_rect;
     // Start is called before the first frame update
     void Start()
     {
@@ -76,6 +76,7 @@ public class UIManager : MonoBehaviour
         co = Typing("",isTyping);
         contentArr = new TMP_Text[1];
         size= content.rectTransform.rect.size.y;
+        name_rect= namemesh.transform.GetComponent<RectTransform>();
         // setTestPosition(targetTransform.position);
     }
 
@@ -104,6 +105,11 @@ public class UIManager : MonoBehaviour
         //아래는 ver을 맞추기위해
         Vertical.GetComponent<RectTransform>().sizeDelta = intRect.sizeDelta * 0.75f;//해당 0.75는 intRect크기에 비례한 intRect의 크기
         Vertical.GetComponent<RectTransform>().position = new Vector3(intRect.sizeDelta.x/2,intRect.sizeDelta.y/2,intRect.position.z);
+
+        //이름 부분 위치 수정
+        Debug.Log("이름 부분 " + namemesh.transform.name);
+        name_rect.sizeDelta = new Vector2(intRect.sizeDelta.x, namemesh.fontSize + namemesh.fontSize/6);
+        name_rect.position = new Vector3(name_rect.sizeDelta.x / 2, intRect.sizeDelta.y+name_rect.sizeDelta.y/2, 0);
     }
 
     private void CharactorImageSizeChange()
@@ -111,25 +117,18 @@ public class UIManager : MonoBehaviour
         float yPox = transform.GetChild(1).GetChild(0).transform.GetComponent<RectTransform>().rect.height;
         for (int i = 0; i < this.transform.GetChild(1).childCount; i++)
         {
-            string ch = "";
             transform.GetChild(1).GetChild(i).GetComponent<RectTransform>().sizeDelta = new Vector2(transform.GetComponent<RectTransform>().rect.width*0.3f, transform.GetComponent<RectTransform>().rect.width * 0.3f);
-            //Vector2 Right = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height * 0.5f));
-            //Vector2 Left = -Right;
-                
-
-            if (i == 0)
+            if (i == 0)//이렇게 한 이유는 이미지는 공간 2개 밖에없을거같아서
             {
-                ch = "main charactor";
                 transform.GetChild(1).GetChild(i).GetComponent<RectTransform>().position = new Vector3(transform.GetComponent<RectTransform>().rect.width * 0.3f / 2, yPox/2, 0); 
             }
             else
             {
-                ch = "sub charactor";
                 transform.GetChild(1).GetChild(i).GetComponent<RectTransform>().position = new Vector3(Screen.width- transform.GetComponent<RectTransform>().rect.width * 0.3f/2, yPox/2, 0);
             }
-            Debug.Log(string.Format("{0} 이름 확인 {1} ", ch, transform.GetChild(1).transform.GetChild(i).name));
         }
     }
+
 
     /// <summary>
     /// 위치를 받으면 대사창 위치가 옮겨짐
