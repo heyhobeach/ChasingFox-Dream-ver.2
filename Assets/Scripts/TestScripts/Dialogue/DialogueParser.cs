@@ -20,7 +20,7 @@ public class DialogueParser : MonoBehaviour
     string splitsign(string text)
     {
         if (row[0]=="") return "";
-        Debug.Log(text);
+        //Debug.Log(text);
         if (text[0] == '\"')
         {
             string newtext=text.Substring(1, text.Length - 2);
@@ -61,6 +61,8 @@ public class DialogueParser : MonoBehaviour
             //dialogue.command = new string[10][];
             dialogue.name = row[2];//
             dialogue.id = row[0];
+            dialogue.image_name = row[5];
+            dialogue.dir = row[6];
             //command = Regex.Split(row[4], SPLIT_COMMAND_PASER);
             //command = spaceremove(command);
             
@@ -117,7 +119,6 @@ public class DialogueParser : MonoBehaviour
                 foreach (var com in coms) { }
             }
             dialogue.context = contextList.ToArray();
-            dialogue.test = testarr.ToArray();
 
             dialoguesList.Add(dialogue); //대화 내용 리스트에 삽입
             if (isEnd)

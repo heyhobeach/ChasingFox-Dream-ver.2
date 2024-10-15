@@ -354,6 +354,8 @@ public class InteractionEvent : MonoBehaviour
             _Uimanager.EnableUI();
             CallCommand(ref precommands);//이전에 실행되어야할 명령어들
                                          //이게 두번 일어나는듯?
+
+            _Uimanager.SetImage(dialogue.dialouses[num].image_name, dialogue.dialouses[num].dir);
             Debug.Log("명령어 호출 테스트" + "id" + dialogue.dialouses[num].id + "이름" + dialogue.dialouses[num].name);//여기는 한번
             _Uimanager.Setname(dialogue.dialouses[num].name);//이름 변경 되는중 마찬가지로 내용도 같이 하면 될듯
                                                              //Debug.Log(dialogue.dialouses[num].context.Length);

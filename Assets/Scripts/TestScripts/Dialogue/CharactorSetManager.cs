@@ -51,7 +51,7 @@ public class SetCharImage : MonoBehaviour
 
 
 
-        ChangeImage();
+        //ChangeImage();
         SetDarkImage();
         //main_charactor.sprite = main_sprite;
         //sub_charactor.sprite = sub_sprite;
@@ -59,25 +59,43 @@ public class SetCharImage : MonoBehaviour
     /// <summary>
     /// 대사 불러올때 한번 호출 예정 지금은 테스트 때문에 update에서 호출중
     /// </summary>
-    public void ChangeImage()
+    public void ChangeImage(string image_name, string image_dir)
     {
-        ScriptorbleObjectTest temp;
-        for(int i=0;i<char_image_list.Length;i++)
+        Debug.Log(image_dir);
+        Sprite image_sprite = null;
+        image_name = string.Format("illustration\\{0}", image_name);
+        image_sprite = Resources.Load<Sprite>(image_name); 
+        if(image_name == null)
         {
-            temp = (ScriptorbleObjectTest)char_image_list[i]; 
-            if (temp.char_name== "zizel_cheerless")
-            {
-                mainData.ImageData = (ScriptorbleObjectTest)char_image_list[0];//상황에 맞게 인덱스 번호 수정필요
-            }
-            if(temp.char_name== "human_coffee")
-            {
-                subData.ImageData = (ScriptorbleObjectTest)char_image_list[1];
-            }
+            Debug.Log("Image Null");
+            throw new Exception("이미지가 없습니다. 이름 확인 혹은 파일 다시 확인 해 주세요");
         }
+        if (image_dir == "left")//여기서 문제 지금 왼쪽 오른쪽 텍스트가 구별 안되는중
+        {
+            Debug.Log("왼쪽");
+            main_charactor.sprite = image_sprite;
+        }
+        else
+        {
+            Debug.Log("오른쪽");
+            sub_charactor.sprite = image_sprite;
+        }
+        //ScriptorbleObjectTest temp;
+        //for(int i=0;i<char_image_list.Length;i++)
+        //{
+        //    temp = (ScriptorbleObjectTest)char_image_list[i]; 
+        //    if (temp.char_name== "zizel_cheerless")
+        //    {
+        //        mainData.ImageData = (ScriptorbleObjectTest)char_image_list[0];//상황에 맞게 인덱스 번호 수정필요
+        //    }
+        //    if(temp.char_name== "human_coffee")
+        //    {
+        //        subData.ImageData = (ScriptorbleObjectTest)char_image_list[1];
+        //    }
+        //}
         //mainData.ImageData = (ScriptorbleObjectTest)char_image_list[0];//상황에 맞게 인덱스 번호 수정필요
         //subData.ImageData = (ScriptorbleObjectTest)char_image_list[1];
-        main_charactor.sprite = mainData.ImageData.sprite;
-        sub_charactor.sprite = subData.ImageData.sprite;
+
     }
 
     public void SetDarkImage()
@@ -85,7 +103,7 @@ public class SetCharImage : MonoBehaviour
         Color color;
 
         ColorUtility.TryParseHtmlString(color_code, out color);
-        Debug.Log("color code " + color);
+        //Debug.Log("color code " + color);
         sub_charactor.color = color;
     }
 

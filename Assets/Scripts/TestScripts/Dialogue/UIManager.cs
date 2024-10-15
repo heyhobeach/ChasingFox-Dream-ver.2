@@ -63,6 +63,8 @@ public class UIManager : MonoBehaviour
 
     private RectTransform intRect;
 
+    private SetCharImage imagesetter;
+
 
     [SerializeField]
     public float typing_speed = 0.05f;
@@ -77,6 +79,7 @@ public class UIManager : MonoBehaviour
         contentArr = new TMP_Text[1];
         size= content.rectTransform.rect.size.y;
         name_rect= namemesh.transform.GetComponent<RectTransform>();
+        imagesetter=this.transform.GetChild(1).GetComponent<SetCharImage>();
         // setTestPosition(targetTransform.position);
     }
 
@@ -145,6 +148,12 @@ public class UIManager : MonoBehaviour
     public void Setname(string name)
     {
         namemesh.text = name;
+    }
+
+    public void SetImage(string image_name,string image_dir)
+    {
+        Debug.Log("setImage");
+        imagesetter.ChangeImage(image_name,image_dir);  
     }
 
 
