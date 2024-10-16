@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Net.Mime;
+using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -152,7 +153,9 @@ public class UIManager : MonoBehaviour
 
     public void SetImage(string image_name,string image_dir)
     {
-        Debug.Log("setImage");
+        //string str = @"^[a-zA-Z]";
+        image_dir = Regex.Replace(image_dir, @"[^a-zA-Z]", "");
+        Debug.Log("변경후"+image_dir);
         imagesetter.ChangeImage(image_name,image_dir);  
     }
 

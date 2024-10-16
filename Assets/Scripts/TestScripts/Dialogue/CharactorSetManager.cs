@@ -61,7 +61,7 @@ public class SetCharImage : MonoBehaviour
     /// </summary>
     public void ChangeImage(string image_name, string image_dir)
     {
-        Debug.Log(image_dir);
+
         Sprite image_sprite = null;
         image_name = string.Format("illustration\\{0}", image_name);
         image_sprite = Resources.Load<Sprite>(image_name); 
@@ -70,14 +70,15 @@ public class SetCharImage : MonoBehaviour
             Debug.Log("Image Null");
             throw new Exception("이미지가 없습니다. 이름 확인 혹은 파일 다시 확인 해 주세요");
         }
-        if (image_dir == "left")//여기서 문제 지금 왼쪽 오른쪽 텍스트가 구별 안되는중
+        Debug.Log(image_dir);
+        if (image_dir.Equals("left"))//여기서 문제 지금 왼쪽 오른쪽 텍스트가 구별 안되는중
         {
-            Debug.Log("왼쪽");
+            Debug.Log(image_dir+"left");
             main_charactor.sprite = image_sprite;
         }
         else
         {
-            Debug.Log("오른쪽");
+            Debug.Log(image_dir+"right");
             sub_charactor.sprite = image_sprite;
         }
         //ScriptorbleObjectTest temp;
