@@ -19,6 +19,10 @@ public class InteractionEvent : MonoBehaviour
     [SerializeField] DialogueEvent dialogue;
     //UIManager ui;
 
+    //코루틴으로 계속 오브젝트를 살려놓는다면 해결 되지 않을까 결국에는 int를 불러오지 못 해서 생기는 일들 
+    //private static InteractionEvent instance;
+    //public static InteractionEvent Instance { get => instance; }
+    
 
 
     public static bool isSkip = false;

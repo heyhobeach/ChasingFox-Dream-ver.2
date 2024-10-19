@@ -80,13 +80,13 @@ public class UIManager : MonoBehaviour
         contentArr = new TMP_Text[1];
         size= content.rectTransform.rect.size.y;
         name_rect= namemesh.transform.GetComponent<RectTransform>();
-        imagesetter=this.transform.GetChild(1).GetComponent<SetCharImage>();
+        imagesetter=this.transform.GetChild(0).GetComponent<SetCharImage>();
         // setTestPosition(targetTransform.position);
     }
 
     private void Awake()
     {
-        intRect=this.transform.GetChild(0).GetComponent<RectTransform>();
+        intRect=this.transform.GetChild(1).GetComponent<RectTransform>();
         is_closing = false;
         //co_closeAinm = ClosingAnim();
     }
@@ -107,28 +107,31 @@ public class UIManager : MonoBehaviour
         intRect.position = new Vector3(0, intRect.sizeDelta.y/2,intRect.position.z);
 
         //아래는 ver을 맞추기위해
+        content.fontSize = intRect.sizeDelta.y * 0.6f;
         Vertical.GetComponent<RectTransform>().sizeDelta = intRect.sizeDelta * 0.75f;//해당 0.75는 intRect크기에 비례한 intRect의 크기
         Vertical.GetComponent<RectTransform>().position = new Vector3(intRect.sizeDelta.x/2,intRect.sizeDelta.y/2,intRect.position.z);
 
+
         //이름 부분 위치 수정
         Debug.Log("이름 부분 " + namemesh.transform.name);
+        namemesh.fontSize = intRect.sizeDelta.y * 0.3f;
         name_rect.sizeDelta = new Vector2(intRect.sizeDelta.x, namemesh.fontSize + namemesh.fontSize/6);
         name_rect.position = new Vector3(name_rect.sizeDelta.x / 2, intRect.sizeDelta.y+name_rect.sizeDelta.y/2, 0);
     }
 
     private void CharactorImageSizeChange()
     {
-        float yPox = transform.GetChild(1).GetChild(0).transform.GetComponent<RectTransform>().rect.height;
+        float yPox = transform.GetChild(0).GetChild(0).transform.GetComponent<RectTransform>().rect.height;
         for (int i = 0; i < this.transform.GetChild(1).childCount; i++)
         {
-            transform.GetChild(1).GetChild(i).GetComponent<RectTransform>().sizeDelta = new Vector2(transform.GetComponent<RectTransform>().rect.width*0.3f, transform.GetComponent<RectTransform>().rect.width * 0.3f);
+            transform.GetChild(0).GetChild(i).GetComponent<RectTransform>().sizeDelta = new Vector2(transform.GetComponent<RectTransform>().rect.width*0.3f, transform.GetComponent<RectTransform>().rect.width * 0.3f);
             if (i == 0)//이렇게 한 이유는 이미지는 공간 2개 밖에없을거같아서
             {
-                transform.GetChild(1).GetChild(i).GetComponent<RectTransform>().position = new Vector3(transform.GetComponent<RectTransform>().rect.width * 0.3f / 2, yPox/2, 0); 
+                transform.GetChild(0).GetChild(i).GetComponent<RectTransform>().position = new Vector3(transform.GetComponent<RectTransform>().rect.width * 0.3f / 2, yPox/2, 0); 
             }
             else
             {
-                transform.GetChild(1).GetChild(i).GetComponent<RectTransform>().position = new Vector3(Screen.width- transform.GetComponent<RectTransform>().rect.width * 0.3f/2, yPox/2, 0);
+                transform.GetChild(0).GetChild(i).GetComponent<RectTransform>().position = new Vector3(Screen.width- transform.GetComponent<RectTransform>().rect.width * 0.3f/2, yPox/2, 0);
             }
         }
     }
@@ -141,7 +144,7 @@ public class UIManager : MonoBehaviour
     public void SetTextPosition(Vector3 pos)//추후 대사 2개이상 발생시 가운데값
     {
         Vector3 _pos;
-        Transform dialogueUiTransform = this.transform.GetChild(0).GetComponent<Transform>();//스크린 좌표로 변환 필요
+        Transform dialogueUiTransform = this.transform.GetChild(1).GetComponent<Transform>();//스크린 좌표로 변환 필요, 0
         //dialogueUiTransform.position = pos;
         dialogueUiTransform.position=Camera.main.WorldToScreenPoint(new Vector3(pos.x,pos.y+1,pos.z));//타겟 오브젝트 위치에 대사 오브젝트 위치 움직임
         Debug.Log(pos);
@@ -156,7 +159,8 @@ public class UIManager : MonoBehaviour
         //string str = @"^[a-zA-Z]";
         image_dir = Regex.Replace(image_dir, @"[^a-zA-Z]", "");
         Debug.Log("변경후"+image_dir);
-        imagesetter.ChangeImage(image_name,image_dir);  
+        //나중에 선택지때 중앙만 오게 된다면 여기서 설정 할 예정
+        imagesetter.ChangeImage(image_name,image_dir);//좌우 기준
     }
 
 
@@ -371,11 +375,11 @@ public class UIManager : MonoBehaviour
     }
     public void EnableUI()
     {
-        Vertical.SetActive(true);
+        this.transform.gameObject.SetActive(true);
     }
     public void DisableUI()
     {
-        Vertical.SetActive(false);
+        this.transform.gameObject.SetActive(false);
     }
     public bool GetTextActive()//수정 필요할듯 이상함
     {

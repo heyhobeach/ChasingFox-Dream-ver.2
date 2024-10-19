@@ -48,13 +48,6 @@ public class SetCharImage : MonoBehaviour
         {
             Debug.Log(sub_charactor.gameObject.transform.name);
         }
-
-
-
-        //ChangeImage();
-        SetDarkImage();
-        //main_charactor.sprite = main_sprite;
-        //sub_charactor.sprite = sub_sprite;
     }
     /// <summary>
     /// 대사 불러올때 한번 호출 예정 지금은 테스트 때문에 update에서 호출중
@@ -62,7 +55,7 @@ public class SetCharImage : MonoBehaviour
     public void ChangeImage(string image_name, string image_dir)
     {
 
-        Sprite image_sprite = null;
+        Sprite image_sprite = null;//이미지 받아오는 변수
         image_name = string.Format("illustration\\{0}", image_name);
         image_sprite = Resources.Load<Sprite>(image_name); 
         if(image_name == null)
@@ -75,11 +68,15 @@ public class SetCharImage : MonoBehaviour
         {
             Debug.Log(image_dir+"left");
             main_charactor.sprite = image_sprite;
+            SetDarkImage(sub_charactor) ;
+            SetWhiteImage(main_charactor);
         }
         else
         {
             Debug.Log(image_dir+"right");
             sub_charactor.sprite = image_sprite;
+            SetDarkImage(main_charactor);
+            SetWhiteImage(sub_charactor);
         }
         //ScriptorbleObjectTest temp;
         //for(int i=0;i<char_image_list.Length;i++)
@@ -99,13 +96,17 @@ public class SetCharImage : MonoBehaviour
 
     }
 
-    public void SetDarkImage()
+    public void SetDarkImage(Image charactor)
     {
         Color color;
 
         ColorUtility.TryParseHtmlString(color_code, out color);
-        //Debug.Log("color code " + color);
-        sub_charactor.color = color;
+        charactor.color = color;
+    }
+
+    public void SetWhiteImage(Image charactor)
+    {
+        charactor.color = Color.white;
     }
 
 }
