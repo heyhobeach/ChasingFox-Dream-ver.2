@@ -53,7 +53,7 @@ public class LoopController : MonoBehaviour
         QualitySettings.vSyncCount = 1;
     }
 
-    public void ResetValue()
+    public void ResetValue()//끝날때 다시 원래대로초기화 하는 함수
     {
         stopListNum = 0;
         loopListNum = 0;
@@ -63,6 +63,11 @@ public class LoopController : MonoBehaviour
         hold_time.Clear();  
         Application.targetFrameRate = 60;
         QualitySettings.vSyncCount = 1;
+    }
+
+    public void SetSkip()
+    {
+        InteractionEvent.Instance.SetSkip(true);
     }
 
     public void EndLoop()

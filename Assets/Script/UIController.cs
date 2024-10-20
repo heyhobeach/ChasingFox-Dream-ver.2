@@ -13,6 +13,7 @@ public class UIController : MonoBehaviour//해당 스크립트는 UI를 그리�
     [SerializeField] private float duration = 1f;//그림 그리는데 필요한 시간
     public bool startCor = false;
     // Start is called before the first frame update
+    public Canvas DialogueCanvas;
 
     private static UIController instance=null;
     public static UIController Instance 
@@ -106,6 +107,19 @@ public class UIController : MonoBehaviour//해당 스크립트는 UI를 그리�
     public void ImageSetTrue()
     {
         image.transform.gameObject.SetActive(true);
+    }
+
+    public void DialogueCanvasSetFalse()
+    {
+        Debug.Log("SetFalse");
+        //DialogueCanvas.transform.gameObject.SetActive(false);
+        DialogueCanvas.transform.gameObject.GetComponent<Canvas>().enabled = false;
+    }
+    public void DialogueCanvasSetTrue()
+    {
+        Debug.Log("SetTrue");
+        //DialogueCanvas.transform.gameObject.SetActive(true);
+        DialogueCanvas.transform.gameObject.GetComponent<Canvas>().enabled = true;
     }
 
 

@@ -63668,6 +63668,7 @@ MonoBehaviour:
   reloadDoon: 1
   duration: 1
   startCor: 0
+  DialogueCanvas: {fileID: 1242394879}
 --- !u!114 &867082883
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77303,6 +77304,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: ef65bd94c990f4cfdb1506fe86152d37, type: 2}
     - {fileID: 11400000, guid: af6965f7c63f94270af6cbfb2c45d31e, type: 2}
     - {fileID: 11400000, guid: e7841edb67bd5d34ea8934545f258b03, type: 2}
+    - {fileID: 11400000, guid: f7bf509e776809e44b44128027148a25, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -77406,9 +77408,9 @@ MonoBehaviour:
           m_CallState: 2
     - m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 1741852987}
-          m_TargetAssemblyTypeName: InteractionEvent, Assembly-CSharp
-          m_MethodName: _DisableUI
+        - m_Target: {fileID: 867082882}
+          m_TargetAssemblyTypeName: UIController, Assembly-CSharp
+          m_MethodName: DialogueCanvasSetFalse
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -77943,6 +77945,20 @@ MonoBehaviour:
             m_ObjectArgument: {fileID: 1250800917}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Playables.PlayableDirector,
               UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 867082882}
+          m_TargetAssemblyTypeName: UIController, Assembly-CSharp
+          m_MethodName: DialogueCanvasSetTrue
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
