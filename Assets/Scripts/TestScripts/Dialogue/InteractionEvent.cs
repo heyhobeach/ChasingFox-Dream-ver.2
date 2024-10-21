@@ -740,4 +740,26 @@ public class InteractionEvent : MonoBehaviour
         }
 
     }
+
+    //public string[] GetImageNameList()
+    public Tuple<string,string>[] GetImageNameList()
+    {
+        Debug.Log("GetNum " + num);
+        Tuple<string, string>[]name_tuple_list= new Tuple<string, string>[2];
+        string[] name_list= new string[2];
+        name_tuple_list[0] = new Tuple<string, string>(dialogue.dialouses[num].image_name, dialogue.dialouses[num].dir);
+
+        name_list[0] = dialogue.dialouses[num].image_name;
+        for(int i = num+1; i < dialogue.dialouses.Length; i++)
+        {
+            if (name_list[0] != dialogue.dialouses[i].image_name)
+            {
+                Debug.Log("다른 사람 이름" + dialogue.dialouses[i].image_name);
+                name_list[1] = dialogue.dialouses[i].image_name;
+                name_tuple_list[1] = new Tuple<string, string>(dialogue.dialouses[i].image_name, dialogue.dialouses[i].dir);
+            }
+        }
+        return name_tuple_list;
+        //return name_list;
+    }
 }

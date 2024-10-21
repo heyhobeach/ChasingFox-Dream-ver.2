@@ -52,7 +52,7 @@ public class Bullet : MonoBehaviour
             return;
         }
     } 
-    private void FixedUpdate() => rg.velocity = destination * speed;
+    private void FixedUpdate() => rg.linearVelocity = destination * speed;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {

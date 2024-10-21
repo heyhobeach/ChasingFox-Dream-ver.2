@@ -163,6 +163,17 @@ public class UIManager : MonoBehaviour
         imagesetter.ChangeImage(image_name,image_dir);//좌우 기준
     }
 
+    public void LoadImage()
+    {
+        //Debug.Log("LoadImage"+namemesh.transform.parent.GetComponent<InteractionEvent>().GetNum());
+        //string []name_list = namemesh.transform.parent.GetComponent<InteractionEvent>().GetImageNameList();
+        Tuple<string, string>[] name_list = namemesh.transform.parent.GetComponent<InteractionEvent>().GetImageNameList();
+        for(int i = 0; i < name_list.Length; i++)//현재 대화의 다음의 모습이 보이는거 같은데 해당 방식이 맞음 이유는 다음 대사에 대한 이미지를 가져와야하기때문에
+        {
+            Debug.Log("name is" + name_list[i]);
+
+        }
+    }
 
     /// <summary>
     /// 글자 수 받아오는곳

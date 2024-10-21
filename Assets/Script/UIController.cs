@@ -119,6 +119,15 @@ public class UIController : MonoBehaviour//해당 스크립트는 UI를 그리�
     {
         Debug.Log("SetTrue");
         //DialogueCanvas.transform.gameObject.SetActive(true);
+        bool is_alone = false;
+        if (is_alone == true)
+        {
+
+        }
+        else
+        {
+            DialogueCanvas.GetComponent<UIManager>().LoadImage();
+        }
         DialogueCanvas.transform.gameObject.GetComponent<Canvas>().enabled = true;
     }
 
