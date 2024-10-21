@@ -113,7 +113,6 @@ public class UIManager : MonoBehaviour
 
 
         //이름 부분 위치 수정
-        Debug.Log("이름 부분 " + namemesh.transform.name);
         namemesh.fontSize = intRect.sizeDelta.y * 0.3f;
         name_rect.sizeDelta = new Vector2(intRect.sizeDelta.x, namemesh.fontSize + namemesh.fontSize/6);
         name_rect.position = new Vector3(name_rect.sizeDelta.x / 2, intRect.sizeDelta.y+name_rect.sizeDelta.y/2, 0);
@@ -165,14 +164,20 @@ public class UIManager : MonoBehaviour
 
     public void LoadImage()
     {
-        //Debug.Log("LoadImage"+namemesh.transform.parent.GetComponent<InteractionEvent>().GetNum());
-        //string []name_list = namemesh.transform.parent.GetComponent<InteractionEvent>().GetImageNameList();
         Tuple<string, string>[] name_list = namemesh.transform.parent.GetComponent<InteractionEvent>().GetImageNameList();
+        if (name_list == null)
+        {
+            Debug.Log("튜플이 null 입니다");
+            throw new Exception("튜플이 null 입니다");
+            return;
+        }
         for(int i = 0; i < name_list.Length; i++)//현재 대화의 다음의 모습이 보이는거 같은데 해당 방식이 맞음 이유는 다음 대사에 대한 이미지를 가져와야하기때문에
         {
-            Debug.Log("name is" + name_list[i]);
+            Debug.Log("name is" + name_list[i].Item1+"dir is" + name_list[i].Item2);
 
         }
+        SetImage(name_list[1].Item1, name_list[1].Item2);
+        SetImage(name_list[0].Item1, name_list[0].Item2);
     }
 
     /// <summary>

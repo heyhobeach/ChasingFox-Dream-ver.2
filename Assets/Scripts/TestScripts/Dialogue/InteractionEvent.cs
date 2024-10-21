@@ -742,6 +742,10 @@ public class InteractionEvent : MonoBehaviour
     }
 
     //public string[] GetImageNameList()
+    /// <summary>
+    /// 현재 텍스트 번호에서 다른 위치에서 로딩이 될 사진들을 튜플로 가져옴
+    /// </summary>
+    /// <returns>성공시 tuple 실패시 null</returns>
     public Tuple<string,string>[] GetImageNameList()
     {
         Debug.Log("GetNum " + num);
@@ -752,14 +756,17 @@ public class InteractionEvent : MonoBehaviour
         name_list[0] = dialogue.dialouses[num].image_name;
         for(int i = num+1; i < dialogue.dialouses.Length; i++)
         {
-            if (name_list[0] != dialogue.dialouses[i].image_name)
+            Debug.Log(string.Format("이름 {0} 위치 {1}", dialogue.dialouses[i].image_name, dialogue.dialouses[i].dir));
+            Debug.Log(string.Format("비교 {0} 과 {1} ", name_tuple_list[0].Item2, dialogue.dialouses[i].dir));
+            if (name_tuple_list[0].Item2 != dialogue.dialouses[i].dir)
             {
-                Debug.Log("다른 사람 이름" + dialogue.dialouses[i].image_name);
+                Debug.Log("다른곳은 " + i + "번째 입니다");
                 name_list[1] = dialogue.dialouses[i].image_name;
                 name_tuple_list[1] = new Tuple<string, string>(dialogue.dialouses[i].image_name, dialogue.dialouses[i].dir);
+                return name_tuple_list;
             }
         }
-        return name_tuple_list;
-        //return name_list;
+
+        return null;
     }
 }
