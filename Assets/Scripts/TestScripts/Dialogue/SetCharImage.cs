@@ -53,12 +53,15 @@ public class SetCharImage : MonoBehaviour
     /// <summary>
     /// 대사 불러올때 한번 호출 예정 지금은 테스트 때문에 update에서 호출중
     /// </summary>
-    public void ChangeImage(string image_name, string image_dir)
+    public void ChangeImage(string image_name, string image_dir,bool is_disable)
     {
 
         Sprite image_sprite = null;//이미지 받아오는 변수
+        Debug.Log("위치" + image_dir);
         image_name = string.Format("illustration\\{0}", image_name);
         image_sprite = Resources.Load<Sprite>(image_name);
+        Image target = null;
+        Image other = null;
         if(image_name == null)
         {
             Debug.Log("Image Null");
@@ -67,33 +70,26 @@ public class SetCharImage : MonoBehaviour
         Debug.Log(image_dir);
         if (image_dir.Equals("left"))//여기서 문제 지금 왼쪽 오른쪽 텍스트가 구별 안되는중
         {
-            Debug.Log(image_dir+"left");
-            main_charactor.sprite = image_sprite;
-            SetDarkImage(sub_charactor) ;
-            SetWhiteImage(main_charactor);
+            //Debug.Log(image_dir+"left");
+            target = main_charactor;
+            other = sub_charactor;
         }
         else
         {
-            Debug.Log(image_dir+"right");
-            sub_charactor.sprite = image_sprite;
-            SetDarkImage(main_charactor);
-            SetWhiteImage(sub_charactor);
+            //Debug.Log(image_dir+"right");
+            target = sub_charactor;
+            other = main_charactor;
         }
-        //ScriptorbleObjectTest temp;
-        //for(int i=0;i<char_image_list.Length;i++)
-        //{
-        //    temp = (ScriptorbleObjectTest)char_image_list[i]; 
-        //    if (temp.char_name== "zizel_cheerless")
-        //    {
-        //        mainData.ImageData = (ScriptorbleObjectTest)char_image_list[0];//상황에 맞게 인덱스 번호 수정필요
-        //    }
-        //    if(temp.char_name== "human_coffee")
-        //    {
-        //        subData.ImageData = (ScriptorbleObjectTest)char_image_list[1];
-        //    }
-        //}
-        //mainData.ImageData = (ScriptorbleObjectTest)char_image_list[0];//상황에 맞게 인덱스 번호 수정필요
-        //subData.ImageData = (ScriptorbleObjectTest)char_image_list[1];
+        target.sprite = image_sprite;
+        SetDarkImage(other);
+        //SetDisable(other);
+        SetWhiteImage(target);
+        if(is_disable)
+        {
+            Debug.Log("투명");
+            //other.color = Color.clear;
+            SetDisable( other);
+        }
 
     }
 
@@ -110,19 +106,10 @@ public class SetCharImage : MonoBehaviour
         charactor.color = Color.white;
     }
 
-    public void SetDisable(string dir)//여기 색상이 변경이 안 되고 있음
+    public void SetDisable( Image charactor)//지금 두번 호출 중임
     {
-        dir = Regex.Replace(dir, @"[^a-zA-Z]", "");
-        if (dir == "left")
-        {
-            Debug.Log("서브캐릭터 없어짐");
-            sub_charactor.color = Color.black;
-        }
-        else
-        {
-            Debug.Log("메인캐릭터 없어짐");
-            main_charactor.color = Color.black;
-        }
+        Debug.Log("setdisable");
+        charactor.color = Color.clear;
     }
 
 }
