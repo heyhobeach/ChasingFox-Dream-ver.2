@@ -155,7 +155,7 @@ public class LoopController : MonoBehaviour
             var a = playableDirector.duration;
             playableDirector.time = loopLineT;
         }
-        if (playableDirector.time >= hold_time[holdListNum])
+        if (playableDirector.time >= hold_time[holdListNum])//현재 이 부분에서 자꾸 빨간 에러 뜨는데 컴파일러 상에서는 문제없어보임 나중에 빌드로 확인 필요 2024.10.23
         {
             isHold = 2;
             playableDirector.playableGraph.GetRootPlayable(0).SetDuration(hold_time[holdListNum]);

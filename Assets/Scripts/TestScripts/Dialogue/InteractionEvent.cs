@@ -150,6 +150,14 @@ public class InteractionEvent : MonoBehaviour
         }
     }
 
+    public class ImageAloneCommand : Command
+    {
+        public override void OnExecute()
+        {
+            Debug.Log("onExecute alone 테스트"); 
+        }
+    }
+
     public class PoliceCommand : Command
     {
         InteractionEvent _manager;
@@ -286,10 +294,7 @@ public class InteractionEvent : MonoBehaviour
     {
         GetDialogue();
         //command[0] = "";
-        foreach (var i in DatabaseManager.instance.indexList)
-        {
-            //Debug.Log(string.Format("list {0}", i));
-        }
+
 
     }
 
@@ -615,6 +620,11 @@ public class InteractionEvent : MonoBehaviour
                         //precommands.Add(new HigherCommand(filteredSubstrings, this));
                     }
                     break;
+                //case "alone":
+                //    {
+                //        precommands.Add(new ImageAloneCommand());
+                //    }
+                //    break;
 
             }
             command = new string[1] { "" };

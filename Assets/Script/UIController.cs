@@ -15,23 +15,24 @@ public class UIController : MonoBehaviour//해당 스크립트는 UI를 그리�
     // Start is called before the first frame update
     public Canvas DialogueCanvas;
 
-    private static UIController instance=null;
-    public static UIController Instance 
-    { 
-        get 
+    private static UIController instance = null;
+    public static UIController Instance
+    {
+        get
         {
-            if(instance == null) { return null; }
-            return instance; 
-        } 
+            if (instance == null) { return null; }
+            return instance;
+        }
     }
 
     private void Awake()
     {
-        if(instance!= null)
+        if (instance != null)
         {
             Destroy(this.gameObject);
-            return; 
-        }instance = this;
+            return;
+        }
+        instance = this;
         //DontDestroyOnLoad(this.gameObject);
     }
     void Start()
@@ -52,8 +53,8 @@ public class UIController : MonoBehaviour//해당 스크립트는 UI를 그리�
         //     //Debug.Log("그림완");
         // }
 
-        
-        
+
+
     }
 
     public IEnumerator DrawReload()
@@ -84,11 +85,11 @@ public class UIController : MonoBehaviour//해당 스크립트는 UI를 그리�
             Debug.Log("1초 후");
             startCor = false;
             //yield return new WaitForSecondsRealtime(1);
-            
+
         }
         //yield return true;
         //yield return null;//이게 밖에있어야함 무한 루프기준
-        
+
     }
 
     public void _DrawReload()//ControllerScript 의 temp를 받아서 가능함 재장전 그리는 애니메이션
@@ -120,14 +121,7 @@ public class UIController : MonoBehaviour//해당 스크립트는 UI를 그리�
         Debug.Log("SetTrue");
         //DialogueCanvas.transform.gameObject.SetActive(true);
         bool is_alone = false;
-        if (is_alone == true)
-        {
-
-        }
-        else
-        {
-            DialogueCanvas.GetComponent<UIManager>().LoadImage();
-        }
+        DialogueCanvas.GetComponent<UIManager>().LoadImage();
         DialogueCanvas.transform.gameObject.GetComponent<Canvas>().enabled = true;
     }
 

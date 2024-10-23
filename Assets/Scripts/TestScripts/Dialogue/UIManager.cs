@@ -164,19 +164,32 @@ public class UIManager : MonoBehaviour
 
     public void LoadImage()
     {
+        //여기에서 isalone 받아야함
         Tuple<string, string>[] name_list = namemesh.transform.parent.GetComponent<InteractionEvent>().GetImageNameList();
+        Debug.Log(string.Format("제공 문자열 {0} 결과 값 {1}", name_list[0].Item2, Regex.IsMatch(name_list[0].Item1, @"^alone_")));
+        if (Regex.IsMatch(name_list[0].Item2, @"^alone_"))
+        {
+            Debug.Log("alone 있음");
+            Debug.Log("substring test" + name_list[0].Item2.Substring(6));
+            imagesetter.SetDisable(name_list[0].Item2.Substring(6));
+        }
+        else
+        {
+            Debug.Log("alone 없음");
+            SetImage(name_list[1].Item1, name_list[1].Item2);
+        }
         if (name_list == null)
         {
             Debug.Log("튜플이 null 입니다");
             throw new Exception("튜플이 null 입니다");
             return;
         }
-        for(int i = 0; i < name_list.Length; i++)//현재 대화의 다음의 모습이 보이는거 같은데 해당 방식이 맞음 이유는 다음 대사에 대한 이미지를 가져와야하기때문에
-        {
-            Debug.Log("name is" + name_list[i].Item1+"dir is" + name_list[i].Item2);
+        //for(int i = 0; i < name_list.Length; i++)//현재 대화의 다음의 모습이 보이는거 같은데 해당 방식이 맞음 이유는 다음 대사에 대한 이미지를 가져와야하기때문에
+        //{
+        //    Debug.Log("name is" + name_list[i].Item1+"dir is" + name_list[i].Item2);
+        //
+        //}
 
-        }
-        SetImage(name_list[1].Item1, name_list[1].Item2);
         SetImage(name_list[0].Item1, name_list[0].Item2);
     }
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -57,7 +58,7 @@ public class SetCharImage : MonoBehaviour
 
         Sprite image_sprite = null;//이미지 받아오는 변수
         image_name = string.Format("illustration\\{0}", image_name);
-        image_sprite = Resources.Load<Sprite>(image_name); 
+        image_sprite = Resources.Load<Sprite>(image_name);
         if(image_name == null)
         {
             Debug.Log("Image Null");
@@ -107,6 +108,21 @@ public class SetCharImage : MonoBehaviour
     public void SetWhiteImage(Image charactor)
     {
         charactor.color = Color.white;
+    }
+
+    public void SetDisable(string dir)//여기 색상이 변경이 안 되고 있음
+    {
+        dir = Regex.Replace(dir, @"[^a-zA-Z]", "");
+        if (dir == "left")
+        {
+            Debug.Log("서브캐릭터 없어짐");
+            sub_charactor.color = Color.black;
+        }
+        else
+        {
+            Debug.Log("메인캐릭터 없어짐");
+            main_charactor.color = Color.black;
+        }
     }
 
 }
