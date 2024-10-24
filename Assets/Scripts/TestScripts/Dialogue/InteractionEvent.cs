@@ -364,7 +364,7 @@ public class InteractionEvent : MonoBehaviour
         //Thread.Sleep(1000);
         if (num < dialogue.dialouses.Length)
         {
-            _Uimanager.EnableUI();
+            _Uimanager.EnableUI();//해당라인 수정필요
             CallCommand(ref precommands);//이전에 실행되어야할 명령어들
                                          //이게 두번 일어나는듯?
 

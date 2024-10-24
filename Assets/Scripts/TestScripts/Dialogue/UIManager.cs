@@ -156,11 +156,15 @@ public class UIManager : MonoBehaviour
     public void SetImage(string image_name,string image_dir,bool is_disable=false)//이 부분은 next text에서 계속 불러옴 그래서 그런 느낌을 원하면 여기서 값을 조정해야하는게 맞ㅇ므
     {
         //string str = @"^[a-zA-Z]";
-        bool test = is_disable;
+        bool isAlone = Regex.IsMatch(image_dir, @"^alone_");
+        if (isAlone)
+        {
+            image_dir = image_dir.Substring(6);
+        }
         image_dir = Regex.Replace(image_dir, @"[^a-zA-Z]", "");
         Debug.Log("변경후"+image_dir);
         //나중에 선택지때 중앙만 오게 된다면 여기서 설정 할 예정
-        imagesetter.ChangeImage(image_name,image_dir,test);//좌우 기준
+        imagesetter.ChangeImage(image_name,image_dir,isAlone);//좌우 기준
     }
 
     public void LoadImage()//이 부분은 한번만 일어남 이미지 켤때
@@ -170,18 +174,7 @@ public class UIManager : MonoBehaviour
         Debug.Log(string.Format("제공 문자열 {0} 결과 값 {1}", name_list[0].Item2, Regex.IsMatch(name_list[0].Item2, @"^alone_")));
         string nameStr = name_list[0].Item2;
         bool isAlone = Regex.IsMatch(name_list[0].Item2, @"^alone_");
-        //if (Regex.IsMatch(name_list[0].Item2, @"^alone_"))
-        //{
-        //    Debug.Log("alone 있음");
-        //    Debug.Log("substring test" + name_list[0].Item2.Substring(6));
-        //    nameStr = name_list[0].Item2.Substring(6);
-        //    SetImage(name_list[1].Item1, name_list[1].Item2,true);
-        //}
-        //else
-        //{
-        //    Debug.Log("alone 없음");
-        //    SetImage(name_list[1].Item1, name_list[1].Item2);
-        //}
+
         if (name_list == null)
         {
             Debug.Log("튜플이 null 입니다");
@@ -406,6 +399,10 @@ public class UIManager : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// 해당 라인들 수정 필요
+    /// </summary>
     public void EnableUI()
     {
         this.transform.gameObject.SetActive(true);
