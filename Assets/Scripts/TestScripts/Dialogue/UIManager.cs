@@ -171,7 +171,7 @@ public class UIManager : MonoBehaviour
     {
         //여기에서 isalone 받아야함
         Tuple<string, string>[] name_list = namemesh.transform.parent.GetComponent<InteractionEvent>().GetImageNameList();
-        Debug.Log(string.Format("제공 문자열 {0} 결과 값 {1}", name_list[0].Item2, Regex.IsMatch(name_list[0].Item2, @"^alone_")));
+        Debug.Log(string.Format("제공 문자열 {0} 결과 값 {1}", name_list[0].Item2, Regex.IsMatch(name_list[0].Item2, @"^alone_")));//마지막 부분에 에러남 
         string nameStr = name_list[0].Item2;
         bool isAlone = Regex.IsMatch(name_list[0].Item2, @"^alone_");
 
