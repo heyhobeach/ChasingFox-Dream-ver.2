@@ -13,7 +13,8 @@ public class Dialogue
     public string choice;
     public string id;
     public string[] command;
-    public string []test;//나중에 지울것
+    public string image_name;
+    public string dir;
 }
 [System.Serializable]
 public class DialogueEvent

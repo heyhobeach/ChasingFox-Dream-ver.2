@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Net.Mime;
+using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -41,6 +42,8 @@ public class UIManager : MonoBehaviour
     public bool is_select_show = false;
     public bool is_closing = false;
 
+    public float BoxSizeRatio = 0.1f;
+
     /// <summary>
     /// start,end,speed
     /// </summary>
@@ -59,12 +62,16 @@ public class UIManager : MonoBehaviour
 
     private delegate void delayDelegeate();
 
+    private RectTransform intRect;
+
+    private SetCharImage imagesetter;
+
 
     [SerializeField]
     public float typing_speed = 0.05f;
     private const float DEFAULT_SPEED= 0.05f;
     //public InteractionEvent interactionEvent;
-
+    private RectTransform name_rect;
     // Start is called before the first frame update
     void Start()
     {
@@ -72,16 +79,62 @@ public class UIManager : MonoBehaviour
         co = Typing("",isTyping);
         contentArr = new TMP_Text[1];
         size= content.rectTransform.rect.size.y;
+        name_rect= namemesh.transform.GetComponent<RectTransform>();
+        imagesetter=this.transform.GetChild(0).GetComponent<SetCharImage>();
         // setTestPosition(targetTransform.position);
     }
 
     private void Awake()
     {
+        intRect=this.transform.GetChild(1).GetComponent<RectTransform>();
         is_closing = false;
         //co_closeAinm = ClosingAnim();
     }
 
     // Update is called once per frame
+    private void Update()
+    {
+        Debug.Log("자식 사이즈" + this.transform.GetChild(0).GetComponent<RectTransform>().rect.size);
+
+        TextBoxSizeChange();
+        CharactorImageSizeChange();
+    }
+
+    private void TextBoxSizeChange()
+    {
+        //int크기 스케일링
+        intRect.sizeDelta = new Vector2(transform.GetComponent<RectTransform>().rect.width, transform.GetComponent<RectTransform>().rect.height* BoxSizeRatio);
+        intRect.position = new Vector3(0, intRect.sizeDelta.y/2,intRect.position.z);
+
+        //아래는 ver을 맞추기위해
+        content.fontSize = intRect.sizeDelta.y * 0.6f;
+        Vertical.GetComponent<RectTransform>().sizeDelta = intRect.sizeDelta * 0.75f;//해당 0.75는 intRect크기에 비례한 intRect의 크기
+        Vertical.GetComponent<RectTransform>().position = new Vector3(intRect.sizeDelta.x/2,intRect.sizeDelta.y/2,intRect.position.z);
+
+
+        //이름 부분 위치 수정
+        namemesh.fontSize = intRect.sizeDelta.y * 0.3f;
+        name_rect.sizeDelta = new Vector2(intRect.sizeDelta.x, namemesh.fontSize + namemesh.fontSize/6);
+        name_rect.position = new Vector3(name_rect.sizeDelta.x / 2, intRect.sizeDelta.y+name_rect.sizeDelta.y/2, 0);
+    }
+
+    private void CharactorImageSizeChange()
+    {
+        float yPox = transform.GetChild(0).GetChild(0).transform.GetComponent<RectTransform>().rect.height;
+        for (int i = 0; i < this.transform.GetChild(1).childCount; i++)
+        {
+            transform.GetChild(0).GetChild(i).GetComponent<RectTransform>().sizeDelta = new Vector2(transform.GetComponent<RectTransform>().rect.width*0.3f, transform.GetComponent<RectTransform>().rect.width * 0.3f);
+            if (i == 0)//이렇게 한 이유는 이미지는 공간 2개 밖에없을거같아서
+            {
+                transform.GetChild(0).GetChild(i).GetComponent<RectTransform>().position = new Vector3(transform.GetComponent<RectTransform>().rect.width * 0.3f / 2, yPox/2, 0); 
+            }
+            else
+            {
+                transform.GetChild(0).GetChild(i).GetComponent<RectTransform>().position = new Vector3(Screen.width- transform.GetComponent<RectTransform>().rect.width * 0.3f/2, yPox/2, 0);
+            }
+        }
+    }
+
 
     /// <summary>
     /// 위치를 받으면 대사창 위치가 옮겨짐
@@ -90,7 +143,7 @@ public class UIManager : MonoBehaviour
     public void SetTextPosition(Vector3 pos)//추후 대사 2개이상 발생시 가운데값
     {
         Vector3 _pos;
-        Transform dialogueUiTransform = this.transform.GetChild(0).GetComponent<Transform>();//스크린 좌표로 변환 필요
+        Transform dialogueUiTransform = this.transform.GetChild(1).GetComponent<Transform>();//스크린 좌표로 변환 필요, 0
         //dialogueUiTransform.position = pos;
         dialogueUiTransform.position=Camera.main.WorldToScreenPoint(new Vector3(pos.x,pos.y+1,pos.z));//타겟 오브젝트 위치에 대사 오브젝트 위치 움직임
         Debug.Log(pos);
@@ -100,6 +153,42 @@ public class UIManager : MonoBehaviour
         namemesh.text = name;
     }
 
+    public void SetImage(string image_name,string image_dir,bool is_disable=false)//이 부분은 next text에서 계속 불러옴 그래서 그런 느낌을 원하면 여기서 값을 조정해야하는게 맞ㅇ므
+    {
+        //string str = @"^[a-zA-Z]";
+        bool isAlone = Regex.IsMatch(image_dir, @"^alone_");
+        if (isAlone)
+        {
+            image_dir = image_dir.Substring(6);
+        }
+        image_dir = Regex.Replace(image_dir, @"[^a-zA-Z]", "");
+        Debug.Log("변경후"+image_dir);
+        //나중에 선택지때 중앙만 오게 된다면 여기서 설정 할 예정
+        imagesetter.ChangeImage(image_name,image_dir,isAlone);//좌우 기준
+    }
+
+    public void LoadImage()//이 부분은 한번만 일어남 이미지 켤때
+    {
+        //여기에서 isalone 받아야함
+        Tuple<string, string>[] name_list = namemesh.transform.parent.GetComponent<InteractionEvent>().GetImageNameList();
+        Debug.Log(string.Format("제공 문자열 {0} 결과 값 {1}", name_list[0].Item2, Regex.IsMatch(name_list[0].Item2, @"^alone_")));
+        string nameStr = name_list[0].Item2;
+        bool isAlone = Regex.IsMatch(name_list[0].Item2, @"^alone_");
+
+        if (name_list == null)
+        {
+            Debug.Log("튜플이 null 입니다");
+            throw new Exception("튜플이 null 입니다");
+            return;
+        }
+        //for(int i = 0; i < name_list.Length; i++)//현재 대화의 다음의 모습이 보이는거 같은데 해당 방식이 맞음 이유는 다음 대사에 대한 이미지를 가져와야하기때문에
+        //{
+        //    Debug.Log("name is" + name_list[i].Item1+"dir is" + name_list[i].Item2);
+        //
+        //}
+        SetImage(name_list[1].Item1, name_list[1].Item2);
+        SetImage(name_list[0].Item1, nameStr,isAlone);
+    }
 
     /// <summary>
     /// 글자 수 받아오는곳
@@ -310,13 +399,17 @@ public class UIManager : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// 해당 라인들 수정 필요
+    /// </summary>
     public void EnableUI()
     {
-        Vertical.SetActive(true);
+        this.transform.gameObject.SetActive(true);
     }
     public void DisableUI()
     {
-        Vertical.SetActive(false);
+        this.transform.gameObject.SetActive(false);
     }
     public bool GetTextActive()//수정 필요할듯 이상함
     {

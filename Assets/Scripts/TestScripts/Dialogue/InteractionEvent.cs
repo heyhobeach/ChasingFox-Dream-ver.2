@@ -19,6 +19,10 @@ public class InteractionEvent : MonoBehaviour
     [SerializeField] DialogueEvent dialogue;
     //UIManager ui;
 
+    //코루틴으로 계속 오브젝트를 살려놓는다면 해결 되지 않을까 결국에는 int를 불러오지 못 해서 생기는 일들 
+    private static InteractionEvent instance;
+    public static InteractionEvent Instance { get => instance; }
+    
 
 
     public static bool isSkip = false;
@@ -46,8 +50,8 @@ public class InteractionEvent : MonoBehaviour
     /// </summary>
     string SPLIT_COMMAND_PASER = @"[""!,]";//명령어 분리 정규식
 
-    private delegate void delayDelegeate();
-    private delayDelegeate _nextDelegate;
+    //private delegate void delayDelegeate();//문제없이 돌아갈경우 삭제
+    //private delayDelegeate _nextDelegate;
 
     /// <summary>
     /// 이전에 실행될 명령어 리스트
@@ -143,6 +147,14 @@ public class InteractionEvent : MonoBehaviour
             //base.OnExecute();
             Debug.Log("onExecute테스트");
             //_uiManger.
+        }
+    }
+
+    public class ImageAloneCommand : Command
+    {
+        public override void OnExecute()
+        {
+            Debug.Log("onExecute alone 테스트"); 
         }
     }
 
@@ -273,26 +285,25 @@ public class InteractionEvent : MonoBehaviour
     private void Awake()
     {
         _Uimanager = gameObject.GetComponentInParent<UIManager>();
+        if (instance == null)
+        {
+            instance = this;
+        }
     }
     private void Start()
     {
         GetDialogue();
         //command[0] = "";
-        foreach (var i in DatabaseManager.instance.indexList)
-        {
-            //Debug.Log(string.Format("list {0}", i));
-        }
+
 
     }
 
     private void Update()
     {
-
+        //Debug.Log("size"+this.transform.parent.GetComponent<RectTransform>().rect.size);
         //if ((num <= dialogue.dialouses.Length))//line을 조절 해야함 대화가 끝나는 시점을 정하려면 line.y를 설정해야함
-        {
 
-            HandleDialogue();
-        }
+        HandleDialogue();
         //if (num > dialogue.dialouses.Length)
         //{
         //    EndDialogue();
@@ -353,9 +364,11 @@ public class InteractionEvent : MonoBehaviour
         //Thread.Sleep(1000);
         if (num < dialogue.dialouses.Length)
         {
-            _Uimanager.EnableUI();
+            _Uimanager.EnableUI();//해당라인 수정필요
             CallCommand(ref precommands);//이전에 실행되어야할 명령어들
                                          //이게 두번 일어나는듯?
+
+            _Uimanager.SetImage(dialogue.dialouses[num].image_name, dialogue.dialouses[num].dir);
             Debug.Log("명령어 호출 테스트" + "id" + dialogue.dialouses[num].id + "이름" + dialogue.dialouses[num].name);//여기는 한번
             _Uimanager.Setname(dialogue.dialouses[num].name);//이름 변경 되는중 마찬가지로 내용도 같이 하면 될듯
                                                              //Debug.Log(dialogue.dialouses[num].context.Length);
@@ -607,6 +620,11 @@ public class InteractionEvent : MonoBehaviour
                         //precommands.Add(new HigherCommand(filteredSubstrings, this));
                     }
                     break;
+                //case "alone":
+                //    {
+                //        precommands.Add(new ImageAloneCommand());
+                //    }
+                //    break;
 
             }
             command = new string[1] { "" };
@@ -731,5 +749,34 @@ public class InteractionEvent : MonoBehaviour
             act();
         }
 
+    }
+
+    //public string[] GetImageNameList()
+    /// <summary>
+    /// 현재 텍스트 번호에서 다른 위치에서 로딩이 될 사진들을 튜플로 가져옴
+    /// </summary>
+    /// <returns>성공시 tuple 실패시 null</returns>
+    public Tuple<string,string>[] GetImageNameList()
+    {
+        Debug.Log("GetNum " + num);
+        Tuple<string, string>[]name_tuple_list= new Tuple<string, string>[2];
+        string[] name_list= new string[2];
+        name_tuple_list[0] = new Tuple<string, string>(dialogue.dialouses[num].image_name, dialogue.dialouses[num].dir);
+
+        name_list[0] = dialogue.dialouses[num].image_name;
+        for(int i = num+1; i < dialogue.dialouses.Length; i++)
+        {
+            Debug.Log(string.Format("이름 {0} 위치 {1}", dialogue.dialouses[i].image_name, dialogue.dialouses[i].dir));
+            Debug.Log(string.Format("비교 {0} 과 {1} ", name_tuple_list[0].Item2, dialogue.dialouses[i].dir));
+            if (name_tuple_list[0].Item2 != dialogue.dialouses[i].dir)
+            {
+                Debug.Log("다른곳은 " + i + "번째 입니다");
+                name_list[1] = dialogue.dialouses[i].image_name;
+                name_tuple_list[1] = new Tuple<string, string>(dialogue.dialouses[i].image_name, dialogue.dialouses[i].dir);
+                return name_tuple_list;
+            }
+        }
+
+        return null;
     }
 }
