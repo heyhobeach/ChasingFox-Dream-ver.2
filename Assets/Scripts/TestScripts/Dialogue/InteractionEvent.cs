@@ -396,7 +396,7 @@ public class InteractionEvent : MonoBehaviour
                 if (start == false)
                 {
                     start = true;
-                    StartCoroutine(ChocieTimer(10, start, Timeover));
+                    StartCoroutine(ChocieTimer(10, start, Timeover));//선택지 제한시간 부분
                 }
             }
 

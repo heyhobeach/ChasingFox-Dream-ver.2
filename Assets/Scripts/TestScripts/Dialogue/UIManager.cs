@@ -254,17 +254,17 @@ public class UIManager : MonoBehaviour
         co = Typing(_content,isTyping);
         StartCoroutine(co);
     }
-    public void SetContent(string[] _contentArr)//배열로 받을 예정
+    public void SetContent(string[] _contentArr)//배열로 받을 예정 선택지 관련 내용
     {
-        StopCoroutine(co);
+        //StopCoroutine(co);
         int br_count = 0;
         //float width = content.fontSize * GetContentLength(_contentArr, ref br_count);//여기부분은 수정 해야하는데 아마 선택지에 br이 안들어갈거같아서 방치
         //float hight = content.fontSize + (content.fontSize * br_count);              //
         //content.rectTransform.sizeDelta = new Vector2(width, hight);                 //
 
         CreatSelect(_contentArr);
-        co = TextSliding(_contentArr);
-        StartCoroutine(co);
+        //co = TextSliding(_contentArr);//선택지 배열 움직이는 슬라이딩 애니메이션
+        //StartCoroutine(co);
     }
     public void ChangeText(int countNum)//화살표 맞게 글자 색 변경하는 부분
     {
@@ -543,18 +543,18 @@ public class UIManager : MonoBehaviour
             contentArr[i] = select;
             select.transform.SetParent(content.transform.parent);
             float height = content.rectTransform.sizeDelta.y;
-            select.transform.localPosition = new Vector3(content.transform.localPosition.x - 1, content.transform.localPosition.y-(height*i), content.transform.localPosition.z);
+            //select.transform.localPosition = new Vector3(content.transform.localPosition.x - 1, content.transform.localPosition.y-(height*i), content.transform.localPosition.z);
             Debug.Log("선택지 위치" + select.transform.localPosition + "content 높이"+content.rectTransform.sizeDelta);
 
-            select.transform.localScale = new Vector3(1, 2, 1);
+            //select.transform.localScale = new Vector3(1, 2, 1);
             //      select.transform.parent = content.transform.parent;
             select.text = strArr[i];
             select.color = Color.gray;
-            if (max_widht < select.rectTransform.sizeDelta.x)
-            {
-                max_widht=select.rectTransform.sizeDelta.x;
-            }
-            select.gameObject.SetActive(false);
+            //if (max_widht < select.rectTransform.sizeDelta.x)
+            //{
+            //    max_widht=select.rectTransform.sizeDelta.x;
+            //}
+            //select.gameObject.SetActive(false);
         }
         Debug.Log("최대 크기" + max_widht);
         //content.gameObject.SetActive(false);
