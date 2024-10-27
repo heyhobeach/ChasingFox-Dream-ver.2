@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Net.Mime;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -40,6 +41,9 @@ public class UIManager : MonoBehaviour
     public TMP_Text content;
 
     public bool is_select_show = false;
+    /// <summary>
+    /// 해당 변수는 애니메이션 중에 대사가 넘어가지 않게 하기 위함 만약 해당 상황이 없다면 사용 안 해도 괜찮음, 현재 사용 안 하는 변수 나중에 어떻게 될지 몰라 놔두겠음
+    /// </summary>
     public bool is_closing = false;
 
     public float BoxSizeRatio = 0.1f;
@@ -254,7 +258,7 @@ public class UIManager : MonoBehaviour
         co = Typing(_content,isTyping);
         StartCoroutine(co);
     }
-    public void SetContent(string[] _contentArr)//배열로 받을 예정 선택지 관련 내용
+    public async void SetContent(string[] _contentArr)//배열로 받을 예정 선택지 관련 내용 , 여기서 배열로 사용 예정
     {
         //StopCoroutine(co);
         int br_count = 0;
@@ -263,6 +267,9 @@ public class UIManager : MonoBehaviour
         //content.rectTransform.sizeDelta = new Vector2(width, hight);                 //
 
         CreatSelect(_contentArr);
+        Debug.Log("비동기 시작");
+        await ImageSliding();
+        Debug.Log("비동기 끝");
         //co = TextSliding(_contentArr);//선택지 배열 움직이는 슬라이딩 애니메이션
         //StartCoroutine(co);
     }
@@ -318,7 +325,7 @@ public class UIManager : MonoBehaviour
     IEnumerator Typing(string str,bool s)
     {
         GameObject fixedVertical = content.transform.parent.gameObject;
-        fixedVertical.GetComponent<VerticalLayoutGroup>().enabled = true;
+        //fixedVertical.GetComponent<VerticalLayoutGroup>().enabled = true;
         //첫 설정때 contentArr 설정 필요 지금 contentArr이 아무것도 없다고 되어있음 따라서 contentArr[0]에는 content가 들어가야함
         string pattern = "<[^>]*>?";
         if(isTyping)
@@ -441,7 +448,7 @@ public class UIManager : MonoBehaviour
     {
         if (contentArr.Length == 1) return;
         int childs = content.transform.parent.transform.childCount;
-        is_closing = true;
+        //is_closing = true;
         GameObject selectobj = content.transform.parent.GetChild(choseIndex).gameObject;
         string tmpstr = selectobj.GetComponent<TMP_Text>().text;
         start_pos=selectobj.transform.position;
@@ -611,8 +618,12 @@ public class UIManager : MonoBehaviour
         fixedVertical.GetComponent<VerticalLayoutGroup>().enabled = true;
         fixedVertical.GetComponent<ContentSizeFitter>().verticalFit=ContentSizeFitter.FitMode.PreferredSize;
         is_select_show = false;
+    }
 
-
+    public async Awaitable ImageSliding()//해당 ui나오는중에는 입력이 되면 안됨 여기서 코루틴 작업들 진행 그러면 해당 작업이 끝나고 나서 뒤에 작업들이 진행이 됨
+    {
+        Debug.Log("비동기중");
+        await Awaitable.WaitForSecondsAsync(5);
     }
 
 }

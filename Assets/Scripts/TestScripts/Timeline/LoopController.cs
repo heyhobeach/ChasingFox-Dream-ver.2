@@ -164,7 +164,8 @@ public class LoopController : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.anyKeyDown && !Input.GetKeyDown(KeyCode.Escape))
+        if (Input.anyKeyDown && !(Input.GetKeyDown(KeyCode.Escape)||Input.GetKeyDown(KeyCode.LeftArrow) ||Input.GetKeyDown(KeyCode.RightArrow)
+                                                                  ||Input.GetKeyDown(KeyCode.A)||Input.GetKeyDown(KeyCode.D)))
         {
             Debug.Log("anyKeyDonw");
             if (isHold > 2 || isHold < 1)

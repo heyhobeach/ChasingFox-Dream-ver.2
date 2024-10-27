@@ -441,16 +441,16 @@ public class InteractionEvent : MonoBehaviour
             
             _Uimanager.CloseSelceet(contentNum);
 
-            if (_Uimanager.is_closing)
-            {
-                Debug.Log("닫는중");
-                StartCoroutine(_Uimanager.ClosingAnim(SetNextContext));
-                //Debug.Log("실행 했음");
-                return;
-                //클로징 중이면 넘어가면 안 됨
-                //Debug.Log("클로징 확인" + gameObject.GetComponentInParent<UIManager>().is_closing);
-                //return;
-            }
+            //if (_Uimanager.is_closing)
+            //{
+            //    Debug.Log("닫는중");
+            //    //StartCoroutine(_Uimanager.ClosingAnim(SetNextContext));
+            //    //Debug.Log("실행 했음");
+            //    return;
+            //    //클로징 중이면 넘어가면 안 됨
+            //    //Debug.Log("클로징 확인" + gameObject.GetComponentInParent<UIManager>().is_closing);
+            //    //return;
+            //}
             SetNextContext();
 
         }
@@ -468,7 +468,7 @@ public class InteractionEvent : MonoBehaviour
             //    start = true;
             //    StartCoroutine(ChocieTimer(5, start, Timeover));
             //}
-            if (Input.GetKeyDown(KeyCode.DownArrow))
+            if (Input.GetKeyDown(KeyCode.RightArrow)||Input.GetKeyDown(KeyCode.A))//오른쪽
             {
                 //countnum은 downArrow가 실행 되면 값이 변하게 되어있음
                 if (contentlength - 1 > (contentNum))
@@ -480,7 +480,7 @@ public class InteractionEvent : MonoBehaviour
 
             }
 
-            if (Input.GetKeyDown(KeyCode.UpArrow) & (contentNum > 0))
+            if ((Input.GetKeyDown(KeyCode.LeftArrow)||Input.GetKeyDown(KeyCode.D)) & (contentNum > 0))//왼쪽
             {
                 _Uimanager.UpArrow(ref contentNum);
                 command = Regex.Split(dialogue.dialouses[temp].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);
