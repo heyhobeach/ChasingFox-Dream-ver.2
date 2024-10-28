@@ -50,6 +50,7 @@ public class SetCharImage : MonoBehaviour
             Debug.Log(sub_charactor.gameObject.transform.name);
         }
     }
+
     /// <summary>
     /// 대사 불러올때 한번 호출 예정 지금은 테스트 때문에 update에서 호출중
     /// </summary>

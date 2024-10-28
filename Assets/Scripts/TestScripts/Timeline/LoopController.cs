@@ -41,6 +41,8 @@ public class LoopController : MonoBehaviour
     /// </summary>
     [SerializeField] private List<double> hold_time = new List<double>();
 
+    public GameObject backgroundImage;
+
     public void setTime(float t)
     {
         time = (double)t;
@@ -72,6 +74,7 @@ public class LoopController : MonoBehaviour
 
     public void EndLoop()
     {
+        backgroundImage.SetActive(false);
         if (isHold == 2)
         {
             Debug.Log("isHold");
@@ -91,6 +94,7 @@ public class LoopController : MonoBehaviour
             playableDirector.playableGraph.GetRootPlayable(0).SetDuration(playableDirector.duration);
             //playableDirector.Resume();
         }
+
 
     }
 
@@ -154,11 +158,13 @@ public class LoopController : MonoBehaviour
             double loopLineT = loop_time[loopListNum];//루프 시작 시간
             var a = playableDirector.duration;
             playableDirector.time = loopLineT;
+            backgroundImage.SetActive(true);
         }
         if (playableDirector.time >= hold_time[holdListNum])//현재 이 부분에서 자꾸 빨간 에러 뜨는데 컴파일러 상에서는 문제없어보임 나중에 빌드로 확인 필요 2024.10.23
         {
             isHold = 2;
             playableDirector.playableGraph.GetRootPlayable(0).SetDuration(hold_time[holdListNum]);
+            backgroundImage.SetActive(true);
             //playableDirector.time = hold_time[holdListNum];
         }
     }

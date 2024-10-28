@@ -134,19 +134,24 @@ public class UIManager : MonoBehaviour
     /// </summary>
     private void CharactorImageSizeChange()//1980, 1080 비율 유지
     {
-        float yPox = transform.GetChild(0).GetChild(0).transform.GetComponent<RectTransform>().rect.height;
-        for (int i = 0; i < this.transform.GetChild(1).childCount; i++)
+
+        for (int i = 0; i < this.transform.GetChild(0).childCount; i++)
         {
             transform.GetChild(0).GetChild(i).GetComponent<RectTransform>().sizeDelta = new Vector2(transform.GetComponent<RectTransform>().rect.width*0.3f, transform.GetComponent<RectTransform>().rect.width * 0.3f);
+            float yPox = transform.GetChild(0).GetChild(0).transform.GetComponent<RectTransform>().rect.height;
+
+            Debug.Log(yPox + "yPos");
             if (i == 0)//이렇게 한 이유는 이미지는 공간 2개 밖에없을거같아서
             {
-                transform.GetChild(0).GetChild(i).GetComponent<RectTransform>().position = new Vector3(transform.GetComponent<RectTransform>().rect.width * 0.3f / 2, yPox/2, 0); 
+                transform.GetChild(0).GetChild(i).GetComponent<RectTransform>().position = new Vector3(transform.GetComponent<RectTransform>().rect.width * 0.3f / 2, yPox / 2, 0); //yPox/2
             }
             else
             {
-                transform.GetChild(0).GetChild(i).GetComponent<RectTransform>().position = new Vector3(Screen.width- transform.GetComponent<RectTransform>().rect.width * 0.3f/2, yPox/2, 0);
+                transform.GetChild(0).GetChild(i).GetComponent<RectTransform>().position = new Vector3(Screen.width- transform.GetComponent<RectTransform>().rect.width * 0.3f/2, yPox / 2, 0);//yPox/2
             }
         }
+        RectTransform _rect = transform.GetChild(0).GetComponent<RectTransform>();
+        _rect.position = new Vector2(_rect.position.x, 540);
     }
 
 
@@ -279,7 +284,7 @@ public class UIManager : MonoBehaviour
         CreatSelect(_contentArr);
         Debug.Log("비동기 시작");
         //await ImageSliding();
-        await imagesetter.ImageAnim();
+        //await imagesetter.ImageAnim();
         Debug.Log("비동기 끝");
         //co = TextSliding(_contentArr);//선택지 배열 움직이는 슬라이딩 애니메이션
         //StartCoroutine(co);
