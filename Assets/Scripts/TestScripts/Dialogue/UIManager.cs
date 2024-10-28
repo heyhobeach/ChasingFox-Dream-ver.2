@@ -5,6 +5,7 @@ using System.Net.Mime;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 // using static UnityEditor.Timeline.TimelinePlaybackControls;
@@ -131,7 +132,7 @@ public class UIManager : MonoBehaviour
     /// <summary>
     /// 이미지 크기 설정 및 위치 조정
     /// </summary>
-    private void CharactorImageSizeChange()
+    private void CharactorImageSizeChange()//1980, 1080 비율 유지
     {
         float yPox = transform.GetChild(0).GetChild(0).transform.GetComponent<RectTransform>().rect.height;
         for (int i = 0; i < this.transform.GetChild(1).childCount; i++)
@@ -278,6 +279,7 @@ public class UIManager : MonoBehaviour
         CreatSelect(_contentArr);
         Debug.Log("비동기 시작");
         //await ImageSliding();
+        await imagesetter.ImageAnim();
         Debug.Log("비동기 끝");
         //co = TextSliding(_contentArr);//선택지 배열 움직이는 슬라이딩 애니메이션
         //StartCoroutine(co);

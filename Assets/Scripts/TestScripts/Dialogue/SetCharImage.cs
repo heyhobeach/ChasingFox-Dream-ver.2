@@ -112,6 +112,25 @@ public class SetCharImage : MonoBehaviour
         charactor.color = Color.clear;
     }
 
+    public async Awaitable ImageAnim()//해당 ui나오는중에는 입력이 되면 안됨 여기서 코루틴 작업들 진행 그러면 해당 작업이 끝나고 나서 뒤에 작업들이 진행이 됨
+    {                                   //여기서 위치가 맞게 나옴
+        Debug.Log("비동기중");
+        float time = 0;
+        float duration = 3f;
+        float yPox = transform.GetChild(0).GetChild(0).transform.GetComponent<RectTransform>().rect.height;
+        //transform.GetChild(0).GetChild(i).GetComponent<RectTransform>().position = new Vector3(transform.GetComponent<RectTransform>().rect.width * 0.3f / 2, yPox/2, 0); 
+
+        RectTransform main_rect = transform.GetChild(0).transform.GetChild(0).GetComponent<RectTransform>();
+        while (time < duration)
+        {
+            time += Time.deltaTime;
+            await Awaitable.NextFrameAsync();
+        }
+        main_rect.position = new Vector3(transform.GetComponent<RectTransform>().rect.width * 0.3f / 4, yPox / 2, 0);
+        Debug.Log("5초끝");
+
+    }
+
 
 }
 
