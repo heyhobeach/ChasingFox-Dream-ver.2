@@ -112,5 +112,6 @@ public class SetCharImage : MonoBehaviour
         charactor.color = Color.clear;
     }
 
+
 }
 

@@ -85,6 +85,10 @@ public class UIManager : MonoBehaviour
         size= content.rectTransform.rect.size.y;
         name_rect= namemesh.transform.GetComponent<RectTransform>();
         imagesetter=this.transform.GetChild(0).GetComponent<SetCharImage>();
+        TextBoxSizeChange();
+        CharactorImageSizeChange();
+
+        Debug.Log("intRect test"+intRect.sizeDelta + "" + intRect.position);
         // setTestPosition(targetTransform.position);
     }
 
@@ -100,8 +104,9 @@ public class UIManager : MonoBehaviour
     {
         Debug.Log("자식 사이즈" + this.transform.GetChild(0).GetComponent<RectTransform>().rect.size);
 
-        TextBoxSizeChange();
-        CharactorImageSizeChange();
+        //TextBoxSizeChange();
+        //CharactorImageSizeChange();
+        Debug.Log("intRect test" + intRect.sizeDelta + "" + intRect.position);
     }
 
     private void TextBoxSizeChange()
@@ -122,6 +127,10 @@ public class UIManager : MonoBehaviour
         name_rect.position = new Vector3(name_rect.sizeDelta.x / 2, intRect.sizeDelta.y+name_rect.sizeDelta.y/2, 0);
     }
 
+
+    /// <summary>
+    /// 이미지 크기 설정 및 위치 조정
+    /// </summary>
     private void CharactorImageSizeChange()
     {
         float yPox = transform.GetChild(0).GetChild(0).transform.GetComponent<RectTransform>().rect.height;
@@ -268,7 +277,7 @@ public class UIManager : MonoBehaviour
 
         CreatSelect(_contentArr);
         Debug.Log("비동기 시작");
-        await ImageSliding();
+        //await ImageSliding();
         Debug.Log("비동기 끝");
         //co = TextSliding(_contentArr);//선택지 배열 움직이는 슬라이딩 애니메이션
         //StartCoroutine(co);
@@ -621,9 +630,22 @@ public class UIManager : MonoBehaviour
     }
 
     public async Awaitable ImageSliding()//해당 ui나오는중에는 입력이 되면 안됨 여기서 코루틴 작업들 진행 그러면 해당 작업이 끝나고 나서 뒤에 작업들이 진행이 됨
-    {
+    {                                   //여기서 위치가 맞게 나옴
         Debug.Log("비동기중");
-        await Awaitable.WaitForSecondsAsync(5);
+        float time = 0;
+        float duration = 3f;
+        float yPox = transform.GetChild(0).GetChild(0).transform.GetComponent<RectTransform>().rect.height;
+        //transform.GetChild(0).GetChild(i).GetComponent<RectTransform>().position = new Vector3(transform.GetComponent<RectTransform>().rect.width * 0.3f / 2, yPox/2, 0); 
+
+        RectTransform main_rect = transform.GetChild(0).transform.GetChild(0).GetComponent<RectTransform>();
+        while (time < duration)
+        {
+            time +=Time.deltaTime;
+            await Awaitable.NextFrameAsync();
+        }
+        main_rect.position= new Vector3(transform.GetComponent<RectTransform>().rect.width * 0.3f / 4, yPox / 2, 0);
+        Debug.Log("5초끝");
+
     }
 
 }
