@@ -47,7 +47,9 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public bool is_closing = false;
 
-    public float BoxSizeRatio = 0.1f;
+    public float BoxSizeRatio = 0.34f;
+    public float fontRatio;
+    public float nameRatio;
 
     /// <summary>
     /// start,end,speed
@@ -110,20 +112,24 @@ public class UIManager : MonoBehaviour
         Debug.Log("intRect test" + intRect.sizeDelta + "" + intRect.position);
     }
 
-    private void TextBoxSizeChange()
+    /// <summary>
+    /// 글자 크기 위치 폰트 사이즈 조절하는 함수
+    /// </summary>
+    private void TextBoxSizeChange()//여기서 지금 ui크기에 맞게 대사창 위치, 이름을 맞추고 제작해야함 여기서 조절 필요
     {
         //int크기 스케일링
         intRect.sizeDelta = new Vector2(transform.GetComponent<RectTransform>().rect.width, transform.GetComponent<RectTransform>().rect.height* BoxSizeRatio);
         intRect.position = new Vector3(0, intRect.sizeDelta.y/2,intRect.position.z);
 
         //아래는 ver을 맞추기위해
-        content.fontSize = intRect.sizeDelta.y * 0.6f;
+        content.fontSize = intRect.sizeDelta.y * fontRatio;
         Vertical.GetComponent<RectTransform>().sizeDelta = intRect.sizeDelta * 0.75f;//해당 0.75는 intRect크기에 비례한 intRect의 크기
+        // Vertical.GetComponent<RectTransform>().sizeDelta.y/2
         Vertical.GetComponent<RectTransform>().position = new Vector3(intRect.sizeDelta.x/2,intRect.sizeDelta.y/2,intRect.position.z);
 
 
         //이름 부분 위치 수정
-        namemesh.fontSize = intRect.sizeDelta.y * 0.3f;
+        namemesh.fontSize = intRect.sizeDelta.y * nameRatio;
         name_rect.sizeDelta = new Vector2(intRect.sizeDelta.x, namemesh.fontSize + namemesh.fontSize/6);
         name_rect.position = new Vector3(name_rect.sizeDelta.x / 2, intRect.sizeDelta.y+name_rect.sizeDelta.y/2, 0);
     }
@@ -137,21 +143,21 @@ public class UIManager : MonoBehaviour
 
         for (int i = 0; i < this.transform.GetChild(0).childCount; i++)
         {
-            transform.GetChild(0).GetChild(i).GetComponent<RectTransform>().sizeDelta = new Vector2(transform.GetComponent<RectTransform>().rect.width*0.3f, transform.GetComponent<RectTransform>().rect.width * 0.3f);
+            transform.GetChild(0).GetChild(i).GetComponent<RectTransform>().sizeDelta = new Vector2(transform.GetComponent<RectTransform>().rect.width*0.328f, transform.GetComponent<RectTransform>().rect.width * 0.36645f);
             float yPox = transform.GetChild(0).GetChild(0).transform.GetComponent<RectTransform>().rect.height;
 
             Debug.Log(yPox + "yPos");
             if (i == 0)//이렇게 한 이유는 이미지는 공간 2개 밖에없을거같아서
             {
-                transform.GetChild(0).GetChild(i).GetComponent<RectTransform>().position = new Vector3(transform.GetComponent<RectTransform>().rect.width * 0.3f / 2, yPox / 2, 0); //yPox/2
+                transform.GetChild(0).GetChild(i).GetComponent<RectTransform>().position = new Vector3(transform.GetComponent<RectTransform>().rect.width * 0.3f / 2, yPox*0.95f, 0); //yPox/2
             }
             else
             {
-                transform.GetChild(0).GetChild(i).GetComponent<RectTransform>().position = new Vector3(Screen.width- transform.GetComponent<RectTransform>().rect.width * 0.3f/2, yPox / 2, 0);//yPox/2
+                transform.GetChild(0).GetChild(i).GetComponent<RectTransform>().position = new Vector3(Screen.width- transform.GetComponent<RectTransform>().rect.width * 0.3f/2, yPox * 0.95f, 0);//yPox/2
             }
         }
         RectTransform _rect = transform.GetChild(0).GetComponent<RectTransform>();
-        _rect.position = new Vector2(_rect.position.x, 540);
+        _rect.position = new Vector2(_rect.position.x, 540);//여기는 크게 영향이 안감
     }
 
 
