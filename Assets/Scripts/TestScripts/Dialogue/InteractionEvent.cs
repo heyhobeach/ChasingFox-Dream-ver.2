@@ -322,6 +322,7 @@ public class InteractionEvent : MonoBehaviour
         //}
         //Debug.Log("명령어" + str);//이전 명령어를 가져옴
         //명령어 호출 시점 조절 했으므로 명령어 구별해서 호출 시점 구분
+
         if (command.Length > 0)
         {
             //Debug.Log("command size is " + command.Length + "command [1]" + command[1]);
@@ -336,6 +337,11 @@ public class InteractionEvent : MonoBehaviour
             //Debug.Log("command size is " + command.Length+"command [0]" + command[0]);
             //command[0] = "";
 
+        }
+        if (contentlength > 1)
+        {
+            Debug.Log("선택지 명령어 처리");
+            CallCommand(ref postcommands);
         }
         contentNum = 0;
     }
@@ -384,7 +390,7 @@ public class InteractionEvent : MonoBehaviour
             }
             else
             {
-                Debug.Log("선택지 부분");
+                //Debug.Log("선택지 부분");
                 string[] textSum = new string[contentlength];
                 //gameObject.GetComponentInParent<UIManager>().SetContent(string.Join("", ""));
                 for (int index = 0; index < contentlength; index++)//한번만 호출 되어야함
@@ -455,6 +461,8 @@ public class InteractionEvent : MonoBehaviour
         {
             Debug.Log("선택지 부분");
             //여기서 precommand와 postcommand를 초기화 한다면?
+            precommands.Clear();
+            postcommands.Clear();
             int temp = num-1;
             if (num > dialogue.dialouses.Length - 1)
             {
