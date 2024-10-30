@@ -145,7 +145,7 @@ public class InteractionEvent : MonoBehaviour
         public override void OnExecute()
         {
             //base.OnExecute();
-            Debug.Log("onExecute테스트");
+            Debug.Log("Brutal onExecute테스트");
             //_uiManger.
         }
     }
@@ -185,7 +185,7 @@ public class InteractionEvent : MonoBehaviour
         public override void OnExecute()
         {
             //base.OnExecute();
-            Debug.Log("onExecute테스트");
+            Debug.Log("Play onExecute테스트");
             //_manager.
         }
     }
@@ -206,8 +206,8 @@ public class InteractionEvent : MonoBehaviour
         public override void OnExecute()
         {
             //base.OnExecute();
-            Debug.Log("onExecute테스트");
-            _uiManger.TextAni(start, end, aniNum);
+            Debug.Log("Ani onExecute테스트");
+            //_uiManger.TextAni(start, end, aniNum);
         }
     }
 
@@ -224,7 +224,7 @@ public class InteractionEvent : MonoBehaviour
         public override void OnExecute()
         {
             //base.OnExecute();
-            Debug.Log("onExecute테스트");
+            Debug.Log("higher onExecute테스트");
             //_uiManger.ani(start, end, size);
         }
     }
@@ -327,7 +327,12 @@ public class InteractionEvent : MonoBehaviour
             //Debug.Log("command size is " + command.Length + "command [1]" + command[1]);
 
             command = spaceremove(command);
+            foreach (var com in command)
+            {
+                Debug.Log("명령어 확인" + com);
+            }
             CallFunction(command);
+
             //Debug.Log("command size is " + command.Length+"command [0]" + command[0]);
             //command[0] = "";
 
@@ -355,18 +360,15 @@ public class InteractionEvent : MonoBehaviour
     }
     public void SetNextContext()
     {
-        //while (gameObject.GetComponentInParent<UIManager>().is_closing) { }//역시나 무한루프
-        //Debug.Log("nextContext");
-        //
+
         CallCommand(ref postcommands);//이후 실행되어야하는 명령어들
         HandleCommand();
-
-        //Thread.Sleep(1000);
         if (num < dialogue.dialouses.Length)
         {
             _Uimanager.EnableUI();//해당라인 수정필요
             CallCommand(ref precommands);//이전에 실행되어야할 명령어들
                                          //이게 두번 일어나는듯?
+
 
             _Uimanager.SetImage(dialogue.dialouses[num].image_name, dialogue.dialouses[num].dir);
             Debug.Log("명령어 호출 테스트" + "id" + dialogue.dialouses[num].id + "이름" + dialogue.dialouses[num].name);//여기는 한번
@@ -427,8 +429,6 @@ public class InteractionEvent : MonoBehaviour
     public void HandleDialogue()
     {
         if (( isSkip) && !_Uimanager.is_closing)//f누를때 문제 생기는듯?
-
-        //if ((Input.GetKeyDown(KeyCode.F) || isSkip)&&!_Uimanager.is_closing)//f누를때 문제 생기는듯?
         {
             isSkip = false;
             if (skipco != null)
@@ -436,9 +436,6 @@ public class InteractionEvent : MonoBehaviour
                 StopCoroutine(skipco);
                 skipco = null;
             }
-
-            //Debug.Log("선택 번호" + contentNum);
-            
             _Uimanager.CloseSelceet(contentNum);
 
             //if (_Uimanager.is_closing)
@@ -457,7 +454,8 @@ public class InteractionEvent : MonoBehaviour
         if (contentlength > 1)//선택지 부분
         {
             Debug.Log("선택지 부분");
-            int temp = num;
+            //여기서 precommand와 postcommand를 초기화 한다면?
+            int temp = num-1;
             if (num > dialogue.dialouses.Length - 1)
             {
                 temp = dialogue.dialouses.Length - 1;
@@ -474,7 +472,9 @@ public class InteractionEvent : MonoBehaviour
                 if (contentlength - 1 > (contentNum))
                 {
                     _Uimanager.DownArrow(ref contentNum);
-                    command = Regex.Split(dialogue.dialouses[temp].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);
+                    //Debug.Log("content num" + contentNum + "ID" +temp);
+                    Debug.Log("content num" + contentNum+"내용" + dialogue.dialouses[temp].command[contentNum]);
+                    command = Regex.Split(dialogue.dialouses[temp].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);// 선택지 명령어 관련이 현재 문제
                     return;
                 }
 
@@ -483,7 +483,8 @@ public class InteractionEvent : MonoBehaviour
             if ((Input.GetKeyDown(KeyCode.LeftArrow)||Input.GetKeyDown(KeyCode.D)) & (contentNum > 0))//왼쪽
             {
                 _Uimanager.UpArrow(ref contentNum);
-                command = Regex.Split(dialogue.dialouses[temp].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);
+                    Debug.Log("content num" + contentNum+"내용" + dialogue.dialouses[temp].command[contentNum]);
+                command = Regex.Split(dialogue.dialouses[temp].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);// 선택지 명령어 관련이 현재 문제
                 return;
             }
 
@@ -588,7 +589,7 @@ public class InteractionEvent : MonoBehaviour
                 case "brutal":
                     {
                         postcommands.Add(new BrutalCommand(this));
-                        brutal(); 
+                        //brutal(); 
                     }
                     break;
                 case "police":
@@ -620,11 +621,7 @@ public class InteractionEvent : MonoBehaviour
                         //precommands.Add(new HigherCommand(filteredSubstrings, this));
                     }
                     break;
-                //case "alone":
-                //    {
-                //        precommands.Add(new ImageAloneCommand());
-                //    }
-                //    break;
+
 
             }
             command = new string[1] { "" };
