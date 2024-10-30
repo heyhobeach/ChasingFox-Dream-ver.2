@@ -88,7 +88,7 @@ public class InteractionEvent : MonoBehaviour
         public override string OnExecute(string str_ = "")
         {
             //base.OnExecute();
-            Debug.Log("onExecute테스트");
+            Debug.Log("Upsize onExecute테스트");
             _str = _uiManger.UpSizeText(_str, start, end, size);
             return _str;
         }
