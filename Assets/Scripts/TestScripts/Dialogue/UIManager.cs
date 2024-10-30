@@ -123,15 +123,15 @@ public class UIManager : MonoBehaviour
 
         //아래는 ver을 맞추기위해
         content.fontSize = intRect.sizeDelta.y * fontRatio;
-        Vertical.GetComponent<RectTransform>().sizeDelta = intRect.sizeDelta * 0.75f;//해당 0.75는 intRect크기에 비례한 intRect의 크기
+        Vertical.GetComponent<RectTransform>().sizeDelta = intRect.sizeDelta * 0.68f;//해당 0.75는 intRect크기에 비례한 intRect의 크기
         // Vertical.GetComponent<RectTransform>().sizeDelta.y/2
-        Vertical.GetComponent<RectTransform>().position = new Vector3(intRect.sizeDelta.x/2,intRect.sizeDelta.y/2,intRect.position.z);
+        Vertical.GetComponent<RectTransform>().position = new Vector3(intRect.sizeDelta.x/2,Vertical.GetComponent<RectTransform>().sizeDelta.y/2,intRect.position.z);
 
 
         //이름 부분 위치 수정
         namemesh.fontSize = intRect.sizeDelta.y * nameRatio;
-        name_rect.sizeDelta = new Vector2(intRect.sizeDelta.x, namemesh.fontSize + namemesh.fontSize/6);
-        name_rect.position = new Vector3(name_rect.sizeDelta.x / 2, intRect.sizeDelta.y+name_rect.sizeDelta.y/2, 0);
+        name_rect.sizeDelta = new Vector2(intRect.sizeDelta.x, intRect.sizeDelta.y*0.3f);//namemesh.fontSize + namemesh.fontSize/6
+        name_rect.position = new Vector3(name_rect.sizeDelta.x / 2, Vertical.GetComponent<RectTransform>().sizeDelta.y+name_rect.sizeDelta.y/2, 0);
     }
 
 
