@@ -51,8 +51,9 @@ public class LoopController : MonoBehaviour
     public void SetNone()
     {
         this.playableDirector.extrapolationMode = DirectorWrapMode.None;
-        Application.targetFrameRate = 60;
-        QualitySettings.vSyncCount = 1;
+        ResetValue();
+        //Application.targetFrameRate = 60;
+        //QualitySettings.vSyncCount = 1;
     }
 
     public void ResetValue()//끝날때 다시 원래대로초기화 하는 함수
@@ -147,20 +148,27 @@ public class LoopController : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (playableDirector.time >= stop_time[stopListNum])
+        //if (playableDirector.time >= stop_time[stopListNum])
 
-        Debug.Log("deltaTime" + Time.deltaTime);
+        //Debug.Log("deltaTime" + Time.deltaTime);
         //playableDirector.time += Time.deltaTime;
         //playableDirector.Evaluate();
-        if (playableDirector.time >= stop_time[stopListNum] - (1 / fixed_timeline_frame/2))//
+
+        if(stop_time.Count > 1) //추가한부분
         {
-            isHold = 1;
-            double loopLineT = loop_time[loopListNum];//루프 시작 시간
-            var a = playableDirector.duration;
-            playableDirector.time = loopLineT;
-            backgroundImage.SetActive(true);
+            if (playableDirector.time >= stop_time[stopListNum] - (1 / fixed_timeline_frame / 2))//갑자기 루프타임라인 부분 다 지우니까 현재 부분 문제 발생, 확인해본바 stop_time이 0인곳이 생겨서 생김 따라서 위에 if를 추가했음
+            {
+                isHold = 1;
+                double loopLineT = loop_time[loopListNum];//루프 시작 시간
+                var a = playableDirector.duration;
+                playableDirector.time = loopLineT;
+                backgroundImage.SetActive(true);
+            }
         }
-        if (playableDirector.time >= hold_time[holdListNum])//현재 이 부분에서 자꾸 빨간 에러 뜨는데 컴파일러 상에서는 문제없어보임 나중에 빌드로 확인 필요 2024.10.23
+
+   
+
+        if (playableDirector.time >= hold_time[holdListNum])//현재 이 부분에서 자꾸 빨간 에러 뜨는데 컴파일러 상에서는 문제없어보임 나중에 빌드로 확인 필요 2024.10.23->loop부분을 다 지우니 에러 없어짐 2024.11.04
         {
             isHold = 2;
             playableDirector.playableGraph.GetRootPlayable(0).SetDuration(hold_time[holdListNum]);
