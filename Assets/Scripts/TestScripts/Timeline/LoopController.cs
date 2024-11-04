@@ -173,6 +173,7 @@ public class LoopController : MonoBehaviour
             isHold = 2;
             playableDirector.playableGraph.GetRootPlayable(0).SetDuration(hold_time[holdListNum]);
             backgroundImage.SetActive(true);
+            Debug.Log("set ishold");
             //playableDirector.time = hold_time[holdListNum];
         }
     }
@@ -184,6 +185,7 @@ public class LoopController : MonoBehaviour
             Debug.Log("anyKeyDonw");
             if (isHold > 2 || isHold < 1)
             {//해당부분은 int로 수정해서 int로 진행할까함 0 = null, 1 = loop, 2 = hold, else error
+                Debug.Log("checky isHold num" + isHold);
                 return;
             }
             EndLoop();
