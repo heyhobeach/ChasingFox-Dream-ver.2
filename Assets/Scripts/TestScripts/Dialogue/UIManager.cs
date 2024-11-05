@@ -196,16 +196,17 @@ public class UIManager : MonoBehaviour
     {
         //여기에서 isalone 받아야함
         Tuple<string, string>[] name_list = namemesh.transform.parent.GetComponent<InteractionEvent>().GetImageNameList();
-        Debug.Log(string.Format("제공 문자열 {0} 결과 값 {1}", name_list[0].Item2, Regex.IsMatch(name_list[0].Item2, @"^alone_")));//마지막 부분에 에러남 
-        string nameStr = name_list[0].Item2;
-        bool isAlone = Regex.IsMatch(name_list[0].Item2, @"^alone_");
+        //Debug.Log(string.Format("제공 문자열 {0} 결과 값 {1}", name_list[0].Item2, Regex.IsMatch(name_list[0].Item2, @"^alone_")));//마지막 부분에 에러남 
+
 
         if (name_list == null)
         {
             Debug.Log("튜플이 null 입니다");
-            throw new Exception("튜플이 null 입니다");
+            //throw new Exception("튜플이 null 입니다");
             return;
         }
+        string nameStr = name_list[0].Item2;
+        bool isAlone = Regex.IsMatch(name_list[0].Item2, @"^alone_");
         //for(int i = 0; i < name_list.Length; i++)//현재 대화의 다음의 모습이 보이는거 같은데 해당 방식이 맞음 이유는 다음 대사에 대한 이미지를 가져와야하기때문에
         //{
         //    Debug.Log("name is" + name_list[i].Item1+"dir is" + name_list[i].Item2);
