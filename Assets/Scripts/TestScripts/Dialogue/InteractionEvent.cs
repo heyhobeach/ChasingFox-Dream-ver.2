@@ -524,13 +524,13 @@ public class InteractionEvent : MonoBehaviour
     private void EndDialogue()
     {
         Debug.Log("대화끝");
-        if (_Uimanager.GetTextActive())
-        {
-            _DisableUI();
-            Debug.Log("비활성화");
-            isSkip = false;
-            return;
-        }
+        //if (_Uimanager.GetTextActive())
+        //{
+        //    //_DisableUI();
+        //    Debug.Log("비활성화");
+        //    isSkip = false;
+        //    return;
+        //}
         if ( (indexNum < DatabaseManager.instance.indexList.Count))
         //if (Input.GetKeyDown(KeyCode.X) & (indexNum < DatabaseManager.instance.indexList.Count))
         {
@@ -541,7 +541,7 @@ public class InteractionEvent : MonoBehaviour
             if (GetDialogue() == null)
             {
                 Debug.Log("대화 끝났습니다");
-                _Uimanager.content.text = "대화종료";//추후 나중에 삭제 확인용
+                //_Uimanager.content.text = "대화종료";//추후 나중에 삭제 확인용
                 return;
             }
             num = 0;

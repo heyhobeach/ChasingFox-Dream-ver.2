@@ -441,7 +441,7 @@ public class UIManager : MonoBehaviour
     {
         this.transform.gameObject.SetActive(false);
     }
-    public bool GetTextActive()//수정 필요할듯 이상함
+    public bool GetTextActive()//수정 필요할듯 이상함 , 없어도 될듯한데?
     {
         //GameObject g = gameObject.transform.GetChild(0).transform.GetChild(0).gameObject;
         Debug.Log(Vertical.name);

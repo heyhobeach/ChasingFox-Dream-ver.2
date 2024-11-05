@@ -54980,7 +54980,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &897695240
 Transform:
   m_ObjectHideFlags: 0
@@ -93257,7 +93257,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1557489109
 Transform:
   m_ObjectHideFlags: 0
@@ -111574,6 +111574,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: e7841edb67bd5d34ea8934545f258b03, type: 2}
     - {fileID: 11400000, guid: f7bf509e776809e44b44128027148a25, type: 2}
     - {fileID: 11400000, guid: 0603a3b8d4d52e640a3d0798b38b7265, type: 2}
+    - {fileID: 11400000, guid: d966883d0d6c7384e94ef03cc462e6d9, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -112221,18 +112222,6 @@ MonoBehaviour:
           m_CallState: 2
     - m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 1503132057}
-          m_TargetAssemblyTypeName: UIController, Assembly-CSharp
-          m_MethodName: DialogueCanvasSetTrue
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
         - m_Target: {fileID: 2139550984}
           m_TargetAssemblyTypeName: InteractionEvent, Assembly-CSharp
           m_MethodName: SetSkip
@@ -112245,9 +112234,35 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
+        - m_Target: {fileID: 1503132057}
+          m_TargetAssemblyTypeName: UIController, Assembly-CSharp
+          m_MethodName: DialogueCanvasSetTrue
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
     - m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 492111922}
+          m_TargetAssemblyTypeName: LoopController, Assembly-CSharp
+          m_MethodName: SetNone
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2144505758}
           m_TargetAssemblyTypeName: LoopController, Assembly-CSharp
           m_MethodName: SetNone
           m_Mode: 1
@@ -112273,10 +112288,208 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogue:
     name: 
-    line: {x: 0, y: 29}
-    dialouses: []
+    line: {x: 54, y: 73}
+    dialouses:
+    - name: "\uB9AC\uD37C"
+      context:
+      - "\uD544\uC694\uD558\uBA74 \uCC3E\uC544\uAC00\uACA0\uB2E4"
+      choice: 
+      id: 53
+      command:
+      - 
+      - 
+      image_name: 
+      dir: 
+    - name: "\uC124\uB9AC\uBC88"
+      context:
+      - "\uD558\uD558\uD558! \uC774\uAC8C \uB204\uAD70\uAC00!"
+      choice: 
+      id: 54
+      command:
+      - 
+      image_name: 
+      dir: 
+    - name: "\uC124\uB9AC\uBC88"
+      context:
+      - "\uC9C0\uC824\uC774 \uD55C \uAC74 \uD588\uAD6C\uB9CC!"
+      choice: 
+      id: 55
+      command:
+      - 
+      image_name: 
+      dir: 
+    - name: "\uB9AC\uD37C"
+      context:
+      - "\uBB34\uC2A8 \uC77C\uC774 \uC788\uC5C8\uB358\uAC70\uC9C0?"
+      choice: 
+      id: 56
+      command:
+      - '!move 57'
+      image_name: 
+      dir: 
+    - name: "\uC124\uB9AC\uBC88"
+      context:
+      - "\uBC14\uB85C \uBCF8\uB860\uC778\uAC74\uAC00? \uADF8\uAC83\uB3C4 \uC88B\uC9C0"
+      choice: 
+      id: 57
+      command:
+      - '!move 61'
+      image_name: 
+      dir: 
+    - name: "\uC124\uB9AC\uBC88"
+      context:
+      - "\uD558\uD558\uD558! \uC5ED\uC2DC \uC2E4\uB825 \uD558\uB098\uB294 \uC778\uC815\uD574\uC57C\uACA0\uAD70"
+      choice: 
+      id: 58
+      command:
+      - 
+      image_name: 
+      dir: 
+    - name: "\uC124\uB9AC\uBC88"
+      context:
+      - "\uADF8 \uB140\uC11D\uB3C4 \uACE0\uC0DD\uD588\uC9C0\uB9CC \uB098\uB3C4 \uACE0\uC0DD
+        \uC880 \uD588\uC5B4"
+      choice: 
+      id: 59
+      command:
+      - 
+      image_name: 
+      dir: 
+    - name: "\uC124\uB9AC\uBC88"
+      context:
+      - "\uC790, \uADF8\uB7FC \uBCF8\uB860\uC73C\uB85C \uB118\uC5B4\uAC00\uC9C0"
+      choice: 
+      id: 60
+      command:
+      - 
+      image_name: 
+      dir: 
+    - name: "\uC124\uB9AC\uBC88"
+      context:
+      - "\uAC80\uC740 \uACE0\uC591\uC774\uAC00 \uB354\uC6B1 \uB0A0\uB6F0\uACE0 \uC788\uC5B4"
+      choice: 
+      id: 61
+      command:
+      - 
+      image_name: 
+      dir: 
+    - name: "\uC124\uB9AC\uBC88"
+      context:
+      - "\uC774\uC804\uC5D0 \uC788\uC5C8\uB358 \uD3ED\uBC1C \uAE30\uC5B5\uD558\uB098?"
+      choice: 
+      id: 62
+      command:
+      - 
+      image_name: 
+      dir: 
+    - name: "\uC124\uB9AC\uBC88"
+      context:
+      - "\uADF8\uAC74 \uC624\uB85C\uC9C0 \uC790\uB124\uB9CC\uC744 \uC81C\uAC70\uD558\uAE30\uC704\uD574
+        \uB9CC\uB4E0 \uD568\uC815\uC774\uC600\uC5B4"
+      choice: 
+      id: 63
+      command:
+      - 
+      image_name: 
+      dir: 
+    - name: "\uC124\uB9AC\uBC88"
+      context:
+      - "\uADF8\uB798\uC11C \uC778\uC9C8\uACFC \uC544\uB9C8\uCD94\uC5B4\uB4E4\uBC16\uC5D0
+        \uC5C6\uC5C8\uB358\uAC70\uACE0"
+      choice: 
+      id: 64
+      command:
+      - 
+      image_name: 
+      dir: 
+    - name: "\uC124\uB9AC\uBC88"
+      context:
+      - "\uC774\uC804\uAE4C\uC9C4 \uC5C6\uC5C8\uB358 \uBCF5\uC218\uAE4C\uC9C0 \uC0DD\uAE30\uACE0\uC788\uB124"
+      choice: 
+      id: 65
+      command:
+      - 
+      image_name: 
+      dir: 
+    - name: "\uB9AC\uD37C"
+      context:
+      - "\uBCF5\uC218?"
+      choice: 
+      id: 66
+      command:
+      - '!size 0 2 1.5'
+      image_name: 
+      dir: 
+    - name: "\uC124\uB9AC\uBC88"
+      context:
+      - "\uC870\uC9C0\uB97C \uAE30\uC5B5\uD558\uB098?"
+      choice: 
+      id: 67
+      command:
+      - 
+      image_name: 
+      dir: 
+    - name: "\uC124\uB9AC\uBC88"
+      context:
+      - "\uC2DC\uCCB4\uB098 \uB2E4\uB984\uC5C6\uB294 \uC790\uB124\uB97C \uAD6C\uD574\uC900
+        \uCE5C\uAD6C\uB9D0\uC774\uC57C"
+      choice: 
+      id: 68
+      command:
+      - 
+      image_name: 
+      dir: 
+    - name: "\uC124\uB9AC\uBC88"
+      context:
+      - "\uC790\uD0DD\uC5D0\uC11C \uC2B5\uACA9\uAE4C\uC9C0 \uBC1B\uC558\uB2E4\uB354\uAD70"
+      choice: 
+      id: 69
+      command:
+      - 
+      image_name: 
+      dir: 
+    - name: "\uC124\uB9AC\uBC88"
+      context:
+      - "\uADF8\uB798\uC11C \uB9D0\uC778\uB370...<br>\uC9C0\uAE08 \uB2F9\uC7A5 \uC77C\uC744
+        \uD574\uC918\uC57C\uACA0\uC5B4"
+      choice: 
+      id: 70
+      command:
+      - 
+      image_name: 
+      dir: 
+    - name: "\uC124\uB9AC\uBC88"
+      context:
+      - "\uC544\uC8FC \uAC04\uB2E8\uD55C \uC77C\uC774\uC57C<br>\uB9AC\uD37C\uAC00
+        \uC0B4\uC544\uC788\uB294\uAC78 \uBCF4\uC5EC\uC8FC\uAE30\uB9CC \uD558\uBA74
+        \uB3FC"
+      choice: 
+      id: 71
+      command:
+      - 
+      image_name: 
+      dir: 
+    - name: "\uC124\uB9AC\uBC88"
+      context:
+      - "\uC870\uC9C1\uC6D0\uB4E4\uC774 \uD55C \uBC88 \uB354 \uB9D0\uD574\uC904\uAC78\uC138"
+      choice: 
+      id: 72
+      command:
+      - 
+      image_name: 
+      dir: 
+    - name: "\uB9AC\uD37C"
+      context:
+      - "\uBC14\uB85C \uC6C0\uC9C1\uC774\uC9C0"
+      choice: 
+      id: 73
+      command:
+      - 
+      - 
+      image_name: 
+      dir: 
   num: 0
-  indexNum: 0
+  indexNum: 1
 --- !u!1 &2144505754
 GameObject:
   m_ObjectHideFlags: 0
@@ -112295,7 +112508,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2144505755
 Transform:
   m_ObjectHideFlags: 0
@@ -112337,7 +112550,7 @@ PlayableDirector:
   - key: {fileID: -5238040685436772031, guid: 001cd90039a23894aa2f0994f8b1140e, type: 2}
     value: {fileID: 375032562}
   - key: {fileID: -7588425189063343193, guid: 001cd90039a23894aa2f0994f8b1140e, type: 2}
-    value: {fileID: 0}
+    value: {fileID: 2139550980}
   m_ExposedReferences:
     m_References:
     - ddfbf9fa2dd214ed8916d779b50fb880: {fileID: 7535830021338084941}
