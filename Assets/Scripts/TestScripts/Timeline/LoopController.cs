@@ -12,7 +12,7 @@ public class LoopController : MonoBehaviour
 
 
     public int fixed_timeline_frame = 30;
-    [SerializeField] private PlayableDirector director;
+    //[SerializeField] private PlayableDirector director;
     public TimelineAsset timeline;
 
     /// <summary>
@@ -70,6 +70,7 @@ public class LoopController : MonoBehaviour
 
     public void SetSkip()
     {
+        Debug.Log("loop controller setskip");
         InteractionEvent.Instance.SetSkip(true);
     }
 
@@ -108,8 +109,10 @@ public class LoopController : MonoBehaviour
         //playableDirector.Evaluate();
         //playableDirector.RebuildGraph();
         //playableDirector.playableGraph.SetTimeUpdateMode(DirectorUpdateMode.Manual);
+        int count = 0;
         foreach (var track in timeline.GetOutputTracks())
         {
+            count++;
             // 트랙에서 마커를 찾습니다.
             foreach (var marker in track.GetMarkers())
             {
@@ -138,6 +141,7 @@ public class LoopController : MonoBehaviour
                 }
             }
         }
+        Debug.Log("시그널 개수 " + count);
         stop_time.Sort();
         loop_time.Sort();
         hold_time.Sort();

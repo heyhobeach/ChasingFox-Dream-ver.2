@@ -310,7 +310,10 @@ public class InteractionEvent : MonoBehaviour
         //}
     }
 
-    public void SetSkip(bool skip) => isSkip = skip;
+    public void SetSkip(bool skip) {
+        Debug.Log("int setskip");
+        isSkip = skip; 
+    }
     public void SetSkip(Transform tf) {}
 
     private void HandleCommand()
@@ -766,6 +769,10 @@ public class InteractionEvent : MonoBehaviour
         Debug.Log("GetNum " + num);
         Tuple<string, string>[]name_tuple_list= new Tuple<string, string>[2];
         string[] name_list= new string[2];
+        if (dialogue.dialouses[num].image_name == null || dialogue.dialouses[num].dir == null)
+        {
+            return null;
+        }
         name_tuple_list[0] = new Tuple<string, string>(dialogue.dialouses[num].image_name, dialogue.dialouses[num].dir);
 
         name_list[0] = dialogue.dialouses[num].image_name;
