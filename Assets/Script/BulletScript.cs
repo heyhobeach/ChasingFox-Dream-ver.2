@@ -58,7 +58,7 @@ public class BulletScript : MonoBehaviour
     {
         //Debug.Log("player pos"+ targetPos + "enemy pos" + shootPos);
         nowpos = transform.position;//목적지 도착시 오브젝트 파괴를 위함
-        bullet_rg.velocity = new Vector2(destination.x, destination.y).normalized*bullet_speed;
+        bullet_rg.linearVelocity = new Vector2(destination.x, destination.y).normalized*bullet_speed;
         //nowpos = Vector2.MoveTowards(transform.position, destination, Time.deltaTime * 10);
         
         if (nowpos == destination)
