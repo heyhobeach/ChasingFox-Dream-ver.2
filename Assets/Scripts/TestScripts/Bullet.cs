@@ -130,7 +130,7 @@ public class Bullet : MonoBehaviour
             var temp = collision.gameObject.GetComponent<IDamageable>();
             Debug.Log(temp.health);
             bool isDamaged = false;
-            if(temp != null) isDamaged = temp.GetDamage(damage);//이거 작동안함
+            if(temp != null) isDamaged = temp.GetDamage(damage, collision);//이거 작동안함
             if (isDamaged)
             {
                 Debug.Log("데미지 받음");
@@ -175,7 +175,7 @@ public class Bullet : MonoBehaviour
             var temp = collision.gameObject.GetComponent<IDamageable>();
             bool isDamaged = false;
             Debug.Log(collision.gameObject.name);
-            if(temp != null) isDamaged = temp.GetDamage(damage);
+            if(temp != null) isDamaged = temp.GetDamage(damage, collision.collider);
             if (isDamaged)
             {
                 Destroy(this.gameObject);
