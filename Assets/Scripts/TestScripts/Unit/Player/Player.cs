@@ -73,7 +73,10 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         fixedDir = 1;
         invalidation = false;
     }
-
+    public void DeathFeedBack(Vector2 dir)
+    {
+        throw new System.NotImplementedException();
+    }
     public bool Crouch(KeyState crouchKey) => changedForm.Crouch(crouchKey);
 
     public bool Jump(KeyState jumpKey) => changedForm.Jump(jumpKey);
