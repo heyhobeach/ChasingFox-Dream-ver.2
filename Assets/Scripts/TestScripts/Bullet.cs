@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    public const float lifeTime = 0.595f;
+    public const float lifeTime = 0.945f;
     public int life = 1;
 
     public GameObject effectObj;
@@ -52,7 +52,7 @@ public class Bullet : MonoBehaviour
             return;
         }
     } 
-    private void FixedUpdate() => rg.velocity = destination * speed;
+    private void FixedUpdate() => rg.linearVelocity = destination * speed;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
