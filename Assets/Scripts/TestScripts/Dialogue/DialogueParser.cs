@@ -19,8 +19,8 @@ public class DialogueParser : MonoBehaviour
 
     string splitsign(string text)
     {
-        if (row[0]=="") return "";
-        Debug.Log(text);
+        if (row[1]=="") return "";
+        //Debug.Log(text);
         if (text[0] == '\"')
         {
             string newtext=text.Substring(1, text.Length - 2);
@@ -61,6 +61,8 @@ public class DialogueParser : MonoBehaviour
             //dialogue.command = new string[10][];
             dialogue.name = row[2];//
             dialogue.id = row[0];
+            dialogue.image_name = row[5];
+            dialogue.dir = row[6];
             //command = Regex.Split(row[4], SPLIT_COMMAND_PASER);
             //command = spaceremove(command);
             
@@ -73,36 +75,22 @@ public class DialogueParser : MonoBehaviour
             List<string> contextList = new List<string>();
             do//동일 id에서 대화 창 변경 한 경우 표시
             {
+                Debug.Log("ID Check" + row[0]+"Context Text" + row[3]);
                 commandList.Add(row[4]);
-                testarr.Add(row[5]);//메모 넣는부분
+                //testarr.Add(row[5]);//메모 넣는부분
                 //dialogue.command[command_num++] = command;
-                row[3] = splitsign(row[3]);
+                row[3] = splitsign(row[3]);//id가 null이면 content를 ""을 리턴
                 contextList.Add(row[3]);//content
                 if (row[3].ToString() == "")//대화가 끝난 경우 대화창 공백
                 {
                     isEnd = true;
                     //Debug.Log(string.Format("content =>null"));//대화 끝난거 확인용 debug
                     contextList.RemoveAt(contextList.Count-1);//마지막에 삽인 되어있는 공백 칸 제거용
-
-                }
-                else
-                {
-                    //Debug.Log(string.Format("content =>{0}", row[3]));
                 }
 
                 if (++i < data.Length-1)
                 {
-
-                    //Debug.Log(string.Format("i�� {0} {1} {2}", i, row[1], row[3]));
-                    
-                    //foreach(var com in command)
-                    //{
-                    //    Debug.Log(string.Format("명령어 {0}", com));
-                    //}
                     row = Regex.Split(data[i], SPLIT_RE);//do while들어와서 csv 분리 못 한 경우 분리
-                    //command = Regex.Split(row[4], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);
-                    //command = spaceremove(command);
-
                 }
                 else
                 {
@@ -112,12 +100,11 @@ public class DialogueParser : MonoBehaviour
             } while (row[0].ToString() == "");
             dialogue.command = commandList.ToArray();
 
-            foreach(var coms in dialogue.command)
+            foreach(var coms in contextList)
             {
-                foreach (var com in coms) { }
+                Debug.Log("대사 " + coms);
             }
             dialogue.context = contextList.ToArray();
-            dialogue.test = testarr.ToArray();
 
             dialoguesList.Add(dialogue); //대화 내용 리스트에 삽입
             if (isEnd)
