@@ -75,7 +75,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     }
     public void DeathFeedBack(Vector2 dir)
     {
-        throw new System.NotImplementedException();
+        //throw new System.NotImplementedException();
     }
     public bool Crouch(KeyState crouchKey) => changedForm.Crouch(crouchKey);
 

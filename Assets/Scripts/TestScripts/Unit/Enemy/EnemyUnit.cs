@@ -62,6 +62,6 @@ public class EnemyUnit : UnitBase, IDamageable
 
     public void DeathFeedBack(Vector2 dir)
     {
-        throw new System.NotImplementedException();
+        //throw new System.NotImplementedException();
     }
 }

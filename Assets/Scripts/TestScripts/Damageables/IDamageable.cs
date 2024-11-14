@@ -38,6 +38,7 @@ namespace Damageables
             if (health <= 0 || invalidation) return false;
             //action?.Invoke();
             Vector2 dir =action(col);
+            Debug.Log("계산후 방향" + dir);
             DeathFeedBack(dir);
             health -= dmg;
             if (health <= 0) {
