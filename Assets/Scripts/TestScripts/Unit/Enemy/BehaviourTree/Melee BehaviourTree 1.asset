@@ -339,6 +339,35 @@ MonoBehaviour:
   description: Chase
   child: {fileID: -3604086991514170634}
   stateCase: 2
+--- !u!114 &-1679556555991530701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3195d4dea04c0744aadaef31853ab61, type: 3}
+  m_Name: SequenceNode
+  m_EditorClassIdentifier: 
+  state: 0
+  guid: 7eceb6f41a099f14fb6b94828d7d1cfc
+  positon: {x: 601.44403, y: 861.86554}
+  blackboard:
+    thisUnit: {fileID: 0}
+    target: {fileID: 0}
+    originPos: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 0
+    FinalNodeList: []
+  description: 
+  children:
+  - {fileID: 4580062493373520207}
+  - {fileID: 3220978404266045939}
 --- !u!114 &-1367118323984246001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -400,7 +429,6 @@ MonoBehaviour:
   - {fileID: 7291363975000716481}
   - {fileID: 5577737174887897221}
   - {fileID: 555910949820902959}
-  - {fileID: 4253570027041858493}
   - {fileID: 1877198029125055445}
   - {fileID: -2728198117769598043}
   - {fileID: 4433449385017773004}
@@ -412,6 +440,10 @@ MonoBehaviour:
   - {fileID: 5388380866008593317}
   - {fileID: -1367118323984246001}
   - {fileID: 7649896592661223750}
+  - {fileID: 6746623829025499627}
+  - {fileID: 3220978404266045939}
+  - {fileID: -1679556555991530701}
+  - {fileID: 4580062493373520207}
   blackboard:
     thisUnit: {fileID: 0}
     target: {fileID: 0}
@@ -422,8 +454,8 @@ MonoBehaviour:
       recognition: 1
       Increase_Sight: 0
     FinalNodeList: []
-  viewPos: {x: 504, y: -239}
-  viewScale: {x: 0.7561437, y: 0.7561437, z: 1}
+  viewPos: {x: -139.2, y: -294.4}
+  viewScale: {x: 0.43232757, y: 0.43232757, z: 1}
 --- !u!114 &531290968384818618
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -521,7 +553,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   state: 0
   guid: 30819079b6d50d040bdb0fb32cc96d65
-  positon: {x: 688.0001, y: 737.00006}
+  positon: {x: 767.35, y: 750.2961}
   blackboard:
     thisUnit: {fileID: 0}
     target: {fileID: 0}
@@ -560,8 +592,7 @@ MonoBehaviour:
       Increase_Sight: 0
     FinalNodeList: []
   description: 
-  isCan: 1
---- !u!114 &4253570027041858493
+--- !u!114 &3220978404266045939
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -570,12 +601,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd55777f44ebe3b46bb49fdc9bb398c1, type: 3}
-  m_Name: Attack
+  m_Script: {fileID: 11500000, guid: 18010df103739f34fa8a9e484853ec76, type: 3}
+  m_Name: Wait
   m_EditorClassIdentifier: 
   state: 0
-  guid: e02181b8217de8e499de93e4f69eaf64
-  positon: {x: 517.0001, y: 737.00006}
+  guid: fdaed8e13982b174db523e5f5d72114d
+  positon: {x: 781.18335, y: 989.28345}
   blackboard:
     thisUnit: {fileID: 0}
     target: {fileID: 0}
@@ -587,8 +618,7 @@ MonoBehaviour:
       Increase_Sight: 0
     FinalNodeList: []
   description: 
-  aimmingTime: 0
-  delayTime: 0.125
+  waitTime: 0.2
 --- !u!114 &4433449385017773004
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -616,8 +646,36 @@ MonoBehaviour:
     FinalNodeList: []
   description: 
   children:
-  - {fileID: 4253570027041858493}
+  - {fileID: 6746623829025499627}
   - {fileID: 1877198029125055445}
+--- !u!114 &4580062493373520207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd55777f44ebe3b46bb49fdc9bb398c1, type: 3}
+  m_Name: Attack
+  m_EditorClassIdentifier: 
+  state: 0
+  guid: 2fb56b2a248e0f740b7c89e7cb628c80
+  positon: {x: 603.7646, y: 989.33276}
+  blackboard:
+    thisUnit: {fileID: 0}
+    target: {fileID: 0}
+    originPos: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 0
+    FinalNodeList: []
+  description: 
+  aimingTime: 0
+  delayTime: 0.455
 --- !u!114 &5388380866008593317
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -677,6 +735,34 @@ MonoBehaviour:
   children:
   - {fileID: 2189719155329094222}
   - {fileID: 1257187732414498288}
+--- !u!114 &6746623829025499627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6587f59b5d3a2a4eab4ba889f75c396, type: 3}
+  m_Name: UnitStateChecker
+  m_EditorClassIdentifier: 
+  state: 0
+  guid: 5a13aac4fbb990f47888dc56aed821fa
+  positon: {x: 598.71, y: 750.302}
+  blackboard:
+    thisUnit: {fileID: 0}
+    target: {fileID: 0}
+    originPos: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 0
+    FinalNodeList: []
+  description: Default
+  child: {fileID: -1679556555991530701}
+  stateCase: 0
 --- !u!114 &7291363975000716481
 MonoBehaviour:
   m_ObjectHideFlags: 0

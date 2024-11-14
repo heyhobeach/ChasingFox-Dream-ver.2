@@ -219,7 +219,7 @@ public partial class ControllerScript : MonoBehaviour
             Debug.Log("벽 충돌 위치" + CheckDir(collision.transform.position));
 
             test = true;
-            rg2d.velocity = Vector2.zero;
+            rg2d.linearVelocity = Vector2.zero;
             test_vec = CheckDir(collision.transform.position); 
             collisionVec = collision.transform.position;
         }
@@ -478,7 +478,7 @@ public partial class ControllerScript : MonoBehaviour
                 }
                 guard.transform.position = this.gameObject.transform.GetChild(0).transform.position;//가드 위치를 가드 포인트 위치로 옮김
                 transform.position = charactor.hidePos;
-                rg2d.velocity = Vector2.zero;//만약 점프가 되려고하면 x만 0으로 초기화
+                rg2d.linearVelocity = Vector2.zero;//만약 점프가 되려고하면 x만 0으로 초기화
                 //rg2d.position = transform.position;
                 charactor.Crouch(guard);
                 isCrouching = true;
