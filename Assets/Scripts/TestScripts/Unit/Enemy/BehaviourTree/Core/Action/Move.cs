@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -68,6 +69,12 @@ namespace BehaviourTree
                 Debug.LogException(e);
                 isRunning = false;
             }
+        }
+
+        public async void Backstep()
+        {
+            //backsteppoint =>구해주기만 하면 되나?
+            //blackboart.target = backsteppoint;
         }
     }
 }

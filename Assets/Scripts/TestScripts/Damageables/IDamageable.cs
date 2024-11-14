@@ -1,3 +1,4 @@
+using NUnit.Framework.Constraints;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -39,11 +40,12 @@ namespace Damageables
             //action?.Invoke();
             Vector2 dir =action(col);
             Debug.Log("계산후 방향" + dir);
-            DeathFeedBack(dir);
+
             health -= dmg;
             if (health <= 0) {
                 dir = dir * -1;
                 Death();
+                DeathFeedBack(dir);
             }
             return true;
         }

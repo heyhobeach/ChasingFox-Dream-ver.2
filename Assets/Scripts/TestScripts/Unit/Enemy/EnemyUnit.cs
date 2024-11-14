@@ -62,6 +62,10 @@ public class EnemyUnit : UnitBase, IDamageable
 
     public void DeathFeedBack(Vector2 dir)
     {
-        //throw new System.NotImplementedException();
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        //rb.linearVelocityX = 2000 * Mathf.Sign(dir.x);
+        //hzForce= 2000 * Mathf.Sign(dir.x);
+        rb.AddForceX(1000    * Mathf.Sign(dir.x), ForceMode2D.Force);
+        Debug.Log("벨로시티" + rb.linearVelocityX);
     }
 }
