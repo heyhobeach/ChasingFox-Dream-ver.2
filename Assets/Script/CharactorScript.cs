@@ -141,7 +141,7 @@ public partial class ControllerScript : MonoBehaviour
                 Debug.Log(temp);
                 if (ControllerScript.instance.isGround)
                 {
-                    ControllerScript.instance.rg2d.velocity = Vector2.zero;//addforce를 계속하면 남아있는 velocity에 계속 합산이 되어서 초기화 시키고 다시 날리기위함
+                    ControllerScript.instance.rg2d.linearVelocity = Vector2.zero;//addforce를 계속하면 남아있는 velocity에 계속 합산이 되어서 초기화 시키고 다시 날리기위함
                     ControllerScript.instance.rg2d.AddForce(temp * 4, ForceMode2D.Impulse);//공격시 날아가는것? 이동을 위함, 공격한 방향으로 움직여햐기때문에 y축도 같이 주었고 대충 테스트 했을때 공격이 연이어서 들어가면 이동이 뺠라짐 addForce가 초기화가 안 되어있어서 그런것 같음
                 }
                 isAttacking = true;//(공격중이라고 판단)
