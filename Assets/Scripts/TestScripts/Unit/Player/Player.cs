@@ -361,7 +361,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
             Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Bullet"), false);
         }
 
-        OverlapTest();
+        //OverlapTest();
     }
 
     public void OverlapTest()//여기 부분 수정필요
