@@ -3,11 +3,37 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-
-public class PlatformScript:MonoBehaviour//해당 스크립트에서 MonoBehaviour가 들어간것은 인스펙터에서 오브젝트 설정을 위함
+[RequireComponent(typeof(CompositeCollider2D))]
+[RequireComponent(typeof(PlatformEffector2D))]
+public class PlatformScript : MonoBehaviour
 {
-
-    // Start is called before the first frame update
-    public enum downJumpObject { STRAIGHT, DIAGONAL};//대각선 바닥 일자 바닥 설정
+    public enum downJumpObject { STRAIGHT, DIAGONAL };
     public downJumpObject dObject;
+    private PlatformEffector2D platformScr;
+
+    private void Start()
+    {
+        platformScr = GetComponent<PlatformEffector2D>();
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        var distance = collision.GetContact(0).separation;
+        var normal = collision.GetContact(0).normal;
+        var position = collision.rigidbody.transform.position;
+        collision.rigidbody.MovePosition((Vector2)position + (-normal * distance));
+    }
+    private void OnTriggerExit2D(Collider2D collider)
+    {
+        if(collider.gameObject.CompareTag("Player")) StartCoroutine(DelayOnTrigger(collider));
+    }
+
+    IEnumerator DelayOnTrigger(Collider2D collider)
+    {
+        yield return new WaitForSeconds(0.2f);
+        AddColliderMask(1<<collider.gameObject.layer);
+    }
+
+    public void RemoveColliderMask(int layer) => platformScr.colliderMask &= ~layer;
+    public void AddColliderMask(int layer) => platformScr.colliderMask |= layer;
 }

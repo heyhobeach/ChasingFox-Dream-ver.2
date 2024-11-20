@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour, IBaseController
         if(Input.GetKeyDown(KeyCode.Space) && KeyControll(PlayerControllerMask.Dash, ref isKeyDown)) unitController.Dash();
         
         if (Input.GetKey(KeyCode.S) && KeyControll(PlayerControllerMask.Crouch, ref isKeyDown)) unitController.Crouch(KeyState.KeyDown);//GetKeyDown -> GetKey
-        else if(Input.GetKey(KeyCode.S) && KeyControll(PlayerControllerMask.Crouch)) unitController.Crouch(KeyState.KeyUp);
+        else if(Input.GetKeyUp(KeyCode.S) && KeyControll(PlayerControllerMask.Crouch)) unitController.Crouch(KeyState.KeyUp);
         if(Input.GetKeyDown(KeyCode.W) && KeyControll(PlayerControllerMask.Jump, ref isKeyDown)) unitController.Jump(KeyState.KeyDown);
         else if(Input.GetKey(KeyCode.W) && KeyControll(PlayerControllerMask.Jump)) unitController.Jump(KeyState.KeyStay);
         else if(Input.GetKeyUp(KeyCode.W) && KeyControll(PlayerControllerMask.Jump)) unitController.Jump(KeyState.KeyUp);

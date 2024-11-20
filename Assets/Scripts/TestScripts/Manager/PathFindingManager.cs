@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public partial class GameManager : MonoBehaviour
@@ -14,7 +16,6 @@ public partial class GameManager : MonoBehaviour
         public Node ParentNode;
 
         public int x, y, G, H;
-        //public int x, y, G, H;
 
         public int F { get { return G + H; } }
         public Node(bool _isWall, bool _isRoad, bool _isPoint, bool _isPlatform, int _x, int _y) { 
@@ -22,7 +23,7 @@ public partial class GameManager : MonoBehaviour
             isRoad = _isRoad; 
             isPoint = _isPoint; 
             isplatform = _isPlatform;
-            if (isplatform)
+            if (isplatform || isPoint)
             {
                 isRoad = true;
             }
@@ -30,6 +31,10 @@ public partial class GameManager : MonoBehaviour
             y = _y; 
         }
     }
+
+    public bool showNodes;
+    public bool showPath;
+
     public Vector2 correctionPos;
     public Vector2Int bottomLeft, topRight, startPos;
     // public bool allowDiagonal, dontCrossCorner;
@@ -67,21 +72,9 @@ public partial class GameManager : MonoBehaviour
                 foreach (Collider2D col in Physics2D.OverlapCircleAll(new Vector2(i + bottomLeft.x + correctionPos.x, j + bottomLeft.y + correctionPos.y), 0.4f))
                 {
                     if (col.gameObject.layer == LayerMask.NameToLayer("Wall")) isWall = true;
-                    if (col.gameObject.layer == LayerMask.NameToLayer("Ground"))
-                    {
-                        isRoad = true;
-                        try{ if(NodeArray[i, j-1].isplatform) isRoad = false; } catch {}
-                    }
+                    if (col.gameObject.layer == LayerMask.NameToLayer("Ground")) isRoad = true;
                     if (col.gameObject.layer == LayerMask.NameToLayer("Point")) isPoint = true;
-                    if (col.gameObject.layer == LayerMask.NameToLayer("EnemyPlatform"))
-                    {
-                        isplatform = true;
-                        isRoad = false;
-                    }
-                    if(col.gameObject.layer == LayerMask.NameToLayer("Map"))
-                    {
-                        isWall = !isRoad && !isplatform;
-                    }
+                    if (col.gameObject.layer == LayerMask.NameToLayer("EnemyPlatform")) isplatform = true;
                 }
                 isWall = !isRoad && !isplatform;
 
@@ -120,10 +113,11 @@ public partial class GameManager : MonoBehaviour
             // ��������Ʈ �� ���� F�� �۰� F�� ���ٸ� H�� ���� �� ������� �ϰ� ��������Ʈ���� ��������Ʈ�� �ű��
             CurNode = OpenList[0];
             for (int i = 1; i < OpenList.Count; i++)
-            if (OpenList[i].F <= CurNode.F && OpenList[i].H < CurNode.H)
-            {//����ġ ����ؼ� �ִ� �������� �κ�
-                CurNode = OpenList[i];
-                
+            {
+                if (OpenList[i].F <= CurNode.F)
+                {
+                    CurNode = OpenList[i];
+                }
             }
 
             OpenList.Remove(CurNode);
@@ -143,6 +137,7 @@ public partial class GameManager : MonoBehaviour
                         Debug.LogError("Path Cant Find Erorr");
                         return null;
                     }
+
                     if (TargetCurNode.isplatform||TargetCurNode.ParentNode.isplatform)
                     {
                         if (targetPos.y > startPos.y)//����
@@ -228,6 +223,7 @@ public partial class GameManager : MonoBehaviour
                             }
                         }
                     }
+                    
                     FinalNodeList.Add(TargetCurNode);
                     TargetCurNode = TargetCurNode.ParentNode;//�θ� �����κ�
                 }
@@ -242,16 +238,19 @@ public partial class GameManager : MonoBehaviour
             // if (allowDiagonal)
             // {
             // }
-                OpenListAdd(CurNode.x + 1, CurNode.y + 1);
-                OpenListAdd(CurNode.x - 1, CurNode.y + 1);
-                OpenListAdd(CurNode.x - 1, CurNode.y - 1);
-                OpenListAdd(CurNode.x + 1, CurNode.y - 1);
+            OpenListAdd(CurNode.x + 1, CurNode.y + 1);
+            OpenListAdd(CurNode.x - 1, CurNode.y + 1);
+            OpenListAdd(CurNode.x - 1, CurNode.y - 1);
+            OpenListAdd(CurNode.x + 1, CurNode.y - 1);
 
             // �� �� �� ��
+            OpenListAdd(CurNode.x - 1, CurNode.y);
             OpenListAdd(CurNode.x, CurNode.y + 1);
             OpenListAdd(CurNode.x + 1, CurNode.y);
             OpenListAdd(CurNode.x, CurNode.y - 1);
-            OpenListAdd(CurNode.x - 1, CurNode.y);
+            
+            try { if(!NodeArray[CurNode.x-1, CurNode.y].isWall && NodeArray[CurNode.x-2, CurNode.y].isPoint) OpenListAdd(CurNode.x - 2, CurNode.y); } catch(Exception e) { Debug.LogException(e); }
+            try { if(!NodeArray[CurNode.x+1, CurNode.y].isWall && NodeArray[CurNode.x+2, CurNode.y].isPoint) OpenListAdd(CurNode.x + 2, CurNode.y); } catch(Exception e) { Debug.LogException(e); }
         }
         // Debug.Log("���� �� ��ǥ ��� ��ġ" + (TargetNode.y));
         if (OpenList.Count == 0)
@@ -283,7 +282,7 @@ public partial class GameManager : MonoBehaviour
             {
                 Node NeighborNode = NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y];
                 int MoveCost = CurNode.G + (CurNode.x - checkX == 0 || CurNode.y - checkY == 0 ? 10 : 14);
-
+                if(NeighborNode.isPoint) MoveCost = CurNode.G - 28;
 
                 // �̵������ �̿����G���� �۰ų� �Ǵ� ��������Ʈ�� �̿���尡 ���ٸ� G, H, ParentNode�� ���� �� ��������Ʈ�� �߰�
                 if (MoveCost < NeighborNode.G || !OpenList.Contains(NeighborNode))
@@ -298,26 +297,38 @@ public partial class GameManager : MonoBehaviour
         }
     }
 #if UNITY_EDITOR
-    //void OnDrawGizmos()
-    //{
-    //    if(NodeArray == null) return;
-    //    foreach(var node in NodeArray)
-    //    {
-    //        Gizmos.color = Color.green;
-    //        if(node.isRoad) Gizmos.DrawWireCube(new Vector3(node.x+0.5f, node.y-0.5f), Vector3.one*0.95f);
-    //        Gizmos.color = Color.blue;
-    //        if(node.isplatform) Gizmos.DrawWireCube(new Vector3(node.x+0.5f, node.y-0.5f), Vector3.one*0.95f);
-    //        Gizmos.color = Color.red;
-    //        if(node.isWall) Gizmos.DrawWireCube(new Vector3(node.x+0.5f, node.y-0.5f), Vector3.one*0.95f);
-    //    }
-    //    Gizmos.color = Color.white;
-    //    Node prv = null;
-    //    if(FinalNodeList == null) return;
-    //    foreach(var node in FinalNodeList)
-    //    {
-    //        if(prv != null) Gizmos.DrawLine(new Vector3(prv.x+0.5f, prv.y-0.5f), new Vector3(node.x+0.5f, node.y-0.5f));
-    //        prv = node;
-    //    }
-    //}
+    void OnDrawGizmos()
+    {
+        if(showNodes)
+        {
+            if(NodeArray == null) return;
+            foreach(var node in NodeArray)
+            {
+                Gizmos.color = Color.green;
+                if(node.isRoad) Gizmos.DrawWireCube(new Vector3(node.x+correctionPos.x, node.y+correctionPos.y), Vector3.one*0.95f);
+                Gizmos.color = Color.blue;
+                if(node.isplatform) Gizmos.DrawWireCube(new Vector3(node.x+correctionPos.x, node.y+correctionPos.y), Vector3.one*0.95f);
+                Gizmos.color = Color.red;
+                if(node.isWall) Gizmos.DrawWireCube(new Vector3(node.x+correctionPos.x, node.y+correctionPos.y), Vector3.one*0.95f);
+                Gizmos.color = Color.blue;
+                if(node.isPoint) Gizmos.DrawWireCube(new Vector3(node.x+correctionPos.x, node.y+correctionPos.y), Vector3.one*0.85f);
+
+                Handles.Label(new Vector3(node.x+correctionPos.x, node.y+correctionPos.y), "G : " + node.G +  "\nH : " + node.H +  "\nF : " + node.F);
+            }
+        }
+        if(showPath)
+        {
+            Gizmos.color = Color.white;
+            Node prv = null;
+            if(FinalNodeList == null) return;
+            foreach(var node in FinalNodeList)
+            {
+                if(prv != null) Gizmos.DrawLine(new Vector3(prv.x+correctionPos.x, prv.y+correctionPos.y), new Vector3(node.x+correctionPos.x, node.y+correctionPos.y));
+                prv = node;
+            }
+        }
+    }
 #endif
 }
+
+

@@ -176,21 +176,21 @@ public partial class ControllerScript : MonoBehaviour
             isGround = true;
             checkHigh= -100;
             //WereWolf.Instance().isAttacking = false;// 이 부분이 있으면 땅에서 연속 공격 가능 
-            if (collision.gameObject.tag == "platform")
-            {
-                currentOneWayPlatform = collision.gameObject;//플랫폼이라면 현재 플렛폼을 담음
-                Debug.Log(collision.gameObject.GetComponent<PlatformScript>().dObject);//다운 오브젝트 타입확인용 로그
-                switch (collision.gameObject.GetComponent<PlatformScript>().dObject)//대각선 직선 오브젝트 마다 떨어지는 시간이 다를수도 있으니
-                {
-                    case downJumpObject.STRAIGHT://직선
-                        downTime = 0.4f;//떨어지는 시간 다르게 하기 위함
-                        break;
-                    case downJumpObject.DIAGONAL://대각선
-                        downTime = 2f;//떨어지는 시간 다르게 하기 위함
-                        break;
-                }
-                //canDown = true;
-            }
+            // if (collision.gameObject.tag == "platform")
+            // {
+            //     currentOneWayPlatform = collision.gameObject;//플랫폼이라면 현재 플렛폼을 담음
+            //     Debug.Log(collision.gameObject.GetComponent<PlatformScript>().dObject);//다운 오브젝트 타입확인용 로그
+            //     switch (collision.gameObject.GetComponent<PlatformScript>().dObject)//대각선 직선 오브젝트 마다 떨어지는 시간이 다를수도 있으니
+            //     {
+            //         case downJumpObject.STRAIGHT://직선
+            //             downTime = 0.4f;//떨어지는 시간 다르게 하기 위함
+            //             break;
+            //         case downJumpObject.DIAGONAL://대각선
+            //             downTime = 2f;//떨어지는 시간 다르게 하기 위함
+            //             break;
+            //     }
+            //     //canDown = true;
+            // }
         }
 
         if (collision.gameObject.tag == "cover")//엄페물 확인용 엄페용 지금 보니까 필요없는거같음 왜냐하면 엄페물은 지금 trigger로 발동중
