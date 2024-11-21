@@ -2,7 +2,10 @@ using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Net.Mime;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 // using static UnityEditor.Timeline.TimelinePlaybackControls;
@@ -39,7 +42,14 @@ public class UIManager : MonoBehaviour
     public TMP_Text content;
 
     public bool is_select_show = false;
+    /// <summary>
+    /// 해당 변수는 애니메이션 중에 대사가 넘어가지 않게 하기 위함 만약 해당 상황이 없다면 사용 안 해도 괜찮음, 현재 사용 안 하는 변수 나중에 어떻게 될지 몰라 놔두겠음
+    /// </summary>
     public bool is_closing = false;
+
+    public float BoxSizeRatio = 0.34f;
+    public float fontRatio;
+    public float nameRatio;
 
     /// <summary>
     /// start,end,speed
@@ -59,12 +69,16 @@ public class UIManager : MonoBehaviour
 
     private delegate void delayDelegeate();
 
+    private RectTransform intRect;
+
+    private SetCharImage imagesetter;
+
 
     [SerializeField]
     public float typing_speed = 0.05f;
     private const float DEFAULT_SPEED= 0.05f;
     //public InteractionEvent interactionEvent;
-
+    private RectTransform name_rect;
     // Start is called before the first frame update
     void Start()
     {
@@ -72,16 +86,80 @@ public class UIManager : MonoBehaviour
         co = Typing("",isTyping);
         contentArr = new TMP_Text[1];
         size= content.rectTransform.rect.size.y;
+        name_rect= namemesh.transform.GetComponent<RectTransform>();
+        imagesetter=this.transform.GetChild(0).GetComponent<SetCharImage>();
+        TextBoxSizeChange();
+        CharactorImageSizeChange();
+
+        Debug.Log("intRect test"+intRect.sizeDelta + "" + intRect.position);
         // setTestPosition(targetTransform.position);
     }
 
     private void Awake()
     {
+        intRect=this.transform.GetChild(1).GetComponent<RectTransform>();
         is_closing = false;
         //co_closeAinm = ClosingAnim();
     }
 
     // Update is called once per frame
+    private void Update()
+    {
+        Debug.Log("자식 사이즈" + this.transform.GetChild(0).GetComponent<RectTransform>().rect.size);
+
+        //TextBoxSizeChange();
+        //CharactorImageSizeChange();
+        Debug.Log("intRect test" + intRect.sizeDelta + "" + intRect.position);
+    }
+
+    /// <summary>
+    /// 글자 크기 위치 폰트 사이즈 조절하는 함수
+    /// </summary>
+    private void TextBoxSizeChange()//여기서 지금 ui크기에 맞게 대사창 위치, 이름을 맞추고 제작해야함 여기서 조절 필요
+    {
+        //int크기 스케일링
+        intRect.sizeDelta = new Vector2(transform.GetComponent<RectTransform>().rect.width, transform.GetComponent<RectTransform>().rect.height* BoxSizeRatio);
+        intRect.position = new Vector3(0, intRect.sizeDelta.y/2,intRect.position.z);
+
+        //아래는 ver을 맞추기위해
+        content.fontSize = intRect.sizeDelta.y * fontRatio;
+        Vertical.GetComponent<RectTransform>().sizeDelta = intRect.sizeDelta * 0.68f;//해당 0.75는 intRect크기에 비례한 intRect의 크기
+        // Vertical.GetComponent<RectTransform>().sizeDelta.y/2
+        Vertical.GetComponent<RectTransform>().position = new Vector3(intRect.sizeDelta.x/2,Vertical.GetComponent<RectTransform>().sizeDelta.y/2,intRect.position.z);
+
+
+        //이름 부분 위치 수정
+        namemesh.fontSize = intRect.sizeDelta.y * nameRatio;
+        name_rect.sizeDelta = new Vector2(intRect.sizeDelta.x, intRect.sizeDelta.y*0.3f);//namemesh.fontSize + namemesh.fontSize/6
+        name_rect.position = new Vector3(name_rect.sizeDelta.x / 2, Vertical.GetComponent<RectTransform>().sizeDelta.y+name_rect.sizeDelta.y/2, 0);
+    }
+
+
+    /// <summary>
+    /// 이미지 크기 설정 및 위치 조정
+    /// </summary>
+    private void CharactorImageSizeChange()//1980, 1080 비율 유지
+    {
+
+        for (int i = 0; i < this.transform.GetChild(0).childCount; i++)
+        {
+            transform.GetChild(0).GetChild(i).GetComponent<RectTransform>().sizeDelta = new Vector2(transform.GetComponent<RectTransform>().rect.width*0.328f, transform.GetComponent<RectTransform>().rect.width * 0.36645f);
+            float yPox = transform.GetChild(0).GetChild(0).transform.GetComponent<RectTransform>().rect.height;
+
+            Debug.Log(yPox + "yPos");
+            if (i == 0)//이렇게 한 이유는 이미지는 공간 2개 밖에없을거같아서
+            {
+                transform.GetChild(0).GetChild(i).GetComponent<RectTransform>().position = new Vector3(transform.GetComponent<RectTransform>().rect.width * 0.3f / 2, yPox*0.95f, 0); //yPox/2
+            }
+            else
+            {
+                transform.GetChild(0).GetChild(i).GetComponent<RectTransform>().position = new Vector3(Screen.width- transform.GetComponent<RectTransform>().rect.width * 0.3f/2, yPox * 0.95f, 0);//yPox/2
+            }
+        }
+        RectTransform _rect = transform.GetChild(0).GetComponent<RectTransform>();
+        _rect.position = new Vector2(_rect.position.x, 540);//여기는 크게 영향이 안감
+    }
+
 
     /// <summary>
     /// 위치를 받으면 대사창 위치가 옮겨짐
@@ -90,7 +168,7 @@ public class UIManager : MonoBehaviour
     public void SetTextPosition(Vector3 pos)//추후 대사 2개이상 발생시 가운데값
     {
         Vector3 _pos;
-        Transform dialogueUiTransform = this.transform.GetChild(0).GetComponent<Transform>();//스크린 좌표로 변환 필요
+        Transform dialogueUiTransform = this.transform.GetChild(1).GetComponent<Transform>();//스크린 좌표로 변환 필요, 0
         //dialogueUiTransform.position = pos;
         dialogueUiTransform.position=Camera.main.WorldToScreenPoint(new Vector3(pos.x,pos.y+1,pos.z));//타겟 오브젝트 위치에 대사 오브젝트 위치 움직임
         Debug.Log(pos);
@@ -100,6 +178,43 @@ public class UIManager : MonoBehaviour
         namemesh.text = name;
     }
 
+    public void SetImage(string image_name,string image_dir,bool is_disable=false)//이 부분은 next text에서 계속 불러옴 그래서 그런 느낌을 원하면 여기서 값을 조정해야하는게 맞ㅇ므
+    {
+        //string str = @"^[a-zA-Z]";
+        bool isAlone = Regex.IsMatch(image_dir, @"^alone_");
+        if (isAlone)
+        {
+            image_dir = image_dir.Substring(6);
+        }
+        image_dir = Regex.Replace(image_dir, @"[^a-zA-Z]", "");
+        Debug.Log("변경후"+image_dir);
+        //나중에 선택지때 중앙만 오게 된다면 여기서 설정 할 예정
+        imagesetter.ChangeImage(image_name,image_dir,isAlone);//좌우 기준
+    }
+
+    public void LoadImage()//이 부분은 한번만 일어남 이미지 켤때
+    {
+        //여기에서 isalone 받아야함
+        Tuple<string, string>[] name_list = namemesh.transform.parent.GetComponent<InteractionEvent>().GetImageNameList();
+        //Debug.Log(string.Format("제공 문자열 {0} 결과 값 {1}", name_list[0].Item2, Regex.IsMatch(name_list[0].Item2, @"^alone_")));//마지막 부분에 에러남 
+
+
+        if (name_list == null)
+        {
+            Debug.Log("튜플이 null 입니다");
+            //throw new Exception("튜플이 null 입니다");
+            return;
+        }
+        string nameStr = name_list[0].Item2;
+        bool isAlone = Regex.IsMatch(name_list[0].Item2, @"^alone_");
+        //for(int i = 0; i < name_list.Length; i++)//현재 대화의 다음의 모습이 보이는거 같은데 해당 방식이 맞음 이유는 다음 대사에 대한 이미지를 가져와야하기때문에
+        //{
+        //    Debug.Log("name is" + name_list[i].Item1+"dir is" + name_list[i].Item2);
+        //
+        //}
+        SetImage(name_list[1].Item1, name_list[1].Item2);
+        SetImage(name_list[0].Item1, nameStr,isAlone);
+    }
 
     /// <summary>
     /// 글자 수 받아오는곳
@@ -165,17 +280,21 @@ public class UIManager : MonoBehaviour
         co = Typing(_content,isTyping);
         StartCoroutine(co);
     }
-    public void SetContent(string[] _contentArr)//배열로 받을 예정
+    public async void SetContent(string[] _contentArr)//배열로 받을 예정 선택지 관련 내용 , 여기서 배열로 사용 예정
     {
-        StopCoroutine(co);
+        //StopCoroutine(co);
         int br_count = 0;
         //float width = content.fontSize * GetContentLength(_contentArr, ref br_count);//여기부분은 수정 해야하는데 아마 선택지에 br이 안들어갈거같아서 방치
         //float hight = content.fontSize + (content.fontSize * br_count);              //
         //content.rectTransform.sizeDelta = new Vector2(width, hight);                 //
 
         CreatSelect(_contentArr);
-        co = TextSliding(_contentArr);
-        StartCoroutine(co);
+        Debug.Log("비동기 시작");
+        //await ImageSliding();
+        //await imagesetter.ImageAnim();
+        Debug.Log("비동기 끝");
+        //co = TextSliding(_contentArr);//선택지 배열 움직이는 슬라이딩 애니메이션
+        //StartCoroutine(co);
     }
     public void ChangeText(int countNum)//화살표 맞게 글자 색 변경하는 부분
     {
@@ -229,7 +348,7 @@ public class UIManager : MonoBehaviour
     IEnumerator Typing(string str,bool s)
     {
         GameObject fixedVertical = content.transform.parent.gameObject;
-        fixedVertical.GetComponent<VerticalLayoutGroup>().enabled = true;
+        //fixedVertical.GetComponent<VerticalLayoutGroup>().enabled = true;
         //첫 설정때 contentArr 설정 필요 지금 contentArr이 아무것도 없다고 되어있음 따라서 contentArr[0]에는 content가 들어가야함
         string pattern = "<[^>]*>?";
         if(isTyping)
@@ -310,15 +429,19 @@ public class UIManager : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// 해당 라인들 수정 필요
+    /// </summary>
     public void EnableUI()
     {
-        Vertical.SetActive(true);
+        this.transform.gameObject.SetActive(true);
     }
     public void DisableUI()
     {
-        Vertical.SetActive(false);
+        this.transform.gameObject.SetActive(false);
     }
-    public bool GetTextActive()//수정 필요할듯 이상함
+    public bool GetTextActive()//수정 필요할듯 이상함 , 없어도 될듯한데?
     {
         //GameObject g = gameObject.transform.GetChild(0).transform.GetChild(0).gameObject;
         Debug.Log(Vertical.name);
@@ -348,7 +471,7 @@ public class UIManager : MonoBehaviour
     {
         if (contentArr.Length == 1) return;
         int childs = content.transform.parent.transform.childCount;
-        is_closing = true;
+        //is_closing = true;
         GameObject selectobj = content.transform.parent.GetChild(choseIndex).gameObject;
         string tmpstr = selectobj.GetComponent<TMP_Text>().text;
         start_pos=selectobj.transform.position;
@@ -450,18 +573,18 @@ public class UIManager : MonoBehaviour
             contentArr[i] = select;
             select.transform.SetParent(content.transform.parent);
             float height = content.rectTransform.sizeDelta.y;
-            select.transform.localPosition = new Vector3(content.transform.localPosition.x - 1, content.transform.localPosition.y-(height*i), content.transform.localPosition.z);
+            //select.transform.localPosition = new Vector3(content.transform.localPosition.x - 1, content.transform.localPosition.y-(height*i), content.transform.localPosition.z);
             Debug.Log("선택지 위치" + select.transform.localPosition + "content 높이"+content.rectTransform.sizeDelta);
 
-            select.transform.localScale = new Vector3(1, 2, 1);
+            //select.transform.localScale = new Vector3(1, 2, 1);
             //      select.transform.parent = content.transform.parent;
             select.text = strArr[i];
             select.color = Color.gray;
-            if (max_widht < select.rectTransform.sizeDelta.x)
-            {
-                max_widht=select.rectTransform.sizeDelta.x;
-            }
-            select.gameObject.SetActive(false);
+            //if (max_widht < select.rectTransform.sizeDelta.x)
+            //{
+            //    max_widht=select.rectTransform.sizeDelta.x;
+            //}
+            //select.gameObject.SetActive(false);
         }
         Debug.Log("최대 크기" + max_widht);
         //content.gameObject.SetActive(false);
@@ -518,7 +641,24 @@ public class UIManager : MonoBehaviour
         fixedVertical.GetComponent<VerticalLayoutGroup>().enabled = true;
         fixedVertical.GetComponent<ContentSizeFitter>().verticalFit=ContentSizeFitter.FitMode.PreferredSize;
         is_select_show = false;
+    }
 
+    public async Awaitable ImageSliding()//해당 ui나오는중에는 입력이 되면 안됨 여기서 코루틴 작업들 진행 그러면 해당 작업이 끝나고 나서 뒤에 작업들이 진행이 됨
+    {                                   //여기서 위치가 맞게 나옴
+        Debug.Log("비동기중");
+        float time = 0;
+        float duration = 3f;
+        float yPox = transform.GetChild(0).GetChild(0).transform.GetComponent<RectTransform>().rect.height;
+        //transform.GetChild(0).GetChild(i).GetComponent<RectTransform>().position = new Vector3(transform.GetComponent<RectTransform>().rect.width * 0.3f / 2, yPox/2, 0); 
+
+        RectTransform main_rect = transform.GetChild(0).transform.GetChild(0).GetComponent<RectTransform>();
+        while (time < duration)
+        {
+            time +=Time.deltaTime;
+            await Awaitable.NextFrameAsync();
+        }
+        main_rect.position= new Vector3(transform.GetComponent<RectTransform>().rect.width * 0.3f / 4, yPox / 2, 0);
+        Debug.Log("5초끝");
 
     }
 

@@ -7,6 +7,9 @@ using Unity.VisualScripting;
 
 namespace BehaviourTree.Editor
 {    
+    /// <summary>
+    /// 출처 : https://www.youtube.com/@TheKiwiCoder
+    /// </summary>
     public class BehaviourTreeEditor : EditorWindow
     {
         [SerializeField]
