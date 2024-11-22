@@ -2,18 +2,21 @@ using UnityEngine;
 
 public class GroundSensor : MonoBehaviour
 {
-    Rigidbody2D target;
-    float boxOffsetY;
-    float boxSizeY;
+    private Rigidbody2D target;
+    private EdgeCollider2D col;
 
-    public void Set(Rigidbody2D target, float offset, float size)
+    public void Set(Rigidbody2D target, Vector2 offset, Vector2 size)
     {
+        if(!col) col = GetComponent<EdgeCollider2D>();
         this.target = target;
-        boxOffsetY = offset;
-        boxSizeY = size;
+        col.offset = offset;
+        col.points = new Vector2[] {
+            new Vector2(-size.x + 0.1f, -size.y - 0.05f),
+            new Vector2(size.x - 0.1f, -size.y - 0.05f)
+        };
     }
 
-    public PlatformScript currentPlatform;
+    [HideInInspector] public PlatformScript currentPlatform;
     private bool _isGrounded;
     public bool isGrounded { get => currentPlatform || _isGrounded; }
     public Vector2 normal { get; private set; }
@@ -38,7 +41,9 @@ public class GroundSensor : MonoBehaviour
                 }
                 break;
             case MapType.None:
-                collision.gameObject.GetComponent<PlatformScript>()?.RemoveColliderMask(1<<target.gameObject.layer);
+                var spr = collision.gameObject.GetComponent<PlatformScript>();
+                if(spr && spr.dObject == PlatformScript.downJumpObject.DIAGONAL && collision.collider.bounds.center.y > col.bounds.center.y)
+                    spr.RemoveColliderMask(1<<target.gameObject.layer);
                 break;
         }
     }
@@ -60,7 +65,9 @@ public class GroundSensor : MonoBehaviour
                 }
                 break;
             case MapType.None:
-                collision.gameObject.GetComponent<PlatformScript>()?.RemoveColliderMask(1<<target.gameObject.layer);
+                var spr = collision.gameObject.GetComponent<PlatformScript>();
+                if(spr && spr.dObject == PlatformScript.downJumpObject.DIAGONAL && collision.collider.bounds.center.y > col.bounds.center.y)
+                    spr.RemoveColliderMask(1<<target.gameObject.layer);
                 break;
         }
     }
@@ -70,9 +77,14 @@ public class GroundSensor : MonoBehaviour
         else if(collision.gameObject.CompareTag("platform")) currentPlatform = null;
     }
 
+    private void Awake()
+    {
+        col = GetComponent<EdgeCollider2D>();
+    }
+
     private void Update()
     {
-        transform.position = target.position + (Vector2.down*0.05f);
+        transform.position = target.position;
     }
 
     /// <summary>
@@ -95,10 +107,9 @@ public class GroundSensor : MonoBehaviour
     {
         if(!(collision.gameObject.CompareTag("Map") || collision.gameObject.CompareTag("platform")) || collision.contactCount <= 0) return MapType.None;
         angle = Mathf.Abs(Vector2.Angle(Vector2.up, collision.contacts[0].normal));
-        point = collision.contacts[0].point;
         if(collision.gameObject.CompareTag("platform") && angle <= 50) return MapType.Platform;
         else if(collision.gameObject.CompareTag("platform") && angle > 50) return MapType.None;
-        if(angle <= 45 || collision.gameObject.tag.Equals("ground")) return MapType.Ground;
+        if(angle <= 45) return MapType.Ground;
         else if(angle >= 135) return MapType.Floor;
         else return MapType.Wall;
     }
@@ -109,11 +120,5 @@ public class GroundSensor : MonoBehaviour
         var nor = contact.normal;
         var distance = contact.separation;
         target.transform.position += (Vector3) nor*distance;
-    }
-
-    Vector2 point;
-    void OnDrawGizmos()
-    {
-        if(point != null) Gizmos.DrawSphere(point, 0.5f);
     }
 }

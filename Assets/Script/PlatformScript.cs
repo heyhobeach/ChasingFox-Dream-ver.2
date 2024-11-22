@@ -10,10 +10,12 @@ public class PlatformScript : MonoBehaviour
     public enum downJumpObject { STRAIGHT, DIAGONAL };
     public downJumpObject dObject;
     private PlatformEffector2D platformScr;
+    private WaitForSeconds waitForSeconds;
 
-    private void Start()
+    private void Awake()
     {
         platformScr = GetComponent<PlatformEffector2D>();
+        waitForSeconds = new WaitForSeconds(0.1f);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -30,7 +32,7 @@ public class PlatformScript : MonoBehaviour
 
     IEnumerator DelayOnTrigger(Collider2D collider)
     {
-        yield return new WaitForSeconds(0.2f);
+        yield return waitForSeconds;
         AddColliderMask(1<<collider.gameObject.layer);
     }
 

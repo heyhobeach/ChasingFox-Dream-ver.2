@@ -144,7 +144,7 @@ public abstract class PlayerUnit : UnitBase
     protected override void OnEnable()
     {
         base.OnEnable();
-        groundSensor.Set(rg, boxOffsetY, boxSizeY);
+        groundSensor.Set(rg, new Vector2(boxOffsetX, boxOffsetY), new Vector2(boxSizeX, boxSizeY));
         // coroutine = StartCoroutine(DownJump());
     }
     protected override void OnDisable()
@@ -479,18 +479,6 @@ public abstract class PlayerUnit : UnitBase
     /// </summary>
     private void Movement()
     {
-        // var hit = Physics2D.BoxCastAll(rg.transform.position-new Vector3(-boxOffsetX, boxSizeY), new Vector2(boxSizeX*2+0.05f, 0.1f), 0, Vector2.down, 0, 1<<LayerMask.NameToLayer("OneWayPlatform") | 1<<LayerMask.NameToLayer("Map"));
-        // if(hit.Length > 0)
-        // {
-        //     var angle = Mathf.Abs(hit[0].normal.x);
-        //     if(angle > 0.1f && angle < 0.9f && !(angle > 0.4f && angle < 0.6f))
-        //     {
-        //         var temp = Vector3.ProjectOnPlane(new Vector3(hzForce, 0), hit[0].normal);
-        //         rg.MovePosition(rg.transform.position + new Vector3(temp.x*1.42f, temp.y*1.42f + vcForce) * Time.deltaTime);
-        //     }
-        //     else rg.MovePosition(rg.transform.position + (new Vector3(hzForce, vcForce) * Time.deltaTime));
-        // }
-        // else rg.MovePosition(rg.transform.position + (new Vector3(hzForce, vcForce) * Time.deltaTime));
         if(isGrounded)
         {
             var normal = Vector3.ProjectOnPlane(new Vector2(hzForce, 0), groundSensor.normal);
@@ -529,10 +517,9 @@ public abstract class PlayerUnit : UnitBase
     {
         if(!(collision.gameObject.CompareTag("Map") || collision.gameObject.CompareTag("platform")) || collision.contactCount <= 0) return MapType.None;
         angle = Mathf.Abs(Vector2.Angle(Vector2.up, collision.contacts[0].normal));
-        if(collision.contacts[0].point.y > (transform.position+(Vector3.down*(boxSizeY+boxOffsetY))).y) angle = 180;
         if(collision.gameObject.CompareTag("platform") && angle <= 50) return MapType.Platform;
         else if(collision.gameObject.CompareTag("platform") && angle > 50) return MapType.None;
-        if(angle <= 45 || collision.gameObject.tag.Equals("ground")) return MapType.Ground;
+        if(angle <= 45) return MapType.Ground;
         else if(angle >= 135) return MapType.Floor;
         else return MapType.Wall;
     }
