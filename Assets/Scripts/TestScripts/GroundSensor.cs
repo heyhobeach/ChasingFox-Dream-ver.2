@@ -11,8 +11,8 @@ public class GroundSensor : MonoBehaviour
         this.target = target;
         col.offset = offset;
         col.points = new Vector2[] {
-            new Vector2(-size.x + 0.1f, -size.y - 0.05f),
-            new Vector2(size.x - 0.1f, -size.y - 0.05f)
+            new Vector2(-size.x * 0.95f, -size.y - 0.05f),
+            new Vector2(size.x * 0.95f, -size.y - 0.05f),
         };
     }
 
@@ -23,65 +23,31 @@ public class GroundSensor : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        switch(CheckMapType(collision))
-        {
-            case MapType.Ground:
-                SetPosition(collision);
-                _isGrounded = true;
-                normal = collision.GetContact(0).normal;
-                if(currentPlatform) currentPlatform = null;
-                break;
-            case MapType.Platform:
-                var psc = collision.gameObject.GetComponent<PlatformScript>();
-                if(!currentPlatform) 
-                {
-                    SetPosition(collision);
-                    if(!_isGrounded) normal = collision.GetContact(0).normal;
-                    currentPlatform = psc;
-                }
-                break;
-            case MapType.None:
-                var spr = collision.gameObject.GetComponent<PlatformScript>();
-                if(spr && spr.dObject == PlatformScript.downJumpObject.DIAGONAL) spr.RemoveColliderMask(1<<target.gameObject.layer);
-                break;
-        }
+        CheckCollision(collision);
     }
     private void OnCollisionStay2D(Collision2D collision)
     {
-        switch(CheckMapType(collision))
-        {
-            case MapType.Ground:
-                _isGrounded = true;
-                normal = collision.GetContact(0).normal;
-                if(currentPlatform) currentPlatform = null;
-                break;
-            case MapType.Platform:
-                var psc = collision.gameObject.GetComponent<PlatformScript>();
-                if(!currentPlatform) 
-                {
-                    if(!_isGrounded) normal = collision.GetContact(0).normal;
-                    currentPlatform = psc;
-                }
-                break;
-            case MapType.None:
-                var spr = collision.gameObject.GetComponent<PlatformScript>();
-                if(spr && spr.dObject == PlatformScript.downJumpObject.DIAGONAL) spr.RemoveColliderMask(1<<target.gameObject.layer);
-                break;
-        }
+        CheckCollision(collision);
     }
     private void OnCollisionExit2D(Collision2D collision)
     {
         if(collision.gameObject.CompareTag("Map")) _isGrounded = false;
-        else if(collision.gameObject.CompareTag("platform")) currentPlatform = null;
+        if(collision.gameObject.CompareTag("platform")) 
+        {
+            currentPlatform.AddColliderMask(1 << target.gameObject.layer);
+            currentPlatform = null;
+        }
     }
 
     private void Awake()
     {
         col = GetComponent<EdgeCollider2D>();
+        normal = Vector2.up;
     }
 
     private void Update()
     {
+        // Debug.Log(_isGrounded + ", " + (bool)currentPlatform);
         transform.position = target.position;
     }
 
@@ -105,6 +71,7 @@ public class GroundSensor : MonoBehaviour
     {
         if(!(collision.gameObject.CompareTag("Map") || collision.gameObject.CompareTag("platform")) || collision.contactCount <= 0) return MapType.None;
         angle = Mathf.Abs(Vector2.Angle(Vector2.up, collision.contacts[0].normal));
+        point = collision.GetContact(0).point;
         if(collision.gameObject.CompareTag("platform") && angle <= 50) return MapType.Platform;
         else if(collision.gameObject.CompareTag("platform") && angle > 50) return MapType.None;
         if(angle <= 45) return MapType.Ground;
@@ -112,11 +79,46 @@ public class GroundSensor : MonoBehaviour
         else return MapType.Wall;
     }
 
-    private void SetPosition(Collision2D collision)
+    private void CheckCollision(Collision2D collision)
     {
-        ContactPoint2D contact = collision.contacts[0];
-        var nor = contact.normal;
-        var distance = contact.separation;
-        target.transform.position += (Vector3) nor*distance;
+        switch(CheckMapType(collision))
+        {
+            case MapType.Ground:
+                _isGrounded = true;
+                normal = collision.GetContact(0).normal;
+                break;
+            case MapType.Platform:
+                if(!currentPlatform) 
+                {
+                    var psc = collision.gameObject.GetComponent<PlatformScript>();
+                    if(!_isGrounded) normal = collision.GetContact(0).normal;
+                    currentPlatform = psc;
+                }
+                break;
+            case MapType.None:
+                var spr = collision.gameObject.GetComponent<PlatformScript>();
+                switch(spr.dObject)
+                {
+                    case PlatformScript.downJumpObject.STRAIGHT:
+                        if(!currentPlatform) 
+                        {
+                            var psc = collision.gameObject.GetComponent<PlatformScript>();
+                            if(!_isGrounded) normal = collision.GetContact(0).normal;
+                            currentPlatform = psc;
+                        }
+                        break;
+                    case PlatformScript.downJumpObject.DIAGONAL:
+                        spr.RemoveColliderMask(1<<target.gameObject.layer);
+                        break;
+                }
+                break;
+        }
+    }
+
+    Vector2 point = Vector2.zero;
+    private void OnDrawGizmo()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(point, 0.1f);
     }
 }

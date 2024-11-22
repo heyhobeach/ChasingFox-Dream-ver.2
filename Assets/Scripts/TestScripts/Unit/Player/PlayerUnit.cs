@@ -58,6 +58,9 @@ public abstract class PlayerUnit : UnitBase
             //     // }
             //     //canDown = true;
             //     break;
+            case MapType.Platform:
+            case MapType.Ground:
+                break;
             case MapType.Floor:
                 isJumping = false;
                 SetVerticalForce(gravity * Time.fixedDeltaTime);
@@ -100,6 +103,9 @@ public abstract class PlayerUnit : UnitBase
             case MapType.Floor:
                 isJumping = false;
                 SetVerticalForce(gravity * Time.fixedDeltaTime);
+                break;
+            case MapType.Platform:
+            case MapType.Ground:
                 break;
             // case MapType.Platform:
             //     if(!currentOneWayPlatform) currentOneWayPlatform = collision.gameObject;//플랫폼이라면 현재 플렛폼을 담음
@@ -482,8 +488,7 @@ public abstract class PlayerUnit : UnitBase
         if(isGrounded)
         {
             var normal = Vector3.ProjectOnPlane(new Vector2(hzForce, 0), groundSensor.normal);
-            var mul = Vector2.one + (Vector2.one - new Vector2(Mathf.Abs(normal.normalized.x), Mathf.Abs(normal.normalized.y)));
-            rg.MovePosition(rg.transform.position + new Vector3(normal.x * mul.x, normal.y * mul.y + vcForce) * Time.deltaTime);     
+            rg.MovePosition(rg.transform.position + new Vector3(normal.x, normal.y + vcForce) * Time.deltaTime);
         }
         else rg.MovePosition(rg.transform.position + (new Vector3(hzForce, vcForce) * Time.deltaTime));
     }
