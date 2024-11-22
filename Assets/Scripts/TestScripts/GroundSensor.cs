@@ -42,8 +42,7 @@ public class GroundSensor : MonoBehaviour
                 break;
             case MapType.None:
                 var spr = collision.gameObject.GetComponent<PlatformScript>();
-                if(spr && spr.dObject == PlatformScript.downJumpObject.DIAGONAL && collision.collider.bounds.center.y > col.bounds.center.y)
-                    spr.RemoveColliderMask(1<<target.gameObject.layer);
+                if(spr && spr.dObject == PlatformScript.downJumpObject.DIAGONAL) spr.RemoveColliderMask(1<<target.gameObject.layer);
                 break;
         }
     }
@@ -66,8 +65,7 @@ public class GroundSensor : MonoBehaviour
                 break;
             case MapType.None:
                 var spr = collision.gameObject.GetComponent<PlatformScript>();
-                if(spr && spr.dObject == PlatformScript.downJumpObject.DIAGONAL && collision.collider.bounds.center.y > col.bounds.center.y)
-                    spr.RemoveColliderMask(1<<target.gameObject.layer);
+                if(spr && spr.dObject == PlatformScript.downJumpObject.DIAGONAL) spr.RemoveColliderMask(1<<target.gameObject.layer);
                 break;
         }
     }
