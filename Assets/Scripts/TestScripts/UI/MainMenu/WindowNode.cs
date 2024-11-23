@@ -11,7 +11,7 @@ namespace MainMenuUI
 
         private void OnEnable()
         {
-            size = MainMenuManager.Instance.screanSize;
+            // size = MainMenuManager.Instance.screanSize;
         }
     }
 }
