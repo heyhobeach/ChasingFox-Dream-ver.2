@@ -42,7 +42,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   state: 0
   guid: abbf8657897053d45b6f700561d0c93e
-  positon: {x: 321.00003, y: 117.162025}
+  positon: {x: 0, y: 0}
   blackboard:
     thisUnit: {fileID: 0}
     target: {fileID: 0}
@@ -163,34 +163,6 @@ MonoBehaviour:
   description: 
   aimingTime: 0
   delayTime: 0
---- !u!114 &-1271001663977389185
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd55777f44ebe3b46bb49fdc9bb398c1, type: 3}
-  m_Name: Attack
-  m_EditorClassIdentifier: 
-  state: 0
-  guid: 4f93e78a7800cda44bdde538d81c498c
-  positon: {x: 231.49901, y: -843.0001}
-  blackboard:
-    thisUnit: {fileID: 0}
-    target: {fileID: 0}
-    originPos: {fileID: 0}
-    playableDirector: {fileID: 0}
-    enemy_state:
-      stateCase: 0
-      recognition: 1
-      Increase_Sight: 0
-    FinalNodeList: []
-  description: 
-  aimingTime: 0
-  delayTime: 0
 --- !u!114 &-1135049620262694422
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -274,10 +246,6 @@ MonoBehaviour:
   - {fileID: -1135049620262694422}
   - {fileID: 8582937515130400082}
   - {fileID: -8268209896162915883}
-  - {fileID: 7402861487786148556}
-  - {fileID: 2843540743708024011}
-  - {fileID: -1271001663977389185}
-  - {fileID: 4509994005883317056}
   blackboard:
     thisUnit: {fileID: 0}
     target: {fileID: 0}
@@ -288,35 +256,8 @@ MonoBehaviour:
       recognition: 1
       Increase_Sight: 0
     FinalNodeList: []
-  viewPos: {x: 306, y: 789}
-  viewScale: {x: 0.65751624, y: 0.65751624, z: 1}
---- !u!114 &2843540743708024011
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18010df103739f34fa8a9e484853ec76, type: 3}
-  m_Name: Wait
-  m_EditorClassIdentifier: 
-  state: 0
-  guid: b45040d800c314a46b1e64aafb110e75
-  positon: {x: 29.331978, y: -843.0001}
-  blackboard:
-    thisUnit: {fileID: 0}
-    target: {fileID: 0}
-    originPos: {fileID: 0}
-    playableDirector: {fileID: 0}
-    enemy_state:
-      stateCase: 0
-      recognition: 1
-      Increase_Sight: 0
-    FinalNodeList: []
-  description: 
-  waitTime: 0
+  viewPos: {x: 93, y: 502}
+  viewScale: {x: 0.8695652, y: 0.8695652, z: 1}
 --- !u!114 &3859384722648994573
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -399,36 +340,6 @@ MonoBehaviour:
     FinalNodeList: []
   description: 
   children: []
---- !u!114 &4509994005883317056
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e3195d4dea04c0744aadaef31853ab61, type: 3}
-  m_Name: SequenceNode
-  m_EditorClassIdentifier: 
-  state: 0
-  guid: a236cd4f4d0f3df428225e8a0bd8288f
-  positon: {x: -1.8151398, y: -998.93665}
-  blackboard:
-    thisUnit: {fileID: 0}
-    target: {fileID: 0}
-    originPos: {fileID: 0}
-    playableDirector: {fileID: 0}
-    enemy_state:
-      stateCase: 0
-      recognition: 1
-      Increase_Sight: 0
-    FinalNodeList: []
-  description: 
-  children:
-  - {fileID: 7402861487786148556}
-  - {fileID: 2843540743708024011}
-  - {fileID: -1271001663977389185}
 --- !u!114 &6169869912226595754
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -457,34 +368,6 @@ MonoBehaviour:
   description: 
   child: {fileID: 0}
   stateCase: 0
---- !u!114 &7402861487786148556
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd55777f44ebe3b46bb49fdc9bb398c1, type: 3}
-  m_Name: Attack
-  m_EditorClassIdentifier: 
-  state: 0
-  guid: 271b42936493e414cb10d40bfa9b482a
-  positon: {x: -173.37975, y: -842.5648}
-  blackboard:
-    thisUnit: {fileID: 0}
-    target: {fileID: 0}
-    originPos: {fileID: 0}
-    playableDirector: {fileID: 0}
-    enemy_state:
-      stateCase: 0
-      recognition: 1
-      Increase_Sight: 0
-    FinalNodeList: []
-  description: 
-  aimingTime: 0
-  delayTime: 0
 --- !u!114 &8461610286854978485
 MonoBehaviour:
   m_ObjectHideFlags: 0

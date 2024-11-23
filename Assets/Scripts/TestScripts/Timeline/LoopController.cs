@@ -134,7 +134,7 @@ public class LoopController : MonoBehaviour
                 }
                 if (marker is SignalEmitter holdSignal)
                 {
-                    if (holdSignal.name == "Hold")
+                    if (holdSignal.name == "Hold"||holdSignal.name == "hold")
                     {
                         hold_time.Add(holdSignal.time);
                     }
