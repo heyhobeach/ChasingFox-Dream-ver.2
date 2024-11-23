@@ -19,7 +19,9 @@ public class GroundSensor : MonoBehaviour
     [HideInInspector] public PlatformScript currentPlatform;
     private bool _isGrounded;
     public bool isGrounded { get => currentPlatform || _isGrounded; }
-    public Vector2 normal { get; private set; }
+    public Vector2 normal { get => _isGrounded ? groundNormal : platformNormal; }
+    private Vector2 groundNormal = Vector2.up;
+    private Vector2 platformNormal = Vector2.up;
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -34,22 +36,14 @@ public class GroundSensor : MonoBehaviour
         if(collision.gameObject.CompareTag("Map")) _isGrounded = false;
         if(collision.gameObject.CompareTag("platform")) 
         {
-            currentPlatform.AddColliderMask(1 << target.gameObject.layer);
+            currentPlatform?.AddColliderMask(1 << target.gameObject.layer);
             currentPlatform = null;
         }
     }
 
-    private void Awake()
-    {
-        col = GetComponent<EdgeCollider2D>();
-        normal = Vector2.up;
-    }
+    private void Awake() => col = GetComponent<EdgeCollider2D>();
 
-    private void Update()
-    {
-        // Debug.Log(_isGrounded + ", " + (bool)currentPlatform);
-        transform.position = target.position;
-    }
+    private void Update() => transform.position = target.position;
 
     /// <summary>
     /// 충돌면의 MapType을 반환
@@ -85,13 +79,13 @@ public class GroundSensor : MonoBehaviour
         {
             case MapType.Ground:
                 _isGrounded = true;
-                normal = collision.GetContact(0).normal;
+                groundNormal = collision.GetContact(0).normal;
                 break;
             case MapType.Platform:
                 if(!currentPlatform) 
                 {
                     var psc = collision.gameObject.GetComponent<PlatformScript>();
-                    if(!_isGrounded) normal = collision.GetContact(0).normal;
+                    platformNormal = collision.GetContact(0).normal;
                     currentPlatform = psc;
                 }
                 break;
@@ -103,7 +97,7 @@ public class GroundSensor : MonoBehaviour
                         if(!currentPlatform) 
                         {
                             var psc = collision.gameObject.GetComponent<PlatformScript>();
-                            if(!_isGrounded) normal = collision.GetContact(0).normal;
+                            platformNormal = collision.GetContact(0).normal;
                             currentPlatform = psc;
                         }
                         break;
