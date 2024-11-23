@@ -185,6 +185,11 @@ public class UIManager : MonoBehaviour
         namemesh.text = name;
     }
 
+    /// <summary>
+    /// 브루탈 수치에 따라 파일명 유동적으로 변경하는함수
+    /// </summary>
+    /// <param name="image_name"></param>
+    /// <returns></returns>
     public string ChangeBrutalName(string image_name)
     {
         string newName = "";
@@ -336,7 +341,7 @@ public class UIManager : MonoBehaviour
             TMP = content.transform.parent.GetChild(i).GetComponent<TMP_Text>();
             if (i == countNum)
             {
-                TMP.color = Color.black;
+                TMP.color = Color.white;
             }
             else
             {
@@ -591,7 +596,7 @@ public class UIManager : MonoBehaviour
         //Debug.Log("strArr[0]" + strArr[0]);
         //for(int i=0;i<strArr.Length;i++)
         content.text = strArr[0];
-        content.color = Color.black;
+        content.color = Color.white;
         contentArr = new TMP_Text[strArr.Length];
         contentArr[0] = content;
         Debug.Log("Content 위치" + content.transform.localPosition);

@@ -537,8 +537,9 @@ public class InteractionEvent : MonoBehaviour
         if ( (indexNum < DatabaseManager.instance.indexList.Count))
         //if (Input.GetKeyDown(KeyCode.X) & (indexNum < DatabaseManager.instance.indexList.Count))
         {
-            dialogue.line.x = ++dialogue.line.y;
+            dialogue.line.x = ++dialogue.line.y;//기존 ++dialogue.line.y
             indexNum++;
+            num = 0;
             //num--;
 
             if (GetDialogue() == null)
@@ -547,7 +548,7 @@ public class InteractionEvent : MonoBehaviour
                 //_Uimanager.content.text = "대화종료";//추후 나중에 삭제 확인용
                 return;
             }
-            num = 0;
+
             SetNextContext();
             Debug.Log(dialogue.dialouses.Length);
 
