@@ -188,6 +188,13 @@ public class Bullet : MonoBehaviour
             //Debug.Log("적 충돌");
             //Destroy(this.gameObject);
         }
+        if (collision.gameObject.tag == "FallingTrap")//여기가 작동 안하는듯 충돌이 안 일어남
+        {
+            Debug.Log("함정");
+            HingeJoint2D joint2D = collision.gameObject.GetComponent<HingeJoint2D>();
+            joint2D.useConnectedAnchor = false;
+            joint2D.connectedBody = null;
+        }
 
 
     }
