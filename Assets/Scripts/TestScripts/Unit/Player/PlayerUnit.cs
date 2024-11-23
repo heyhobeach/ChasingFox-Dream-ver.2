@@ -21,80 +21,19 @@ public abstract class PlayerUnit : UnitBase
     public Rigidbody2D rg;
     public GroundSensor groundSensor;
 
-    // private GameObject currentOneWayPlatform;
-    // private float downTime;
-    // private bool canDown;
-    // private bool cTemp;
-    // private bool isHide;
-    // private bool findRayPlatform;
-    // private float check;
-    // private float checkHigh;
-    // private float distanceToCheck;
-    // private LayerMask lm;
-    // private Coroutine coroutine;
-
-    // private Vector3 hidePos;
-
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
-        //Debug.Log(CheckMapType(collision));
-        // Debug.Log(collision.gameObject.tag);
         switch (CheckMapType(collision))
         {
-            // case MapType.Platform:
-            //     // Debug.Log("플랫폼 들어옴");
-            //     // if(!currentOneWayPlatform) currentOneWayPlatform = collision.gameObject;//플랫폼이라면 현재 플렛폼을 담음
-            //     // else collision.gameObject.GetComponent<PlatformScript>()?.RemoveColliderMask(1<<gameObject.layer);
-            //     // Debug.Log(collision.gameObject.GetComponent<PlatformScript>().dObject);//다운 오브젝트 타입확인용 로그
-            //     // switch (collision.gameObject.GetComponent<PlatformScript>().dObject)//대각선 직선 오브젝트 마다 떨어지는 시간이 다를수도 있으니  
-            //     // {
-            //     //     case PlatformScript.downJumpObject.STRAIGHT://직선
-            //     //         downTime = 1f;//떨어지는 시간 다르게 하기 위함
-            //     //         break;
-            //     //     case PlatformScript.downJumpObject.DIAGONAL://대각선
-            //     //         downTime = 0.8f;//떨어지는 시간 다르게 하기 위함 , 0.7초까지도 1칸에 대해서는 가능하지만 만약에 쭉 앞으로 가면서 떨어진다고 하면 안전한 시간은 0.75~0.8사이임
-            //     //         break;
-            //     // }
-            //     //canDown = true;
-            //     break;
-            case MapType.Platform:
-            case MapType.Ground:
-                break;
             case MapType.Floor:
                 isJumping = false;
                 SetVerticalForce(gravity * Time.fixedDeltaTime);
                 break;
-            case MapType.Wall:
-                SetHorizontalForce(0);
-                SetHorizontalVelocity(0);
-                break;
-            //default:
-            //    
-            //    break;
         }
     }
 
-    protected virtual void OnCollisionExit2D(Collision2D collision)
-    {
-        // switch(CheckMapType(collision))
-        // {
-        //     case MapType.Platform:
-        //         // Debug.Log("플랫폼 벗어남");
-        //         // if (isJumping)
-        //         // {
-        //         //     Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), false);
-        //         //     // Debug.Log("점프");
-        //         // }
-        //         currentOneWayPlatform = null;//platform에서 벗어난거라면 플랫폼 변수를 비움
-        //         break;
-        //     case MapType.Wall:
-        //         SetHorizontalForce(0);
-        //         SetHorizontalVelocity(0);
-        //         break;
-        // }
-        // if(collision.gameObject.CompareTag("platform")) currentOneWayPlatform = null;
-    }
+    protected virtual void OnCollisionExit2D(Collision2D collision) {}
 
     protected virtual void OnCollisionStay2D(Collision2D collision)
     {
@@ -104,35 +43,18 @@ public abstract class PlayerUnit : UnitBase
                 isJumping = false;
                 SetVerticalForce(gravity * Time.fixedDeltaTime);
                 break;
-            case MapType.Platform:
-            case MapType.Ground:
-                break;
-            // case MapType.Platform:
-            //     if(!currentOneWayPlatform) currentOneWayPlatform = collision.gameObject;//플랫폼이라면 현재 플렛폼을 담음
-            //     break;
-            case MapType.Wall:
-                SetHorizontalForce(0);
-                SetHorizontalVelocity(0);
-                break;
         }
-        // if(CheckMapType(collision) == MapType.Floor) isJumping = false;
-        // if(collision.gameObject.CompareTag("ground") || collision.gameObject.CompareTag("platform")) isGrounded = true;
     }
 
     protected override void Start()
     {
         base.Start();
-        // lm = ~(1 << gameObject.layer);
-        // distanceToCheck = boxSizeY * 1.05f;
     }
 
     protected override void Update()
     {
         if(!isGrounded && unitState == UnitState.Default) unitState = UnitState.Air; // 기본 상태에서 공중에 뜰 시 공중 상태로 변경
         else if(isGrounded && unitState == UnitState.Air) unitState = UnitState.Default; // 공중 상태에서 바닥에 닿을 시 기본 상태로 변경
-        // Debug.Log(string.Format("{0}은 현재 오브젝트", currentOneWayPlatform));
-        // CrouchUpdate();
-        // Debug.Log("유닛 상태"+unitState);
         isGrounded = groundSensor.isGrounded;
         base.Update();
     }
@@ -151,13 +73,10 @@ public abstract class PlayerUnit : UnitBase
     {
         base.OnEnable();
         groundSensor.Set(rg, new Vector2(boxOffsetX, boxOffsetY), new Vector2(boxSizeX, boxSizeY));
-        // coroutine = StartCoroutine(DownJump());
     }
     protected override void OnDisable()
     {
         base.OnDisable();
-        // StopCoroutine(coroutine);
-        // coroutine = null;
         ResetForce();
         SetHorizontalVelocity(0);
     }
@@ -208,34 +127,18 @@ public abstract class PlayerUnit : UnitBase
         }
         else base.Move(dir);
         return true;
-        // if(Mathf.Abs(hzForce) >= Mathf.Abs(hzVel * movementSpeed) && MathF.Sign(hzForce) == Mathf.Sign(hzVel)) return false;
-        // else return SetHorizontalForce(hzVel * movementSpeed);
     }
 
     // 수정 필요함
     public override bool Crouch(KeyState crouchKey)
     {
-        // Debug.Log("findRayPlatform" + findRayPlatform);
         if (ControllerChecker() || unitState == UnitState.FormChange) return false;
-        // if (currentOneWayPlatform == null) Debug.Log("크라우치에서 플랫폼 없음");
-        // else Debug.Log("크라우치에서 플랫폼 있음");
         switch (crouchKey)
         {
             case KeyState.KeyDown:
             case KeyState.KeyStay:
                 groundSensor.currentPlatform?.RemoveColliderMask(1<<gameObject.layer);
                 groundSensor.currentPlatform = null;
-                // canDown = true; 
-                // if (currentOneWayPlatform != null)//밑 아래 점프 가능한 오브젝트와 닿아있을때 ,우선순위 따라서 위로 올리고 return이 필요할듯 
-                // {
-                //     // Debug.Log("hello");
-                //     // canDown = !isHide;
-                //     canDown = true;
-                // }
-                // else
-                // {
-                //     // Debug.Log("여기에 걸림");
-                // }
                 return true;
             case KeyState.KeyUp:
                 return true;
@@ -243,7 +146,215 @@ public abstract class PlayerUnit : UnitBase
         return false;
     }
 
-    // public void GetCurrenttPlatform(RaycastHit2D ray)
+    /// <summary>
+    /// 중력을 추가
+    /// </summary>
+    private void AddGravity()
+    {
+        if(isGrounded) AddVerticalForce(0);
+        else AddVerticalForce(unitState == UnitState.HoldingWall ? gravity * Time.fixedDeltaTime * 0.2f : gravity * Time.fixedDeltaTime);
+    }
+    /// <summary>
+    /// 마찰력을 추가
+    /// </summary>
+    private void AddFrictional() // 수평힘에 마찰력 추가
+    {
+        if(Mathf.Abs(hzVel) > 1) AddHorizontalVelocity(-hzVel * accelerate * Time.fixedDeltaTime);
+        else if(Mathf.Abs(hzVel) > 0.1f) AddHorizontalVelocity(-Mathf.Sign(hzVel) * accelerate * Time.fixedDeltaTime);
+        else SetHorizontalVelocity(0);
+    }
+
+    /// <summary>
+    /// 수직 방향 힘을 추가
+    /// </summary>
+    protected void AddVerticalForce(float force)
+    {
+        if(isGrounded && vcForce < 0) vcForce = 0; // 바닥에 붙어있을 시 아래 방향의 힘 초기화
+        vcForce += force;
+    }
+    /// <summary>
+    /// 수평 방향 힘을 추가
+    /// </summary>
+    protected void AddHorizontalForce(float force) => hzForce += force;
+    /// <summary>
+    /// 수직 방향 힘을 설정
+    /// </summary>
+    public bool SetVerticalForce(float force)
+    {
+        vcForce = force;
+        return true;
+    }
+    /// <summary>
+    /// 수평 방향 힘을 설정
+    /// </summary>
+    public bool SetHorizontalForce(float force)
+    {
+        hzForce = force;
+        return true;
+    }
+
+    public void SetHorizontalVelocity(float vel) => hzVel = vel;
+    public void AddHorizontalVelocity(float vel) => hzVel += vel;
+
+    /// <summary>
+    /// 플레이어 유닛 힘을 리지드바디로 전달
+    /// </summary>
+    private void Movement()
+    {
+        var dir = Vector3.ProjectOnPlane(new Vector2(hzForce, 0), groundSensor.normal);
+        var mul = Vector2.Distance(Vector2.zero, Vector2.one * hzForce);
+        rg.MovePosition(rg.transform.position + (((dir.normalized * mul) + (Vector3.up * vcForce)) * Time.deltaTime));
+    }
+
+    /// <summary>
+    /// 현재 플레이어 유닛의 모든 힘을 초기화
+    /// </summary>
+    public void ResetForce()
+    {
+        SetHorizontalForce(0);
+        SetVerticalForce(0);
+    }
+
+    /// <summary>
+    /// 충돌면의 MapType을 반환
+    /// </summary>
+    /// <param name="collision">충돌체</param>
+    /// <returns>충돌면의 MapType</returns>
+    protected MapType CheckMapType(Collision2D collision)
+    {
+        float angle = 0;
+        return CheckMapType(collision, ref angle);
+    }
+    /// <summary>
+    /// 충돌면의 MapType을 반환
+    /// </summary>
+    /// <param name="collision">충돌체</param>
+    /// <param name="ref angle">충돌각 반환 (0 ~ 180)</param>
+    /// <returns>충돌면의 MapType</returns>
+    protected MapType CheckMapType(Collision2D collision, ref float angle)
+    {
+        if(!(collision.gameObject.CompareTag("Map") || collision.gameObject.CompareTag("platform")) || collision.contactCount <= 0) return MapType.None;
+        angle = Mathf.Abs(Vector2.Angle(Vector2.up, collision.contacts[0].normal));
+        if(collision.gameObject.CompareTag("platform") && angle <= 50) return MapType.Platform;
+        else if(collision.gameObject.CompareTag("platform") && angle > 50) return MapType.None;
+        if(angle <= 45) return MapType.Ground;
+        else if(angle >= 135) return MapType.Floor;
+        else return MapType.Wall;
+    }
+}
+
+/* isGround - Old */
+
+    // private GameObject currentOneWayPlatform;
+    // private float downTime;
+    // private bool canDown;
+    // private bool cTemp;
+    // private bool isHide;
+    // private bool findRayPlatform;
+    // private float check;
+    // private float checkHigh;
+    // private float distanceToCheck;
+    // private LayerMask lm;
+    // private Coroutine coroutine;
+
+    // private Vector3 hidePos;
+
+    /* OnCollisionEnter */
+        // switch(CheckMapType(collision))
+        // {
+            // case MapType.Platform:
+            //     // Debug.Log("플랫폼 들어옴");
+            //     // if(!currentOneWayPlatform) currentOneWayPlatform = collision.gameObject;//플랫폼이라면 현재 플렛폼을 담음
+            //     // else collision.gameObject.GetComponent<PlatformScript>()?.RemoveColliderMask(1<<gameObject.layer);
+            //     // Debug.Log(collision.gameObject.GetComponent<PlatformScript>().dObject);//다운 오브젝트 타입확인용 로그
+            //     // switch (collision.gameObject.GetComponent<PlatformScript>().dObject)//대각선 직선 오브젝트 마다 떨어지는 시간이 다를수도 있으니  
+            //     // {
+            //     //     case PlatformScript.downJumpObject.STRAIGHT://직선
+            //     //         downTime = 1f;//떨어지는 시간 다르게 하기 위함
+            //     //         break;
+            //     //     case PlatformScript.downJumpObject.DIAGONAL://대각선
+            //     //         downTime = 0.8f;//떨어지는 시간 다르게 하기 위함 , 0.7초까지도 1칸에 대해서는 가능하지만 만약에 쭉 앞으로 가면서 떨어진다고 하면 안전한 시간은 0.75~0.8사이임
+            //     //         break;
+            //     // }
+            //     //canDown = true;
+            //     break;
+        // }
+    // protected virtual void OnCollisionExit2D(Collision2D collision)
+    // {
+        // switch(CheckMapType(collision))
+        // {
+        //     case MapType.Platform:
+        //         // Debug.Log("플랫폼 벗어남");
+        //         // if (isJumping)
+        //         // {
+        //         //     Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("OneWayPlatform"), false);
+        //         //     // Debug.Log("점프");
+        //         // }
+        //         currentOneWayPlatform = null;//platform에서 벗어난거라면 플랫폼 변수를 비움
+        //         break;
+        // }
+        // if(collision.gameObject.CompareTag("platform")) currentOneWayPlatform = null;
+    // }
+    // protected virtual void OnCollisionStay2D(Collision2D collision)
+    // {
+    //     switch(CheckMapType(collision))
+    //     {
+            // case MapType.Platform:
+            //     if(!currentOneWayPlatform) currentOneWayPlatform = collision.gameObject;//플랫폼이라면 현재 플렛폼을 담음
+            //     break;
+        // }
+        // if(CheckMapType(collision) == MapType.Floor) isJumping = false;
+    // }
+    // protected override void Start()
+    // {
+    //     // lm = ~(1 << gameObject.layer);
+    //     // distanceToCheck = boxSizeY * 1.05f;
+    // }
+    // protected override void Update()
+    // {
+    //     CrouchUpdate();
+    // }
+    // protected override void OnEnable()
+    // {
+    //     // coroutine = StartCoroutine(DownJump());
+    // }
+    // protected override void OnEnable()
+    // {
+    //     // coroutine = StartCoroutine(DownJump());
+    // }
+    // protected override void OnDisable()
+    // {
+    //     // StopCoroutine(coroutine);
+    //     // coroutine = null;
+    // }
+    // public override bool Crouch(KeyState crouchKey)
+    // {
+    //     // Debug.Log("findRayPlatform" + findRayPlatform);
+    //     if (ControllerChecker() || unitState == UnitState.FormChange) return false;
+    //     // if (currentOneWayPlatform == null) Debug.Log("크라우치에서 플랫폼 없음");
+    //     // else Debug.Log("크라우치에서 플랫폼 있음");
+    //     switch (crouchKey)
+    //     {
+    //         case KeyState.KeyDown:
+    //         case KeyState.KeyStay:
+    //             // canDown = true; 
+    //             // if (currentOneWayPlatform != null)//밑 아래 점프 가능한 오브젝트와 닿아있을때 ,우선순위 따라서 위로 올리고 return이 필요할듯 
+    //             // {
+    //             //     // Debug.Log("hello");
+    //             //     // canDown = !isHide;
+    //             //     canDown = true;
+    //             // }
+    //             // else
+    //             // {
+    //             //     // Debug.Log("여기에 걸림");
+    //             // }
+    //             return true;
+    //         case KeyState.KeyUp:
+    //             return true;
+    //     }
+    //     return false;
+    // }
+        // public void GetCurrenttPlatform(RaycastHit2D ray)
     // {
     //     // Debug.Log("플랫폼 들어옴");
     //     currentOneWayPlatform = ray.transform.gameObject;//플랫폼이라면 현재 플렛폼을 담음
@@ -428,107 +539,6 @@ public abstract class PlayerUnit : UnitBase
     //         yield return null;
     //     }
     // }
-
-    /// <summary>
-    /// 중력을 추가
-    /// </summary>
-    private void AddGravity()
-    {
-        if(isGrounded) AddVerticalForce(0);
-        else AddVerticalForce(unitState == UnitState.HoldingWall ? gravity * Time.fixedDeltaTime * 0.2f : gravity * Time.fixedDeltaTime);
-    }
-    /// <summary>
-    /// 마찰력을 추가
-    /// </summary>
-    private void AddFrictional() // 수평힘에 마찰력 추가
-    {
-        if(Mathf.Abs(hzVel) > 1) AddHorizontalVelocity(-hzVel * accelerate * Time.fixedDeltaTime);
-        else if(Mathf.Abs(hzVel) > 0.1f) AddHorizontalVelocity(-Mathf.Sign(hzVel) * accelerate * Time.fixedDeltaTime);
-        else SetHorizontalVelocity(0);
-    }
-
-    /// <summary>
-    /// 수직 방향 힘을 추가
-    /// </summary>
-    protected void AddVerticalForce(float force)
-    {
-        if(isGrounded && vcForce < 0) vcForce = 0; // 바닥에 붙어있을 시 아래 방향의 힘 초기화
-        vcForce += force;
-        // Debug.Log(isGrounded + ", " + !canDown);
-    }
-    /// <summary>
-    /// 수평 방향 힘을 추가
-    /// </summary>
-    protected void AddHorizontalForce(float force) => hzForce += force;
-    /// <summary>
-    /// 수직 방향 힘을 설정
-    /// </summary>
-    public bool SetVerticalForce(float force)
-    {
-        vcForce = force;
-        return true;
-    }
-    /// <summary>
-    /// 수평 방향 힘을 설정
-    /// </summary>
-    public bool SetHorizontalForce(float force)
-    {
-        hzForce = force;
-        return true;
-    }
-
-    public void SetHorizontalVelocity(float vel) => hzVel = vel;
-    public void AddHorizontalVelocity(float vel) => hzVel += vel;
-
-    /// <summary>
-    /// 플레이어 유닛 힘을 리지드바디로 전달
-    /// </summary>
-    private void Movement()
-    {
-        if(isGrounded)
-        {
-            var normal = Vector3.ProjectOnPlane(new Vector2(hzForce, 0), groundSensor.normal);
-            rg.MovePosition(rg.transform.position + new Vector3(normal.x, normal.y + vcForce) * Time.deltaTime);
-        }
-        else rg.MovePosition(rg.transform.position + (new Vector3(hzForce, vcForce) * Time.deltaTime));
-    }
-
-    /// <summary>
-    /// 현재 플레이어 유닛의 모든 힘을 초기화
-    /// </summary>
-    public void ResetForce()
-    {
-        SetHorizontalForce(0);
-        SetVerticalForce(0);
-    }
-
-    /// <summary>
-    /// 충돌면의 MapType을 반환
-    /// </summary>
-    /// <param name="collision">충돌체</param>
-    /// <returns>충돌면의 MapType</returns>
-    protected MapType CheckMapType(Collision2D collision)
-    {
-        float angle = 0;
-        return CheckMapType(collision, ref angle);
-    }
-    /// <summary>
-    /// 충돌면의 MapType을 반환
-    /// </summary>
-    /// <param name="collision">충돌체</param>
-    /// <param name="ref angle">충돌각 반환 (0 ~ 180)</param>
-    /// <returns>충돌면의 MapType</returns>
-    protected MapType CheckMapType(Collision2D collision, ref float angle)
-    {
-        if(!(collision.gameObject.CompareTag("Map") || collision.gameObject.CompareTag("platform")) || collision.contactCount <= 0) return MapType.None;
-        angle = Mathf.Abs(Vector2.Angle(Vector2.up, collision.contacts[0].normal));
-        if(collision.gameObject.CompareTag("platform") && angle <= 50) return MapType.Platform;
-        else if(collision.gameObject.CompareTag("platform") && angle > 50) return MapType.None;
-        if(angle <= 45) return MapType.Ground;
-        else if(angle >= 135) return MapType.Floor;
-        else return MapType.Wall;
-    }
-}
 
 /* Hiding On */
 

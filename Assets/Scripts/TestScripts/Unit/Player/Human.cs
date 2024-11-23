@@ -63,6 +63,29 @@ public class Human : PlayerUnit
 
     private Vector2 fixedDir = Vector2.zero;
 
+    protected override void OnCollisionEnter2D(Collision2D collision)
+    {
+        base.OnCollisionEnter2D(collision);
+        switch(CheckMapType(collision))
+        {
+            case MapType.Wall:
+                SetHorizontalForce(0);
+                SetHorizontalVelocity(0);
+                break;
+        }
+    }
+    protected override void OnCollisionStay2D(Collision2D collision)
+    {
+        base.OnCollisionEnter2D(collision);
+        switch(CheckMapType(collision))
+        {
+            case MapType.Wall:
+                SetHorizontalForce(0);
+                SetHorizontalVelocity(0);
+                break;
+        }
+    }
+
     public void Awake(){
         var animator = gameObject.AddComponent<Animator>();
     }
