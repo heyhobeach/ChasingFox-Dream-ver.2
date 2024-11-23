@@ -75,6 +75,7 @@ namespace BehaviourTree.Editor
 
         public void UpdateState()
         {
+            if(EditorApplication.isPaused) return;
             RemoveFromClassList("running");
             RemoveFromClassList("failure");
             RemoveFromClassList("success");

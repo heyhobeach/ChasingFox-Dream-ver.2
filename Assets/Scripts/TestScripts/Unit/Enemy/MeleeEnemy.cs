@@ -11,7 +11,7 @@ public class MeleeEnemy : EnemyUnit
     {
         base.Start();
         MeleeAttack.SetActive(true);
-        attackDistance = MeleeAttack.GetComponent<BoxCollider2D>().bounds.extents.x + MeleeAttack.transform.localPosition.x;
+        //attackDistance = MeleeAttack.GetComponent<BoxCollider2D>().bounds.extents.x + MeleeAttack.transform.localPosition.x;
         MeleeAttack.SetActive(false);
         MeleeAttack.GetComponent<MaleeAttack>().Set(1, gameObject);
         effectRenderer = MeleeAttack.transform.GetChild(0).GetComponent<SpriteRenderer>();

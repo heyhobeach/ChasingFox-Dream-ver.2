@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    public const float lifeTime = 4;
+    public const float lifeTime = 0.945f;
     public int life = 1;
 
     public GameObject effectObj;
