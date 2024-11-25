@@ -36,17 +36,27 @@ namespace Damageables
         /// <returns>데미지가 성공적으로 적용되었는지 여부를 반환</returns>
         bool GetDamage(int dmg,  Collider2D col,Func<Collider2D, Vector2> action = null)
         {
-            if (health <= 0 || invalidation) return false;
-            //action?.Invoke();
-            Vector2 dir =action(col);
-            Debug.Log("계산후 방향" + dir);
+            Debug.Log(" 리턴 " + health + " , " + invalidation);
+            if (health <= 0 || invalidation) {
 
-            health -= dmg;
-            if (health <= 0) {
-                dir = dir * -1;
-                Death();
-                DeathFeedBack(dir);
+                return false;
             }
+
+            //action?.Invoke();
+            health -= dmg;
+            Death();
+            if (action != null)
+            {
+                Vector2 dir = action(col);
+                Debug.Log("계산후 방향" + dir);
+                if (health <= 0)
+                {
+                    dir = dir * -1;
+
+                    DeathFeedBack(dir);
+                }
+            }
+
             return true;
         }
 

@@ -87,6 +87,14 @@ public class Bullet : MonoBehaviour
             BulletSound();
             life--;
         }
+        //if (collision.gameObject.tag == "FallingTrap")//여기가 작동 안하는듯 충돌이 안 일어남
+        //{
+        //    Debug.Log("함정");
+        //    HingeJoint2D joint2D = collision.gameObject.GetComponent<HingeJoint2D>();
+        //    joint2D.useConnectedAnchor = false;
+        //    joint2D.connectedBody = null;
+        //    Destroy(gameObject);
+        //}
 
     }
 
@@ -141,6 +149,14 @@ public class Bullet : MonoBehaviour
                 Debug.Log("작동안함");
             }
         }
+        //if (collision.gameObject.tag == "FallingTrap")//여기가 작동 안하는듯 충돌이 안 일어남
+        //{
+        //    Debug.Log("함정");
+        //    HingeJoint2D joint2D = collision.gameObject.GetComponent<HingeJoint2D>();
+        //    joint2D.useConnectedAnchor = false;
+        //    joint2D.connectedBody = null;
+        //    Destroy(gameObject);
+        //}
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -194,7 +210,9 @@ public class Bullet : MonoBehaviour
             HingeJoint2D joint2D = collision.gameObject.GetComponent<HingeJoint2D>();
             joint2D.useConnectedAnchor = false;
             joint2D.connectedBody = null;
+            Destroy(gameObject);
         }
+
 
 
     }
