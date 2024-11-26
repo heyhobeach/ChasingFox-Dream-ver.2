@@ -10,9 +10,11 @@ public class FallingTrap : MonoBehaviour
     public int damage = 3;
 
     public HingeJoint2D joint2D;
+    public GameObject TrapWerck;
     void Start()
     {
-        
+        joint2D = this.gameObject.GetComponent<HingeJoint2D>();
+        TrapWerck = this.gameObject.transform.GetComponent<TrapSet>().TrapWreck;
     }
 
     // Update is called once per frame
@@ -38,26 +40,42 @@ public class FallingTrap : MonoBehaviour
             joint2D.useConnectedAnchor = false;
             joint2D.connectedBody = null;
         }
-        bool isDamaged = false;
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))//플레이어 총알이 적군에게 충돌시
+        if (joint2D != null & collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
-            Debug.Log("적충돌");
-            var temp = collision.gameObject.GetComponent<IDamageable>();
-            Func<Collider2D, Vector2> func = null;
-            //func += DamagedFeedBack;
-            if (temp != null) 
+            this.transform.parent.gameObject.SetActive(false);
+            Vector2 vec2 = this.transform.position;
+            GameObject gobj = transform.parent.GetComponent<TrapSet>().TrapWreck;
+            ContactPoint2D[] contacts = new ContactPoint2D[20];
+            int points = collision.GetContacts(contacts);
+            vec2 = contacts[0].point;
+            Debug.Log("접점 개수" + points);//현재 접점개수가 0개로 나옴
+            for(int i =0;i<points; i++)
             {
-                isDamaged = temp.GetDamage(damage, collision, func);
+                Debug.Log(contacts[i].point);
             }
-
-            if (isDamaged) { 
-                Debug.Log("isDamaged is not null");
-                Destroy(gameObject);
-            }
-            else
-            {
-                Debug.Log("isDamaged is null");
-            }
+            Instantiate(gobj, vec2, Quaternion.Euler(0,0,0));
         }
+
+        //bool isDamaged = false;//적에게 바로 충돌하는 함수
+        //if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))//
+        //{
+        //    Debug.Log("적충돌");
+        //    var temp = collision.gameObject.GetComponent<IDamageable>();
+        //    Func<Collider2D, Vector2> func = null;
+        //    //func += DamagedFeedBack;
+        //    if (temp != null) 
+        //    {
+        //        isDamaged = temp.GetDamage(damage, collision, func);
+        //    }
+        //
+        //    if (isDamaged) { 
+        //        Debug.Log("isDamaged is not null");
+        //        Destroy(gameObject);
+        //    }
+        //    else
+        //    {
+        //        Debug.Log("isDamaged is null");
+        //    }
+        //}
     }
 }
