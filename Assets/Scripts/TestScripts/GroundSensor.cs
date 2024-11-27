@@ -9,10 +9,11 @@ public class GroundSensor : MonoBehaviour
     {
         if(!col) col = GetComponent<EdgeCollider2D>();
         this.target = target;
-        col.offset = offset;
+        var temp = new Vector2(offset.x, -offset.y-0.05f);
+        col.offset = temp;
         col.points = new Vector2[] {
-            new Vector2(-size.x * 0.95f, -size.y - 0.05f),
-            new Vector2(size.x * 0.95f, -size.y - 0.05f),
+            new Vector2(-size.x * 0.95f, 0),
+            new Vector2(size.x * 0.95f, 0),
         };
     }
 
