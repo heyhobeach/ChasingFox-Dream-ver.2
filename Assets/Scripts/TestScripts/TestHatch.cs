@@ -27,4 +27,8 @@ public class TestHatch : MonoBehaviour, IDamageable
         on.SetActive(false);
         health = maxHealth;
     }
+    public void DeathFeedBack(Vector2 dir)
+    {
+        //throw new System.NotImplementedException();
+    }
 }

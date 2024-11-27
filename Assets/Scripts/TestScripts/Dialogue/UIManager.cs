@@ -73,6 +73,8 @@ public class UIManager : MonoBehaviour
 
     private SetCharImage imagesetter;
 
+    public BrutalData brutalData;
+    public int brutalScroe;
 
     [SerializeField]
     public float typing_speed = 0.05f;
@@ -99,6 +101,11 @@ public class UIManager : MonoBehaviour
     {
         intRect=this.transform.GetChild(1).GetComponent<RectTransform>();
         is_closing = false;
+
+        //brutalData = GameManager.GetBrutalData();//여기 주석 풀면 max게이지 기준
+        //brutalScroe = brutalData.Brutality;
+        brutalScroe = GameManager.Brutality;//지금 테스트 해 보니 브루탈 100기준 설정되어있는듯
+        Debug.Log("brutal 수치 " + brutalScroe);
         //co_closeAinm = ClosingAnim();
     }
 
@@ -178,6 +185,34 @@ public class UIManager : MonoBehaviour
         namemesh.text = name;
     }
 
+    /// <summary>
+    /// 브루탈 수치에 따라 파일명 유동적으로 변경하는함수
+    /// </summary>
+    /// <param name="image_name"></param>
+    /// <returns></returns>
+    public string ChangeBrutalName(string image_name)
+    {
+        string newName = "";
+        if (Regex.IsMatch(image_name, "reaper"))//6번째에 퍼센트 삽입
+        {
+            if (brutalScroe == 100)
+            {
+                brutalScroe = 100;
+            }else if (brutalScroe >= 90 && brutalScroe < 100)
+            {
+                brutalScroe = 90;
+            }else if (brutalScroe <= 35)
+            {
+                brutalScroe = 35;
+            }
+            newName = image_name.Insert(6, brutalScroe.ToString());
+            Debug.Log("변경후" + newName);
+            return newName;
+        }
+
+        return image_name;
+    }
+
     public void SetImage(string image_name,string image_dir,bool is_disable=false)//이 부분은 next text에서 계속 불러옴 그래서 그런 느낌을 원하면 여기서 값을 조정해야하는게 맞ㅇ므
     {
         //string str = @"^[a-zA-Z]";
@@ -188,8 +223,9 @@ public class UIManager : MonoBehaviour
         }
         image_dir = Regex.Replace(image_dir, @"[^a-zA-Z]", "");
         Debug.Log("변경후"+image_dir);
+        
         //나중에 선택지때 중앙만 오게 된다면 여기서 설정 할 예정
-        imagesetter.ChangeImage(image_name,image_dir,isAlone);//좌우 기준
+        imagesetter.ChangeImage(ChangeBrutalName(image_name),image_dir,isAlone);//좌우 기준
     }
 
     public void LoadImage()//이 부분은 한번만 일어남 이미지 켤때
@@ -305,7 +341,7 @@ public class UIManager : MonoBehaviour
             TMP = content.transform.parent.GetChild(i).GetComponent<TMP_Text>();
             if (i == countNum)
             {
-                TMP.color = Color.black;
+                TMP.color = Color.white;
             }
             else
             {
@@ -560,7 +596,7 @@ public class UIManager : MonoBehaviour
         //Debug.Log("strArr[0]" + strArr[0]);
         //for(int i=0;i<strArr.Length;i++)
         content.text = strArr[0];
-        content.color = Color.black;
+        content.color = Color.white;
         contentArr = new TMP_Text[strArr.Length];
         contentArr[0] = content;
         Debug.Log("Content 위치" + content.transform.localPosition);

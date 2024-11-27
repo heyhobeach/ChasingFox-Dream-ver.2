@@ -13,6 +13,7 @@ namespace Damageables
         public int health { get; set; }
         private Animator animator;
 
+
         void OnEnable()
         {
             health = _maxHealth;
@@ -20,5 +21,10 @@ namespace Damageables
         }
 
         public void Death() => animator.SetTrigger("On");
+
+        public void DeathFeedBack(Vector2 dir)
+        {
+            //throw new System.NotImplementedException();
+        }
     }
 }

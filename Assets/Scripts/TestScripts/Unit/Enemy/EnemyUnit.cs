@@ -59,4 +59,13 @@ public class EnemyUnit : UnitBase, IDamageable
     public override void StopAllC()
     {
     }
+
+    public void DeathFeedBack(Vector2 dir)
+    {
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        //rb.linearVelocityX = 2000 * Mathf.Sign(dir.x);
+        //hzForce= 2000 * Mathf.Sign(dir.x);
+        rb.AddForceX(1000    * Mathf.Sign(dir.x), ForceMode2D.Force);
+        Debug.Log("벨로시티" + rb.linearVelocityX);
+    }
 }

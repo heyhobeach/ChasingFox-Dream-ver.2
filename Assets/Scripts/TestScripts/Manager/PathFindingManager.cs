@@ -42,7 +42,7 @@ public partial class GameManager : MonoBehaviour
     List<Node> OpenList, ClosedList;
     private List<Node> FinalNodeList;
     List<string> NodeDistanceList;
-    Node[,] NodeArray;
+    public Node[,] NodeArray;
     private bool isLoad;
 
     public IEnumerator MapSearchStart()

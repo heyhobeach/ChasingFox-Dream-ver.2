@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Com.LuisPedroFonseca.ProCamera2D;
 using Damageables;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 
 [RequireComponent(typeof(PlayerController))]
@@ -74,6 +75,14 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         invalidation = false;
     }
 
+    
+
+    public void DeathFeedBack(Vector2 dir)
+    {
+        //throw new System.NotImplementedException();
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        rb.linearVelocityX = 2 * Mathf.Sign(dir.x);
+    }
     public bool Crouch(KeyState crouchKey) => changedForm.Crouch(crouchKey);
 
     public bool Jump(KeyState jumpKey) => changedForm.Jump(jumpKey);
@@ -350,6 +359,21 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         else
         {
             Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Bullet"), false);
+        }
+
+        //OverlapTest();
+    }
+
+    public void OverlapTest()//여기 부분 수정필요
+    {
+        CompositeCollider2D ringcol = GetComponent<CompositeCollider2D>();
+        //ringcol.Overlap(filter, results);
+        float radius = 3f;
+        List<Collider2D> colliders = null;
+        Physics2D.OverlapCollider(ringcol, colliders);
+        foreach(var col in colliders)
+        {
+            Debug.Log("안의 콜라이더" + col.transform.gameObject.name);
         }
     }
 

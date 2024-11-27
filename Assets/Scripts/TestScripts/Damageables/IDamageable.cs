@@ -1,3 +1,4 @@
+using NUnit.Framework.Constraints;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -33,14 +34,33 @@ namespace Damageables
         /// <param name="dmg">가할 데미지 양</param>
         /// <param name="action">데미지가 가해진 후 실행할 액션 (옵션)</param>
         /// <returns>데미지가 성공적으로 적용되었는지 여부를 반환</returns>
-        bool GetDamage(int dmg, Action action = null)
+        bool GetDamage(int dmg,  Collider2D col,Func<Collider2D, Vector2> action = null)
         {
-            if (health <= 0 || invalidation) return false; 
-            action?.Invoke();
+            Debug.Log(" 리턴 " + health + " , " + invalidation);
+            if (health <= 0 || invalidation) {
+
+                return false;
+            }
+
+            //action?.Invoke();
             health -= dmg;
-            if (health <= 0) Death();
+            Death();
+            if (action != null)
+            {
+                Vector2 dir = action(col);
+                Debug.Log("계산후 방향" + dir);
+                if (health <= 0)
+                {
+                    dir = dir * -1;
+
+                    DeathFeedBack(dir);
+                }
+            }
+
             return true;
         }
+
+        void DeathFeedBack(Vector2 dir);
 
         /// <summary>
         /// 사망 동작을 수행

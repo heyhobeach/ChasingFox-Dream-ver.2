@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Damageables;
+using JetBrains.Annotations;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -69,26 +72,42 @@ public class Bullet : MonoBehaviour
         {
             var temp = collision.gameObject.GetComponent<IDamageable>();
             if(temp == null) temp = collision.gameObject.GetComponentInParent<IDamageable>();
-            if(temp != null) isDamaged = temp.GetDamage(damage);
+            Func<Collider2D, Vector2> func = null;
+            func += DamagedFeedBack;
+            if (temp != null) isDamaged = temp.GetDamage(damage, collision, func);
             if (isDamaged) Destroy(gameObject);
         }
         if(life > 0 && collision.gameObject.tag == "Enemy" && !parentGo.CompareTag("Enemy"))//플레이어 총알이 적군에게 충돌시
         {
             var temp = collision.gameObject.GetComponent<IDamageable>();
-            if(temp != null) isDamaged = temp.GetDamage(damage);
+            Func<Collider2D, Vector2> func = null;
+            func += DamagedFeedBack;
+            if(temp != null) isDamaged = temp.GetDamage(damage,collision,func);
             if (isDamaged) Destroy(gameObject);
             BulletSound();
             life--;
         }
+        //if (collision.gameObject.tag == "FallingTrap")//여기가 작동 안하는듯 충돌이 안 일어남
+        //{
+        //    Debug.Log("함정");
+        //    HingeJoint2D joint2D = collision.gameObject.GetComponent<HingeJoint2D>();
+        //    joint2D.useConnectedAnchor = false;
+        //    joint2D.connectedBody = null;
+        //    Destroy(gameObject);
+        //}
 
-        if(isDamaged)
-        {
-            var effect = Instantiate(effectObj, transform.position, Quaternion.identity);
-            var sprite = effect.GetComponent<SpriteRenderer>();
-            var dir = transform.position - collision.transform.position;
-            if(dir.x >= 0) sprite.flipX = true;
-            else sprite.flipX = false;
-        }
+    }
+
+    public Vector2 DamagedFeedBack(Collider2D collision)
+    {
+        Debug.Log("액션 테스트");
+        var effect = Instantiate(effectObj, transform.position, Quaternion.identity);
+        var sprite = effect.GetComponent<SpriteRenderer>();
+        var dir = transform.position - collision.transform.position;
+        if (dir.x >= 0) sprite.flipX = true;
+        else sprite.flipX = false;
+
+        return dir;
     }
 
     private void BulletSound()
@@ -119,7 +138,7 @@ public class Bullet : MonoBehaviour
             var temp = collision.gameObject.GetComponent<IDamageable>();
             Debug.Log(temp.health);
             bool isDamaged = false;
-            if(temp != null) isDamaged = temp.GetDamage(damage);//이거 작동안함
+            if(temp != null) isDamaged = temp.GetDamage(damage, collision);//이거 작동안함
             if (isDamaged)
             {
                 Debug.Log("데미지 받음");
@@ -130,6 +149,14 @@ public class Bullet : MonoBehaviour
                 Debug.Log("작동안함");
             }
         }
+        //if (collision.gameObject.tag == "FallingTrap")//여기가 작동 안하는듯 충돌이 안 일어남
+        //{
+        //    Debug.Log("함정");
+        //    HingeJoint2D joint2D = collision.gameObject.GetComponent<HingeJoint2D>();
+        //    joint2D.useConnectedAnchor = false;
+        //    joint2D.connectedBody = null;
+        //    Destroy(gameObject);
+        //}
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -164,7 +191,7 @@ public class Bullet : MonoBehaviour
             var temp = collision.gameObject.GetComponent<IDamageable>();
             bool isDamaged = false;
             Debug.Log(collision.gameObject.name);
-            if(temp != null) isDamaged = temp.GetDamage(damage);
+            if(temp != null) isDamaged = temp.GetDamage(damage, collision.collider);
             if (isDamaged)
             {
                 Destroy(this.gameObject);
@@ -177,6 +204,15 @@ public class Bullet : MonoBehaviour
             //Debug.Log("적 충돌");
             //Destroy(this.gameObject);
         }
+        if (collision.gameObject.tag == "FallingTrap")//여기가 작동 안하는듯 충돌이 안 일어남
+        {
+            Debug.Log("함정");
+            HingeJoint2D joint2D = collision.gameObject.GetComponent<HingeJoint2D>();
+            joint2D.useConnectedAnchor = false;
+            joint2D.connectedBody = null;
+            Destroy(gameObject);
+        }
+
 
 
     }

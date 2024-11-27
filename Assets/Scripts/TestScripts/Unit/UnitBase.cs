@@ -184,6 +184,11 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         return true;
     }
 
+    public virtual void OnCollisionEnter2D(Collision collider)
+    {
+
+    }
+
     public virtual bool Dash()
     {
         if(longRangeUnit) shootingAnimationController.NomalAni();
@@ -222,9 +227,11 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     public void Death()
     {
         StopAllC();
+        //여기서 수정예정
+        
         anim.SetTrigger("death");
         anim.SetBool("isDeath", true);
-        GetComponent<Collider2D>().enabled = false;
+        //GetComponent<Collider2D>().enabled = false;
         if(longRangeUnit) shootingAnimationController.NomalAni();
         unitState = UnitState.Death;
         if(onDeath != null) onDeath.Invoke();
