@@ -5,15 +5,24 @@ public class GroundSensor : MonoBehaviour
     private Rigidbody2D target;
     private EdgeCollider2D col;
 
-    public void Set(Rigidbody2D target, Vector2 offset, Vector2 size)
+    public void Set(Rigidbody2D target, BoxCollider2D targetCol)
     {
         if(!col) col = GetComponent<EdgeCollider2D>();
         this.target = target;
-        var temp = new Vector2(offset.x, -offset.y-0.05f);
-        col.offset = temp;
+        col.offset = targetCol.offset;
         col.points = new Vector2[] {
-            new Vector2(-size.x * 0.95f, 0),
-            new Vector2(size.x * 0.95f, 0),
+            new Vector2(-targetCol.bounds.size.x, -targetCol.size.y - 0.05f),
+            new Vector2(targetCol.bounds.size.x, -targetCol.size.y - 0.05f),
+        };
+    }
+    public void Set(Rigidbody2D target, CapsuleCollider2D targetCol)
+    {
+        if(!col) col = GetComponent<EdgeCollider2D>();
+        this.target = target;
+        col.offset = targetCol.offset;
+        col.points = new Vector2[] {
+            new Vector2(-targetCol.bounds.size.x, -targetCol.size.y - 0.05f),
+            new Vector2(targetCol.bounds.size.x, -targetCol.size.y - 0.05f),
         };
     }
 

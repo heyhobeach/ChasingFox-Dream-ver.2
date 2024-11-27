@@ -72,7 +72,7 @@ public abstract class PlayerUnit : UnitBase
     protected override void OnEnable()
     {
         base.OnEnable();
-        groundSensor.Set(rg, new Vector2(boxOffsetX, boxOffsetY), new Vector2(boxSizeX, boxSizeY));
+        groundSensor.Set(rg, GetComponent<CapsuleCollider2D>());
     }
     protected override void OnDisable()
     {
