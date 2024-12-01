@@ -4,27 +4,8 @@ public class GroundSensor : MonoBehaviour
 {
     private Rigidbody2D target;
     private EdgeCollider2D col;
-
-    public void Set(Rigidbody2D target, BoxCollider2D targetCol)
-    {
-        if(!col) col = GetComponent<EdgeCollider2D>();
-        this.target = target;
-        col.offset = targetCol.offset;
-        col.points = new Vector2[] {
-            new Vector2(-targetCol.bounds.size.x, -targetCol.size.y - 0.05f),
-            new Vector2(targetCol.bounds.size.x, -targetCol.size.y - 0.05f),
-        };
-    }
-    public void Set(Rigidbody2D target, CapsuleCollider2D targetCol)
-    {
-        if(!col) col = GetComponent<EdgeCollider2D>();
-        this.target = target;
-        col.offset = targetCol.offset;
-        col.points = new Vector2[] {
-            new Vector2(-targetCol.bounds.size.x, -targetCol.size.y - 0.05f),
-            new Vector2(targetCol.bounds.size.x, -targetCol.size.y - 0.05f),
-        };
-    }
+    private Vector2 startAP = Vector2.zero;
+    private Vector2 endAP = Vector2.zero;
 
     [HideInInspector] public PlatformScript currentPlatform;
     private bool _isGrounded;
@@ -33,27 +14,58 @@ public class GroundSensor : MonoBehaviour
     private Vector2 groundNormal = Vector2.up;
     private Vector2 platformNormal = Vector2.up;
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    public void Set(Rigidbody2D target, Collider2D targetCol)
     {
-        CheckCollision(collision);
+        if(!col) col = GetComponent<EdgeCollider2D>();
+        this.target = target;
+        col.offset = targetCol.offset;
+        var temp = targetCol.bounds.size * 0.5f;
+        col.points = new Vector2[] {
+            new Vector2(-temp.x + 0.05f, -temp.y - 0.05f),
+            new Vector2(temp.x - 0.05f, -temp.y - 0.05f),
+        };
+        startAP = new Vector2(-temp.x + 0.05f, -temp.y - 0.05f);
+        endAP = new Vector2(temp.x - 0.05f, -temp.y - 0.05f);
     }
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        CheckCollision(collision);
-    }
+
+    private void OnCollisionEnter2D(Collision2D collision) => CheckCollision(collision);
+    private void OnCollisionStay2D(Collision2D collision) => CheckCollision(collision);
     private void OnCollisionExit2D(Collision2D collision)
     {
         if(collision.gameObject.CompareTag("Map")) _isGrounded = false;
         if(collision.gameObject.CompareTag("platform")) 
         {
-            currentPlatform?.AddColliderMask(1 << target.gameObject.layer);
-            currentPlatform = null;
+            var temp = collision.gameObject.GetComponent<PlatformScript>();
+            if(currentPlatform && temp && currentPlatform.Equals(temp))
+            {
+                currentPlatform.AddColliderMask(1 << target.gameObject.layer);
+                currentPlatform = null;
+            }
         }
     }
 
-    private void Awake() => col = GetComponent<EdgeCollider2D>();
+    private void Awake()
+    {
+        col = GetComponent<EdgeCollider2D>();
+    }
 
-    private void Update() => transform.position = target.position;
+    private void FixedUpdate()
+    {
+        transform.position = target.position;
+        if(_isGrounded)
+        {
+            col.useAdjacentStartPoint = true;
+            col.useAdjacentEndPoint = true;
+            var temp = 0.05f * (120 / GameManager.fps);
+            col.adjacentStartPoint = new Vector2(startAP.x - temp, startAP.y);
+            col.adjacentEndPoint = new Vector2(endAP.x + temp, endAP.y);
+        }
+        else
+        {
+            col.useAdjacentStartPoint = false;
+            col.useAdjacentEndPoint = false;
+        }
+    }
 
     /// <summary>
     /// 충돌면의 MapType을 반환
@@ -75,7 +87,6 @@ public class GroundSensor : MonoBehaviour
     {
         if(!(collision.gameObject.CompareTag("Map") || collision.gameObject.CompareTag("platform")) || collision.contactCount <= 0) return MapType.None;
         angle = Mathf.Abs(Vector2.Angle(Vector2.up, collision.contacts[0].normal));
-        point = collision.GetContact(0).point;
         if(collision.gameObject.CompareTag("platform") && angle <= 50) return MapType.Platform;
         else if(collision.gameObject.CompareTag("platform") && angle > 50) return MapType.None;
         if(angle <= 45) return MapType.Ground;
@@ -95,20 +106,27 @@ public class GroundSensor : MonoBehaviour
                 if(!currentPlatform) 
                 {
                     var psc = collision.gameObject.GetComponent<PlatformScript>();
-                    platformNormal = collision.GetContact(0).normal;
+                    switch(psc.dObject)
+                    {
+                        case PlatformScript.downJumpObject.STRAIGHT:
+                            platformNormal = Vector2.up;
+                            break;
+                        case PlatformScript.downJumpObject.DIAGONAL:
+                            platformNormal = collision.GetContact(0).normal;
+                            break;
+                    }
                     currentPlatform = psc;
                 }
                 break;
             case MapType.None:
                 var spr = collision.gameObject.GetComponent<PlatformScript>();
-                switch(spr.dObject)
+                switch(spr?.dObject)
                 {
                     case PlatformScript.downJumpObject.STRAIGHT:
                         if(!currentPlatform) 
                         {
-                            var psc = collision.gameObject.GetComponent<PlatformScript>();
-                            platformNormal = collision.GetContact(0).normal;
-                            currentPlatform = psc;
+                            platformNormal = Vector2.up;
+                            currentPlatform = spr;
                         }
                         break;
                     case PlatformScript.downJumpObject.DIAGONAL:
@@ -117,12 +135,5 @@ public class GroundSensor : MonoBehaviour
                 }
                 break;
         }
-    }
-
-    Vector2 point = Vector2.zero;
-    private void OnDrawGizmo()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(point, 0.1f);
     }
 }

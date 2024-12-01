@@ -52,6 +52,10 @@ public partial class GameManager : MonoBehaviour
     
     public List<Map> maps = new List<Map>();
 
+    public int targetFrame = 60;
+    private float deltaTime = 0f;
+    public static float fps { get; private set; }
+
     public void TimeScale(float t) => Time.timeScale = t;
 
     private void OnDestroy()
@@ -64,6 +68,7 @@ public partial class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        Application.targetFrameRate = targetFrame;
         if (instance != null)
         {
             Destroy(gameObject);
@@ -92,6 +97,13 @@ public partial class GameManager : MonoBehaviour
     private void Update()
     {
         if(controllers.Count > 0) controllers.Peek().Controller();
+        deltaTime += Time.unscaledDeltaTime - deltaTime;
+    }
+    private void FixedUpdate()
+    {
+        fps = 1.0f / deltaTime;
+        // if(fps < 120) Time.fixedDeltaTime = 0.02f / (120 / (int)fps);
+        // else Time.fixedDeltaTime = 0.02f;
     }
 
     public void CreateWallRoom(int currentRoomIndex, int previousRoomIndex)
