@@ -8,6 +8,7 @@ public class DialogueController : MonoBehaviour
     {
         //InteractionEvent.Instance.indexNum = indexNum;
         //InteractionEvent.Instance.num = num;
+        Debug.Log("dialogue controller");
         InteractionEvent.Instance.indexNum = scriptorble.indexNum;
         InteractionEvent.Instance.num=scriptorble.num;
         Debug.Log(InteractionEvent.Instance.indexNum + "" + InteractionEvent.Instance.num);
