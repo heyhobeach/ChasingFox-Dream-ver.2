@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Com.LuisPedroFonseca.ProCamera2D;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 [RequireComponent(typeof(ShootingAnimationController))]
 /// <summary>
@@ -154,13 +155,18 @@ public class Human : PlayerUnit
 
             // Debug.Log("여기 문제");
             base.Attack(clickPos);
+            Assert.IsNotNull(sound, "총기 격발음 셋팅 안됨");
             sound?.PlayOneShot(soundClip, 0.3f);
             SoundManager.Instance.CoStartBullet(userGunsoud);
             ProCamera2DShake.Instance.Shake("GunShot ShakePreset");
-            GameObject _bullet = Instantiate(bullet);//총알을 공격포지션에서 생성함
-            GameObject gObj = this.gameObject;
-            _bullet.GetComponent<Bullet>().Set(shootingAnimationController.GetShootPosition(), clickPos, shootingAnimationController.GetShootRotation(), bulletDamage, bulletSpeed, gObj);
-            residualAmmo--;
+            Assert.IsNotNull(bullet, "총알 셋팅 안됨");
+            if(bullet)
+            {
+                GameObject _bullet = Instantiate(bullet);//총알을 공격포지션에서 생성함
+                GameObject gObj = this.gameObject;
+                _bullet.GetComponent<Bullet>().Set(shootingAnimationController.GetShootPosition(), clickPos, shootingAnimationController.GetShootRotation(), bulletDamage, bulletSpeed, gObj);
+                residualAmmo--;
+            }
             isAttack = false;
         }
     }

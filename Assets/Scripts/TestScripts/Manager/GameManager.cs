@@ -1,19 +1,15 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using BehaviourTree;
-using Com.LuisPedroFonseca.ProCamera2D;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public partial class GameManager : MonoBehaviour
 {
-    public SoundManager soundManager;
-
     private static GameManager instance;
     public static GameManager Instance { get => instance; }
 
+    public SoundManager soundManager;
     private PopupManager popupManager;
     public InteractionEvent interactionEvent;
 
@@ -55,6 +51,8 @@ public partial class GameManager : MonoBehaviour
     public int targetFrame = 60;
     private float deltaTime = 0f;
     public static float fps { get; private set; }
+
+    private bool isPaused = false;
 
     public void TimeScale(float t) => Time.timeScale = t;
 
@@ -150,4 +148,17 @@ public partial class GameManager : MonoBehaviour
 
     public void LoadScene(string name) => PageManger.Instance.LoadScene(name);
     public void RetryScene() => PageManger.Instance.LoadScene(SceneManager.GetActiveScene().name);
+    public void Pause()
+    {
+        if(isPaused)
+        {
+            Time.timeScale = 1;
+            isPaused = false;
+        }
+        else 
+        {
+            Time.timeScale = 0;
+            isPaused = true;
+        }
+    }
 }
