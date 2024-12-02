@@ -13,9 +13,13 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
 
+    [Tooltip("ver 오브젝트 들어갈 항목")]
+    /// <summary>
+    /// ver오브젝트 들어갈변수
+    /// </summary>
     public GameObject Vertical;
 
-    public Transform targetTransform;
+    //public Transform targetTransform;
     /// <summary>
     /// 선택지 생성한 오브젝트 담는 배열
     /// </summary>
@@ -93,7 +97,7 @@ public class UIManager : MonoBehaviour
         TextBoxSizeChange();
         CharactorImageSizeChange();
 
-        Debug.Log("intRect test"+intRect.sizeDelta + "" + intRect.position);
+        //Debug.Log("intRect test"+intRect.sizeDelta + "" + intRect.position);
         // setTestPosition(targetTransform.position);
     }
 
@@ -112,11 +116,11 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        Debug.Log("자식 사이즈" + this.transform.GetChild(0).GetComponent<RectTransform>().rect.size);
+        //Debug.Log("자식 사이즈" + this.transform.GetChild(0).GetComponent<RectTransform>().rect.size);
 
         //TextBoxSizeChange();
         //CharactorImageSizeChange();
-        Debug.Log("intRect test" + intRect.sizeDelta + "" + intRect.position);
+        //Debug.Log("intRect test" + intRect.sizeDelta + "" + intRect.position);
     }
 
     /// <summary>

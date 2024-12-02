@@ -16,7 +16,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 public class InteractionEvent : MonoBehaviour
 {
     // Start is called before the first frame update
-    [SerializeField] DialogueEvent dialogue;
+    [SerializeField] public DialogueEvent dialogue;
     //UIManager ui;
 
     //코루틴으로 계속 오브젝트를 살려놓는다면 해결 되지 않을까 결국에는 int를 불러오지 못 해서 생기는 일들 
@@ -271,9 +271,9 @@ public class InteractionEvent : MonoBehaviour
         }
         else
         {
-            Debug.Log("Getdialoogues succese" + dialogue.dialouses.Length);
-            Debug.Log(string.Format("content {0} num{1}", contentNum, num));
-            Debug.Log(string.Format("Get content {0}", dialogue.dialouses[0].context));
+            //Debug.Log("Getdialoogues succese" + dialogue.dialouses.Length);
+            //Debug.Log(string.Format("content {0} num{1}", contentNum, num));
+            //Debug.Log(string.Format("Get content {0}", dialogue.dialouses[0].context));
             num = 0;
         }
         _Uimanager.content.text = "";
@@ -328,8 +328,6 @@ public class InteractionEvent : MonoBehaviour
 
         if (command.Length > 0)
         {
-            //Debug.Log("command size is " + command.Length + "command [1]" + command[1]);
-
             command = spaceremove(command);
             foreach (var com in command)
             {
@@ -645,6 +643,7 @@ public class InteractionEvent : MonoBehaviour
         //int index = 0;
         foreach (var j in com)
         {
+            Debug.Log("문제점 확인중" + j);
             if (j.ToString() != "")
             {
                 temp.Add(j);
