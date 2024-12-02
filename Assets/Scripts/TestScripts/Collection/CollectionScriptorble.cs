@@ -7,6 +7,7 @@ namespace Collection
     public class CollectionScriptorble : ScriptableObject
     {
         public string _name;
+        [TextArea(3,8)]
         public string _context;
     }
 

@@ -203,7 +203,7 @@ public abstract class PlayerUnit : UnitBase
     {
         var dir = Vector3.ProjectOnPlane(new Vector2(hzForce, 0), isGrounded ? groundSensor.normal : Vector2.up);
         var mul = Vector2.Distance(Vector2.zero, Vector2.one * hzForce);
-        rg.MovePosition(rg.transform.position + (((dir.normalized * mul) + (Vector3.up * vcForce)) * Time.deltaTime));
+        rg.MovePosition(rg.transform.position + (((dir.normalized * mul) + (Vector3.up * vcForce)) * Mathf.Min(Time.deltaTime, 0.05f)));
     }
 
     /// <summary>

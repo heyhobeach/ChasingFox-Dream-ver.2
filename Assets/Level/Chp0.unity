@@ -12192,7 +12192,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetTag: Player
   limit: 1
-  eventLists: []
+  eventLists:
+  - prerequisites: {fileID: 0}
+    keyCode: 0
+    action:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1741852989}
+          m_TargetAssemblyTypeName: DialogueController, Assembly-CSharp
+          m_MethodName: SetDialogueNum
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 11400000, guid: 69d36212e64c59945a5e5010a4b81db4, type: 2}
+            m_ObjectArgumentAssemblyTypeName: DialogueIndex, Assembly-CSharp
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    lockTime: 0
   autoTrigger: 0
   keyCode: 0
 --- !u!114 &372171833
@@ -13650,6 +13668,8 @@ MonoBehaviour:
   player: {fileID: 0}
   maps:
   - {fileID: 1908880873}
+  showNodes: 0
+  showPath: 0
   correctionPos: {x: 0.5, y: -0.5}
   bottomLeft: {x: 0, y: 0}
   topRight: {x: 0, y: 0}
@@ -77014,6 +77034,7 @@ GameObject:
   - component: {fileID: 1741852986}
   - component: {fileID: 1741852985}
   - component: {fileID: 1741852988}
+  - component: {fileID: 1741852989}
   m_Layer: 5
   m_Name: int
   m_TagString: Untagged
@@ -77890,6 +77911,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &1741852989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1741852983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d323ab395464ada4c95506376fa23dbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1744601223
 GameObject:
   m_ObjectHideFlags: 0

@@ -114,9 +114,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     public Action onDisable;
     private SpriteResolver spriteResolver;
 
-    public void Init() => Start();
-
-    protected virtual void Start()
+    public void Init()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteResolver = GetComponent<SpriteResolver>();
@@ -136,6 +134,8 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         shootingAnimationController = GetComponent<ShootingAnimationController>();
         if(shootingAnimationController != null) longRangeUnit = true;
     }
+
+    protected virtual void Start() => Init();
     protected virtual void Update()
     {
         // 힘의 방향에 따라 이미지를 좌우 반전
@@ -182,11 +182,6 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         shootingAnimationController.AttackAni();
         shootingAnimationController.Shoot();
         return true;
-    }
-
-    public virtual void OnCollisionEnter2D(Collision collider)
-    {
-
     }
 
     public virtual bool Dash()

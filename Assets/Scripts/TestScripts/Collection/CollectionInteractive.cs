@@ -1,19 +1,20 @@
 using UnityEngine;
 using Collection;
+using Unity.VisualScripting;
 
-public class CollectionInteractive : MonoBehaviour
+public class CollectionInteractive : EventTrigger
 {
     public Collection.CollectionScriptorble scriptorbleobj;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
 
-    public void OnTriggerStay2D(Collider2D collision)
+    
+    public void TestFunc()
     {
-        if (collision.gameObject.tag == "Player")//여기서 팝업창 띄우면 될듯
-        {
-            Debug.Log("collection의 이름 입니다" + scriptorbleobj._name);
-            Debug.Log("collection의 내용 입니다" + scriptorbleobj._context);
-        }
+        Debug.Log("collection의 이름 입니다" + scriptorbleobj._name);
+        Debug.Log("collection의 내용 입니다" + scriptorbleobj._context);
     }
-
+    public void OnTriggerExit2D(Collider2D collision)
+    {
+        //OnEnable()
+    }
 
 }
