@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public class GroundSensor : MonoBehaviour
 {
@@ -16,6 +17,9 @@ public class GroundSensor : MonoBehaviour
 
     public void Set(Rigidbody2D target, Collider2D targetCol)
     {
+        Assert.IsNotNull(target, "target is Null");
+        Assert.IsNotNull(target, "target Collider is Null");
+        
         if(!col) col = GetComponent<EdgeCollider2D>();
         this.target = target;
         col.offset = targetCol.offset;
@@ -81,10 +85,11 @@ public class GroundSensor : MonoBehaviour
     /// 충돌면의 MapType을 반환
     /// </summary>
     /// <param name="collision">충돌체</param>
-    /// <param name="ref angle">충돌각 반환 (0 ~ 180)</param>
+    /// <param name="angle">충돌각 반환 (0 ~ 180)</param>
     /// <returns>충돌면의 MapType</returns>
     protected MapType CheckMapType(Collision2D collision, ref float angle)
     {
+        Debug.Assert(collision.contactCount > 0, "콜리전 충돌이 감지되지 않음");
         if(!(collision.gameObject.CompareTag("Map") || collision.gameObject.CompareTag("platform")) || collision.contactCount <= 0) return MapType.None;
         angle = Mathf.Abs(Vector2.Angle(Vector2.up, collision.contacts[0].normal));
         if(collision.gameObject.CompareTag("platform") && angle <= 50) return MapType.Platform;

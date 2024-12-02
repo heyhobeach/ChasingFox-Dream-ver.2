@@ -51,7 +51,6 @@ public class PageManger : MonoBehaviour
             if(prv.name != null && !prv.name.Equals("Loading")) prevSceneName = prv.name;
             if(ne.name != null && !ne.name.Equals("Loading")) newSceneName = ne.name;
             if(prevSceneName.Equals("")) prevSceneName = newSceneName;
-            Debug.Log("AAA : " + prevSceneName + ", " + newSceneName);
             if(!newSceneName.Equals(prevSceneName))
             {
                 foreach(var map in clearedMaps)

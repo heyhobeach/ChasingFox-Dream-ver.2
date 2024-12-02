@@ -28,6 +28,8 @@ public class PlayerController : MonoBehaviour, IBaseController
     public void Controller()
     {
         bool isKeyDown = false;
+        if(Input.GetKeyDown(KeyCode.Escape)) GameManager.Instance.Pause();
+
         if(Input.GetKeyDown(KeyCode.Mouse1) && KeyControll(PlayerControllerMask.FormChange, ref isKeyDown)) unitController.FormChange();
         if(Input.GetKeyDown(KeyCode.R) && KeyControll(PlayerControllerMask.Reload, ref isKeyDown)) unitController.Reload();
         if(Input.GetKeyDown(KeyCode.Mouse0) && KeyControll(PlayerControllerMask.Attack, ref isKeyDown)) unitController.Attack(ClickPos());

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 /// <summary>
 /// 늑대인간 상태 클래스, PlayerUnit 클래스를 상속함
