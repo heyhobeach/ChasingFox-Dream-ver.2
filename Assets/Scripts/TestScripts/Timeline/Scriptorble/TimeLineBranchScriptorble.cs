@@ -5,6 +5,6 @@ using UnityEngine.Timeline;
 [CreateAssetMenu(fileName = "TimeLineBranchScriptorble", menuName = "Scriptable Objects/TimeLineBranchScriptorble")]
 public class TimeLineBranchScriptorble : ScriptableObject
 {
-    public PlayableAsset branch1;
-    public PlayableAsset branch2;
+    public TimelineAsset branch1;
+    public TimelineAsset branch2;
 }
