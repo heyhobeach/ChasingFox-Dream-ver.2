@@ -12021,6 +12021,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc71b6b44ed3a894398f9bf48f28d43b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  branch1Obj: {fileID: 2002226817}
+  branch2Obj: {fileID: 1526427603}
+  currentObj: {fileID: 1420599977}
+  branch1Timeline: {fileID: 1476177440}
+  branch2Timeline: {fileID: 473144932}
 --- !u!1 &387456103
 GameObject:
   m_ObjectHideFlags: 0
@@ -67179,7 +67184,6 @@ GameObject:
   - component: {fileID: 1012746342}
   - component: {fileID: 1012746341}
   - component: {fileID: 1012746340}
-  - component: {fileID: 1012746339}
   m_Layer: 0
   m_Name: DialogueManager
   m_TagString: Untagged
@@ -67187,24 +67191,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1012746339
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1012746338}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b04da7e52dfaef9488c47be0f0b6e66d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dialogue:
-    name: 
-    line: {x: 0, y: 0}
-    dialouses: []
-  num: 0
-  indexNum: 0
 --- !u!114 &1012746340
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75124,11 +75110,11 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 152.1
+  near clip plane: 0.1
+  far clip plane: 5000
+  field of view: 40
   orthographic: 1
-  orthographic size: 3.5
+  orthographic size: 10
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -75153,7 +75139,7 @@ Transform:
   m_GameObject: {fileID: 1705891306}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 152.96, y: -2.1850765, z: -4.274467}
+  m_LocalPosition: {x: 109.50467, y: -0.9327125, z: -41.482094}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -77962,11 +77948,11 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 152.1
+  near clip plane: 0.1
+  far clip plane: 5000
+  field of view: 40
   orthographic: 1
-  orthographic size: 3.5
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -77991,7 +77977,7 @@ Transform:
   m_GameObject: {fileID: 1900477501}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 143.29143, y: -0.37633157, z: -6.43062}
+  m_LocalPosition: {x: 99.83609, y: 0.8760324, z: -43.63825}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
