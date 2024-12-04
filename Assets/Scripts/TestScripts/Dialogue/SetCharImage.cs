@@ -33,22 +33,22 @@ public class SetCharImage : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (main_charactor==null)
-        {
-            Debug.Log("main_charactor null");
-        }
-        else
-        {
-            Debug.Log(main_charactor.transform.name);
-        }
-       if (sub_charactor == null)
-        {
-            Debug.Log("sub_charactor null");
-        }
-        else
-        {
-            Debug.Log(sub_charactor.gameObject.transform.name);
-        }
+        //if (main_charactor==null)
+        //{
+        //    Debug.Log("main_charactor null");
+        //}
+        //else
+        //{
+        //    Debug.Log(main_charactor.transform.name);
+        //}
+        //if (sub_charactor == null)
+        //{
+        //    Debug.Log("sub_charactor null");
+        //}
+        //else
+        //{
+        //    Debug.Log(sub_charactor.gameObject.transform.name);
+        //}
     }
 
     /// <summary>
