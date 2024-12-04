@@ -110,12 +110,14 @@ public class Human : PlayerUnit
         if(attackCoroutine != null) StopCoroutine(attackCoroutine);
     }
 
-    protected override void Start()
+    protected override void Start() => Init();
+
+    public override void Init()
     {
+        base.Init();
         gameObject.SetActive(true);
         sound=GetComponent<AudioSource>(); 
         //sound.PlayOneShot(soundClip, 0.3f);
-        base.Start();
         bulletTimeCount = GameManager.GetHumanData();
         residualAmmo = maxAmmo;
         anim.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("PlayerAnim/Human/Human Lib Ani");
@@ -155,7 +157,7 @@ public class Human : PlayerUnit
 
             // Debug.Log("여기 문제");
             base.Attack(clickPos);
-            Assert.IsNotNull(sound, "총기 격발음 셋팅 안됨");
+//            Assert.IsNotNull(sound, "총기 격발음 셋팅 안됨");
             sound?.PlayOneShot(soundClip, 0.3f);
             SoundManager.Instance.CoStartBullet(userGunsoud);
             ProCamera2DShake.Instance.Shake("GunShot ShakePreset");

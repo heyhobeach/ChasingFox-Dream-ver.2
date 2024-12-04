@@ -204,7 +204,9 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         {
             changing = StartCoroutine(ChangeWerewolf());
             b = true;
+
         }
+
         else if(changedForm.GetType() == typeof(Werewolf) && changedForm.FormChange())
         {
             changing = StartCoroutine(ChangeHuman());

@@ -114,7 +114,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     public Action onDisable;
     private SpriteResolver spriteResolver;
 
-    public void Init()
+    public virtual void Init()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteResolver = GetComponent<SpriteResolver>();

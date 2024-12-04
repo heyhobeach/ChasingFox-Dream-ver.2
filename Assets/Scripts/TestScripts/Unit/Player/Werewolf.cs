@@ -72,10 +72,10 @@ public class Werewolf : PlayerUnit
         StopHoldingWall();
     }
 
-    protected override void Start()
+    protected override void Start() => Init();
+    public override void Init()
     {
-        gameObject.SetActive(true);
-        base.Start();
+        base.Init();
         MeleeAttack.GetComponent<MaleeAttack>().Set(1, gameObject);
         brutalData = GameManager.GetBrutalData();
         changeGauge = brutalData.maxGage;
