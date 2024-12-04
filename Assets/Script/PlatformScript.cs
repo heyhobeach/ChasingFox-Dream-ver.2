@@ -31,4 +31,9 @@ public class PlatformScript : MonoBehaviour
 
     public void RemoveColliderMask(int layer) => platformScr.colliderMask &= ~layer;
     public void AddColliderMask(int layer) => platformScr.colliderMask |= layer;
+    public int GetUpDown(Vector2 otherPos)
+    {
+        var temp = otherPos - (Vector2)transform.position;
+        return (int) Mathf.Sign(temp.y);
+    }
 }

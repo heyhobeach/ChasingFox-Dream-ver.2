@@ -82,7 +82,6 @@ public partial class GameManager : MonoBehaviour
     private void Start()
     {
         StartCoroutine(MapSearchStart());
-        player = FindObjectOfType<Player>();
         int i = 0;
         while(maps[i].used) if(maps[i].used) player.transform.position = maps[i++].position;
         if(!maps[0].used && maps[0].position != Vector3.zero) player.transform.position = maps[0].position;

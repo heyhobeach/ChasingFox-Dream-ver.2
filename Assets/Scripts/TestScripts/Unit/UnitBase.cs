@@ -226,7 +226,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         
         anim.SetTrigger("death");
         anim.SetBool("isDeath", true);
-        //GetComponent<Collider2D>().enabled = false;
+        GetComponent<Collider2D>().enabled = false;
         if(longRangeUnit) shootingAnimationController.NomalAni();
         unitState = UnitState.Death;
         if(onDeath != null) onDeath.Invoke();

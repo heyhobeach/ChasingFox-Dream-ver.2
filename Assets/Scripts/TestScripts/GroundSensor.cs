@@ -60,7 +60,7 @@ public class GroundSensor : MonoBehaviour
         {
             col.useAdjacentStartPoint = true;
             col.useAdjacentEndPoint = true;
-            var temp = 0.05f * (120 / GameManager.fps);
+            var temp = 0.05f * (120 / GameManager.fps) + 0.05f;
             col.adjacentStartPoint = new Vector2(startAP.x - temp, startAP.y);
             col.adjacentEndPoint = new Vector2(endAP.x + temp, endAP.y);
         }
