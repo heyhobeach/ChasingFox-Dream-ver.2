@@ -197,7 +197,6 @@ public class UIManager : MonoBehaviour
     public string ChangeBrutalName(string image_name)
     {
         string newName = "";
-        Debug.Log("브루탈 설정중");
         if (Regex.IsMatch(image_name, "Reaper"))//6번째에 퍼센트 삽입
         {
             if (brutalScroe == 100)
@@ -211,7 +210,7 @@ public class UIManager : MonoBehaviour
                 brutalScroe = 35;
             }
             newName = image_name.Insert(6, brutalScroe.ToString());
-            Debug.Log("브루탈 이미지" + newName);
+            //Debug.Log("브루탈 이미지" + newName);//브루탈 이미지 확인할때 필요한 부분
             return newName;
         }
 
