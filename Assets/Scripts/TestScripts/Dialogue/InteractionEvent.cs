@@ -378,7 +378,7 @@ public class InteractionEvent : MonoBehaviour
 
 
             _Uimanager.SetImage(dialogue.dialouses[num].image_name, dialogue.dialouses[num].dir);
-            Debug.Log("명령어 호출 테스트" + "id" + dialogue.dialouses[num].id + "이름" + dialogue.dialouses[num].name);//여기는 한번
+            //Debug.Log("명령어 호출 테스트" + "id" + dialogue.dialouses[num].id + "이름" + dialogue.dialouses[num].name);//여기는 한번
             _Uimanager.Setname(dialogue.dialouses[num].name);//이름 변경 되는중 마찬가지로 내용도 같이 하면 될듯
                                                              //Debug.Log(dialogue.dialouses[num].context.Length);
                                                              //Debug.Log(string.Format("num => {0} contentnum ={1}", num, contentNum));
@@ -411,7 +411,7 @@ public class InteractionEvent : MonoBehaviour
 
 
 
-                Debug.Log(string.Format("num {3}, name {0}: content{1} , 명령어{2}", dialogue.dialouses[num].name, dialogue.dialouses[num].context[contentNum], dialogue.dialouses[num].command[contentNum],num));
+                //Debug.Log(string.Format("num {3}, name {0}: content{1} , 명령어{2}", dialogue.dialouses[num].name, dialogue.dialouses[num].context[contentNum], dialogue.dialouses[num].command[contentNum],num));
                 if (++num == dialogue.dialouses.Length)
                 {
                     //command = Regex.Split(dialogue.dialouses[num-1].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);//여기까지는 순서 맞음 command받기전에 num이 증가되어야함
@@ -420,8 +420,8 @@ public class InteractionEvent : MonoBehaviour
                 command = Regex.Split(dialogue.dialouses[num].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);//여기까지는 순서 맞음 command받기전에 num이 증가되어야함
 
 
-            Debug.Log("command length"+command.Length);
-            Debug.Log("Getdialoogues succese" + dialogue.dialouses.Length);
+            //Debug.Log("command length"+command.Length);
+            //Debug.Log("Getdialoogues succese" + dialogue.dialouses.Length);
 
         }
         else
