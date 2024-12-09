@@ -24,6 +24,13 @@ public class CollectionCanvasController : MonoBehaviour
     {
         panel.SetActive(true);
     }
+    public void SetPosition(Vector2 vec)
+
+    { 
+
+        panel.gameObject.transform.position = vec;
+        //panel.gameObject.transform.localPosition = vec;
+    }
 
      public void SetContentText(string text)
     {
