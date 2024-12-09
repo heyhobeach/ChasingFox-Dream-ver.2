@@ -70,7 +70,7 @@ public class LoopController : MonoBehaviour
 
     public void SetSkip()
     {
-        Debug.Log("loop controller setskip");
+        //Debug.Log("loop controller setskip");
         InteractionEvent.Instance.SetSkip(true);
     }
 
@@ -79,7 +79,7 @@ public class LoopController : MonoBehaviour
         //backgroundImage.SetActive(false);
         if (isHold == 2)
         {
-            Debug.Log("isHold");
+            //Debug.Log("isHold");
             isHold = 0;
             holdListNum++;
             playableDirector.playableGraph.GetRootPlayable(0).SetDuration(playableDirector.duration);
@@ -87,7 +87,7 @@ public class LoopController : MonoBehaviour
         }
         if (isHold == 1)
         {
-            Debug.Log("end loop");
+            //Debug.Log("end loop");
             //LoopDir.Stop();
             isHold = 0;
             stopListNum++;
@@ -141,7 +141,7 @@ public class LoopController : MonoBehaviour
                 }
             }
         }
-        Debug.Log("시그널 개수 " + count);
+        //Debug.Log("시그널 개수 " + count);
         stop_time.Sort();
         loop_time.Sort();
         hold_time.Sort();
@@ -177,7 +177,7 @@ public class LoopController : MonoBehaviour
             isHold = 2;
             playableDirector.playableGraph.GetRootPlayable(0).SetDuration(hold_time[holdListNum]);
             //backgroundImage.SetActive(true);
-            Debug.Log("set ishold");
+            //Debug.Log("set ishold");
             //playableDirector.time = hold_time[holdListNum];
         }
     }

@@ -329,11 +329,11 @@ public class InteractionEvent : MonoBehaviour
         if (command.Length > 0)
         {
             command = spaceremove(command);
-            foreach (var com in command)
-            {
-                Debug.Log("명령어 확인" + com);
-            }
-            CallFunction(command);
+            //foreach (var com in command)
+            //{
+            //    //Debug.Log("명령어 확인" + com);
+            //}
+            SetCommands(command);
 
             //Debug.Log("command size is " + command.Length+"command [0]" + command[0]);
             //command[0] = "";
@@ -367,12 +367,14 @@ public class InteractionEvent : MonoBehaviour
     }
     public void SetNextContext()
     {
-
+        //Debug.Log("postcommand");
         CallCommand(ref postcommands);//이후 실행되어야하는 명령어들
+        //EditorApplication.isPaused = true;
         HandleCommand();
         if (num < dialogue.dialouses.Length)
         {
-            _Uimanager.EnableUI();//해당라인 수정필요
+            _Uimanager.EnableUI();//해당라인 수정필요, 사용 안 하는 라인 같은데
+            Debug.Log("precommand");
             CallCommand(ref precommands);//이전에 실행되어야할 명령어들
                                          //이게 두번 일어나는듯?
 
@@ -462,8 +464,8 @@ public class InteractionEvent : MonoBehaviour
         {
             Debug.Log("선택지 부분");
             //여기서 precommand와 postcommand를 초기화 한다면?
-            precommands.Clear();
-            postcommands.Clear();
+            //precommands.Clear();
+            //postcommands.Clear();
             int temp = num-1;
             if (num > dialogue.dialouses.Length - 1)
             {
@@ -553,7 +555,7 @@ public class InteractionEvent : MonoBehaviour
         }
     }
 
-    private void CallFunction(string[] _functions)
+    private void SetCommands(string[] _functions)
     {
         int temp = num;
         if (num> dialogue.dialouses.Length-1)
@@ -567,19 +569,19 @@ public class InteractionEvent : MonoBehaviour
 
         foreach (var func in _functions)
         {
-            Debug.Log("num=>" +num+ "func"+func);
+            //Debug.Log("num=>" +num+ "func"+func);
             string[] strarr = Regex.Split(func, SPLIT_NUM);//
             string[] filteredSubstrings = strarr.Where(s => s != Regex.Match(s, SPLIT_NUM).ToString()).ToArray();
             int n;
             //string[] numarr = Array.FindAll(strarr, s => !string.IsNullOrEmpty(s) && (int.TryParse(s, out n)));
-            Debug.Log(string.Format("mat 체크=>{0}", func));
+            //Debug.Log(string.Format("mat 체크=>{0}", func));
             var mat = Regex.Matches(func, GET_COMMAND);
-            Debug.Log(string.Format("커맨드 체크 =>{0}", mat[0]));
+            //Debug.Log(string.Format("커맨드 체크 =>{0}", mat[0]));
             switch (mat[0].ToString())
             {
                 case "size":
                     {
-                        Debug.Log("Num=>" + num);//선택지 부분에서만 문제
+                        //Debug.Log("Num=>" + num);//선택지 부분에서만 문제
                         precommands.Add(new SizeCommand(filteredSubstrings, dialogue.dialouses[temp].context[contentNum], _Uimanager));
                         //size(filteredSubstrings); 
                     }
@@ -643,7 +645,7 @@ public class InteractionEvent : MonoBehaviour
         //int index = 0;
         foreach (var j in com)
         {
-            Debug.Log("문제점 확인중" + j);
+            //Debug.Log("문제점 확인중" + j);
             if (j.ToString() != "")
             {
                 temp.Add(j);
