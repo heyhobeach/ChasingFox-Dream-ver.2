@@ -168,11 +168,13 @@ public partial class GameManager : MonoBehaviour
         if(isPaused)
         {
             Time.timeScale = 1;
+            PopupManager.Instance.PausePop(false);
             isPaused = false;
         }
         else 
         {
             Time.timeScale = 0;
+            PopupManager.Instance.PausePop(true);
             isPaused = true;
         }
     }

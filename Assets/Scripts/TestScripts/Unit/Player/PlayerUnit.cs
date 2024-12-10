@@ -14,6 +14,7 @@ public abstract class PlayerUnit : UnitBase
 {
     public GameObject coverBox;
 
+    private bool _isGrounded;
     protected bool isJumping;
 
     protected float hzVel;
@@ -28,6 +29,10 @@ public abstract class PlayerUnit : UnitBase
     {
         switch (CheckMapType(collision))
         {
+            case MapType.Ground:
+            case MapType.Platform:
+                _isGrounded = true;
+                break;
             case MapType.Floor:
                 isJumping = false;
                 if(vcForce > 0) SetVerticalVelocity(0);
@@ -44,6 +49,10 @@ public abstract class PlayerUnit : UnitBase
     {
         switch (CheckMapType(collision))
         {
+            case MapType.Ground:
+            case MapType.Platform:
+                _isGrounded = true;
+                break;
             case MapType.Floor:
                 isJumping = false;
                 if(vcForce > 0) SetVerticalVelocity(0);
@@ -56,7 +65,10 @@ public abstract class PlayerUnit : UnitBase
         }
     }
 
-    protected virtual void OnCollisionExit2D(Collision2D collision) {}
+    protected virtual void OnCollisionExit2D(Collision2D collision)
+    {
+        if(collision.gameObject.CompareTag("platform") || collision.gameObject.CompareTag("Map")) _isGrounded = false;
+    }
 
     protected override void Update()
     {
@@ -67,7 +79,7 @@ public abstract class PlayerUnit : UnitBase
 
     private void FixedUpdate()
     {
-        isGrounded = groundSensor.isGrounded;
+        isGrounded = groundSensor.isGrounded && _isGrounded;
         AddGravity();
         AddFrictional();
         SetHorizontalForce(hzVel);
@@ -210,6 +222,7 @@ public abstract class PlayerUnit : UnitBase
     private void Movement()
     {
         Debug.Assert(groundSensor.normal != Vector2.right, "Vector2.right(1, 0) 아님\nVector2.up으로 교체해주세요.");
+
         var dir = Vector3.ProjectOnPlane(new Vector2(hzForce, 0), isGrounded ? groundSensor.normal : Vector2.up);
         var mul = Vector2.Distance(Vector2.zero, Vector2.one * hzForce);
         rg.MovePosition(rg.transform.position + (((dir.normalized * mul) + (Vector3.up * vcForce)) * Time.fixedDeltaTime));

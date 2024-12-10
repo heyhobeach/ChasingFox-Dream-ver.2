@@ -322,7 +322,6 @@ namespace Com.LuisPedroFonseca.ProCamera2D
         {
             if (!isActiveAndEnabled || (Time.deltaTime < .0001f && !IgnoreTimeScale) || float.IsNaN(influence.x) || float.IsNaN(influence.y))
                 return;
-
             _influences.Add(VectorHV(influence.x, influence.y));
         }
 
