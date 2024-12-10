@@ -37,8 +37,6 @@ public class SoundManager:MonoBehaviour
     public static SoundManager Instance;
     private static SoundManager instance;
 
-    private Queue<(GameObject, bool)> objQueue = new ();
-
     private void Awake()
     {
         if(instance == null)
@@ -54,59 +52,38 @@ public class SoundManager:MonoBehaviour
         bullet.standbyBullet = new Queue<GameObject>(queueArr);
     }
 
-    private void Update()
-    {
-        if(objQueue.Count > 0)
-        {
-            while(objQueue.Count > 0) 
-            {
-                var temp = objQueue.Dequeue();
-                StartCoroutine(CoBulletSound(temp.Item1, temp.Item2));
-            }
-        }
-    }
 
     public void SFXSound(AudioClip Sound)
     {
         AudioSource SFXsound =GetComponent<AudioSource>();
     }
 
-    public void CoStartBullet(GameObject obj, bool isQueue = true)
+    public void CoStartBullet(GameObject obj)
     {
-        objQueue.Enqueue((obj, isQueue));
+        StartCoroutine(CoBulletSound(obj));
     }
 
-    public IEnumerator CoBulletSound(GameObject obj, bool isQueue = true)
+    public IEnumerator CoBulletSound(GameObject obj)
     {
         //GameObject _obj=bullet.standbyBullet.Dequeue();
         //Debug.Log("코루틴 호출");
-#if UNITY_EDITOR
-        drawobj.Add(obj);
-#endif
         
         obj.SetActive(true);
-        if (obj.gameObject.layer == LayerMask.NameToLayer("GunSound") && isQueue)
+        if (obj.gameObject.layer == LayerMask.NameToLayer("GunSound"))
         {
             Debug.Log("총 소리 레이어");
             bullet.standbyBullet.Enqueue(obj);
         }
 
-        // yield return new WaitForSeconds(bulletTime);
-        // yield return new WaitForSecondsRealtime(Time.unscaledDeltaTime);
-        yield return new WaitForEndOfFrame();
-
+        yield return null;
         obj.SetActive(false);
-
-#if UNITY_EDITOR
-        drawobj.Remove(obj);
-#endif
         // Debug.Log(string.Format("태그{0} 오브젝트 이름{1}", obj.transform.parent.tag, obj.name));
        
-        // if (obj.transform.parent != null && obj.transform.parent.tag == "Player")
-        // {
-        //     Debug.Log("유저 총 소리");
-        //     yield return null;
-        // }
+        if (obj.transform.parent != null && obj.transform.parent.tag == "Player")
+        {
+            Debug.Log("유저 총 소리");
+            yield return null;
+        }
         //else
         //{
         //    Debug.Log("성공적 삽입"+obj.name);
@@ -114,13 +91,5 @@ public class SoundManager:MonoBehaviour
         //}
         
     }
-#if UNITY_EDITOR
-    List<GameObject> drawobj = new();
-    void OnDrawGizmos()
-    {
-        if(drawobj.Count <= 0) return;
-        Gizmos.color = Color.yellow;
-        foreach(var obj in drawobj) Gizmos.DrawWireSphere(obj.transform.position, obj.GetComponent<CircleCollider2D>().bounds.extents.x * 0.5f);
-    }
-#endif
+
 }

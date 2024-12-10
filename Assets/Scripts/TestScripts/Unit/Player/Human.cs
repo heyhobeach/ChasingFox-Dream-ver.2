@@ -64,8 +64,30 @@ public class Human : PlayerUnit
 
     private Vector2 fixedDir = Vector2.zero;
 
-    public void Awake()
+    protected override void OnCollisionEnter2D(Collision2D collision)
     {
+        base.OnCollisionEnter2D(collision);
+        switch(CheckMapType(collision))
+        {
+            case MapType.Wall:
+                SetHorizontalForce(0);
+                SetHorizontalVelocity(0);
+                break;
+        }
+    }
+    protected override void OnCollisionStay2D(Collision2D collision)
+    {
+        base.OnCollisionEnter2D(collision);
+        switch(CheckMapType(collision))
+        {
+            case MapType.Wall:
+                SetHorizontalForce(0);
+                SetHorizontalVelocity(0);
+                break;
+        }
+    }
+
+    public void Awake(){
         var animator = gameObject.AddComponent<Animator>();
     }
 
@@ -93,6 +115,7 @@ public class Human : PlayerUnit
     public override void Init()
     {
         base.Init();
+        gameObject.SetActive(true);
         sound=GetComponent<AudioSource>(); 
         //sound.PlayOneShot(soundClip, 0.3f);
         bulletTimeCount = GameManager.GetHumanData();
@@ -102,8 +125,6 @@ public class Human : PlayerUnit
 
     protected override void Update()
     {
-        if(GameManager.Instance.isPaused || ControllerChecker()) return;
-
         base.Update();
         
         var screenPoint = Input.mousePosition;
@@ -138,7 +159,7 @@ public class Human : PlayerUnit
             base.Attack(clickPos);
 //            Assert.IsNotNull(sound, "총기 격발음 셋팅 안됨");
             sound?.PlayOneShot(soundClip, 0.3f);
-            SoundManager.Instance.CoStartBullet(userGunsoud, false);
+            SoundManager.Instance.CoStartBullet(userGunsoud);
             ProCamera2DShake.Instance.Shake("GunShot ShakePreset");
             Assert.IsNotNull(bullet, "총알 셋팅 안됨");
             if(bullet)
@@ -220,7 +241,6 @@ public class Human : PlayerUnit
     {
         if(ControllerChecker() || reloadCoroutine != null || residualAmmo >= maxAmmo) return false;
         base.Reload();
-        residualAmmo = 0;
         reloadCoroutine = StartCoroutine(Reloading());
         return true;
     }
@@ -245,7 +265,7 @@ public class Human : PlayerUnit
         if(isGrounded) unitState = UnitState.Default;
         else unitState = UnitState.Air;
         if(reloadCoroutine != null) StopCoroutine(reloadCoroutine);
-        shootingAnimationController?.NomalAni();
+        shootingAnimationController.NomalAni();
         reloadCoroutine = null;
     }
 
@@ -256,26 +276,3 @@ public class Human : PlayerUnit
         unitState = UnitState.Death;
     }
 }
-
-    // protected override void OnCollisionEnter2D(Collision2D collision)
-    // {
-    //     base.OnCollisionEnter2D(collision);
-    //     switch(CheckMapType(collision))
-    //     {
-    //         case MapType.Wall:
-    //             SetHorizontalForce(0);
-    //             SetHorizontalVelocity(0);
-    //             break;
-    //     }
-    // }
-    // protected override void OnCollisionStay2D(Collision2D collision)
-    // {
-    //     base.OnCollisionEnter2D(collision);
-    //     switch(CheckMapType(collision))
-    //     {
-    //         case MapType.Wall:
-    //             SetHorizontalForce(0);
-    //             SetHorizontalVelocity(0);
-    //             break;
-    //     }
-    // }

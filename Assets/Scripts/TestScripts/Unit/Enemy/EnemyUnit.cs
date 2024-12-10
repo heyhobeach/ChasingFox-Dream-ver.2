@@ -58,7 +58,6 @@ public class EnemyUnit : UnitBase, IDamageable
 
     public override void StopAllC()
     {
-        invalidation = true;
     }
 
     public void DeathFeedBack(Vector2 dir)

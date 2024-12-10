@@ -11,16 +11,6 @@ public class MapData : ScriptableObject
 {
     public Vector3 position;
     public bool used;
-    public bool cleared;
-    public PlayerData playerData;
-
-    public void Init()
-    {
-        position = Vector3.zero;
-        used = false;
-        playerData = CreateInstance<PlayerData>();
-        playerData.Init();
-    }
 
 #if UNITY_EDITOR
     void OnEnable()
@@ -37,10 +27,7 @@ public class MapData : ScriptableObject
         if(playModeStateChange == PlayModeStateChange.ExitingPlayMode)
         {
             used = false;
-            cleared = false;
             position = Vector3.zero;
-            playerData = CreateInstance<PlayerData>();
-            playerData.Init();
         }
     }
 #endif

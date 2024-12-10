@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    public float lifeTime = 0.945f;
+    public const float lifeTime = 0.945f;
     public int life = 1;
 
     public GameObject effectObj;
@@ -48,7 +48,7 @@ public class Bullet : MonoBehaviour
     }
     private void Update()
     {
-        startTime += Time.deltaTime;
+        startTime += Time.unscaledDeltaTime;
         if(startTime >= lifeTime)
         {
             Destroy(gameObject);
