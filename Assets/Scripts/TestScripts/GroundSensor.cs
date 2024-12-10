@@ -5,8 +5,11 @@ public class GroundSensor : MonoBehaviour
 {
     private Rigidbody2D target;
     private EdgeCollider2D col;
-    private Vector2 startAP = Vector2.zero;
-    private Vector2 endAP = Vector2.zero;
+
+    private Vector2 size = Vector2.zero;
+
+    Vector2[] defaultPoints = new Vector2[2];
+    Vector2[] groundPoints = new Vector2[2];
 
     [HideInInspector] public PlatformScript currentPlatform;
     private bool _isGrounded;
@@ -23,13 +26,14 @@ public class GroundSensor : MonoBehaviour
         if(!col) col = GetComponent<EdgeCollider2D>();
         this.target = target;
         col.offset = targetCol.offset;
-        var temp = targetCol.bounds.size * 0.5f;
-        col.points = new Vector2[] {
-            new Vector2(-temp.x + 0.05f, -temp.y - 0.05f),
-            new Vector2(temp.x - 0.05f, -temp.y - 0.05f),
-        };
-        startAP = new Vector2(-temp.x + 0.05f, -temp.y - 0.05f);
-        endAP = new Vector2(temp.x - 0.05f, -temp.y - 0.05f);
+        size = targetCol.bounds.size * 0.5f;
+
+        defaultPoints[0] = new Vector2(-size.x + 0.05f, -size.y);
+        defaultPoints[1] = new Vector2(size.x - 0.05f, -size.y);
+        groundPoints[0] = new Vector2(-size.x - 0.1f, -size.y - 0.1f);
+        groundPoints[1] = new Vector2(size.x + 0.1f, -size.y - 0.1f);
+
+        col.points = defaultPoints;
     }
 
     private void OnCollisionEnter2D(Collision2D collision) => CheckCollision(collision);
@@ -48,26 +52,22 @@ public class GroundSensor : MonoBehaviour
         }
     }
 
-    private void Awake()
-    {
-        col = GetComponent<EdgeCollider2D>();
-    }
+    private void Awake() => col = GetComponent<EdgeCollider2D>();
 
+    private void Update() {}
     private void FixedUpdate()
     {
         transform.position = target.position;
-        if(_isGrounded)
+        if(_isGrounded && GameManager.fps < 120)
         {
-            col.useAdjacentStartPoint = true;
-            col.useAdjacentEndPoint = true;
-            var temp = 0.05f * (120 / GameManager.fps) + 0.05f;
-            col.adjacentStartPoint = new Vector2(startAP.x - temp, startAP.y);
-            col.adjacentEndPoint = new Vector2(endAP.x + temp, endAP.y);
+            var temp = 0.01f * (120 / GameManager.fps);
+            groundPoints[0] = new Vector2(-size.x - temp, -size.y - 0.1f);
+            groundPoints[1] = new Vector2(size.x + temp, -size.y - 0.1f);
+            col.points = groundPoints;
         }
-        else
+        else 
         {
-            col.useAdjacentStartPoint = false;
-            col.useAdjacentEndPoint = false;
+            col.points = defaultPoints;
         }
     }
 
@@ -91,21 +91,25 @@ public class GroundSensor : MonoBehaviour
     {
         Debug.Assert(collision.contactCount > 0, "콜리전 충돌이 감지되지 않음");
         if(!(collision.gameObject.CompareTag("Map") || collision.gameObject.CompareTag("platform")) || collision.contactCount <= 0) return MapType.None;
-        angle = Mathf.Abs(Vector2.Angle(Vector2.up, collision.contacts[0].normal));
+        angle = Mathf.Abs(Vector2.Angle(Vector2.up, collision.GetContact(collision.contactCount-1).normal));
         if(collision.gameObject.CompareTag("platform") && angle <= 50) return MapType.Platform;
         else if(collision.gameObject.CompareTag("platform") && angle > 50) return MapType.None;
-        if(angle <= 45) return MapType.Ground;
-        else if(angle >= 135) return MapType.Floor;
+        if(angle <= 50) return MapType.Ground;
+        else if(angle >= 130) return MapType.Floor;
         else return MapType.Wall;
     }
 
     private void CheckCollision(Collision2D collision)
     {
+        // Debug.Log(collision.gameObject.name + " : " + collision.GetContact(0).normal);
         switch(CheckMapType(collision))
         {
+            case MapType.Wall:
+                _isGrounded = false;
+                break;
             case MapType.Ground:
                 _isGrounded = true;
-                groundNormal = collision.GetContact(0).normal;
+                groundNormal = collision.GetContact(collision.contactCount-1).normal;
                 break;
             case MapType.Platform:
                 if(!currentPlatform) 
@@ -117,7 +121,7 @@ public class GroundSensor : MonoBehaviour
                             platformNormal = Vector2.up;
                             break;
                         case PlatformScript.downJumpObject.DIAGONAL:
-                            platformNormal = collision.GetContact(0).normal;
+                            platformNormal = collision.GetContact(collision.contactCount-1).normal;
                             break;
                     }
                     currentPlatform = psc;

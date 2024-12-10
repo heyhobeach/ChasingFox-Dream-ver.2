@@ -44,7 +44,7 @@ namespace Damageables
 
             //action?.Invoke();
             health -= dmg;
-            Death();
+            if(health <= 0) Death();
             if (action != null)
             {
                 Vector2 dir = action(col);

@@ -12,6 +12,8 @@ namespace BehaviourTree
         bool isAttacking;
         float time;
         Vector2 aimPos;
+        Transform target;
+        Rigidbody2D targetRigidbody;
         
         protected override void OnEnd() => blackboard.thisUnit.SetAni(false);
 
@@ -19,7 +21,13 @@ namespace BehaviourTree
         {
             time = 0;
             isAttacking = false;
-            aimPos = blackboard.target.position;
+            if(!target || target != blackboard.target)
+            {
+                target = blackboard.target;
+                targetRigidbody = target.GetComponent<Rigidbody2D>();
+            }
+            if(targetRigidbody) aimPos = targetRigidbody.worldCenterOfMass;
+            else aimPos = blackboard.target.position;
             canAttack = blackboard.thisUnit.AttackCheck(aimPos);
             blackboard.thisUnit.SetAni(true);
         }
@@ -28,15 +36,10 @@ namespace BehaviourTree
         {
             if(isAttacking && !blackboard.thisUnit.isAttacking) return NodeState.Success;
             if(!canAttack) return NodeState.Failure;
-            blackboard.thisUnit.Move(blackboard.thisUnit.transform.position);
             if(time < aimingTime)
             {
                 time += Time.deltaTime;
-                if(blackboard.thisUnit.AttackCheck(blackboard.target.position))
-                {
-                    aimPos = blackboard.target.position;
-                    if(blackboard.thisUnit.shootingAnimationController != null) blackboard.thisUnit.shootingAnimationController.targetPosition = aimPos;
-                }
+                if(blackboard.thisUnit.shootingAnimationController != null) blackboard.thisUnit.shootingAnimationController.targetPosition = aimPos;
             }
             else if(time < aimingTime+delayTime)
             {
