@@ -83,8 +83,11 @@ public class Bullet : MonoBehaviour
             Func<Collider2D, Vector2> func = null;
             func += DamagedFeedBack;
             if(temp != null) isDamaged = temp.GetDamage(damage,collision,func);
-            if (isDamaged) Destroy(gameObject);
-            BulletSound();
+            if (isDamaged) 
+            {
+                Destroy(gameObject);
+                BulletSound();
+            }
             life--;
         }
         //if (collision.gameObject.tag == "FallingTrap")//여기가 작동 안하는듯 충돌이 안 일어남

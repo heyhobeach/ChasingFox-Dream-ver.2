@@ -281,6 +281,8 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         return new Vector3(0, 0, Vector3.SignedAngle(transform.right, dir, transform.forward)); // 유닛 기준 뱡향 벡터의 각도 계산 및 반환
     }
 
+    public void SetFlipX(bool b) => spriteRenderer.flipX = b;
+
     public void OnResolver() => spriteResolver.enabled = true;
     public void OffResolver() => spriteResolver.enabled = false;
 }
