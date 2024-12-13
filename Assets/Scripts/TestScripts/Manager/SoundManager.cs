@@ -85,7 +85,8 @@ public class SoundManager:MonoBehaviour
 #endif
         
         obj.SetActive(true);
-        if (obj.gameObject.layer == LayerMask.NameToLayer("GunSound") && isQueue)
+        GameManager.Instance.OnGunsound(obj.transform, obj.transform.position, obj.GetComponent<CircleCollider2D>().bounds.extents);
+        if (isQueue && obj.gameObject.layer == LayerMask.NameToLayer("GunSound"))
         {
             Debug.Log("총 소리 레이어");
             bullet.standbyBullet.Enqueue(obj);

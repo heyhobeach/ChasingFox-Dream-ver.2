@@ -5,6 +5,9 @@ using Com.LuisPedroFonseca.ProCamera2D;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+public delegate void EnemyDeathDel(EnemyUnit enemyUnit);
+public delegate void GunsoundDel(Transform transform, Vector2 pos, Vector2 size);
+
 public partial class GameManager : MonoBehaviour
 {
     private static GameManager instance;
@@ -13,6 +16,17 @@ public partial class GameManager : MonoBehaviour
     public SoundManager soundManager;
     private PopupManager popupManager;
     public InteractionEvent interactionEvent;
+
+    private EnemyDeathDel onEnemyDeath;
+    private GunsoundDel onGunsound;
+
+    public void AddEnemyDeath(EnemyDeathDel del) => onEnemyDeath += del;
+    public void AddGunsound(GunsoundDel del) => onGunsound += del;
+    public void DelEnemyDeath(EnemyDeathDel del) => onEnemyDeath -= del;
+    public void DelGunsound(GunsoundDel del) => onGunsound -= del;
+
+    public void OnEnemyDeath(EnemyUnit enemyUnit) => onEnemyDeath?.Invoke(enemyUnit);
+    public void OnGunsound(Transform transform, Vector2 pos, Vector2 size) => onGunsound?.Invoke(transform, pos, size);
 
     private Stack<IBaseController> controllers = new();
     public static void PushController(IBaseController @base)

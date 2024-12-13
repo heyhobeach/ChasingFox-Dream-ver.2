@@ -64,11 +64,6 @@ public class Human : PlayerUnit
 
     private Vector2 fixedDir = Vector2.zero;
 
-    public void Awake()
-    {
-        var animator = gameObject.AddComponent<Animator>();
-    }
-
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -97,7 +92,7 @@ public class Human : PlayerUnit
         //sound.PlayOneShot(soundClip, 0.3f);
         bulletTimeCount = GameManager.GetHumanData();
         residualAmmo = maxAmmo;
-        anim.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("PlayerAnim/Human/Human Lib Ani");
+        if(!anim.runtimeAnimatorController) anim.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("PlayerAnim/Human/Human Lib Ani");
     }
 
     protected override void Update()

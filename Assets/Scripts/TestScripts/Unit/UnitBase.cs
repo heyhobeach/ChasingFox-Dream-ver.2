@@ -228,7 +228,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         // GetComponent<Collider2D>().enabled = false;
         if(longRangeUnit) shootingAnimationController.NomalAni();
         unitState = UnitState.Death;
-        if(onDeath != null) onDeath.Invoke();
+        onDeath?.Invoke();
     }
 
     /// <summary>

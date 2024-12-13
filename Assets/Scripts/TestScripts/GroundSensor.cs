@@ -109,7 +109,9 @@ public class GroundSensor : MonoBehaviour
                 break;
             case MapType.Ground:
                 _isGrounded = true;
-                groundNormal = collision.GetContact(collision.contactCount-1).normal;
+                // groundNormal = collision.GetContact(collision.contactCount-1).normal;
+                var hit = Physics2D.BoxCast(target.transform.position, new Vector2(size.x, 0.05f), 0, Vector2.down, size.y*0.5f, 1 << LayerMask.NameToLayer("Map"));
+                if(hit) groundNormal = hit.normal;
                 break;
             case MapType.Platform:
                 if(!currentPlatform) 
