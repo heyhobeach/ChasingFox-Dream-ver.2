@@ -13,6 +13,7 @@ using UnityEngine.U2D.Animation;
 public abstract class PlayerUnit : UnitBase
 {
     public GameObject coverBox;
+    private GameObject currentGorundObject;
 
     private bool _isGrounded;
     protected bool isJumping;
@@ -31,7 +32,11 @@ public abstract class PlayerUnit : UnitBase
         {
             case MapType.Ground:
             case MapType.Platform:
-                _isGrounded = true;
+                if(!_isGrounded)
+                {
+                    _isGrounded = true;
+                    currentGorundObject = collision.gameObject;
+                }
                 break;
             case MapType.Floor:
                 isJumping = false;
@@ -51,7 +56,11 @@ public abstract class PlayerUnit : UnitBase
         {
             case MapType.Ground:
             case MapType.Platform:
-                _isGrounded = true;
+                if(!_isGrounded)
+                {
+                    _isGrounded = true;
+                    currentGorundObject = collision.gameObject;
+                }
                 break;
             case MapType.Floor:
                 isJumping = false;
@@ -67,7 +76,11 @@ public abstract class PlayerUnit : UnitBase
 
     protected virtual void OnCollisionExit2D(Collision2D collision)
     {
-        if(collision.gameObject.CompareTag("platform") || collision.gameObject.CompareTag("Map")) _isGrounded = false;
+        if((collision.gameObject.CompareTag("platform") || collision.gameObject.CompareTag("Map")) && collision.gameObject == currentGorundObject) 
+        {
+            _isGrounded = false;
+            currentGorundObject = null;
+        }
     }
 
     protected override void Update()
@@ -223,9 +236,9 @@ public abstract class PlayerUnit : UnitBase
     {
         Debug.Assert(groundSensor.normal != Vector2.right, "Vector2.right(1, 0) 아님\nVector2.up으로 교체해주세요.");
 
-        var dir = Vector3.ProjectOnPlane(new Vector2(hzForce, 0), isGrounded ? groundSensor.normal : Vector2.up);
-        var mul = Vector2.Distance(Vector2.zero, Vector2.one * hzForce);
-        rg.MovePosition(rg.transform.position + (((dir.normalized * mul) + (Vector3.up * vcForce)) * Time.fixedDeltaTime));
+        Vector3 dir = Vector3.ProjectOnPlane(new Vector2(hzForce, 0), isGrounded ? groundSensor.normal : Vector2.up);
+        float mul = 1 / groundSensor.normal.y;
+        rg.MovePosition(rg.transform.position + (((dir * mul) + (Vector3.up * vcForce)) * Time.fixedDeltaTime));
     }
 
     /// <summary>
