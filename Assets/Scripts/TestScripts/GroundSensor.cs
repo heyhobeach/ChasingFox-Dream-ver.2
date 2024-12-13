@@ -6,6 +6,7 @@ public class GroundSensor : MonoBehaviour
     private Rigidbody2D target;
     private EdgeCollider2D col;
 
+    private Vector2 offset = Vector2.zero;
     private Vector2 size = Vector2.zero;
 
     Vector2[] defaultPoints = new Vector2[2];
@@ -26,6 +27,7 @@ public class GroundSensor : MonoBehaviour
         if(!col) col = GetComponent<EdgeCollider2D>();
         this.target = target;
         col.offset = targetCol.offset;
+        offset = targetCol.offset;
         size = targetCol.bounds.size * 0.5f;
 
         defaultPoints[0] = new Vector2(-size.x + 0.05f, -size.y);
@@ -52,12 +54,14 @@ public class GroundSensor : MonoBehaviour
         }
     }
 
-    private void Awake() => col = GetComponent<EdgeCollider2D>();
+    private void Awake()
+    {
+        col = GetComponent<EdgeCollider2D>();
+    }
 
-    private void Update() {}
+    private void Update() => transform.position = target.position;
     private void FixedUpdate()
     {
-        transform.position = target.position;
         if(_isGrounded && GameManager.fps < 120)
         {
             var temp = 0.01f * (120 / GameManager.fps);
@@ -109,9 +113,9 @@ public class GroundSensor : MonoBehaviour
                 break;
             case MapType.Ground:
                 _isGrounded = true;
-                // groundNormal = collision.GetContact(collision.contactCount-1).normal;
-                var hit = Physics2D.BoxCast(target.transform.position, new Vector2(size.x, 0.05f), 0, Vector2.down, size.y*0.5f, 1 << LayerMask.NameToLayer("Map"));
-                if(hit) groundNormal = hit.normal;
+                var hit = Physics2D.BoxCast(transform.position+(Vector3.up*(-size.y+offset.y)), new Vector2(size.x, 0.05f), 0, Vector2.down, 0, 1 << LayerMask.NameToLayer("Map"));
+                if(hit) groundNormal = hit.normal == Vector2.right || hit.normal == Vector2.left ? Vector2.up : hit.normal;
+                else groundNormal = collision.GetContact(collision.contactCount-1).normal;
                 break;
             case MapType.Platform:
                 if(!currentPlatform) 
