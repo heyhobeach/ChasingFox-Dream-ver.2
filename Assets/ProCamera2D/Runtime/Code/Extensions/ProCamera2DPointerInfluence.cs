@@ -50,6 +50,7 @@ namespace Com.LuisPedroFonseca.ProCamera2D
 
         #endregion
 
+        Vector2 prevInfluence;
         void ApplyInfluence(float deltaTime)
         {
             var mousePosViewport = ProCamera2D.GameCamera.ScreenToViewportPoint(Input.mousePosition);
@@ -60,9 +61,12 @@ namespace Com.LuisPedroFonseca.ProCamera2D
             var hInfluence = mousePosViewportH * MaxHorizontalInfluence;
             var vInfluence = mousePosViewportV * MaxVerticalInfluence;
 
-            _influence = Vector2.SmoothDamp(_influence, new Vector2(hInfluence, vInfluence), ref _velocity, InfluenceSmoothness, Mathf.Infinity, deltaTime);
-
-            ProCamera2D.ApplyInfluence(_influence);
+            if(Time.timeScale > .001f) 
+            {
+                _influence = Vector2.SmoothDamp(_influence, new Vector2(hInfluence, vInfluence), ref _velocity, InfluenceSmoothness, Mathf.Infinity, deltaTime);
+                prevInfluence = _influence;
+            }
+            ProCamera2D.ApplyInfluence(Time.timeScale > .001f ? _influence : prevInfluence);
         }
     }
 }

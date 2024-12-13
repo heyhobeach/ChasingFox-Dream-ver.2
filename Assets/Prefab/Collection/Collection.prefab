@@ -45,6 +45,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37ee79ab7a646d34686aaf5eedc7189f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetTag: Player
+  limit: 0
+  eventLists:
+  - prerequisites: {fileID: 0}
+    keyCode: 0
+    action:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6695553469641676831}
+          m_TargetAssemblyTypeName: CollectionInteractive, Assembly-CSharp
+          m_MethodName: CallCollectionPopup
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    lockTime: 0
   scriptorbleobj: {fileID: 11400000, guid: 6a1b966f0c722c34fb208d2b56cb78fe, type: 2}
 --- !u!61 &2729917046875322917
 BoxCollider2D:

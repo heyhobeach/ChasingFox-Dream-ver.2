@@ -80,7 +80,7 @@ public class Werewolf : PlayerUnit
         brutalData = GameManager.GetBrutalData();
         changeGauge = brutalData.maxGage;
         
-        anim.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("PlayerAnim/WereWolf/WereWolf Lib Ani");
+        if(!anim.runtimeAnimatorController) anim.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("PlayerAnim/WereWolf/WereWolf Lib Ani");
     }
 
     protected override void Update()

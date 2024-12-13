@@ -229,7 +229,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         GetComponent<Collider2D>().enabled = false;
         if(longRangeUnit) shootingAnimationController.NomalAni();
         unitState = UnitState.Death;
-        if(onDeath != null) onDeath.Invoke();
+        onDeath?.Invoke();
     }
 
     /// <summary>
@@ -281,6 +281,8 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         dir = (to - from).normalized; // 시작 벡터에서 목표 벡터까지의 방향 계산
         return new Vector3(0, 0, Vector3.SignedAngle(transform.right, dir, transform.forward)); // 유닛 기준 뱡향 벡터의 각도 계산 및 반환
     }
+
+    public void SetFlipX(bool b) => spriteRenderer.flipX = b;
 
     public void OnResolver() => spriteResolver.enabled = true;
     public void OffResolver() => spriteResolver.enabled = false;
