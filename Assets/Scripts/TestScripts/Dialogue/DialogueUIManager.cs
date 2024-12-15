@@ -406,6 +406,7 @@ public class UIManager : MonoBehaviour
         // {
         //     content.color = Color.black;
         // }
+        content.color = Color.white;
         if (str == "")
         {
             yield return null;
