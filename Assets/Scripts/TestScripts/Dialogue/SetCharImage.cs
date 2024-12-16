@@ -15,40 +15,31 @@ public class SetCharImage : MonoBehaviour
     public Image main_charactor;
     public Image sub_charactor;
 
-     private CharImageData mainData;
-    private CharImageData subData; 
 
-    ScriptableObject[] char_image_list;
+
+
+    /// <summary>
+    /// 원래는 해당 변수들은 mainData와 subData로 구별해서 좌측에 주인공 무리들이 뜬다면 미리 셋팅 해 두려고 만든 스크립트임 다만 현재 명령어 시스템으로 변경되어서 해당 변수는 사용하지 않는중임
+    /// </summary>
+    /// 
+    //private CharImageData mainData;
+    //private CharImageData subData; 
+    //ScriptableObject[] char_image_list;
 
     public string color_code = "5C5C5C"; 
     // Start is called before the first frame update
     void Start()
     {
-        char_image_list = GetComponent<CharactorImageList>().ImageList;
-        mainData=main_charactor.transform.GetComponent<CharImageData>();
-        subData=sub_charactor.transform.GetComponent<CharImageData>();
+        //char_image_list = GetComponent<CharactorImageList>().ImageList;
+        //mainData=main_charactor.transform.GetComponent<CharImageData>();
+        //subData=sub_charactor.transform.GetComponent<CharImageData>();
         color_code = "#" + color_code;
     }
 
     // Update is called once per frame
     void Update()
-    {
-        //if (main_charactor==null)
-        //{
-        //    Debug.Log("main_charactor null");
-        //}
-        //else
-        //{
-        //    Debug.Log(main_charactor.transform.name);
-        //}
-        //if (sub_charactor == null)
-        //{
-        //    Debug.Log("sub_charactor null");
-        //}
-        //else
-        //{
-        //    Debug.Log(sub_charactor.gameObject.transform.name);
-        //}
+    { 
+
     }
 
     /// <summary>
