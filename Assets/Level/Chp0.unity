@@ -10714,7 +10714,7 @@ MonoBehaviour:
   targetTag: Player
   limit: 1
   eventLists:
-  - prerequisites: {fileID: 0}
+  - prerequisites: {fileID: 372171833}
     keyCode: 0
     action:
       m_PersistentCalls:
@@ -10732,36 +10732,6 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
         - m_Target: {fileID: 204268671}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-    lockTime: 0
-  - prerequisites: {fileID: 304780445}
-    keyCode: 0
-    action:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 204268671}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_MethodName: SetActive
           m_Mode: 6
@@ -10978,6 +10948,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1a04371ec0fd014399b3963d7075aab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  noHold: 1
   time: 0
   fixed_timeline_frame: 30
   timeline: {fileID: 11400000, guid: 9dfd2704d1b677149ad3910f5f23a9bf, type: 2}
@@ -11897,6 +11868,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1a04371ec0fd014399b3963d7075aab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  noHold: 0
   time: 0
   fixed_timeline_frame: 30
   timeline: {fileID: 11400000, guid: 5484ac553bce146a48e97bf6ec4dfbb0, type: 2}
@@ -12821,7 +12793,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &473144933
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13089,6 +13061,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1a04371ec0fd014399b3963d7075aab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  noHold: 0
   time: 0
   fixed_timeline_frame: 30
   timeline: {fileID: 11400000, guid: 3368555bee9eac04cb258b57758750d9, type: 2}
@@ -71002,13 +70975,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1461051284}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1538198855}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -71390,7 +71363,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1476177441
 Transform:
   m_ObjectHideFlags: 0
@@ -71418,6 +71391,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1a04371ec0fd014399b3963d7075aab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  noHold: 0
   time: 0
   fixed_timeline_frame: 30
   timeline: {fileID: 11400000, guid: b82a145ed4fe1534c8521959f0486067, type: 2}
@@ -72210,7 +72184,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1538198854}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0cba631767e3b64458025ffd99c58dfc, type: 3}
   m_Name: 
@@ -72284,6 +72258,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1a04371ec0fd014399b3963d7075aab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  noHold: 0
   time: 0
   fixed_timeline_frame: 30
   timeline: {fileID: 0}
@@ -75915,7 +75890,7 @@ MonoBehaviour:
           m_CallState: 2
     - m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 473144938}
+        - m_Target: {fileID: 372171831}
           m_TargetAssemblyTypeName: LoopController, Assembly-CSharp
           m_MethodName: SetNone
           m_Mode: 1
