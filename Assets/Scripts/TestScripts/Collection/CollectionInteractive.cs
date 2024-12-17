@@ -1,7 +1,4 @@
 using UnityEngine;
-using Collection;
-using Unity.VisualScripting;
-using UnityEngine.LightTransport;
 
 public class CollectionInteractive : EventTrigger
 {
