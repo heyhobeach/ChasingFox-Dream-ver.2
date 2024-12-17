@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour, IBaseController
@@ -36,8 +34,8 @@ public class PlayerController : MonoBehaviour, IBaseController
         bool isKeyDown = false;
 
         // System Control
-        if(Input.GetKeyDown(KeyCode.Escape)) GameManager.Instance.Pause();
-        if(Input.GetKeyDown(KeyCode.R) || Input.GetKey(KeyCode.R))
+        if(Input.GetButtonDown("Cancel")) GameManager.Instance.Pause();
+        if(Input.GetButtonDown("Reload") || Input.GetButton("Reload"))
         {
             resetTimer += Time.unscaledDeltaTime;
             if(resetTimer > 2f) GameManager.Instance.RetryScene();
@@ -47,16 +45,16 @@ public class PlayerController : MonoBehaviour, IBaseController
         if(GameManager.Instance.isPaused) return;
 
         // Player Control
-        if(Input.GetKeyDown(KeyCode.Mouse1) && KeyControl(PlayerControllerMask.FormChange, ref isKeyDown)) unitController.FormChange();
-        if(Input.GetKeyDown(KeyCode.R) && KeyControl(PlayerControllerMask.Reload, ref isKeyDown)) unitController.Reload();
-        if(Input.GetKeyDown(KeyCode.Mouse0) && KeyControl(PlayerControllerMask.Attack, ref isKeyDown)) unitController.Attack(ClickPos());
-        if(Input.GetKeyDown(KeyCode.Space) && KeyControl(PlayerControllerMask.Dash, ref isKeyDown)) unitController.Dash();
+        if(Input.GetButtonDown("Fire2") && KeyControl(PlayerControllerMask.FormChange, ref isKeyDown)) unitController.FormChange();
+        if(Input.GetButtonDown("Reload") && KeyControl(PlayerControllerMask.Reload, ref isKeyDown)) unitController.Reload();
+        if(Input.GetButtonDown("Fire1") && KeyControl(PlayerControllerMask.Attack, ref isKeyDown)) unitController.Attack(ClickPos());
+        if(Input.GetButtonDown("Dash") && KeyControl(PlayerControllerMask.Dash, ref isKeyDown)) unitController.Dash();
         
-        if (Input.GetKey(KeyCode.S) && KeyControl(PlayerControllerMask.Crouch, ref isKeyDown)) unitController.Crouch(KeyState.KeyDown);//GetKeyDown -> GetKey
-        else if(Input.GetKeyUp(KeyCode.S) && KeyControl(PlayerControllerMask.Crouch)) unitController.Crouch(KeyState.KeyUp);
-        if(Input.GetKeyDown(KeyCode.W) && KeyControl(PlayerControllerMask.Jump, ref isKeyDown)) unitController.Jump(KeyState.KeyDown);
-        else if(Input.GetKey(KeyCode.W) && KeyControl(PlayerControllerMask.Jump)) unitController.Jump(KeyState.KeyStay);
-        else if(Input.GetKeyUp(KeyCode.W) && KeyControl(PlayerControllerMask.Jump)) unitController.Jump(KeyState.KeyUp);
+        if (Input.GetButton("Crouch") && KeyControl(PlayerControllerMask.Crouch, ref isKeyDown)) unitController.Crouch(KeyState.KeyDown);//GetKeyDown -> GetKey
+        else if(Input.GetButtonUp("Crouch") && KeyControl(PlayerControllerMask.Crouch)) unitController.Crouch(KeyState.KeyUp);
+        if(Input.GetButtonDown("Jump") && KeyControl(PlayerControllerMask.Jump, ref isKeyDown)) unitController.Jump(KeyState.KeyDown);
+        else if(Input.GetButton("Jump") && KeyControl(PlayerControllerMask.Jump)) unitController.Jump(KeyState.KeyStay);
+        else if(Input.GetButtonUp("Jump") && KeyControl(PlayerControllerMask.Jump)) unitController.Jump(KeyState.KeyUp);
         else unitController.Jump(KeyState.None);
         if (Input.GetAxisRaw("Horizontal") != 0 && KeyControl(PlayerControllerMask.Move)) unitController.Move(Vector2.right * Input.GetAxisRaw("Horizontal"));
         else unitController.Move(Vector2.zero);

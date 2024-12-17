@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 public delegate void EnemyDeathDel(EnemyUnit enemyUnit);
 public delegate void GunsoundDel(Transform transform, Vector2 pos, Vector2 size);
 
+[RequireComponent(typeof(ControllerManager))]
 public partial class GameManager : MonoBehaviour
 {
     private static GameManager instance;
@@ -15,6 +16,7 @@ public partial class GameManager : MonoBehaviour
 
     public SoundManager soundManager;
     private PopupManager popupManager;
+    private ControllerManager controllerManager;
     public InteractionEvent interactionEvent;
 
     private EnemyDeathDel onEnemyDeath;
@@ -27,24 +29,6 @@ public partial class GameManager : MonoBehaviour
 
     public void OnEnemyDeath(EnemyUnit enemyUnit) => onEnemyDeath?.Invoke(enemyUnit);
     public void OnGunsound(Transform transform, Vector2 pos, Vector2 size) => onGunsound?.Invoke(transform, pos, size);
-
-    private Stack<IBaseController> controllers = new();
-    public static void PushController(IBaseController @base)
-    {
-        if(instance.controllers.Contains(@base)) return;
-        instance.controllers.Push(@base);
-    }
-    public static void PopController(IBaseController @base)
-    {
-        if(instance.controllers.Count > 0 && instance.controllers.Peek() != @base)
-        {
-            Stack<IBaseController> temp = new();
-            while(instance.controllers.Count > 0 && !temp.Equals(instance.controllers.Peek())) temp.Push(instance.controllers.Pop());
-            while(temp.Count > 0) instance.controllers.Push(temp.Pop());
-        }
-        if(instance.controllers.Count > 0) instance.controllers.Pop();
-    }
-    public static IBaseController GetTopController() => instance.controllers.Peek();
 
     public BrutalDatas brutalDatas;
     public HumanDatas humanDatas;
@@ -80,7 +64,7 @@ public partial class GameManager : MonoBehaviour
         eventTriggers.Clear();
         BehaviourNode.clone.Clear();
         StopAllCoroutines();
-        CameraManager.Instance.proCamera2DRooms.OnStartedTransition.RemoveListener(MoveNextRoom);
+        CameraManager.Instance?.proCamera2DRooms.OnStartedTransition.RemoveListener(MoveNextRoom);
     }
 
     private void Awake()
@@ -92,10 +76,10 @@ public partial class GameManager : MonoBehaviour
             return;
         }
         instance = this;
-        if(controllers == null) controllers = new();
         player = FindObjectOfType<Player>();
         interactionEvent = FindObjectOfType<InteractionEvent>();
         popupManager = PopupManager.Instance;
+        controllerManager = ControllerManager.Instance;
     }
 
     private void Start()
@@ -109,12 +93,11 @@ public partial class GameManager : MonoBehaviour
         }
         else player.GetComponent<Player>().Init();
         for(int i=0; i<maps.Count; i++) CreateWallRoom(i).enabled = false;
-        CameraManager.Instance.proCamera2DRooms.OnStartedTransition.AddListener(MoveNextRoom);
+        CameraManager.Instance?.proCamera2DRooms.OnStartedTransition.AddListener(MoveNextRoom);
     }
 
     private void Update()
     {
-        if(controllers.Count > 0) controllers.Peek().Controller();
         deltaTime += Time.unscaledDeltaTime - deltaTime;
     }
     private void FixedUpdate()
@@ -178,18 +161,13 @@ public partial class GameManager : MonoBehaviour
     public void RetryScene() => PageManger.Instance.LoadScene(SceneManager.GetActiveScene().name);
     public void Pause()
     {
-        // TODO : Pause UI 추가 및 기타 기능 구현
-        if(isPaused)
-        {
-            Time.timeScale = 1;
-            PopupManager.Instance.PausePop(false);
-            isPaused = false;
-        }
-        else 
-        {
-            Time.timeScale = 0;
-            PopupManager.Instance.PausePop(true);
-            isPaused = true;
-        }
+        Pause(!isPaused);
+    }
+
+    public void Pause(bool isPause)
+    {
+        this.isPaused = isPause;
+        Time.timeScale = isPause ? 0 : 1;
+        PopupManager.Instance.PausePop(isPause);
     }
 }
