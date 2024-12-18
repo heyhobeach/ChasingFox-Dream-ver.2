@@ -5,13 +5,10 @@ namespace MainMenuUI
 {
     public class WindowNode : MonoBehaviour
     {
-        [SerializeField] private Vector2 centerPosition;
-        private Vector2 size;
-        [SerializeField] private List<WindowNode> nextNodes;
+        [SerializeField] private Vector3 centerPosition;
 
-        private void OnEnable()
-        {
-            // size = MainMenuManager.Instance.screanSize;
-        }
+        private void Awake() => centerPosition = new Vector3(transform.position.x, transform.position.y, -10);
+
+        public Vector3 GetCenterPosition() => centerPosition;
     }
 }

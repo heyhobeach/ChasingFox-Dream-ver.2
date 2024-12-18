@@ -3,6 +3,10 @@ using BehaviourTree;
 using UnityEngine;
 using UnityEngine.Playables;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 public class EnemyController : MonoBehaviour
 {
     public BehaviourTree.BehaviourTree behaviorTree;
@@ -10,9 +14,6 @@ public class EnemyController : MonoBehaviour
     private Blackboard blackboard;
     public SpriteRenderer spriteRenderer;
 
-    private RaycastHit2D[] hits = new RaycastHit2D[0];
-
-    public float layDistance;
     public float _viewOuterRange;
     public float viewOuterRange
     {
@@ -25,7 +26,7 @@ public class EnemyController : MonoBehaviour
     }
     public float viewAngle;
     public float appendDistance;
-    private float distance { get => layDistance+(blackboard.enemy_state.Increase_Sight*appendDistance); }
+    private float distance { get => viewOuterRange; }
 
     void Start()
     {
@@ -41,17 +42,45 @@ public class EnemyController : MonoBehaviour
         behaviorTree = behaviorTree.Clone();
         blackboard = behaviorTree.blackboard;
         blackboard.FinalNodeList = null;
+
+        GameManager.Instance.AddEnemyDeath(EnemyCheck);
+        GameManager.Instance.AddGunsound(SoundCheck);
+
+        blackboard.thisUnit.onDeath += () => {
+            GameManager.Instance.DelEnemyDeath(EnemyCheck);
+            GameManager.Instance.DelGunsound(SoundCheck);
+            GameManager.Instance.OnEnemyDeath(blackboard.thisUnit);
+        };
     }
     void Update()
     {
-        CircleRay();
         behaviorTree.Update();
     }
 
-    private bool ViewCheck(int idx)
+    void FixedUpdate()
     {
-        int layerMapMask = 1 << LayerMask.NameToLayer("Map");
-        var subvec = (Vector2)hits[idx].transform.position - (Vector2)transform.position;// ray2d=>tartget_ray2d[index_player]
+        CircleRay();
+    }
+
+    private bool ViewCheck(Collider2D hit)
+    {
+        int layerMapMask = 1 << LayerMask.NameToLayer("Map") | 1 << LayerMask.NameToLayer("Wall");
+        var subvec = (Vector2)hit.transform.position - (Vector2)transform.position;// ray2d=>tartget_ray2d[index_player]
+        float deg = Mathf.Atan2(subvec.y, subvec.x);//mathf.de
+        deg *= Mathf.Rad2Deg;
+        bool inAngle = 180-viewAngle*0.5f < MathF.Abs(deg) || Mathf.Abs(deg) < viewAngle*0.5f;
+        bool isForword = Mathf.Sign(subvec.normalized.x)>0&&!spriteRenderer.flipX ? true : Mathf.Sign(subvec.normalized.x)<0&&spriteRenderer.flipX ? true : false;
+        if((subvec.magnitude <= viewInnerRange || (subvec.magnitude <= viewOuterRange && inAngle && isForword))
+            && !Physics2D.Raycast(transform.position, subvec.normalized, subvec.magnitude, layerMapMask))
+        {                
+            return true;
+        }
+        else return false;
+    }
+    private bool ViewCheck(Vector2 pos)
+    {
+        int layerMapMask = 1 << LayerMask.NameToLayer("Map") | 1 << LayerMask.NameToLayer("Wall");
+        var subvec = pos - (Vector2)transform.position;// ray2d=>tartget_ray2d[index_player]
         float deg = Mathf.Atan2(subvec.y, subvec.x);//mathf.de
         deg *= Mathf.Rad2Deg;
         bool inAngle = 180-viewAngle*0.5f < MathF.Abs(deg) || Mathf.Abs(deg) < viewAngle*0.5f;
@@ -71,65 +100,68 @@ public class EnemyController : MonoBehaviour
             blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Default;
             return;
         }
-        int layerMask = 1 << LayerMask.NameToLayer("Enemy") | 1 << LayerMask.NameToLayer("GunSound") | 1 << LayerMask.NameToLayer("Player");//enemy와 gunsound 객체 총알이 만약 바닥에 박히면 gunsound객체를 생성했다가 일정시간 이후 지우는식
-        hits = Physics2D.CircleCastAll(transform.position, distance, Vector2.zero, 0, layerMask);//죽은 적군 찾는 변수
+        int layerMask = 1 << LayerMask.NameToLayer("Player");//enemy와 gunsound 객체 총알이 만약 바닥에 박히면 gunsound객체를 생성했다가 일정시간 이후 지우는식
+        var hit = Physics2D.OverlapCircle(transform.position, distance, layerMask);//죽은 적군 찾는 변수
 
-        if(hits.Length<=0) return;
-
-        int index_player = -1;
-        int index_enemy = -1;
-        int index_gunsound = -1;
-        int idx = 0;
-
-        foreach(RaycastHit2D ray in hits)
+        if(!hit) return;
+        if(hit.transform.GetComponent<UnitBase>()?.UnitState == UnitState.Death)
         {
-            switch(ray.transform.tag)
-            {
-                case "Player": index_player = idx;
-                break;
-                case "Enemy": if(hits[idx].transform.GetComponent<EnemyUnit>() != blackboard.thisUnit) index_enemy = idx;
-                break;
-                case "GunSound": index_gunsound = idx;
-                break;
-            }
-            idx++;
+            blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Default;
+            blackboard.target = null;
         }
-
-        bool isTrigger = false;
-
-        if(index_player>-1)
+        else if(blackboard.enemy_state.stateCase != Blackboard.Enemy_State.StateCase.Chase && blackboard.target != hit.transform && ViewCheck(hit))
         {
-            if(hits[index_player].transform.GetComponent<Player>().ChagedForm.UnitState == UnitState.Death)
-            {
-                blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Default;
-                blackboard.target = null;
-                isTrigger = true;
-            }
-            else if(ViewCheck(index_player) && blackboard.target!= hits[index_player].transform)
-            {                
-                blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Chase;
-                blackboard.target = hits[index_player].transform;
-                blackboard.enemy_state.Increase_Sight++;
-                isTrigger = true;
-            }
+            blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Chase;
+            blackboard.target = hit.transform;
+            blackboard.enemy_state.Increase_Sight++;
         }
-        if(!isTrigger && index_enemy>-1 && blackboard.enemy_state.stateCase != Blackboard.Enemy_State.StateCase.Chase && hits[index_enemy].transform.GetComponent<UnitBase>().UnitState == UnitState.Death && ViewCheck(index_enemy))
+    }
+
+    private void EnemyCheck(EnemyUnit enemy)
+    {
+        if(blackboard.enemy_state.stateCase == Blackboard.Enemy_State.StateCase.Chase && enemy == blackboard.thisUnit) return;
+
+        if(ViewCheck(enemy.transform.position))
         {               
+            if(GameManager.Instance.player.GetComponent<Player>().ChagedForm.UnitState == UnitState.Death) return;
             blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Chase;
             blackboard.target = GameManager.Instance.player.transform;
             blackboard.enemy_state.Increase_Sight++;
-            isTrigger = true;
         }
-        if(!isTrigger && index_gunsound>-1 && blackboard.enemy_state.stateCase != Blackboard.Enemy_State.StateCase.Chase)
+
+    }
+
+    private void SoundCheck(Transform transform, Vector2 pos, Vector2 size)
+    {
+        if(blackboard.enemy_state.stateCase == Blackboard.Enemy_State.StateCase.Chase) return;
+
+        var subvec = pos - (Vector2)transform.position;
+        if(subvec.magnitude <= viewInnerRange + (size.x * 0.5f))
         {
-            var subvec = (Vector2)hits[index_gunsound].transform.position - (Vector2)transform.position;
-            if(subvec.magnitude <= viewInnerRange + hits[index_gunsound].collider.bounds.extents.x)
-            {
-                blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Alert;
-                blackboard.target = hits[index_gunsound].transform;
-                blackboard.enemy_state.Increase_Sight++;
-                isTrigger = true;
-            }
+            blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Alert;
+            blackboard.target = transform;
+            blackboard.enemy_state.Increase_Sight++;
         }
     }
+
+#if UNITY_EDITOR
+    public bool showRange;
+    void OnDrawGizmos()
+    {
+        if(!showRange || !EditorApplication.isPlaying) return;
+
+        Handles.color = Color.red;
+        Vector3 vec = spriteRenderer.flipX ? Vector3.left : Vector3.right;
+        Vector3 startInner = Quaternion.Euler(0, 0, viewAngle*0.5f) * vec * viewInnerRange;
+        Vector3 endInner = Quaternion.Euler(0, 0, -viewAngle*0.5f) * vec * viewInnerRange;
+        Vector3 startOuter = Quaternion.Euler(0, 0, viewAngle*0.5f) * vec * viewOuterRange;
+        Vector3 endOuter = Quaternion.Euler(0, 0, -viewAngle*0.5f) * vec * viewOuterRange;
+
+        Handles.DrawWireArc(transform.position, Vector3.forward, startInner, 360-viewAngle, viewInnerRange);
+        Handles.DrawWireArc(transform.position, Vector3.forward, endInner, viewAngle, viewOuterRange);
+
+        Handles.DrawLine(transform.position + startInner, transform.position + startOuter);
+        Handles.DrawLine(transform.position + endInner, transform.position + endOuter);
+    }
+#endif
 }

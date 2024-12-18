@@ -6,6 +6,8 @@ using UnityEngine.Timeline;
 
 public class LoopController : MonoBehaviour
 {
+    [Tooltip("체크 하면 hold 안 걸림")]
+    public bool noHold = false;
     PlayableDirector playableDirector;
     PlayableDirector LoopDir;
     public double time = 0;
@@ -70,7 +72,7 @@ public class LoopController : MonoBehaviour
 
     public void SetSkip()
     {
-        Debug.Log("loop controller setskip");
+        //Debug.Log("loop controller setskip");
         InteractionEvent.Instance.SetSkip(true);
     }
 
@@ -79,7 +81,7 @@ public class LoopController : MonoBehaviour
         //backgroundImage.SetActive(false);
         if (isHold == 2)
         {
-            Debug.Log("isHold");
+            //Debug.Log("isHold");
             isHold = 0;
             holdListNum++;
             playableDirector.playableGraph.GetRootPlayable(0).SetDuration(playableDirector.duration);
@@ -87,7 +89,7 @@ public class LoopController : MonoBehaviour
         }
         if (isHold == 1)
         {
-            Debug.Log("end loop");
+            //Debug.Log("end loop");
             //LoopDir.Stop();
             isHold = 0;
             stopListNum++;
@@ -141,7 +143,7 @@ public class LoopController : MonoBehaviour
                 }
             }
         }
-        Debug.Log("시그널 개수 " + count);
+        //Debug.Log("시그널 개수 " + count);
         stop_time.Sort();
         loop_time.Sort();
         hold_time.Sort();
@@ -170,16 +172,19 @@ public class LoopController : MonoBehaviour
             }
         }
 
-   
 
-        if (playableDirector.time >= hold_time[holdListNum])//현재 이 부분에서 자꾸 빨간 에러 뜨는데 컴파일러 상에서는 문제없어보임 나중에 빌드로 확인 필요 2024.10.23->loop부분을 다 지우니 에러 없어짐 2024.11.04 
+        if (!noHold)
         {
-            isHold = 2;
-            playableDirector.playableGraph.GetRootPlayable(0).SetDuration(hold_time[holdListNum]);
-            //backgroundImage.SetActive(true);
-            Debug.Log("set ishold");
-            //playableDirector.time = hold_time[holdListNum];
+            if (playableDirector.time >= hold_time[holdListNum])//현재 이 부분에서 자꾸 빨간 에러 뜨는데 컴파일러 상에서는 문제없어보임 나중에 빌드로 확인 필요 2024.10.23->loop부분을 다 지우니 에러 없어짐 2024.11.04 
+            {
+                isHold = 2;
+                playableDirector.playableGraph.GetRootPlayable(0).SetDuration(hold_time[holdListNum]);
+                //backgroundImage.SetActive(true);
+                //Debug.Log("set ishold");
+                //playableDirector.time = hold_time[holdListNum];
+            }
         }
+
     }
     private void Update()
     {

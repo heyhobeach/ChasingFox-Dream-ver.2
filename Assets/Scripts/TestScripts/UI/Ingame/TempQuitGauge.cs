@@ -10,13 +10,20 @@ public class TempQuitGauge : MonoBehaviour
     [SerializeField] private float holdTime = 1.5f;
     private float holdingTime;
 
+    private void Start() => StartCoroutine(MyUpdate());
+
     // Update is called once per frame
-    void Update()
+    private IEnumerator MyUpdate()
     {
-        if(Input.GetKey(KeyCode.Escape)) holdingTime += Time.deltaTime;
-        else holdingTime -= Time.deltaTime;
-        if(holdingTime < 0) holdingTime = 0;
-        gauge.fillAmount = holdingTime;
-        if(holdingTime >= holdTime) Application.Quit();
+        while(true)
+        {
+            if(Input.GetKey(KeyCode.Escape) && holdingTime < holdTime) holdingTime += Time.unscaledDeltaTime;
+            else holdingTime -= Time.unscaledDeltaTime;
+            if(holdingTime < 0) holdingTime = 0;
+            gauge.fillAmount = holdingTime;
+            if(holdingTime >= holdTime) Application.Quit();
+
+            yield return new WaitForEndOfFrame();
+        }
     }
 }

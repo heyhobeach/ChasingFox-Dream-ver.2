@@ -25,7 +25,7 @@ public class EventTrigger : MonoBehaviour
     public bool limit;
     public EventList[] eventLists;
     protected int eventIdx = 0;
-    protected bool used { get => eventTriggerData.used; set => eventTriggerData.used = value; }
+    public bool used { get => eventTriggerData.used; set => eventTriggerData.used = value; }
     protected bool eventLock;
     private Action action;
 
@@ -45,7 +45,7 @@ public class EventTrigger : MonoBehaviour
         }
         if(eventIdx >= eventLists.Length)
         {
-            used = true;
+            if(limit) used = true;
             eventIdx = 0;
             action = null;
         }
@@ -85,6 +85,7 @@ public class EventTrigger : MonoBehaviour
             eventTriggerData = asset;
         }
         GetComponent<BoxCollider2D>().isTrigger = true;
+        if(GameManager.Instance) GameManager.Instance.eventTriggers.Add(this);
     }
 
     private void Update()

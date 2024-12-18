@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    public const float lifeTime = 0.945f;
+    public float lifeTime = 0.945f;
     public int life = 1;
 
     public GameObject effectObj;
@@ -48,7 +48,7 @@ public class Bullet : MonoBehaviour
     }
     private void Update()
     {
-        startTime += Time.unscaledDeltaTime;
+        startTime += Time.deltaTime;
         if(startTime >= lifeTime)
         {
             Destroy(gameObject);
@@ -83,8 +83,11 @@ public class Bullet : MonoBehaviour
             Func<Collider2D, Vector2> func = null;
             func += DamagedFeedBack;
             if(temp != null) isDamaged = temp.GetDamage(damage,collision,func);
-            if (isDamaged) Destroy(gameObject);
-            BulletSound();
+            if (isDamaged) 
+            {
+                Destroy(gameObject);
+                BulletSound();
+            }
             life--;
         }
         //if (collision.gameObject.tag == "FallingTrap")//여기가 작동 안하는듯 충돌이 안 일어남

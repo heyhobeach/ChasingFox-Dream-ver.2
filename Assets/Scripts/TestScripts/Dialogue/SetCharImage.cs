@@ -15,40 +15,31 @@ public class SetCharImage : MonoBehaviour
     public Image main_charactor;
     public Image sub_charactor;
 
-     private CharImageData mainData;
-    private CharImageData subData; 
 
-    ScriptableObject[] char_image_list;
+
+
+    /// <summary>
+    /// 원래는 해당 변수들은 mainData와 subData로 구별해서 좌측에 주인공 무리들이 뜬다면 미리 셋팅 해 두려고 만든 스크립트임 다만 현재 명령어 시스템으로 변경되어서 해당 변수는 사용하지 않는중임
+    /// </summary>
+    /// 
+    //private CharImageData mainData;
+    //private CharImageData subData; 
+    //ScriptableObject[] char_image_list;
 
     public string color_code = "5C5C5C"; 
     // Start is called before the first frame update
     void Start()
     {
-        char_image_list = GetComponent<CharactorImageList>().ImageList;
-        mainData=main_charactor.transform.GetComponent<CharImageData>();
-        subData=sub_charactor.transform.GetComponent<CharImageData>();
+        //char_image_list = GetComponent<CharactorImageList>().ImageList;
+        //mainData=main_charactor.transform.GetComponent<CharImageData>();
+        //subData=sub_charactor.transform.GetComponent<CharImageData>();
         color_code = "#" + color_code;
     }
 
     // Update is called once per frame
     void Update()
-    {
-        //if (main_charactor==null)
-        //{
-        //    Debug.Log("main_charactor null");
-        //}
-        //else
-        //{
-        //    Debug.Log(main_charactor.transform.name);
-        //}
-        //if (sub_charactor == null)
-        //{
-        //    Debug.Log("sub_charactor null");
-        //}
-        //else
-        //{
-        //    Debug.Log(sub_charactor.gameObject.transform.name);
-        //}
+    { 
+
     }
 
     /// <summary>
@@ -58,8 +49,8 @@ public class SetCharImage : MonoBehaviour
     {
 
         Sprite image_sprite = null;//이미지 받아오는 변수
-        Debug.Log("위치" + image_dir);
-        Debug.Log("이미지명" + image_name);
+        //Debug.Log("위치" + image_dir);
+        //Debug.Log("이미지명" + image_name);
         image_name = string.Format("illustration\\{0}", image_name);
         image_sprite = Resources.Load<Sprite>(image_name);
         Image target = null;
@@ -69,7 +60,7 @@ public class SetCharImage : MonoBehaviour
             Debug.Log("Image Null");
             throw new Exception("이미지가 없습니다. 이름 확인 혹은 파일 다시 확인 해 주세요");
         }
-        Debug.Log(image_dir);
+        //Debug.Log(image_dir);
         if (image_dir.Equals("left"))//여기서 문제 지금 왼쪽 오른쪽 텍스트가 구별 안되는중
         {
             //Debug.Log(image_dir+"left");
@@ -110,13 +101,13 @@ public class SetCharImage : MonoBehaviour
 
     public void SetDisable( Image charactor)//지금 두번 호출 중임
     {
-        Debug.Log("setdisable");
+        //Debug.Log("setdisable");
         charactor.color = Color.clear;
     }
 
     public async Awaitable ImageAnim()//해당 ui나오는중에는 입력이 되면 안됨 여기서 코루틴 작업들 진행 그러면 해당 작업이 끝나고 나서 뒤에 작업들이 진행이 됨
     {                                   //여기서 위치가 맞게 나옴
-        Debug.Log("비동기중");
+        //Debug.Log("비동기중");
         float time = 0;
         float duration = 3f;
         float yPox = transform.GetChild(0).GetChild(0).transform.GetComponent<RectTransform>().rect.height;
@@ -129,7 +120,7 @@ public class SetCharImage : MonoBehaviour
             await Awaitable.NextFrameAsync();
         }
         main_rect.position = new Vector3(transform.GetComponent<RectTransform>().rect.width * 0.3f / 4, yPox / 2, 0);
-        Debug.Log("5초끝");
+        //Debug.Log("5초끝");
 
     }
 

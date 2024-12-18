@@ -1,7 +1,7 @@
 public interface IBaseController
 {
-    public void AddController() => GameManager.PushController(this);
-    public void RemoveController() => GameManager.PopController(this);
+    public void AddController() => ControllerManager.PushController(this);
+    public void RemoveController() => ControllerManager.PopController(this);
 
     public void Controller();
 }

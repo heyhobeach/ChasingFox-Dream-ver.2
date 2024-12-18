@@ -23,11 +23,16 @@ public class PopupManager : MonoBehaviour
     }
 
     [SerializeField] private GameObject deathPopup;
+    [SerializeField] private GameObject pausePopup;
     [SerializeField] private GameObject quitInfo;
 
     void Awake()
     {
-        if(instance != null) return;
+        if(instance != null) 
+        {
+            Destroy(gameObject);
+            return;
+        }
         instance = this;
         DontDestroyOnLoad(instance);
     }
@@ -36,6 +41,7 @@ public class PopupManager : MonoBehaviour
     void Start()
     {
         if(deathPopup == null) deathPopup = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Death Popup"), transform);
+        if(pausePopup == null) pausePopup = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Pause Popup"), transform);
         if(quitInfo == null) quitInfo = Instantiate(Resources.Load<GameObject>("Prefabs/UI/DefaultUI"), transform);
         // for(int i  = 0; i < transform.childCount; i++)
         // {
@@ -60,5 +66,9 @@ public class PopupManager : MonoBehaviour
         //Debug.Log(gameObject.name);
         //transform.GetChild(0).gameObject.SetActive(false);
         //Debug.Log(transform.GetChild(0).gameObject.name);  
+    }
+    public void PausePop(bool enabled)
+    {
+        pausePopup.SetActive(enabled);
     }
 }
