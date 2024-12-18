@@ -13,7 +13,9 @@ public class CollectionInteractive : EventTrigger
         //Debug.Log("collection의 내용 입니다" + scriptorbleobj._context);
         //Debug.Log("collection의 위치 입니다" + collider.transform.position.x+","+collider.bounds.center.y + collider.bounds.extents.y);
         //Debug.Log("collection의 위치 입니다" + this.gameObject.transform.position);
-        Vector2 vec=Camera.main.WorldToScreenPoint(this.gameObject.transform.position);
+        Vector2 pos = new Vector2(this.gameObject.transform.position.x, this.gameObject.transform.position.y+collider.bounds.extents.y*2);
+        //pos = new Vector2(this.gameObject.transform.position.x, this.gameObject.transform.position.y);
+        Vector2 vec=Camera.main.WorldToScreenPoint(pos);
         //Debug.Log("스크린 위치 vec"+vec);
         CollectionCanvasController.Instance.SetPosition(vec); 
         CollectionCanvasController.Instance.Popup();
