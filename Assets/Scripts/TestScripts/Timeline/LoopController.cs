@@ -23,6 +23,7 @@ public class LoopController : MonoBehaviour
     private int stopListNum = 0;
     private int loopListNum = 0;
     private int holdListNum = 0;
+    private int noneListNum = 0;
 
     /// <summary>
     /// 현재 상태가 홀드인지 루프인지 판단위한 변수
@@ -43,6 +44,11 @@ public class LoopController : MonoBehaviour
     /// </summary>
     [SerializeField] private List<double> hold_time = new List<double>();
 
+    /// <summary>
+    /// 루프 정지아닌 hold 포인트 해당 포인트는 다른 타임라인으로 이동시 메인 타임라인의 진행상황을 잡고 있기위함
+    /// </summary>
+    [SerializeField] private List<double> none_time = new List<double>();
+
     //public GameObject backgroundImage;
 
     public void setTime(float t)
@@ -52,6 +58,7 @@ public class LoopController : MonoBehaviour
 
     public void SetNone()
     {
+
         this.playableDirector.extrapolationMode = DirectorWrapMode.None;
         ResetValue();
         //Application.targetFrameRate = 60;
@@ -63,9 +70,11 @@ public class LoopController : MonoBehaviour
         stopListNum = 0;
         loopListNum = 0;
         holdListNum = 0;
+        noneListNum = 0;
         stop_time.Clear();
         loop_time.Clear();
-        hold_time.Clear();  
+        hold_time.Clear();
+        none_time.Clear();
         Application.targetFrameRate = 60;
         QualitySettings.vSyncCount = 1;
     }
@@ -85,6 +94,10 @@ public class LoopController : MonoBehaviour
             isHold = 0;
             holdListNum++;
             playableDirector.playableGraph.GetRootPlayable(0).SetDuration(playableDirector.duration);
+            if (holdListNum >= hold_time.Count)
+            {
+                SetNone();
+            }
             return;
         }
         if (isHold == 1)
@@ -107,8 +120,9 @@ public class LoopController : MonoBehaviour
     {
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = fixed_timeline_frame;
-        //this.playableDirector.extrapolationMode = DirectorWrapMode.Hold;
         playableDirector = GetComponent<PlayableDirector>();
+
+        Debug.Log("타임라인 길이" + playableDirector.duration);
         //playableDirector.Evaluate();
         //playableDirector.RebuildGraph();
         //playableDirector.playableGraph.SetTimeUpdateMode(DirectorUpdateMode.Manual);
@@ -137,9 +151,16 @@ public class LoopController : MonoBehaviour
                 }
                 if (marker is SignalEmitter holdSignal)
                 {
-                    if (holdSignal.name == "Hold"||holdSignal.name == "hold")
+                    if (holdSignal.name == "Hold" || holdSignal.name == "hold")
                     {
                         hold_time.Add(holdSignal.time);
+                    }
+                }
+                if (marker is SignalEmitter noneSignal)
+                {
+                    if (noneSignal.name == "None" || noneSignal.name == "none")
+                    {
+                        none_time.Add(noneSignal.time);
                     }
                 }
             }
@@ -148,6 +169,7 @@ public class LoopController : MonoBehaviour
         stop_time.Sort();
         loop_time.Sort();
         hold_time.Sort();
+        none_time.Sort();
     }
     private void Awake()
     {
@@ -161,7 +183,7 @@ public class LoopController : MonoBehaviour
         //playableDirector.time += Time.deltaTime;
         //playableDirector.Evaluate();
 
-        if(stop_time.Count > 1) //추가한부분
+        if (stop_time.Count > 1) //추가한부분
         {
             if (playableDirector.time >= stop_time[stopListNum] - (1 / fixed_timeline_frame / 2))//갑자기 루프타임라인 부분 다 지우니까 현재 부분 문제 발생, 확인해본바 stop_time이 0인곳이 생겨서 생김 따라서 위에 if를 추가했음
             {
@@ -186,11 +208,17 @@ public class LoopController : MonoBehaviour
             }
         }
 
+        if (playableDirector.time >= none_time[noneListNum])
+        {
+            Debug.Log("setnone");
+            SetNone();
+        }
+
     }
     private void Update()
     {
-        if (Input.anyKeyDown && !(Input.GetKeyDown(KeyCode.Escape)||Input.GetKeyDown(KeyCode.LeftArrow) ||Input.GetKeyDown(KeyCode.RightArrow)
-                                                                  ||Input.GetKeyDown(KeyCode.A)||Input.GetKeyDown(KeyCode.D)))
+        if (Input.anyKeyDown && !(Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow)
+                                                                  || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D)))
         {
             Debug.Log("anyKeyDonw");
             if (isHold > 2 || isHold < 1)
