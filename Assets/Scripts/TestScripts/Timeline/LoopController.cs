@@ -23,7 +23,6 @@ public class LoopController : MonoBehaviour
     private int stopListNum = 0;
     private int loopListNum = 0;
     private int holdListNum = 0;
-    private int noneListNum = 0;
 
     /// <summary>
     /// 현재 상태가 홀드인지 루프인지 판단위한 변수
@@ -44,11 +43,6 @@ public class LoopController : MonoBehaviour
     /// </summary>
     [SerializeField] private List<double> hold_time = new List<double>();
 
-    /// <summary>
-    /// 루프 정지아닌 hold 포인트 해당 포인트는 다른 타임라인으로 이동시 메인 타임라인의 진행상황을 잡고 있기위함
-    /// </summary>
-    [SerializeField] private List<double> none_time = new List<double>();
-
     //public GameObject backgroundImage;
 
     public void setTime(float t)
@@ -58,7 +52,6 @@ public class LoopController : MonoBehaviour
 
     public void SetNone()
     {
-
         this.playableDirector.extrapolationMode = DirectorWrapMode.None;
         ResetValue();
         //Application.targetFrameRate = 60;
@@ -70,11 +63,9 @@ public class LoopController : MonoBehaviour
         stopListNum = 0;
         loopListNum = 0;
         holdListNum = 0;
-        noneListNum = 0;
         stop_time.Clear();
         loop_time.Clear();
-        hold_time.Clear();
-        none_time.Clear();
+        hold_time.Clear();  
         Application.targetFrameRate = 60;
         QualitySettings.vSyncCount = 1;
     }
@@ -94,10 +85,6 @@ public class LoopController : MonoBehaviour
             isHold = 0;
             holdListNum++;
             playableDirector.playableGraph.GetRootPlayable(0).SetDuration(playableDirector.duration);
-            if (holdListNum >= hold_time.Count)
-            {
-                SetNone();
-            }
             return;
         }
         if (isHold == 1)
@@ -121,8 +108,6 @@ public class LoopController : MonoBehaviour
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = fixed_timeline_frame;
         playableDirector = GetComponent<PlayableDirector>();
-
-        Debug.Log("타임라인 길이" + playableDirector.duration);
         //playableDirector.Evaluate();
         //playableDirector.RebuildGraph();
         //playableDirector.playableGraph.SetTimeUpdateMode(DirectorUpdateMode.Manual);
@@ -156,6 +141,7 @@ public class LoopController : MonoBehaviour
                         hold_time.Add(holdSignal.time);
                     }
                 }
+<<<<<<< HEAD
                 if (marker is SignalEmitter noneSignal)
                 {
                     if (noneSignal.name == "None" || noneSignal.name == "none")
@@ -163,13 +149,14 @@ public class LoopController : MonoBehaviour
                         none_time.Add(noneSignal.time);
                     }
                 }
+=======
+>>>>>>> parent of 82be4bba (수정)
             }
         }
         //Debug.Log("시그널 개수 " + count);
         stop_time.Sort();
         loop_time.Sort();
         hold_time.Sort();
-        none_time.Sort();
     }
     private void Awake()
     {
@@ -206,12 +193,6 @@ public class LoopController : MonoBehaviour
                 //Debug.Log("set ishold");
                 //playableDirector.time = hold_time[holdListNum];
             }
-        }
-
-        if (playableDirector.time >= none_time[noneListNum])
-        {
-            Debug.Log("setnone");
-            SetNone();
         }
 
     }
