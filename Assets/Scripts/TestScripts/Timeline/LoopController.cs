@@ -107,6 +107,7 @@ public class LoopController : MonoBehaviour
     {
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = fixed_timeline_frame;
+        //this.playableDirector.extrapolationMode = DirectorWrapMode.Hold;
         playableDirector = GetComponent<PlayableDirector>();
         //playableDirector.Evaluate();
         //playableDirector.RebuildGraph();
