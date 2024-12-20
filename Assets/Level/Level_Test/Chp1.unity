@@ -704,7 +704,7 @@ PlayableDirector:
   serializedVersion: 3
   m_PlayableAsset: {fileID: 11400000, guid: c934946001928f74099b026cf1fd7bb6, type: 2}
   m_InitialState: 0
-  m_WrapMode: 0
+  m_WrapMode: 2
   m_DirectorUpdateMode: 1
   m_InitialTime: 0
   m_SceneBindings:
@@ -879,7 +879,6 @@ MonoBehaviour:
   stop_time: []
   loop_time: []
   hold_time: []
-  none_time: []
 --- !u!1 &85435871
 GameObject:
   m_ObjectHideFlags: 0
@@ -1349,7 +1348,6 @@ MonoBehaviour:
   stop_time: []
   loop_time: []
   hold_time: []
-  none_time: []
 --- !u!114 &107771774
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22976,7 +22974,6 @@ MonoBehaviour:
   stop_time: []
   loop_time: []
   hold_time: []
-  none_time: []
 --- !u!1001 &852292036
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26357,7 +26354,6 @@ MonoBehaviour:
   stop_time: []
   loop_time: []
   hold_time: []
-  none_time: []
 --- !u!114 &1017276239
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31565,7 +31561,7 @@ PlayableDirector:
   - key: {fileID: -7726700693749848416, guid: 7041116ee8376ee45abdd9bdfa0596e1, type: 2}
     value: {fileID: 85435872}
   - key: {fileID: 5721593909819551844, guid: 7041116ee8376ee45abdd9bdfa0596e1, type: 2}
-    value: {fileID: 1219963443}
+    value: {fileID: 0}
   - key: {fileID: 8484830624993107089, guid: 7041116ee8376ee45abdd9bdfa0596e1, type: 2}
     value: {fileID: 625677795}
   - key: {fileID: 1805801870116062293, guid: 7041116ee8376ee45abdd9bdfa0596e1, type: 2}
@@ -32094,7 +32090,19 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
     - m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 0}
+          m_TargetAssemblyTypeName: LoopController, Assembly-CSharp
+          m_MethodName: SetNone
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
     - m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 0}
