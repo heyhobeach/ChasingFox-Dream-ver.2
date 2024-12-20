@@ -148,6 +148,10 @@ public class LoopController : MonoBehaviour
         stop_time.Sort();
         loop_time.Sort();
         hold_time.Sort();
+
+
+
+        //
     }
     private void Awake()
     {
