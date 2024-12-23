@@ -397,7 +397,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &23739583
 Transform:
   m_ObjectHideFlags: 0
@@ -10956,6 +10956,7 @@ MonoBehaviour:
   stop_time: []
   loop_time: []
   hold_time: []
+  none_time: []
 --- !u!1 &315724700
 GameObject:
   m_ObjectHideFlags: 0
@@ -11876,6 +11877,7 @@ MonoBehaviour:
   stop_time: []
   loop_time: []
   hold_time: []
+  none_time: []
 --- !u!114 &372171832
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11918,24 +11920,6 @@ MonoBehaviour:
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    lockTime: 0
-  - prerequisites: {fileID: 372171833}
-    keyCode: 0
-    action:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 525140351}
-          m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-          m_MethodName: LoadScene
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: Chp1
             m_BoolArgument: 0
           m_CallState: 2
     lockTime: 0
@@ -12016,6 +12000,7 @@ MonoBehaviour:
   currentObj: {fileID: 1420599977}
   branch1Timeline: {fileID: 1476177440}
   branch2Timeline: {fileID: 473144932}
+  branch_brutality: 100
 --- !u!1 &387456103
 GameObject:
   m_ObjectHideFlags: 0
@@ -13087,6 +13072,7 @@ MonoBehaviour:
   stop_time: []
   loop_time: []
   hold_time: []
+  none_time: []
 --- !u!1 &481453046
 GameObject:
   m_ObjectHideFlags: 0
@@ -71431,6 +71417,7 @@ MonoBehaviour:
   stop_time: []
   loop_time: []
   hold_time: []
+  none_time: []
 --- !u!114 &1476177443
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72298,6 +72285,7 @@ MonoBehaviour:
   stop_time: []
   loop_time: []
   hold_time: []
+  none_time: []
 --- !u!4 &1540021705
 Transform:
   m_ObjectHideFlags: 0
@@ -75117,11 +75105,11 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 152.1
+  near clip plane: 0.1
+  far clip plane: 5000
+  field of view: 40
   orthographic: 1
-  orthographic size: 3.5
+  orthographic size: 10
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -75146,7 +75134,7 @@ Transform:
   m_GameObject: {fileID: 1705891306}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 152.96, y: -2.1850765, z: -4.274467}
+  m_LocalPosition: {x: 109.50467, y: -0.9327125, z: -41.482094}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -77955,11 +77943,11 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 152.1
+  near clip plane: 0.1
+  far clip plane: 5000
+  field of view: 40
   orthographic: 1
-  orthographic size: 3.5
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -77984,7 +77972,7 @@ Transform:
   m_GameObject: {fileID: 1900477501}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 143.29143, y: -0.37633157, z: -6.43062}
+  m_LocalPosition: {x: 99.83609, y: 0.8760324, z: -43.63825}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
