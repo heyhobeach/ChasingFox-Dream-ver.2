@@ -19,7 +19,6 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     /// </summary>
     public PlayerUnit[] forms;
 
-
     /// <summary>
     /// 현재 폼을 담는 변수
     /// </summary>
@@ -30,6 +29,8 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     public int maxHealth { get => _maxHealth; set => _maxHealth = value; }
     public int health { get; set; }
     public bool invalidation { get; set; }
+
+    [SerializeField] private GameObject playerUI;
 
     public static GameObject pObject;
 
@@ -362,6 +363,8 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         {
             Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Bullet"), false);
         }
+
+        playerUI.SetActive(!GameManager.Instance.isPaused);
 
         //OverlapTest();
     }
