@@ -32,7 +32,7 @@ public class FixedEventTrigger : EventTrigger, IBaseController
         {
             ((IBaseController)this).RemoveController();
             eventIdx = 0;
-            PageManger.Instance.AddClearList(eventTriggerData);
+            if(limit) used = true;
         }
     }
 
