@@ -397,7 +397,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &23739583
 Transform:
   m_ObjectHideFlags: 0
@@ -10956,6 +10956,7 @@ MonoBehaviour:
   stop_time: []
   loop_time: []
   hold_time: []
+  none_time: []
 --- !u!1 &315724700
 GameObject:
   m_ObjectHideFlags: 0
@@ -11822,7 +11823,7 @@ PlayableDirector:
   serializedVersion: 3
   m_PlayableAsset: {fileID: 11400000, guid: 5484ac553bce146a48e97bf6ec4dfbb0, type: 2}
   m_InitialState: 0
-  m_WrapMode: 0
+  m_WrapMode: 2
   m_DirectorUpdateMode: 1
   m_InitialTime: 0
   m_SceneBindings:
@@ -11868,7 +11869,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1a04371ec0fd014399b3963d7075aab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noHold: 0
+  noHold: 1
   time: 0
   fixed_timeline_frame: 30
   timeline: {fileID: 11400000, guid: 5484ac553bce146a48e97bf6ec4dfbb0, type: 2}
@@ -11876,6 +11877,7 @@ MonoBehaviour:
   stop_time: []
   loop_time: []
   hold_time: []
+  none_time: []
 --- !u!114 &372171832
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11918,24 +11920,6 @@ MonoBehaviour:
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    lockTime: 0
-  - prerequisites: {fileID: 372171833}
-    keyCode: 0
-    action:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 525140351}
-          m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-          m_MethodName: LoadScene
-          m_Mode: 5
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: Chp1
             m_BoolArgument: 0
           m_CallState: 2
     lockTime: 0
@@ -12016,6 +12000,7 @@ MonoBehaviour:
   currentObj: {fileID: 1420599977}
   branch1Timeline: {fileID: 1476177440}
   branch2Timeline: {fileID: 473144932}
+  branch_brutality: 100
 --- !u!1 &387456103
 GameObject:
   m_ObjectHideFlags: 0
@@ -13087,6 +13072,7 @@ MonoBehaviour:
   stop_time: []
   loop_time: []
   hold_time: []
+  none_time: []
 --- !u!1 &481453046
 GameObject:
   m_ObjectHideFlags: 0
@@ -71431,6 +71417,7 @@ MonoBehaviour:
   stop_time: []
   loop_time: []
   hold_time: []
+  none_time: []
 --- !u!114 &1476177443
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72298,6 +72285,7 @@ MonoBehaviour:
   stop_time: []
   loop_time: []
   hold_time: []
+  none_time: []
 --- !u!4 &1540021705
 Transform:
   m_ObjectHideFlags: 0
