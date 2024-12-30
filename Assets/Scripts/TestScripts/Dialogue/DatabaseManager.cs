@@ -8,7 +8,7 @@ public class DatabaseManager : MonoBehaviour
     public static DatabaseManager instance;//나중에 싱글턴 될듯
 
     [DisableInspector] public string csv_FileName;
-    public enum Lang//언어 설정
+    enum Lang//언어 설정
     {
         KOR,
         ENG
@@ -35,9 +35,7 @@ public class DatabaseManager : MonoBehaviour
         {
             instance = this;
             theParser = GetComponent<DialogueParser>();
-
             //if(csv_FileName.Equals("")) csv_FileName = "테스트파일";
-            eLang = GetLangEnum(SystemManager.Instance.optionData.language);
             csv_FileName= string.Format("{0}\\{1}\\Chapter{2}\\Chapter{3}", "FindTest", CheckLangugea(eLang), chapter,chapter);
             //Dialogue[] dialogues =theParser.Parse(csv_FileName);//여기서 지금 대화 모든 내용을 다 파싱 한 상태//주석 풀고 사용 하면 됨
             //csv_FileName = "테스트파일";//테스트용 csv파일 주석 풀면 실행됨
@@ -61,31 +59,6 @@ public class DatabaseManager : MonoBehaviour
         }
         return null;
 
-    }
-
-    public static Lang GetLangEnum(string s)
-    {
-        switch (s)
-        {
-            case "KOR":
-                return Lang.KOR;
-            case "ENG":
-                return Lang.ENG;
-        }
-        return Lang.KOR;
-    }
-
-    public void ChangeLanguage(Lang lang)
-    {
-        eLang = lang;
-        csv_FileName= string.Format("{0}\\{1}\\Chapter{2}\\Chapter{3}", "FindTest", CheckLangugea(eLang), chapter,chapter);
-        //Dialogue[] dialogues =theParser.Parse(csv_FileName);//여기서 지금 대화 모든 내용을 다 파싱 한 상태//주석 풀고 사용 하면 됨
-        //csv_FileName = "테스트파일";//테스트용 csv파일 주석 풀면 실행됨
-        Dialogue[] dialogues =theParser.Parse(csv_FileName);//여기서 지금 대화 모든 내용을 다 파싱 한 상태//주석 풀고 사용 하면 됨
-        for (int i =0;i<dialogues.Length;i++)
-        {
-            dialogueDic.Add(i +1, dialogues[i]);
-        }
     }
 
     public Dialogue[] GetDialogues(int startNum ,int endNum)
