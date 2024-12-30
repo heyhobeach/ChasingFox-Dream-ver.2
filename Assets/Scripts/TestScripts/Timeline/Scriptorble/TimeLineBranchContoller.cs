@@ -10,33 +10,17 @@ public class TimeLineBranchContoller : MonoBehaviour
 
     public GameObject branch1Timeline;
     public GameObject branch2Timeline;
-
-    [SerializeField]
-    private int branch_brutality = 50;
     public void branchfunc(TimeLineBranchScriptorble branchscriptorble)
     {
-
         PlayableDirector currentDirector = this.gameObject.GetComponent<PlayableDirector>();
-
         currentDirector.Stop();
         currentObj.SetActive(false);
-
+        branch1Obj.SetActive(true);
         //branchscriptorble.branch1.
         //currentDirector.playableAsset = branchscriptorble.branch1;
         //currentDirector.Play();
-        if(branch_brutality > GameManager.Brutality)
-        {
-            branch1Obj.SetActive(true);
-            branch1Timeline.SetActive(true);
-            branch1Timeline.GetComponent<PlayableDirector>().Play();
-        }
-        else
-        {
-            branch2Obj.SetActive(true);
-            branch2Timeline.SetActive(true);
-            branch2Timeline.GetComponent<PlayableDirector>().Play();
-        }
 
+        branch1Timeline.GetComponent<PlayableDirector>().Play();
         //
     }
 }

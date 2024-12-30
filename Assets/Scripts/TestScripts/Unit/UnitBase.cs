@@ -119,14 +119,6 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteResolver = GetComponent<SpriteResolver>();
         anim = GetComponent<Animator>();
-        // 콜라이더 크기(절반) 계산
-        var ect = gameObject.activeSelf;
-        gameObject.SetActive(true);
-        boxSizeX = gameObject.GetComponent<Collider2D>().bounds.extents.x;
-        boxSizeY = gameObject.GetComponent<Collider2D>().bounds.extents.y;
-        boxOffsetX = gameObject.GetComponent<Collider2D>().offset.x;
-        boxOffsetY = gameObject.GetComponent<Collider2D>().offset.y;
-        gameObject.SetActive(ect);
         
         unitState = UnitState.Default;
         anim.SetFloat("dashMultiplier", dashDuration > 0 ? 1/dashDuration : 1);
@@ -145,7 +137,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         else anim.SetBool("isAir", false);
         if(Mathf.Abs(vcForce) > 0.2f) anim.SetFloat("vcForce", vcForce);
         else anim.SetFloat("vcForce", 0);
-        if(Mathf.Abs(hzForce) < 0.1f || Physics2D.Raycast(transform.position, Vector2.right*Mathf.Sign(hzForce), boxSizeX*1.1f, 1<<LayerMask.NameToLayer("Map")))
+        if(Mathf.Abs(hzForce) < 0.1f)
         {
             anim.SetFloat("hzForce", 0);
             anim.SetBool("isRun", false);
@@ -163,7 +155,14 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         if(spriteResolver.enabled) spriteResolver.ResolveSpriteToSpriteRenderer();
     }
     
-    protected virtual void OnEnable() => onEnable?.Invoke();
+    protected virtual void OnEnable()
+    {
+        boxSizeX = gameObject.GetComponent<Collider2D>().bounds.extents.x;
+        boxSizeY = gameObject.GetComponent<Collider2D>().bounds.extents.y;
+        boxOffsetX = gameObject.GetComponent<Collider2D>().offset.x;
+        boxOffsetY = gameObject.GetComponent<Collider2D>().offset.y;
+        onEnable?.Invoke();
+    }
 
     /// <summary>
     /// 폼체인지 시 초기화 해야할 작업을 수행
@@ -226,7 +225,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         
         anim.SetTrigger("death");
         anim.SetBool("isDeath", true);
-        GetComponent<Collider2D>().enabled = false;
+        // GetComponent<Collider2D>().enabled = false;
         if(longRangeUnit) shootingAnimationController.NomalAni();
         unitState = UnitState.Death;
         onDeath?.Invoke();
