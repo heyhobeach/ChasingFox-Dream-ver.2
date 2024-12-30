@@ -56,19 +56,13 @@ namespace BehaviourTree
             try
             {
                 Vector2 startPos = Vector2.zero;
-                if(blackboard.FinalNodeList != null && blackboard.FinalNodeList.Count > blackboard.nodeIdx-1)
+                if(blackboard.FinalNodeList != null && blackboard.FinalNodeList.Count > 0)
                 {
-                    blackboard.nodeIdx--;
+                    if(blackboard.FinalNodeList.Count-1 < blackboard.nodeIdx) blackboard.nodeIdx = blackboard.FinalNodeList.Count-1;
                     if(blackboard.nodeIdx < 0) blackboard.nodeIdx = 0;
-                    var curNode = blackboard.FinalNodeList[blackboard.nodeIdx];
-                    startPos = new Vector2(curNode.x, curNode.y);
-                }
-                else startPos = blackboard.thisUnit.transform.position - (Vector3.down * (blackboard.thisUnit.BoxSizeY + 0.1f));
-                if(blackboard.FinalNodeList != null)
-                {
-                    if(blackboard.FinalNodeList.Count <= blackboard.nodeIdx) blackboard.nodeIdx = 0;
                     startPos = new Vector2(blackboard.FinalNodeList[blackboard.nodeIdx].x, blackboard.FinalNodeList[blackboard.nodeIdx].y);
                 }
+                else startPos = blackboard.thisUnit.transform.position;
                 var targetPos = blackboard.target.position;
                 List<GameManager.Node> nodes = null;
                 await Task.Run(() => {
@@ -79,7 +73,7 @@ namespace BehaviourTree
                 {
                     blackboard.FinalNodeList = nodes;
                     blackboard.nodeIdx = 0;
-                    while((new Vector3(nodes[blackboard.nodeIdx].x, nodes[blackboard.nodeIdx].y)-blackboard.thisUnit.transform.position).magnitude > (new Vector3(nodes[blackboard.nodeIdx+1].x, nodes[blackboard.nodeIdx+1].y)-blackboard.thisUnit.transform.position).magnitude) blackboard.nodeIdx++;
+                    while(blackboard.nodeIdx+1 < nodes.Count && (new Vector3(nodes[blackboard.nodeIdx].x, nodes[blackboard.nodeIdx].y)-blackboard.thisUnit.transform.position).magnitude > (new Vector3(nodes[blackboard.nodeIdx+1].x, nodes[blackboard.nodeIdx+1].y)-blackboard.thisUnit.transform.position).magnitude) blackboard.nodeIdx++;
                     if((new Vector2(nodes[blackboard.nodeIdx].x, nodes[blackboard.nodeIdx].y)-moveDir).x > 0.3f) blackboard.nodeIdx++;
                 }
             }
