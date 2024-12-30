@@ -5,7 +5,7 @@ namespace MainMenuUI
 {
     public class WindowNode : MonoBehaviour
     {
-        [SerializeField] private Vector3 centerPosition;
+        [SerializeField, DisableInspector] private Vector3 centerPosition;
 
         private void Awake() => centerPosition = new Vector3(transform.position.x, transform.position.y, -10);
 
