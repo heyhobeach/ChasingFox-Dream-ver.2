@@ -76,7 +76,7 @@ public partial class GameManager : MonoBehaviour
                     if (col.gameObject.layer == LayerMask.NameToLayer("Point")) isPoint = true;
                     if (col.gameObject.layer == LayerMask.NameToLayer("EnemyPlatform")) isplatform = true;
                 }
-                if(!isWall) isWall = !isRoad && !isplatform;
+                isWall = !isRoad && !isplatform;
 
                 NodeArray[i, j] = new Node(isWall, isRoad, isPoint, isplatform, i + bottomLeft.x, j + bottomLeft.y);
             }
@@ -248,6 +248,9 @@ public partial class GameManager : MonoBehaviour
             OpenListAdd(CurNode.x, CurNode.y + 1);
             OpenListAdd(CurNode.x + 1, CurNode.y);
             OpenListAdd(CurNode.x, CurNode.y - 1);
+            
+            try { if(!NodeArray[CurNode.x-1, CurNode.y].isWall && NodeArray[CurNode.x-2, CurNode.y].isPoint) OpenListAdd(CurNode.x - 2, CurNode.y); } catch(Exception e) { Debug.LogException(e); }
+            try { if(!NodeArray[CurNode.x+1, CurNode.y].isWall && NodeArray[CurNode.x+2, CurNode.y].isPoint) OpenListAdd(CurNode.x + 2, CurNode.y); } catch(Exception e) { Debug.LogException(e); }
         }
         // Debug.Log("���� �� ��ǥ ��� ��ġ" + (TargetNode.y));
         if (OpenList.Count == 0)
