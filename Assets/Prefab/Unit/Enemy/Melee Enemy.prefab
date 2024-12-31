@@ -108,7 +108,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 184135232, guid: 2acab8d4cc9a0c2419105b73a3c7289b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 6.0062566, y: 5.625}
@@ -129,7 +129,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62ffbc93cd9e4a349a37cc05bda415a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 6.25
+  movementSpeed: 6.35
   accelerate: 0.1
   dashDuration: 0.2
   jumpForce: 3
@@ -156,11 +156,11 @@ MonoBehaviour:
   behaviorTree: {fileID: 11400000, guid: cf6acdca7811adc4bba5dbcada481365, type: 2}
   playableDirector: {fileID: 0}
   spriteRenderer: {fileID: 0}
-  layDistance: 10
-  _viewOuterRange: 85
-  _viewInnerRange: 4.5
-  viewAngle: 60
+  _viewOuterRange: 15.5
+  _viewInnerRange: 2.5
+  viewAngle: 95
   appendDistance: 2
+  showRange: 1
 --- !u!50 &6506840840629724753
 Rigidbody2D:
   serializedVersion: 5

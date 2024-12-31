@@ -4,12 +4,12 @@ using UnityEngine.Playables;
 public class TimeLineBranchContoller : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    public GameObject branch1Obj;
-    public GameObject branch2Obj;
+    public GameObject upBranchobj;//up
+    public GameObject downBranchobj;//donw
     public GameObject currentObj;
 
-    public GameObject branch1Timeline;
-    public GameObject branch2Timeline;
+    public PlayableDirector upBranchTimeline;
+    public PlayableDirector downBranchTimeline;
 
     [SerializeField]
     private int branch_brutality = 50;
