@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Com.LuisPedroFonseca.ProCamera2D;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class CameraManager : MonoBehaviour
 {

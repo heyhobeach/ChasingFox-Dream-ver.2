@@ -34,6 +34,7 @@ public class EventTrigger : MonoBehaviour
     /// </summary>
     public void Controller()
     {
+        Debug.Log("EventTrigger.Controller");
         if(eventLock) return;
         if(eventIdx < eventLists.Length && 
             (eventLists[eventIdx].prerequisites == null || eventLists[eventIdx].prerequisites.isSatisfied) &&
@@ -93,7 +94,7 @@ public class EventTrigger : MonoBehaviour
         if(action != null) action.Invoke();
     }
 
-    private IEnumerator LockTime(float lockTime)
+    protected IEnumerator LockTime(float lockTime)
     {
         eventLock = true;
         yield return new WaitForSecondsRealtime(lockTime);
