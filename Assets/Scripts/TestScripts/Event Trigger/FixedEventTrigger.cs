@@ -52,11 +52,4 @@ public class FixedEventTrigger : EventTrigger, IBaseController
         used = true;
         ((IBaseController)this).AddController();
     }
-
-    private IEnumerator LockTime(float lockTime)
-    {
-        eventLock = true;
-        yield return new WaitForSecondsRealtime(lockTime);
-        eventLock = false;
-    }
 }
