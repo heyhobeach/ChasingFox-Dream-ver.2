@@ -26,15 +26,15 @@ public class TimeLineBranchContoller : MonoBehaviour
         //currentDirector.Play();
         if(branch_brutality > GameManager.Brutality)
         {
-            branch1Obj.SetActive(true);
-            branch1Timeline.SetActive(true);
-            branch1Timeline.GetComponent<PlayableDirector>().Play();
+            downBranchobj.SetActive(true);
+            downBranchTimeline.gameObject.SetActive(true);
+            downBranchTimeline.Play();
         }
         else
         {
-            branch2Obj.SetActive(true);
-            branch2Timeline.SetActive(true);
-            branch2Timeline.GetComponent<PlayableDirector>().Play();
+            upBranchobj.SetActive(true);
+            upBranchTimeline.gameObject.SetActive(true);
+            upBranchTimeline.Play();
         }
 
         //
