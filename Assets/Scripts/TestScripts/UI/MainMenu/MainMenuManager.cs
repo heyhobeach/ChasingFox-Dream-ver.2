@@ -13,6 +13,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField, DisableInspector] private Vector3 targetPosition;
     public float moveSpeed = 1f;
     private float progress = 0;
+    public bool isMoving { get => progress > 0; }
 
     public MainPopupUI popupUI;
     public GameObject eventSystem;

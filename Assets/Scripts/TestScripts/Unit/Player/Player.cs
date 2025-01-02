@@ -138,7 +138,6 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     {
         yield return new WaitForSeconds(3f);
         // changedForm.gameObject.SetActive(false);
-        GameManager.Instance.Pause();
         PopupManager.Instance.DeathPop();
 
     }

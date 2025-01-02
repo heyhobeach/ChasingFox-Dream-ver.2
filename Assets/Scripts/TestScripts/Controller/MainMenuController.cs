@@ -4,7 +4,7 @@ public class MainMenuController : MonoBehaviour, IBaseController
 {
     public void Controller()
     {
-        if(Input.GetKeyDown(KeyCode.Escape))
+        if(Input.GetKeyDown(KeyCode.Escape) && MainMenuManager.Instance.isMoving == false)
         {
             MainMenuManager.Instance.MoveBackNode();
         }
