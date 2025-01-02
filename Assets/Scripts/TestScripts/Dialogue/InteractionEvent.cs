@@ -11,6 +11,7 @@ using Unity.VisualScripting.Antlr3.Runtime;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Runtime.InteropServices.WindowsRuntime;
+using UnityEditor.Recorder.Encoder;
 
 
 public class InteractionEvent : MonoBehaviour
@@ -245,6 +246,27 @@ public class InteractionEvent : MonoBehaviour
             //base.OnExecute();
             Debug.Log("onExecute테스트");
             _event.move(id);
+            //_uiManger.ani(start, end, size);
+        }
+    }
+
+    public class BranchCommand : Command
+    {
+        public int branch_id;
+        InteractionEvent _event;
+
+        public BranchCommand(string[] args, InteractionEvent manager)
+        {
+            branch_id = int.Parse(args[0]);
+            _event = manager;
+
+        }
+        public override void OnExecute()
+        {
+            //base.OnExecute();
+            Debug.Log("branch onExecute테스트"+branch_id);
+            _event.Branch(branch_id);
+            //_event.move(branch_id);
             //_uiManger.ani(start, end, size);
         }
     }
@@ -633,6 +655,11 @@ public class InteractionEvent : MonoBehaviour
                         //precommands.Add(new HigherCommand(filteredSubstrings, this));
                     }
                     break;
+                case "branch":
+                    {
+                        postcommands.Add(new BranchCommand(filteredSubstrings, this));
+                    }
+                    break;
 
 
             }
@@ -716,6 +743,11 @@ public class InteractionEvent : MonoBehaviour
         //num--;
         Debug.Log(num + "변환 테스트");
         contentNum = 0;
+    }
+
+    public void Branch(int id)
+    {
+        TimelineBranchManager.Instance.TimelineBranch(id);
     }
 
 
