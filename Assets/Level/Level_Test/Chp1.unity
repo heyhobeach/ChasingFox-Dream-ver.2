@@ -781,35 +781,11 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
     lockTime: 0
-  - prerequisites: {fileID: 0}
+  - prerequisites: {fileID: 84951122}
     keyCode: 0
     action:
       m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1178653005}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 1178653007}
-          m_TargetAssemblyTypeName: UnityEngine.Playables.PlayableDirector, UnityEngine
-          m_MethodName: Play
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
+        m_Calls: []
     lockTime: 0
   autoTrigger: 1
   keyCode: 0
@@ -879,6 +855,7 @@ MonoBehaviour:
   stop_time: []
   loop_time: []
   hold_time: []
+  none_time: []
 --- !u!1 &85435871
 GameObject:
   m_ObjectHideFlags: 0
@@ -1348,6 +1325,7 @@ MonoBehaviour:
   stop_time: []
   loop_time: []
   hold_time: []
+  none_time: []
 --- !u!114 &107771774
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1825,8 +1803,6 @@ GameObject:
   - component: {fileID: 123036445}
   - component: {fileID: 123036446}
   - component: {fileID: 123036447}
-  - component: {fileID: 123036450}
-  - component: {fileID: 123036449}
   - component: {fileID: 123036448}
   m_Layer: 0
   m_Name: Timeline_1-5
@@ -1928,117 +1904,7 @@ MonoBehaviour:
   stop_time: []
   loop_time: []
   hold_time: []
---- !u!114 &123036449
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 123036444}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c72af648c5115d4cbf2b4d9a2ffac99, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetTag: Player
-  limit: 1
-  eventLists:
-  - prerequisites: {fileID: 0}
-    keyCode: 0
-    action:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 123036446}
-          m_TargetAssemblyTypeName: UnityEngine.Playables.PlayableDirector, UnityEngine
-          m_MethodName: Play
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    lockTime: 0
-  - prerequisites: {fileID: 0}
-    keyCode: 0
-    action:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 123036444}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 123036446}
-          m_TargetAssemblyTypeName: UnityEngine.Playables.PlayableDirector, UnityEngine
-          m_MethodName: Play
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    lockTime: 0
-  autoTrigger: 1
-  keyCode: 0
---- !u!61 &123036450
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 123036444}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  none_time: []
 --- !u!1 &128009975
 GameObject:
   m_ObjectHideFlags: 0
@@ -21914,8 +21780,6 @@ GameObject:
   - component: {fileID: 776934576}
   - component: {fileID: 776934577}
   - component: {fileID: 776934578}
-  - component: {fileID: 776934581}
-  - component: {fileID: 776934580}
   - component: {fileID: 776934579}
   m_Layer: 0
   m_Name: Timeline_1-3 (restore_CutScene)
@@ -22017,117 +21881,7 @@ MonoBehaviour:
   stop_time: []
   loop_time: []
   hold_time: []
---- !u!114 &776934580
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 776934575}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c72af648c5115d4cbf2b4d9a2ffac99, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetTag: Player
-  limit: 1
-  eventLists:
-  - prerequisites: {fileID: 0}
-    keyCode: 0
-    action:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 776934577}
-          m_TargetAssemblyTypeName: UnityEngine.Playables.PlayableDirector, UnityEngine
-          m_MethodName: Play
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    lockTime: 0
-  - prerequisites: {fileID: 0}
-    keyCode: 0
-    action:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 776934575}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 776934577}
-          m_TargetAssemblyTypeName: UnityEngine.Playables.PlayableDirector, UnityEngine
-          m_MethodName: Play
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    lockTime: 0
-  autoTrigger: 1
-  keyCode: 0
---- !u!61 &776934581
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 776934575}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  none_time: []
 --- !u!1 &777961449
 GameObject:
   m_ObjectHideFlags: 0
@@ -22865,6 +22619,7 @@ MonoBehaviour:
   stop_time: []
   loop_time: []
   hold_time: []
+  none_time: []
 --- !u!1001 &852292036
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24413,7 +24168,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &945236382
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26245,6 +26000,7 @@ MonoBehaviour:
   stop_time: []
   loop_time: []
   hold_time: []
+  none_time: []
 --- !u!114 &1017276239
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27738,7 +27494,7 @@ SpriteRenderer:
   m_Size: {x: 4.79, y: 4.18}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1154520612
@@ -31413,7 +31169,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1178653006
 Transform:
   m_ObjectHideFlags: 0
@@ -31423,7 +31179,7 @@ Transform:
   m_GameObject: {fileID: 1178653005}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.5, y: 19.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -31502,25 +31258,7 @@ MonoBehaviour:
     action:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 1178653007}
-          m_TargetAssemblyTypeName: UnityEngine.Playables.PlayableDirector, UnityEngine
-          m_MethodName: Play
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    lockTime: 0
-  - prerequisites: {fileID: 0}
-    keyCode: 0
-    action:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1178653005}
+        - m_Target: {fileID: 283146762}
           m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_MethodName: SetActive
           m_Mode: 6
@@ -31542,6 +31280,114 @@ MonoBehaviour:
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    lockTime: 0
+  - prerequisites: {fileID: 1178653008}
+    keyCode: 0
+    action:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1289161043}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 776934577}
+          m_TargetAssemblyTypeName: UnityEngine.Playables.PlayableDirector, UnityEngine
+          m_MethodName: Play
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    lockTime: 0
+  - prerequisites: {fileID: 776934578}
+    keyCode: 0
+    action:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 91211207}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 1223142105}
+          m_TargetAssemblyTypeName: UnityEngine.Playables.PlayableDirector, UnityEngine
+          m_MethodName: Play
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    lockTime: 0
+  - prerequisites: {fileID: 1223142107}
+    keyCode: 0
+    action:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1766943393}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 123036446}
+          m_TargetAssemblyTypeName: UnityEngine.Playables.PlayableDirector, UnityEngine
+          m_MethodName: Play
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    lockTime: 0
+  - prerequisites: {fileID: 123036447}
+    keyCode: 0
+    action:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1952601964}
+          m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+          m_MethodName: LoadScene
+          m_Mode: 5
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Chp2
             m_BoolArgument: 0
           m_CallState: 2
     lockTime: 0
@@ -31577,7 +31423,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -31591,7 +31437,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 10, y: 4.04}
   m_EdgeRadius: 0
 --- !u!114 &1178653011
 MonoBehaviour:
@@ -31613,6 +31459,7 @@ MonoBehaviour:
   stop_time: []
   loop_time: []
   hold_time: []
+  none_time: []
 --- !u!4 &1193437330 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 460293031744060578, guid: e496df94030238d46ad28f61ae99733f, type: 3}
@@ -32673,9 +32520,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1223142104}
   - component: {fileID: 1223142105}
-  - component: {fileID: 1223142108}
-  - component: {fileID: 1223142107}
   - component: {fileID: 1223142106}
+  - component: {fileID: 1223142107}
   m_Layer: 0
   m_Name: Timeline_1-4 (zizel Lab)
   m_TagString: Untagged
@@ -32768,6 +32614,7 @@ MonoBehaviour:
   stop_time: []
   loop_time: []
   hold_time: []
+  none_time: []
 --- !u!114 &1223142107
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32777,108 +32624,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1223142103}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c72af648c5115d4cbf2b4d9a2ffac99, type: 3}
+  m_Script: {fileID: 11500000, guid: fa1ee43abf03ee242a7eb89a698bfae0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetTag: Player
-  limit: 1
-  eventLists:
-  - prerequisites: {fileID: 0}
-    keyCode: 0
-    action:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1223142105}
-          m_TargetAssemblyTypeName: UnityEngine.Playables.PlayableDirector, UnityEngine
-          m_MethodName: Play
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    lockTime: 0
-  - prerequisites: {fileID: 0}
-    keyCode: 0
-    action:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1223142103}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 1223142105}
-          m_TargetAssemblyTypeName: UnityEngine.Playables.PlayableDirector, UnityEngine
-          m_MethodName: Play
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    lockTime: 0
-  autoTrigger: 1
-  keyCode: 0
---- !u!61 &1223142108
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1223142103}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!1 &1255285590
 GameObject:
   m_ObjectHideFlags: 0
@@ -33159,517 +32907,7 @@ CompositeCollider2D:
   m_GeometryType: 1
   m_GenerationType: 0
   m_EdgeRadius: 0
-  m_ColliderPaths:
-  - m_Collider: {fileID: 1321328741}
-    m_ColliderPaths:
-    - - X: -370000000
-        Y: -50000000
-      - X: -180000000
-        Y: -50000000
-      - X: -180000000
-        Y: 90000000
-      - X: -210000000
-        Y: 90000000
-      - X: -210000000
-        Y: 0
-      - X: -190000000
-        Y: 0
-      - X: -190000000
-        Y: -30000000
-      - X: -370000000
-        Y: -30000000
-      - X: -370000000
-        Y: 90000000
-      - X: -380000000
-        Y: 90000000
-      - X: -380000000
-        Y: -30000000
-      - X: -680000000
-        Y: -30000000
-      - X: -680000000
-        Y: -50000000
-      - X: -380000000
-        Y: -50000000
-      - X: -380000000
-        Y: -100000000
-      - X: -370000000
-        Y: -100000000
-    - - X: 1420000000
-        Y: 30000000
-      - X: 1260000000
-        Y: 30000000
-      - X: 1260000000
-        Y: -50000000
-      - X: 1420000000
-        Y: -50000000
-    - - X: -410000000
-        Y: -120000000
-      - X: -400000000
-        Y: -120000000
-      - X: -400000000
-        Y: -100000000
-      - X: -390000000
-        Y: -100000000
-      - X: -390000000
-        Y: -60000000
-      - X: -400000000
-        Y: -60000000
-      - X: -400000000
-        Y: -90000000
-      - X: -410000000
-        Y: -90000000
-      - X: -410000000
-        Y: -110000000
-      - X: -420000000
-        Y: -110000000
-      - X: -420000000
-        Y: -140000000
-      - X: -410000000
-        Y: -140000000
-    - - X: -700000000
-        Y: -100000000
-      - X: -710000000
-        Y: -100000000
-      - X: -710000000
-        Y: -70000000
-      - X: -720000000
-        Y: -70000000
-      - X: -720000000
-        Y: -110000000
-      - X: -710000000
-        Y: -110000000
-      - X: -710000000
-        Y: -130000000
-      - X: -700000000
-        Y: -130000000
-    - - X: -530000000
-        Y: -70000000
-      - X: -540000000
-        Y: -70000000
-      - X: -540000000
-        Y: -100000000
-      - X: -530000000
-        Y: -100000000
-    - - X: 1430000000
-        Y: -80000000
-      - X: 1420000000
-        Y: -80000000
-      - X: 1420000000
-        Y: -150000000
-      - X: 1430000000
-        Y: -150000000
-    - - X: 1410000000
-        Y: -80000000
-      - X: 1400000000
-        Y: -80000000
-      - X: 1400000000
-        Y: -110000000
-      - X: 1380000000
-        Y: -110000000
-      - X: 1380000000
-        Y: -120000000
-      - X: 1400000000
-        Y: -120000000
-      - X: 1400000000
-        Y: -140000000
-      - X: 1410000000
-        Y: -140000000
-    - - X: -560000000
-        Y: -120000000
-      - X: -570000000
-        Y: -120000000
-      - X: -570000000
-        Y: -130000000
-      - X: -580000000
-        Y: -130000000
-      - X: -580000000
-        Y: -110000000
-      - X: -570000000
-        Y: -110000000
-      - X: -570000000
-        Y: -80000000
-      - X: -610000000
-        Y: -80000000
-      - X: -610000000
-        Y: -90000000
-      - X: -580000000
-        Y: -90000000
-      - X: -580000000
-        Y: -100000000
-      - X: -590000000
-        Y: -100000000
-      - X: -590000000
-        Y: -120000000
-      - X: -600000000
-        Y: -120000000
-      - X: -600000000
-        Y: -140000000
-      - X: -560000000
-        Y: -140000000
-    - - X: -660000000
-        Y: -120000000
-      - X: -650000000
-        Y: -120000000
-      - X: -650000000
-        Y: -110000000
-      - X: -630000000
-        Y: -110000000
-      - X: -630000000
-        Y: -80000000
-      - X: -640000000
-        Y: -80000000
-      - X: -640000000
-        Y: -100000000
-      - X: -650000000
-        Y: -100000000
-      - X: -650000000
-        Y: -80000000
-      - X: -670000000
-        Y: -80000000
-      - X: -670000000
-        Y: -90000000
-      - X: -690000000
-        Y: -90000000
-      - X: -690000000
-        Y: -100000000
-      - X: -660000000
-        Y: -100000000
-      - X: -660000000
-        Y: -110000000
-      - X: -670000000
-        Y: -110000000
-      - X: -670000000
-        Y: -140000000
-      - X: -660000000
-        Y: -140000000
-    - - X: 1330000000
-        Y: -130000000
-      - X: 1340000000
-        Y: -130000000
-      - X: 1340000000
-        Y: -120000000
-      - X: 1350000000
-        Y: -120000000
-      - X: 1350000000
-        Y: -130000000
-      - X: 1360000000
-        Y: -130000000
-      - X: 1360000000
-        Y: -140000000
-      - X: 1370000000
-        Y: -140000000
-      - X: 1370000000
-        Y: -120000000
-      - X: 1360000000
-        Y: -120000000
-      - X: 1360000000
-        Y: -110000000
-      - X: 1350000000
-        Y: -110000000
-      - X: 1350000000
-        Y: -100000000
-      - X: 1370000000
-        Y: -100000000
-      - X: 1370000000
-        Y: -90000000
-      - X: 1310000000
-        Y: -90000000
-      - X: 1310000000
-        Y: -100000000
-      - X: 1340000000
-        Y: -100000000
-      - X: 1340000000
-        Y: -110000000
-      - X: 1330000000
-        Y: -110000000
-      - X: 1330000000
-        Y: -120000000
-      - X: 1320000000
-        Y: -120000000
-      - X: 1320000000
-        Y: -130000000
-      - X: 1310000000
-        Y: -130000000
-      - X: 1310000000
-        Y: -140000000
-      - X: 1330000000
-        Y: -140000000
-    - - X: -310000000
-        Y: -90000000
-      - X: -320000000
-        Y: -90000000
-      - X: -320000000
-        Y: -100000000
-      - X: -310000000
-        Y: -100000000
-    - - X: -240000000
-        Y: -140000000
-      - X: -210000000
-        Y: -140000000
-      - X: -210000000
-        Y: -130000000
-      - X: -240000000
-        Y: -130000000
-      - X: -240000000
-        Y: -90000000
-      - X: -250000000
-        Y: -90000000
-      - X: -250000000
-        Y: -170000000
-      - X: -240000000
-        Y: -170000000
-    - - X: 1280000000
-        Y: -90000000
-      - X: 1270000000
-        Y: -90000000
-      - X: 1270000000
-        Y: -150000000
-      - X: 1280000000
-        Y: -150000000
-    - - X: -750000000
-        Y: -130000000
-      - X: -740000000
-        Y: -130000000
-      - X: -740000000
-        Y: -120000000
-      - X: -730000000
-        Y: -120000000
-      - X: -730000000
-        Y: -90000000
-      - X: -760000000
-        Y: -90000000
-      - X: -760000000
-        Y: -100000000
-      - X: -790000000
-        Y: -100000000
-      - X: -790000000
-        Y: -110000000
-      - X: -750000000
-        Y: -110000000
-      - X: -750000000
-        Y: -120000000
-      - X: -760000000
-        Y: -120000000
-      - X: -760000000
-        Y: -140000000
-      - X: -750000000
-        Y: -140000000
-    - - X: -310000000
-        Y: -140000000
-      - X: -300000000
-        Y: -140000000
-      - X: -300000000
-        Y: -150000000
-      - X: -290000000
-        Y: -150000000
-      - X: -290000000
-        Y: -130000000
-      - X: -280000000
-        Y: -130000000
-      - X: -280000000
-        Y: -120000000
-      - X: -300000000
-        Y: -120000000
-      - X: -300000000
-        Y: -100000000
-      - X: -310000000
-        Y: -100000000
-      - X: -310000000
-        Y: -120000000
-      - X: -330000000
-        Y: -120000000
-      - X: -330000000
-        Y: -130000000
-      - X: -320000000
-        Y: -130000000
-      - X: -320000000
-        Y: -150000000
-      - X: -310000000
-        Y: -150000000
-    - - X: 1210000000
-        Y: -140000000
-      - X: 1220000000
-        Y: -140000000
-      - X: 1220000000
-        Y: -120000000
-      - X: 1230000000
-        Y: -120000000
-      - X: 1230000000
-        Y: -140000000
-      - X: 1240000000
-        Y: -140000000
-      - X: 1240000000
-        Y: -150000000
-      - X: 1250000000
-        Y: -150000000
-      - X: 1250000000
-        Y: -130000000
-      - X: 1240000000
-        Y: -130000000
-      - X: 1240000000
-        Y: -110000000
-      - X: 1260000000
-        Y: -110000000
-      - X: 1260000000
-        Y: -100000000
-      - X: 1190000000
-        Y: -100000000
-      - X: 1190000000
-        Y: -110000000
-      - X: 1210000000
-        Y: -110000000
-      - X: 1210000000
-        Y: -130000000
-      - X: 1200000000
-        Y: -130000000
-      - X: 1200000000
-        Y: -150000000
-      - X: 1210000000
-        Y: -150000000
-    - - X: -510000000
-        Y: -140000000
-      - X: -520000000
-        Y: -140000000
-      - X: -520000000
-        Y: -100000000
-      - X: -530000000
-        Y: -100000000
-      - X: -530000000
-        Y: -150000000
-      - X: -520000000
-        Y: -150000000
-      - X: -520000000
-        Y: -160000000
-      - X: -510000000
-        Y: -160000000
-    - - X: -750000000
-        Y: -110000000
-      - X: -750000000
-        Y: -100000000
-      - X: -740000000
-        Y: -100000000
-      - X: -740000000
-        Y: -110000000
-    - - X: -620000000
-        Y: -110000000
-      - X: -630000000
-        Y: -110000000
-      - X: -630000000
-        Y: -160000000
-      - X: -620000000
-        Y: -160000000
-    - - X: -420000000
-        Y: -140000000
-      - X: -430000000
-        Y: -140000000
-      - X: -430000000
-        Y: -160000000
-      - X: -420000000
-        Y: -160000000
-    - - X: -670000000
-        Y: -140000000
-      - X: -680000000
-        Y: -140000000
-      - X: -680000000
-        Y: -150000000
-      - X: -670000000
-        Y: -150000000
-    - - X: -270000000
-        Y: -160000000
-      - X: -280000000
-        Y: -160000000
-      - X: -280000000
-        Y: -150000000
-      - X: -290000000
-        Y: -150000000
-      - X: -290000000
-        Y: -170000000
-      - X: -270000000
-        Y: -170000000
-    - - X: -320000000
-        Y: -150000000
-      - X: -330000000
-        Y: -150000000
-      - X: -330000000
-        Y: -160000000
-      - X: -340000000
-        Y: -160000000
-      - X: -340000000
-        Y: -170000000
-      - X: -320000000
-        Y: -170000000
-    - - X: 1410000000
-        Y: -190000000
-      - X: 1380000000
-        Y: -190000000
-      - X: 1380000000
-        Y: -180000000
-      - X: 1400000000
-        Y: -180000000
-      - X: 1400000000
-        Y: -150000000
-      - X: 1370000000
-        Y: -150000000
-      - X: 1370000000
-        Y: -160000000
-      - X: 1390000000
-        Y: -160000000
-      - X: 1390000000
-        Y: -170000000
-      - X: 1370000000
-        Y: -170000000
-      - X: 1370000000
-        Y: -200000000
-      - X: 1410000000
-        Y: -200000000
-    - - X: -710000000
-        Y: -190000000
-      - X: -720000000
-        Y: -190000000
-      - X: -720000000
-        Y: -180000000
-      - X: -710000000
-        Y: -180000000
-      - X: -710000000
-        Y: -170000000
-      - X: -700000000
-        Y: -170000000
-      - X: -700000000
-        Y: -150000000
-      - X: -750000000
-        Y: -150000000
-      - X: -750000000
-        Y: -160000000
-      - X: -720000000
-        Y: -160000000
-      - X: -720000000
-        Y: -170000000
-      - X: -740000000
-        Y: -170000000
-      - X: -740000000
-        Y: -190000000
-      - X: -730000000
-        Y: -190000000
-      - X: -730000000
-        Y: -200000000
-      - X: -710000000
-        Y: -200000000
-    - - X: -430000000
-        Y: -160000000
-      - X: -440000000
-        Y: -160000000
-      - X: -440000000
-        Y: -200000000
-      - X: -430000000
-        Y: -200000000
-    - - X: -700000000
-        Y: -180000000
-      - X: -710000000
-        Y: -180000000
-      - X: -710000000
-        Y: -190000000
-      - X: -700000000
-        Y: -190000000
+  m_ColliderPaths: []
   m_CompositePaths:
     m_Paths:
     - - {x: -37.00003, y: -10}
@@ -42117,7 +41355,7 @@ SpriteRenderer:
   m_Size: {x: 4.79, y: 4.18}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1537783616
@@ -48711,7 +47949,7 @@ SpriteRenderer:
   m_Size: {x: 4.79, y: 4.18}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &1880052003
@@ -50841,7 +50079,6 @@ MonoBehaviour:
   - {fileID: 558622874}
   - {fileID: 522901665}
   - {fileID: 777961450}
-  - {fileID: 0}
   eventTriggers: []
   targetFrame: 60
   showNodes: 0

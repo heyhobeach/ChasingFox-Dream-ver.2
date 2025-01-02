@@ -4,12 +4,12 @@ using UnityEngine.Playables;
 public class TimeLineBranchContoller : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    public GameObject branch1Obj;
-    public GameObject branch2Obj;
+    public GameObject upBranchobj;//up
+    public GameObject downBranchobj;//donw
     public GameObject currentObj;
 
-    public GameObject branch1Timeline;
-    public GameObject branch2Timeline;
+    public PlayableDirector upBranchTimeline;
+    public PlayableDirector downBranchTimeline;
 
     [SerializeField]
     private int branch_brutality = 50;
@@ -18,7 +18,7 @@ public class TimeLineBranchContoller : MonoBehaviour
 
         PlayableDirector currentDirector = this.gameObject.GetComponent<PlayableDirector>();
 
-        currentDirector.Stop();
+        currentDirector.Stop();//여기 부분 none으로 해야하는가?
         currentObj.SetActive(false);
 
         //branchscriptorble.branch1.
@@ -26,15 +26,15 @@ public class TimeLineBranchContoller : MonoBehaviour
         //currentDirector.Play();
         if(branch_brutality > GameManager.Brutality)
         {
-            branch1Obj.SetActive(true);
-            branch1Timeline.SetActive(true);
-            branch1Timeline.GetComponent<PlayableDirector>().Play();
+            downBranchobj.SetActive(true);
+            downBranchTimeline.gameObject.SetActive(true);
+            downBranchTimeline.Play();
         }
         else
         {
-            branch2Obj.SetActive(true);
-            branch2Timeline.SetActive(true);
-            branch2Timeline.GetComponent<PlayableDirector>().Play();
+            upBranchobj.SetActive(true);
+            upBranchTimeline.gameObject.SetActive(true);
+            upBranchTimeline.Play();
         }
 
         //

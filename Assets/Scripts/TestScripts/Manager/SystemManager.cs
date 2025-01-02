@@ -6,8 +6,14 @@ public class SystemManager : MonoBehaviour
     private static SystemManager instance;
     public static SystemManager Instance;
 
+    public const string optionDataPath = "OptionData.json";
+    public const string keybindDataPath = "KeybindData.json";
+
     public OptionData optionData;
     private OptionData defaultOptionData = new OptionData();
+
+    public KeybindData keybindData;
+    private KeybindData defaultKeybindData = new KeybindData();
 
     private void Awake()
     {
@@ -27,13 +33,23 @@ public class SystemManager : MonoBehaviour
             language = "KOR",
             lightEffect = true
         };
+        defaultKeybindData = new KeybindData{
+
+        };
         DontDestroyOnLoad(gameObject);
 
-        LoadJson("OptionData.json", ref optionData);
+        optionData = LoadJson<OptionData>(optionDataPath);
+        keybindData = LoadJson<KeybindData>(keybindDataPath);
 
         if(DatabaseManager.instance && optionData.language != null) DatabaseManager.instance.ChangeLanguage(DatabaseManager.GetLangEnum(optionData.language));
     }
 
+    public T LoadJson<T>(string fileName)
+    {
+        string path = Path.Combine(Application.dataPath, fileName);
+        string jsonData = File.ReadAllText(path);
+        return JsonUtility.FromJson<T>(jsonData);
+    }
     public void LoadJson<T>(string fileName, ref T data)
     {
         string path = Path.Combine(Application.dataPath, fileName);
@@ -51,6 +67,12 @@ public class SystemManager : MonoBehaviour
     public void ResetOptionData()
     {
         optionData = defaultOptionData;
-        SaveJson("OptionData.json", optionData);
+        SaveJson(keybindDataPath, optionData);
+    }
+
+    public void ResetKeybindData()
+    {
+        keybindData = defaultKeybindData;
+        SaveJson(keybindDataPath, keybindData);
     }
 }
