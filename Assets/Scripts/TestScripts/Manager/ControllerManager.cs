@@ -10,6 +10,8 @@ public class ControllerManager : MonoBehaviour
     public static void PushController(IBaseController @base)
     {
         if(instance.controllers.Contains(@base)) return;
+        if(instance.controllers.Count > 0) instance.controllers.Peek().onDown?.Invoke();
+        if(instance.controllers.Count > 0) Debug.Log(@instance.controllers.Peek());
         instance.controllers.Push(@base);
     }
     public static void PopController(IBaseController @base)
@@ -21,6 +23,7 @@ public class ControllerManager : MonoBehaviour
             while(temp.Count > 0) instance.controllers.Push(temp.Pop());
         }
         if(instance.controllers.Count > 0) instance.controllers.Pop();
+        if(instance.controllers.Count > 0) instance.controllers.Peek().onUp?.Invoke();
     }
     public static IBaseController GetTopController() => instance.controllers.Peek();
 

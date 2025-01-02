@@ -1,10 +1,14 @@
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 public class ButtonSelector : MonoBehaviour, IBaseController
 {
+    private Action _onDown;
+    public Action onDown { get => _onDown; set => throw new NotImplementedException(); }
+    private Action _onUp;
+    public Action onUp { get => _onUp; set => throw new NotImplementedException(); }
+    
     public Vector2Int arraySize = new Vector2Int(0, 1);
 
     [SerializeField] private Vector2Int buttonIdx = Vector2Int.zero;

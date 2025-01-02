@@ -159,16 +159,16 @@ public partial class GameManager : MonoBehaviour
 
     public void LoadScene(string name) => PageManger.Instance.LoadScene(name);
     public void RetryScene() => PageManger.Instance.LoadScene(SceneManager.GetActiveScene().name);
-    public void Pause(bool isPopup = true)
+    public void Pause()
     {
-        Pause(!isPaused, isPopup);
+        Pause(!isPaused);
     }
 
-    public void Pause(bool isPause, bool isPopup = true)
+    public void Pause(bool isPause)
     {
         this.isPaused = isPause;
         Time.timeScale = isPause ? 0 : 1;
-        if(isPopup) PopupManager.Instance.PausePop(isPause);
+        PopupManager.Instance.PausePop(isPause);
     }
 
     public void Quit() => PageManger.Instance.Quit();
