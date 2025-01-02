@@ -19,10 +19,22 @@ public class PlayerController : MonoBehaviour, IBaseController
     private IUnitController unitController;
     [SerializeField] private PlayerControllerMask pcm;
 
+    public GameObject playerUI;
+
     private float resetTimer;
 
+    private Action _onDown;
+    public Action onDown { get => _onDown; set => throw new NotImplementedException(); }
+    private Action _onUp;
+    public Action onUp { get => _onUp; set => throw new NotImplementedException(); }
+
     void Awake() => ((IBaseController)this).AddController();
-    void Start() => unitController = GetComponent<IUnitController>();
+    void Start()
+    {
+        unitController = GetComponent<IUnitController>();
+        _onDown = () => playerUI.SetActive(false);
+        _onUp = () => playerUI.SetActive(true);
+    }
     void OnEnable() => resetTimer = 0;
     void OnDestroy() => ((IBaseController)this).RemoveController();
 

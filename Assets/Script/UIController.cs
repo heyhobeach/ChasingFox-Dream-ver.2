@@ -35,6 +35,7 @@ public class UIController : MonoBehaviour//해당 스크립트는 UI를 그리�
             return;
         }
         instance = this;
+        DialogueCanvasSetFalse();
         //DontDestroyOnLoad(this.gameObject);
     }
     void Start()

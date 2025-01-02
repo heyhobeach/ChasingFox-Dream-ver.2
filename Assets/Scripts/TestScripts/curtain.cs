@@ -6,7 +6,7 @@ public class curtain : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     SpriteRenderer spriteRenderer;
 
-    public float curtainTime = 8f;
+    public float curtainTime = 0.8f;
    // private Color color;
     private void Start()
     {

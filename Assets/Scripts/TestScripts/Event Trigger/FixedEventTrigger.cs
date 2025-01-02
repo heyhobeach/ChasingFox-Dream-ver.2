@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,13 +14,21 @@ public class FixedEventTrigger : EventTrigger, IBaseController
     /// <para>후에 키 설정 도입 시 GetButtonDown기반 (string)으로 변경 필요</para>
     /// </summary>
     public KeyCode keyCode;
+    
+    private Action _onDown;
+    public Action onDown { get => _onDown; set => throw new NotImplementedException(); }
+    private Action _onUp;
+    public Action onUp { get => _onUp; set => throw new NotImplementedException(); }
 
     /// <summary>
     /// 이벤트 작동부
     /// </summary>
     public new void Controller()
     {
-        if(eventLock) return;
+        if(eventLock || GameManager.Instance.isPaused) return;
+
+        if(Input.GetButtonDown("Cancel")) GameManager.Instance.Pause();
+
         if(eventIdx < eventLists.Length && 
             (eventLists[eventIdx].prerequisites == null || eventLists[eventIdx].prerequisites.isSatisfied) &&
             (eventLists[eventIdx].keyCode == KeyCode.None || Input.GetKeyDown(eventLists[eventIdx].keyCode)))

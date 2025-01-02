@@ -30,8 +30,6 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     public int health { get; set; }
     public bool invalidation { get; set; }
 
-    [SerializeField] private GameObject playerUI;
-
     public static GameObject pObject;
 
 
@@ -138,7 +136,6 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     {
         yield return new WaitForSeconds(3f);
         // changedForm.gameObject.SetActive(false);
-        GameManager.Instance.Pause();
         PopupManager.Instance.DeathPop();
 
     }
@@ -245,8 +242,6 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
             invalidation = false;
             Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Bullet"), false);
         }
-
-        playerUI.SetActive(!GameManager.Instance.isPaused);
 
         //OverlapTest();
     }
