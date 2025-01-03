@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -23,6 +25,14 @@ public class SystemManager : MonoBehaviour
     public string[] languages { get; private set; }
     public int languageIndex { get; private set; }
 
+    private Dictionary<string, KeyCode> keybinds = new Dictionary<string, KeyCode>();
+
+    private void OnDistroy()
+    {
+        SaveJson(optionDataPath, optionData);
+        SaveJson(keybindDataPath, keybindData);
+    }
+
     private void Awake()
     {
         if(instance != null && instance != this)
@@ -38,14 +48,22 @@ public class SystemManager : MonoBehaviour
         defaultOptionData = new OptionData{
             fullscreen = true,
             resolutionIndex = 0,
-            masterVolume = 1,
-            musicVolume = 1,
-            sfxVolume = 1,
+            masterVolume = 0.5f,
+            musicVolume = 0.5f,
+            sfxVolume = 0.5f,
             language = "KOR",
             lightEffect = true
         };
         defaultKeybindData = new KeybindData{
-
+            moveLeft = KeyCode.A,
+            moveRight = KeyCode.D,
+            jump = KeyCode.W,
+            crouch = KeyCode.S,
+            attack = KeyCode.Mouse0,
+            reload = KeyCode.R,
+            dash = KeyCode.Space,
+            formChange = KeyCode.LeftShift,
+            retry = KeyCode.R
         };
         resolutions = new Resolution[]{
             new Resolution{width = 1920, height = 1080},
@@ -64,17 +82,22 @@ public class SystemManager : MonoBehaviour
             optionData = defaultOptionData; 
             SaveJson(optionDataPath, optionData); 
         }
-        SetOption(optionData);
         try { keybindData = LoadJson<KeybindData>(keybindDataPath); }
         catch (FileNotFoundException e)
         { 
-            Debug.Log("OptionData not found. Creating new one.\n" + e);
+            Debug.Log("KeybindData not found. Creating new one.\n" + e);
             keybindData = defaultKeybindData; 
-            SaveJson(optionDataPath, optionData); 
+            SaveJson(keybindDataPath, keybindData); 
         }
 
         resolutionIndex = optionData.resolutionIndex;
         languageIndex = System.Array.IndexOf(languages, optionData.language);
+
+        SetOption(optionData);
+        foreach(FieldInfo key in keybindData.GetType().GetFields())
+        {
+            keybinds.Add(key.Name, (KeyCode)key.GetValue(keybindData));
+        }
 
         if(DatabaseManager.instance && optionData.language != null) DatabaseManager.instance.ChangeLanguage(DatabaseManager.GetLangEnum(optionData.language));
     }
@@ -116,29 +139,33 @@ public class SystemManager : MonoBehaviour
         SetOption(optionData);
     }
 
-    public void ResetKeybindData()
+    private float ConvertDbToLinear(float db)
     {
-        keybindData = defaultKeybindData;
-        SaveJson(keybindDataPath, keybindData);
+        return Mathf.Pow(10, db / 20);
+    }
+
+    private float ConvertLinearToDb(float linear)
+    {
+        return linear > 0 ? 20 * Mathf.Log10(linear) : -80;
     }
 
     public void SetVolume(float volume)
     {
-        float vol = volume > 0 ? Mathf.Log10(volume) * 20 : -80;
+        float vol = ConvertLinearToDb(volume);
         audioMixer.SetFloat("MasterVol", vol);
-        optionData.masterVolume = vol;
+        optionData.masterVolume = volume;
     }
     public void SetMusicVolume(float volume)
     {
-        float vol = volume > 0 ? Mathf.Log10(volume) * 20 : -80;
+        float vol = ConvertLinearToDb(volume);
         audioMixer.SetFloat("BGVol", vol);
-        optionData.musicVolume = vol;
+        optionData.musicVolume = volume;
     }
     public void SetSFXVolume(float volume)
     {
-        float vol = volume > 0 ? Mathf.Log10(volume) * 20 : -80;
+        float vol = ConvertLinearToDb(volume);
         audioMixer.SetFloat("SFXVol", vol);
-        optionData.sfxVolume = vol;
+        optionData.sfxVolume = volume;
     }
     // public static void PlaySFX(AudioClip audioClip) => Instance.musicsource[1].PlayOneShot(audioClip);
 
@@ -153,7 +180,7 @@ public class SystemManager : MonoBehaviour
         if(index < 0 || index >= languages.Length) return;
         optionData.language = languages[index];
         languageIndex = index;
-        DatabaseManager.instance.ChangeLanguage(DatabaseManager.GetLangEnum(optionData.language));
+        DatabaseManager.instance?.ChangeLanguage(DatabaseManager.GetLangEnum(optionData.language));
     }
     public void LanguageLeft() => SetLanguage(languageIndex-1);
     public void LanguageRight() => SetLanguage(languageIndex+1);
@@ -172,5 +199,44 @@ public class SystemManager : MonoBehaviour
     public void SetLightEffect(bool isOn)
     {
         optionData.lightEffect = isOn;
+    }
+
+    // ------------------- Keybind -------------------
+
+    public void ResetKeybindData()
+    {
+        keybindData = defaultKeybindData;
+        SetKeybind();
+    }
+
+    public KeyCode GetKeybind(string keyName) => keybinds[keyName];
+
+    public void SetKeybind()
+    {
+        foreach(FieldInfo key in keybindData.GetType().GetFields())
+        {
+            SetKeybind(key.Name, keybinds[key.Name]);
+        }
+        SaveJson(keybindDataPath, keybindData);
+    }
+    public void SetKeybind(string keyName, KeyCode keyCode)
+    {
+        keybinds[keyName] = keyCode;
+        FieldInfo fieldInfo = keybindData.GetType().GetField(keyName);
+        fieldInfo.SetValue(keybindData, keyCode);
+    }
+
+    public static bool GetButton(string keyName) => Input.GetKey(instance.keybinds[keyName]);
+    public static bool GetButtonDown(string keyName) => Input.GetKeyDown(instance.keybinds[keyName]);
+    public static bool GetButtonUp(string keyName) => Input.GetKeyUp(instance.keybinds[keyName]);
+    public static int GetAxis(string keyName)
+    {
+        if(keyName.Equals("Horizontal"))
+        {
+            if(Input.GetKeyDown(instance.keybinds["moveLeft"]) || Input.GetKey(instance.keybinds["moveLeft"])) return -1;
+            else if(Input.GetKeyDown(instance.keybinds["moveRight"]) || Input.GetKey(instance.keybinds["moveRight"])) return 1;
+        }
+        
+        return 0;
     }
 }

@@ -1,4 +1,4 @@
-public struct OptionData
+public class OptionData
 {
     public bool fullscreen;
     public int resolutionIndex;
