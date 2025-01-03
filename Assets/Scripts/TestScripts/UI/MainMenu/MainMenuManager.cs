@@ -1,3 +1,4 @@
+using Com.LuisPedroFonseca.ProCamera2D;
 using MainMenuUI;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,7 +14,8 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField, DisableInspector] private Vector3 targetPosition;
     public float moveSpeed = 1f;
     private float progress = 0;
-    public bool isMoving { get => progress > 0; }
+    private bool _isMoving = false;
+    public bool isMoving { get => _isMoving; }
 
     public MainPopupUI popupUI;
     public GameObject eventSystem;
@@ -34,10 +36,11 @@ public class MainMenuManager : MonoBehaviour
 
     private void Update()
     {
-        if(Vector3.Distance(Camera.main.transform.position, targetPosition) > 0.1f)
+        if(!_isMoving) return;
+        if(progress < moveSpeed)
         {
-            progress += moveSpeed * Time.deltaTime;
-            Camera.main.transform.position = Vector3.Lerp(prevPosition, targetPosition, progress);
+            progress += Time.deltaTime;
+            Camera.main.transform.position = Vector3.Lerp(prevPosition, targetPosition, Utils.EaseFromTo(0, moveSpeed, progress));
             eventSystem.SetActive(false);
         }
         else 
@@ -46,6 +49,7 @@ public class MainMenuManager : MonoBehaviour
             Camera.main.transform.position = targetPosition;
             prevPosition = targetPosition;
             eventSystem.SetActive(true);
+            _isMoving = false;
         }
     }
 
@@ -57,6 +61,7 @@ public class MainMenuManager : MonoBehaviour
         nodeStack.Push(node);
         currentNode = node;
         targetPosition = currentNode.GetCenterPosition();
+        _isMoving = true;
     }
 
     public void MoveBackNode()
