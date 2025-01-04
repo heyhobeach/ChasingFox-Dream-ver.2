@@ -70,4 +70,21 @@ public class MainMenuManager : MonoBehaviour
         nodeStack.Pop();
         MoveNextNode(nodeStack.Peek());
     }
+
+
+    //--------------------------------------------------------------------------------
+
+    public void SetOption() => SystemManager.Instance.SetOption();
+    public void ResetOptionData() => SystemManager.Instance.ResetOptionData();
+    public void ResolutionLeft() => SystemManager.Instance.ResolutionLeft();
+    public void ResolutionRight() => SystemManager.Instance.ResolutionRight();
+    public void LanguageLeft() => SystemManager.Instance.LanguageLeft();
+    public void LanguageRight() => SystemManager.Instance.LanguageRight();
+
+    public void SetKeybind() => SystemManager.Instance.SetKeybind();
+    public void ResetKeybindData() => SystemManager.Instance.ResetKeybindData();
+
+    public void PlayGame(string scene) => PageManger.Instance.LoadScene(scene);
+    public void QuitGame() => PageManger.Instance.Quit();
+
 }
