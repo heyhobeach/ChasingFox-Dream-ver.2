@@ -16,6 +16,7 @@ public class CollectionInteractive : EventTrigger
         CollectionCanvasController.Instance.Popup();
 
         CollectionCanvasController.Instance.SetContentText(scriptorbleobj._context);
+
         Debug.Log("before show inven");
         GameManager.Instance.inventoryManager.showinven();
         Debug.Log("after show inven");

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 
 
-public class Inventory : SingletonFrame<Inventory>
+public class Inventory : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
@@ -18,11 +18,15 @@ public class Inventory : SingletonFrame<Inventory>
     protected Dictionary<int, Info> inventory;
     public int invenCount;
 
-    private void Awake()
+    private new void Awake()
     {
-        base.Awake();
+        //base.Awake();
         inventory = new Dictionary<int, Info>();
 
+    }
+    public void testFunc1()
+    {
+        Debug.Log("inventory 싱글톤 테스트");
     }
 
     private Info SetInfoStruct(Collection.CollectionScriptorble collection)

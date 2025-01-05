@@ -5,7 +5,17 @@ using UnityEngine;
 public class InventoryManager : Inventory
 
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    // Start is called once before the first execution of Update after the MonoBehaviour is created\
+    private void Awake()
+    {
+        //base.Awake();
+        //SingleToneFunc();
+    }
+
+    public void testFunc2()
+    {
+        Debug.Log("inventorymanager 싱글톤 테스트");
+    }
     public void showinven()
     {
         Debug.Log("수집품 목록 확인 함수");
