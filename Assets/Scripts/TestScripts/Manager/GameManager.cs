@@ -22,7 +22,7 @@ public partial class GameManager : MonoBehaviour
     private EnemyDeathDel onEnemyDeath;
     private GunsoundDel onGunsound;
 
-    public Inventory inventory;
+    public InventoryManager inventoryManager;
 
     public void AddEnemyDeath(EnemyDeathDel del) => onEnemyDeath += del;
     public void AddGunsound(GunsoundDel del) => onGunsound += del;

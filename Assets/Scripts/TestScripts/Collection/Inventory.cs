@@ -1,13 +1,13 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 
 
-public class Inventory : MonoBehaviour
+public class Inventory : SingletonFrame<Inventory>
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-
 
     protected class Info
     {
@@ -16,10 +16,13 @@ public class Inventory : MonoBehaviour
         public Sprite image;
     }
     protected Dictionary<int, Info> inventory;
+    public int invenCount;
 
     private void Awake()
     {
+        base.Awake();
         inventory = new Dictionary<int, Info>();
+
     }
 
     private Info SetInfoStruct(Collection.CollectionScriptorble collection)
@@ -35,16 +38,22 @@ public class Inventory : MonoBehaviour
         if (!inventory.ContainsKey(collection.id))
         {
             inventory.Add(collection.id, SetInfoStruct(collection));
+            invenCount = inventory.Count;
+            Debug.Log("inventory 개수" + inventory.Count);
             //Debug.Log(string.Format("수집품 추가 완료+{0} : {1},{2}", collection.id, inventory[collection.id].name, inventory[collection.id].context));
         }
     }
-    //public Info GetInfo(int id)
-    //{
-    //    if (inventory.ContainsKey(id))
-    //    {
-    //        return inventory[id];
-    //    }
-    //}
+    protected Info GetInfo(int id)
+    {
+        if (inventory.ContainsKey(id))
+        {
+            return inventory[id];
+        }
+        else
+        {
+            return null;
+        }
+    }
 
 }
 

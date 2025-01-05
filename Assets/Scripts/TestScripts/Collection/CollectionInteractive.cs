@@ -8,6 +8,7 @@ public class CollectionInteractive : EventTrigger
     [ContextMenu("CollectionPopup")]
     public void CallCollectionPopup()
     {
+        
         Collider2D collider = this.gameObject.GetComponent<BoxCollider2D>();
         Vector2 pos = new Vector2(this.gameObject.transform.position.x, this.gameObject.transform.position.y+collider.bounds.extents.y*2);
         Vector2 vec=Camera.main.WorldToScreenPoint(pos);
@@ -15,6 +16,10 @@ public class CollectionInteractive : EventTrigger
         CollectionCanvasController.Instance.Popup();
 
         CollectionCanvasController.Instance.SetContentText(scriptorbleobj._context);
+        Debug.Log("before show inven");
+        GameManager.Instance.inventoryManager.showinven();
+        Debug.Log("after show inven");
+
     }
     public void OnTriggerExit2D(Collider2D collision)
     {
