@@ -17,8 +17,8 @@ public class TempDeathPopup : MonoBehaviour, IPointerClickHandler, IBaseControll
     {
         if (Input.anyKeyDown&&!Input.GetKeyDown(KeyCode.Escape)) 
         {
-            unityEvent?.Invoke();
             transform.gameObject.SetActive(false);
+            unityEvent?.Invoke();
         }
     }
 
