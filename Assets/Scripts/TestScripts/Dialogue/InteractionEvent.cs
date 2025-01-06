@@ -36,7 +36,7 @@ public class InteractionEvent : MonoBehaviour
     public int indexNum = 0;
     int contentlength = 0;
 
-    string[] command = new string[1];
+    public string[] command = new string[1];
     bool start = false;
 
     Coroutine skipco = null;

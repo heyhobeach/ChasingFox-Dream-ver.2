@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEditor.Search;
 using UnityEngine;
 
@@ -5,11 +6,16 @@ using UnityEngine;
 public class InventoryManager : Inventory
 
 {
+    Inventory inven;
     // Start is called once before the first execution of Update after the MonoBehaviour is created\
     private void Awake()
     {
-        //base.Awake();
-        //SingleToneFunc();
+        
+    }
+
+    public void setitem()
+    {
+
     }
 
     public void testFunc2()
@@ -22,7 +28,7 @@ public class InventoryManager : Inventory
         if (invenCount > 0)
         {
             Debug.Log("수집품 존재");
-            for(int i=0;i< invenCount; i++)
+            for (int i = 0; i < invenCount; i++)
             {
                 Debug.Log(string.Format("수집품 목록확인+{0} : {1},{2}", i, inventory[i].name, inventory[i].context));
             }
@@ -31,5 +37,15 @@ public class InventoryManager : Inventory
         {
             Debug.Log("수집품 없음");
         }
+    }
+
+    //public Dictionary<int,Info> getall()
+    //{
+    //    return inventory;
+    //}
+    //
+    public Info GetInfo(int id)
+    {
+        return inventory[id];
     }
 }

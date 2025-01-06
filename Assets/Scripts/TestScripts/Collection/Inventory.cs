@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -8,14 +9,14 @@ using UnityEngine.UI;
 public class Inventory : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-
-    protected class Info
+    public class Info
     {
         public string name;
         public string context;
         public Sprite image;
     }
-    protected Dictionary<int, Info> inventory;
+    public Dictionary<int, Info> inventory;
+    public event Action<int, Info> OnItemAdded;
     public int invenCount;
 
     private new void Awake()
