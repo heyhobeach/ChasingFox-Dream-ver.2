@@ -104,20 +104,20 @@ public class SystemManager : MonoBehaviour
 
     public T LoadJson<T>(string fileName)
     {
-        string path = Path.Combine(Application.dataPath, fileName);
+        string path = Path.Combine(Application.persistentDataPath, fileName);
         string jsonData = File.ReadAllText(path);
         return JsonUtility.FromJson<T>(jsonData);
     }
     public void LoadJson<T>(string fileName, ref T data)
     {
-        string path = Path.Combine(Application.dataPath, fileName);
+        string path = Path.Combine(Application.persistentDataPath, fileName);
         string jsonData = File.ReadAllText(path);
         data = JsonUtility.FromJson<T>(jsonData);
     }
 
     public void SaveJson<T>(string fileName, T data)
     {
-        string path = Path.Combine(Application.dataPath, fileName);
+        string path = Path.Combine(Application.persistentDataPath, fileName);
         string jsonData = JsonUtility.ToJson(data, true);
         File.WriteAllText(path, jsonData);
     }
