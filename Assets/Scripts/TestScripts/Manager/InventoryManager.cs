@@ -10,12 +10,29 @@ public class InventoryManager : Inventory
     // Start is called once before the first execution of Update after the MonoBehaviour is created\
     private void Awake()
     {
-        
+
     }
 
     public void setitem()
     {
 
+    }
+
+    private void OnEnable()
+    {
+        OnItemAdded += setInven;
+    }
+    private void OnDisable()
+    {
+        OnItemAdded -= setInven;
+    }
+
+    public void setInven(int id,Info _info)
+    {
+        Debug.Log("before add inven - manager");
+        inventory.Add(id, _info);
+        //inventory.Add(id, _info);
+        Debug.Log("add inventory - manager");
     }
 
     public void testFunc2()

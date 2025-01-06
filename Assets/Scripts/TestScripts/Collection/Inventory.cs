@@ -16,7 +16,7 @@ public class Inventory : MonoBehaviour
         public Sprite image;
     }
     public Dictionary<int, Info> inventory;
-    public event Action<int, Info> OnItemAdded;
+    public static event Action<int, Info> OnItemAdded;
     public int invenCount;
 
     private new void Awake()
@@ -43,6 +43,7 @@ public class Inventory : MonoBehaviour
         if (!inventory.ContainsKey(collection.id))
         {
             inventory.Add(collection.id, SetInfoStruct(collection));
+            OnItemAdded?.Invoke(collection.id, SetInfoStruct(collection));
             invenCount = inventory.Count;
             Debug.Log("inventory 개수" + inventory.Count);
             //Debug.Log(string.Format("수집품 추가 완료+{0} : {1},{2}", collection.id, inventory[collection.id].name, inventory[collection.id].context));
