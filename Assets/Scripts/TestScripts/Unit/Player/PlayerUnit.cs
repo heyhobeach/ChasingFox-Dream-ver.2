@@ -184,7 +184,7 @@ public abstract class PlayerUnit : UnitBase
     private void AddGravity()
     {
         if(isGrounded && vcVel < 0) SetVerticalVelocity(0);
-        else AddVerticalVelocity(gravity * Time.fixedDeltaTime);
+        else AddVerticalVelocity(gravity * 2 * Time.fixedDeltaTime);
     }
     /// <summary>
     /// 마찰력을 추가

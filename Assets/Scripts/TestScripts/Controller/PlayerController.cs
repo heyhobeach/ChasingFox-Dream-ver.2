@@ -57,18 +57,18 @@ public class PlayerController : MonoBehaviour, IBaseController
         if(GameManager.Instance.isPaused) return;
 
         // Player Control
-        if(Input.GetButtonDown("Fire2") && KeyControl(PlayerControllerMask.FormChange, ref isKeyDown)) unitController.FormChange();
-        if(Input.GetButtonDown("Reload") && KeyControl(PlayerControllerMask.Reload, ref isKeyDown)) unitController.Reload();
-        if(Input.GetButtonDown("Fire1") && KeyControl(PlayerControllerMask.Attack, ref isKeyDown)) unitController.Attack(ClickPos());
-        if(Input.GetButtonDown("Dash") && KeyControl(PlayerControllerMask.Dash, ref isKeyDown)) unitController.Dash();
+        if(SystemManager.GetButtonDown("formChange") && KeyControl(PlayerControllerMask.FormChange, ref isKeyDown)) unitController.FormChange();
+        if(SystemManager.GetButtonDown("reload") && KeyControl(PlayerControllerMask.Reload, ref isKeyDown)) unitController.Reload();
+        if(SystemManager.GetButtonDown("attack") && KeyControl(PlayerControllerMask.Attack, ref isKeyDown)) unitController.Attack(ClickPos());
+        if(SystemManager.GetButtonDown("dash") && KeyControl(PlayerControllerMask.Dash, ref isKeyDown)) unitController.Dash();
         
-        if (Input.GetButton("Crouch") && KeyControl(PlayerControllerMask.Crouch, ref isKeyDown)) unitController.Crouch(KeyState.KeyDown);//GetKeyDown -> GetKey
-        else if(Input.GetButtonUp("Crouch") && KeyControl(PlayerControllerMask.Crouch)) unitController.Crouch(KeyState.KeyUp);
-        if(Input.GetButtonDown("Jump") && KeyControl(PlayerControllerMask.Jump, ref isKeyDown)) unitController.Jump(KeyState.KeyDown);
-        else if(Input.GetButton("Jump") && KeyControl(PlayerControllerMask.Jump)) unitController.Jump(KeyState.KeyStay);
-        else if(Input.GetButtonUp("Jump") && KeyControl(PlayerControllerMask.Jump)) unitController.Jump(KeyState.KeyUp);
+        if (SystemManager.GetButton("crouch") && KeyControl(PlayerControllerMask.Crouch, ref isKeyDown)) unitController.Crouch(KeyState.KeyDown);//GetKeyDown -> GetKey
+        else if(SystemManager.GetButtonUp("crouch") && KeyControl(PlayerControllerMask.Crouch)) unitController.Crouch(KeyState.KeyUp);
+        if(SystemManager.GetButtonDown("jump") && KeyControl(PlayerControllerMask.Jump, ref isKeyDown)) unitController.Jump(KeyState.KeyDown);
+        else if(SystemManager.GetButton("jump") && KeyControl(PlayerControllerMask.Jump)) unitController.Jump(KeyState.KeyStay);
+        else if(SystemManager.GetButtonUp("jump") && KeyControl(PlayerControllerMask.Jump)) unitController.Jump(KeyState.KeyUp);
         else unitController.Jump(KeyState.None);
-        if (Input.GetAxisRaw("Horizontal") != 0 && KeyControl(PlayerControllerMask.Move)) unitController.Move(Vector2.right * Input.GetAxisRaw("Horizontal"));
+        if (SystemManager.GetAxis("Horizontal") != 0 && KeyControl(PlayerControllerMask.Move)) unitController.Move(Vector2.right * SystemManager.GetAxis("Horizontal"));
         else unitController.Move(Vector2.zero);
     }
 
