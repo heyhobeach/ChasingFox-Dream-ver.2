@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,17 +17,22 @@ public class Inventory : MonoBehaviour
         public string context;
         public Sprite image;
     }
-    public Dictionary<int, Info> inventory;
-    public static event Action<int, Info> OnItemAdded;
+   public  Dictionary<int, Info> inventory;//static으로 해결은 가능한데
+    //public Dictionary<int, int> inventory2;
+    public  event Action<int, Info> OnItemAdded;//static으로 해결은 가능한데
+    InventoryScripable invendata;
+
     public int invenCount;
 
     private new void Awake()
     {
         //base.Awake();
+
+        invendata = Resources.Load("Inventory") as InventoryScripable;
         inventory = new Dictionary<int, Info>();
 
     }
-    public void testFunc1()
+     public void testFunc1()
     {
         Debug.Log("inventory 싱글톤 테스트");
     }
@@ -43,13 +50,14 @@ public class Inventory : MonoBehaviour
         if (!inventory.ContainsKey(collection.id))
         {
             inventory.Add(collection.id, SetInfoStruct(collection));
-            OnItemAdded?.Invoke(collection.id, SetInfoStruct(collection));
-            invenCount = inventory.Count;
+
+            invendata.inventory = inventory;
+            invenCount = invendata.inventory.Count;
             Debug.Log("inventory 개수" + inventory.Count);
             //Debug.Log(string.Format("수집품 추가 완료+{0} : {1},{2}", collection.id, inventory[collection.id].name, inventory[collection.id].context));
         }
     }
-    protected Info GetInfo(int id)
+    public Info GetInfo(int id)
     {
         if (inventory.ContainsKey(id))
         {
@@ -59,6 +67,11 @@ public class Inventory : MonoBehaviour
         {
             return null;
         }
+    }
+    protected Info GetInfo()
+    {
+        Info info = new Info();
+        return info;
     }
 
 }

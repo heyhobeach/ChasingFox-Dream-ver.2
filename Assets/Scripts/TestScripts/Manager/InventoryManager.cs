@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEditor.Search;
 using UnityEngine;
 
@@ -6,39 +8,19 @@ using UnityEngine;
 public class InventoryManager : Inventory
 
 {
-    Inventory inven;
+    public Inventory inven;
+    new public Dictionary<int, Info> inventory;
+    InventoryScripable invendata;
     // Start is called once before the first execution of Update after the MonoBehaviour is created\
     private void Awake()
     {
+        inventory = new Dictionary<int, Info>();
+
+        invendata = Resources.Load("Inventory") as InventoryScripable;
 
     }
 
-    public void setitem()
-    {
 
-    }
-
-    private void OnEnable()
-    {
-        OnItemAdded += setInven;
-    }
-    private void OnDisable()
-    {
-        OnItemAdded -= setInven;
-    }
-
-    public void setInven(int id,Info _info)
-    {
-        Debug.Log("before add inven - manager");
-        inventory.Add(id, _info);
-        //inventory.Add(id, _info);
-        Debug.Log("add inventory - manager");
-    }
-
-    public void testFunc2()
-    {
-        Debug.Log("inventorymanager 싱글톤 테스트");
-    }
     public void showinven()
     {
         Debug.Log("수집품 목록 확인 함수");
@@ -56,13 +38,28 @@ public class InventoryManager : Inventory
         }
     }
 
-    //public Dictionary<int,Info> getall()
-    //{
-    //    return inventory;
-    //}
-    //
-    public Info GetInfo(int id)
+
+
+     public Info GetInfo_(int id)
     {
-        return inventory[id];
+        //if(invendata != null)
+        //{
+        //    for (int i = 0; i < invendata.inventory.Count; i++)
+        //    {
+        //        Info info = invendata.inventory[i];
+        //        Debug.Log("scriptorble"+info.name + info.context + info.image);
+        //    }
+        //}
+        return invendata.inventory[id];
+    }
+
+
+    /// <summary>
+    /// 스크립터블 오브젝트가 저장 되어있으므로 인벤데이터 사용하려 하면 invendata.inventory로 접근
+    /// </summary>
+    /// <returns>InventoryScripable</returns>
+    public InventoryScripable GetInventoryAll()
+    {
+        return invendata;
     }
 }
