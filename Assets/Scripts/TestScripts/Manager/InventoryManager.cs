@@ -5,21 +5,31 @@ using UnityEditor.Search;
 using UnityEngine;
 
 //싱글톤으로 구현할지 연결을 시킬지 생각해봐야함 
+//지금 보변 Inventory를 상속 받았을 필요도 없어보임
 public class InventoryManager : Inventory
 
 {
-    public Inventory inven;
-    new public Dictionary<int, Info> inventory;
     InventoryScripable invendata;
     // Start is called once before the first execution of Update after the MonoBehaviour is created\
     private void Awake()
     {
-        inventory = new Dictionary<int, Info>();
+
 
         invendata = Resources.Load("Inventory") as InventoryScripable;
 
     }
 
+    /// <summary>
+    /// 저장되어있는 인벤토리의 정보를 스크립터블로 옮길 예정
+    /// </summary>
+    public void LoadInvenInfo() 
+    { }
+
+    /// <summary>
+    /// 인벤토리의 정보를 저장 할 함수
+    /// </summary>
+    public void SaveInvenInfo()
+    { }
 
     public void showinven()
     {
