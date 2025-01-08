@@ -11,13 +11,17 @@ public class DialogueController : MonoBehaviour
     {
         //InteractionEvent.Instance.indexNum = indexNum;
         //InteractionEvent.Instance.num = num;
-        Debug.Log("dialogue controller");
+        //Debug.Log("dialogue controller");
 
         interaction.indexNum = scriptorble.indexNum;
         
         Debug.Log(interaction.indexNum + "," + interaction.num);
         interaction.GetDialogue();
         interaction.num = scriptorble.num;
+        interaction.command[0] = "";
+        interaction.command[1] = "";
+        interaction.postcommands.Clear();
+        interaction.precommands.Clear();
         //InteractionEvent.Instance.indexNum = scriptorble.indexNum;
         //InteractionEvent.Instance.num=scriptorble.num;
         ////InteractionEvent.Instance.dialogue.line.x = InteractionEvent.Instance.dialogue.line.y + 1;
