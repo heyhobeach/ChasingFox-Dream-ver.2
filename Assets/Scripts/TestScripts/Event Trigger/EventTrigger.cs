@@ -35,19 +35,20 @@ public class EventTrigger : MonoBehaviour
     public void Controller()
     {
         if(eventLock) return;
-        if(eventIdx < eventLists.Length && 
-            (eventLists[eventIdx].prerequisites == null || eventLists[eventIdx].prerequisites.isSatisfied) &&
-            (eventLists[eventIdx].keyCode == KeyCode.None || Input.GetKeyDown(eventLists[eventIdx].keyCode)))
-        {
-            eventLists[eventIdx].action?.Invoke();
-            if(eventLists[eventIdx].lockTime > 0) StartCoroutine(LockTime(eventLists[eventIdx].lockTime));
-            eventIdx++;
-        }
         if(eventIdx >= eventLists.Length)
         {
             if(limit) used = true;
             eventIdx = 0;
             action = null;
+            return;
+        }
+        if(eventIdx < eventLists.Length && 
+            (eventLists[eventIdx].enterPrerequisites == null || eventLists[eventIdx].enterPrerequisites.isSatisfied) &&
+            (eventLists[eventIdx].keyCode == KeyCode.None || Input.GetKeyDown(eventLists[eventIdx].keyCode)))
+        {
+            eventLists[eventIdx].action?.Invoke();
+            if(eventLists[eventIdx].exitPrerequisites != null) StartCoroutine(LockTime(eventLists[eventIdx].exitPrerequisites));
+            eventIdx++;
         }
     }
 
@@ -93,10 +94,10 @@ public class EventTrigger : MonoBehaviour
         if(action != null) action.Invoke();
     }
 
-    protected IEnumerator LockTime(float lockTime)
+    protected IEnumerator LockTime(QTE_Prerequisites prerequisites)
     {
         eventLock = true;
-        yield return new WaitForSecondsRealtime(lockTime);
+        yield return new WaitUntil(() => prerequisites.isSatisfied);
         eventLock = false;
     }
 }

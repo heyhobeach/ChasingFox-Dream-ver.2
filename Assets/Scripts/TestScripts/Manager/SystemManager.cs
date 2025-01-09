@@ -122,6 +122,8 @@ public class SystemManager : MonoBehaviour
         File.WriteAllText(path, jsonData);
     }
 
+    // ------------------- Option -------------------
+
     public void SetOption() => SetOption(optionData);
     public void SetOption(OptionData data)
     {

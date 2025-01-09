@@ -26,22 +26,22 @@ public class FixedEventTrigger : EventTrigger, IBaseController
     public new void Controller()
     {
         if(eventLock || GameManager.Instance.isPaused) return;
-
-        if(Input.GetButtonDown("Cancel")) GameManager.Instance.Pause();
-
-        if(eventIdx < eventLists.Length && 
-            (eventLists[eventIdx].prerequisites == null || eventLists[eventIdx].prerequisites.isSatisfied) &&
-            (eventLists[eventIdx].keyCode == KeyCode.None || Input.GetKeyDown(eventLists[eventIdx].keyCode)))
-        {
-            eventLists[eventIdx].action?.Invoke();
-            if(eventLists[eventIdx].lockTime > 0) StartCoroutine(LockTime(eventLists[eventIdx].lockTime));
-            eventIdx++;
-        }
         if(eventIdx >= eventLists.Length)
         {
             ((IBaseController)this).RemoveController();
             eventIdx = 0;
             if(limit) used = true;
+        }
+
+        if(Input.GetButtonDown("Cancel")) GameManager.Instance.Pause();
+
+        if(eventIdx < eventLists.Length && 
+            (eventLists[eventIdx].enterPrerequisites == null || eventLists[eventIdx].enterPrerequisites.isSatisfied) &&
+            (eventLists[eventIdx].keyCode == KeyCode.None || Input.GetKeyDown(eventLists[eventIdx].keyCode)))
+        {
+            eventLists[eventIdx].action?.Invoke();
+            if(eventLists[eventIdx].exitPrerequisites != null) StartCoroutine(LockTime(eventLists[eventIdx].exitPrerequisites));
+            eventIdx++;
         }
     }
 
