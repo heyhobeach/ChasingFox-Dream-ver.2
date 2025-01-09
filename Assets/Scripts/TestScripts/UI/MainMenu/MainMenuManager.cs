@@ -84,7 +84,17 @@ public class MainMenuManager : MonoBehaviour
     public void SetKeybind() => SystemManager.Instance.SetKeybind();
     public void ResetKeybindData() => SystemManager.Instance.ResetKeybindData();
 
-    public void PlayGame(string scene) => PageManger.Instance.LoadScene(scene);
-    public void QuitGame() => PageManger.Instance.Quit();
+    public void PlayGame(string scene) => StartCoroutine(LoadScene(scene));
+    private IEnumerator<WaitForSeconds> LoadScene(string scene)
+    {
+        yield return new WaitForSeconds(moveSpeed);
+        PageManger.Instance.LoadScene(scene);
+    }
+    public void QuitGame() => StartCoroutine(Quit());
+    private IEnumerator<WaitForSeconds> Quit()
+    {
+        yield return new WaitForSeconds(moveSpeed);
+        Application.Quit();
+    }
 
 }
