@@ -3875,6 +3875,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1166609838}
+        m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
+        m_MethodName: PlayGame
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &369930289
 GameObject:
   m_ObjectHideFlags: 0
@@ -4191,7 +4203,7 @@ GameObject:
   - component: {fileID: 405970392}
   - component: {fileID: 405970391}
   m_Layer: 5
-  m_Name: Save Date
+  m_Name: Created Date
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4555,6 +4567,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c69fe86fa62a9374292061a6518c6bac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  saveIndex: 0
   audioMixer: {fileID: 24100000, guid: de46d845ad35eb7458e3b1b283b9ca84, type: 2}
 --- !u!4 &444218242
 Transform:
@@ -5893,7 +5906,31 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 573314102}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1166609838}
+        m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
+        m_MethodName: SaveDelete
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1910843834}
+        m_TargetAssemblyTypeName: SaveSlot, Assembly-CSharp
+        m_MethodName: SlotUpdate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &573314102
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6696,7 +6733,31 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 674211203}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1166609838}
+        m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
+        m_MethodName: SaveDelete
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2119779472}
+        m_TargetAssemblyTypeName: SaveSlot, Assembly-CSharp
+        m_MethodName: SlotUpdate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &674211203
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9086,7 +9147,31 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 909358978}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1166609838}
+        m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
+        m_MethodName: SaveDelete
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1850353918}
+        m_TargetAssemblyTypeName: SaveSlot, Assembly-CSharp
+        m_MethodName: SlotUpdate
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &909358978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10694,7 +10779,7 @@ GameObject:
   - component: {fileID: 1100794787}
   - component: {fileID: 1100794786}
   m_Layer: 5
-  m_Name: Save Date
+  m_Name: Created Date
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11200,6 +11285,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1166609838}
+        m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
+        m_MethodName: PlayGame
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1139793170
 GameObject:
   m_ObjectHideFlags: 0
@@ -11465,6 +11562,18 @@ MonoBehaviour:
           m_ObjectArgument: {fileID: 1855432711}
           m_ObjectArgumentAssemblyTypeName: MainMenuUI.WindowNode, Assembly-CSharp
           m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1166609838}
+        m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
+        m_MethodName: PlayGame
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -11799,7 +11908,7 @@ GameObject:
   - component: {fileID: 1177116387}
   - component: {fileID: 1177116386}
   m_Layer: 5
-  m_Name: Save Date
+  m_Name: Created Date
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15684,6 +15793,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1166609838}
+        m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
+        m_MethodName: PlayGame
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1668409074
 GameObject:
   m_ObjectHideFlags: 0
@@ -17639,6 +17760,18 @@ MonoBehaviour:
       - m_Target: {fileID: 1166609838}
         m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
         m_MethodName: PlayGame
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1166609838}
+        m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
+        m_MethodName: PlayGame
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -17659,6 +17792,7 @@ GameObject:
   - component: {fileID: 1850353915}
   - component: {fileID: 1850353917}
   - component: {fileID: 1850353916}
+  - component: {fileID: 1850353918}
   m_Layer: 5
   m_Name: Slot 1
   m_TagString: Untagged
@@ -17726,6 +17860,30 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1850353914}
   m_CullTransparentMesh: 1
+--- !u!114 &1850353918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1850353914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 790c4157c0eb2564e94f80fdf693e015, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableObj: {fileID: 1666665346}
+  disableObj: {fileID: 1849069205}
+  slotImage: {fileID: 2114509546}
+  progressDateText: {fileID: 1165663428}
+  createdDateText: {fileID: 1177116386}
+  images:
+  - {fileID: 21300000, guid: 433fe7d0e35bde8468bec13f6975827a, type: 3}
+  - {fileID: 21300000, guid: f0fe1fa4c01580f4bbd5c56d4a5c2d1d, type: 3}
+  - {fileID: 21300000, guid: 63a6f1ddcdf39da49aaa5da98026151f, type: 3}
+  - {fileID: 21300000, guid: 03210e6c7feb8dd41959df3f9e959196, type: 3}
+  - {fileID: 21300000, guid: 9201b5f5afc78bc419ba12894effd41d, type: 3}
+  slotIdx: 0
 --- !u!1 &1853428968
 GameObject:
   m_ObjectHideFlags: 0
@@ -18735,6 +18893,18 @@ MonoBehaviour:
       - m_Target: {fileID: 1166609838}
         m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
         m_MethodName: PlayGame
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1166609838}
+        m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
+        m_MethodName: PlayGame
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -18891,6 +19061,7 @@ GameObject:
   - component: {fileID: 1910843831}
   - component: {fileID: 1910843833}
   - component: {fileID: 1910843832}
+  - component: {fileID: 1910843834}
   m_Layer: 5
   m_Name: Slot 3
   m_TagString: Untagged
@@ -18958,6 +19129,30 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1910843830}
   m_CullTransparentMesh: 1
+--- !u!114 &1910843834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1910843830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 790c4157c0eb2564e94f80fdf693e015, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableObj: {fileID: 1138305420}
+  disableObj: {fileID: 1156519339}
+  slotImage: {fileID: 834085145}
+  progressDateText: {fileID: 1334192323}
+  createdDateText: {fileID: 405970391}
+  images:
+  - {fileID: 21300000, guid: 433fe7d0e35bde8468bec13f6975827a, type: 3}
+  - {fileID: 21300000, guid: f0fe1fa4c01580f4bbd5c56d4a5c2d1d, type: 3}
+  - {fileID: 21300000, guid: 63a6f1ddcdf39da49aaa5da98026151f, type: 3}
+  - {fileID: 21300000, guid: 03210e6c7feb8dd41959df3f9e959196, type: 3}
+  - {fileID: 21300000, guid: 9201b5f5afc78bc419ba12894effd41d, type: 3}
+  slotIdx: 2
 --- !u!1 &1926911383
 GameObject:
   m_ObjectHideFlags: 0
@@ -20799,6 +20994,7 @@ GameObject:
   - component: {fileID: 2119779469}
   - component: {fileID: 2119779471}
   - component: {fileID: 2119779470}
+  - component: {fileID: 2119779472}
   m_Layer: 5
   m_Name: Slot 2
   m_TagString: Untagged
@@ -20866,6 +21062,30 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2119779468}
   m_CullTransparentMesh: 1
+--- !u!114 &2119779472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2119779468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 790c4157c0eb2564e94f80fdf693e015, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableObj: {fileID: 347895231}
+  disableObj: {fileID: 1893698228}
+  slotImage: {fileID: 1614629890}
+  progressDateText: {fileID: 963463981}
+  createdDateText: {fileID: 1100794786}
+  images:
+  - {fileID: 21300000, guid: 433fe7d0e35bde8468bec13f6975827a, type: 3}
+  - {fileID: 21300000, guid: f0fe1fa4c01580f4bbd5c56d4a5c2d1d, type: 3}
+  - {fileID: 21300000, guid: 63a6f1ddcdf39da49aaa5da98026151f, type: 3}
+  - {fileID: 21300000, guid: 03210e6c7feb8dd41959df3f9e959196, type: 3}
+  - {fileID: 21300000, guid: 9201b5f5afc78bc419ba12894effd41d, type: 3}
+  slotIdx: 1
 --- !u!1 &2132567009
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,7 +11,7 @@ using UnityEditor;
 [RequireComponent(typeof(BoxCollider2D))]
 public class EventTrigger : MonoBehaviour
 {
-    protected EventTriggerData eventTriggerData;
+    public EventTriggerData eventTriggerData;
     /// <summary>
     /// 이벤트를 작동시킬 대상의 태그
     /// </summary>
@@ -84,6 +84,7 @@ public class EventTrigger : MonoBehaviour
             AssetDatabase.Refresh();
 #endif
             eventTriggerData = asset;
+            eventTriggerData.path = path;
         }
         GetComponent<BoxCollider2D>().isTrigger = true;
         if(GameManager.Instance) GameManager.Instance.eventTriggers.Add(this);

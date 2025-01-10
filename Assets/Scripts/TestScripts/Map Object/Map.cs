@@ -18,7 +18,7 @@ public class Map : MonoBehaviour
     public Vector3 position { get => mapData.position; set => mapData.position = value; }
     public PlayerData playerData { get => mapData.playerData; set => mapData.playerData = value; }
 
-    protected MapData mapData;
+    public MapData mapData;
 
     public void Reset() => mapData.Init();
 
@@ -36,6 +36,7 @@ public class Map : MonoBehaviour
 #endif
             mapData = asset;
             mapData.Init();
+            mapData.path = path;
         }
 
         enemyCount= enemyUnits.Count;

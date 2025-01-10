@@ -56,11 +56,14 @@ public partial class GameManager : MonoBehaviour
 
     public bool isPaused { get; private set; }
 
+    private bool isClear;
+
     public void TimeScale(float t) => Time.timeScale = t;
 
     private void OnDestroy()
     {
         instance = null;
+        if(!isClear) SaveData();
         if (isPaused) Pause();
         maps.Clear();
         eventTriggers.Clear();
@@ -87,6 +90,7 @@ public partial class GameManager : MonoBehaviour
     private void Start()
     {
         StartCoroutine(MapSearchStart());
+        karmaRatio = SystemManager.Instance.saveData.karma;
         if (maps[PlayerData.lastRoomIdx].used)
         {
             player.GetComponent<Player>().Init(maps[PlayerData.lastRoomIdx].playerData);
@@ -152,16 +156,23 @@ public partial class GameManager : MonoBehaviour
         return maps[currentRoomIndex].edgeCollider2D;
     }
 
-    public void ResetScene()
+    public void ResetScene(string nextScene)
     {
         foreach (var map in maps) map.Reset();
         foreach (var trigger in eventTriggers) trigger.used = false;
+        SystemManager.Instance.saveData.mapDatas = null;
+        SystemManager.Instance.saveData.eventTriggerDatas = null;
+        SystemManager.Instance.saveData.chapter = nextScene;
+        SystemManager.Instance.saveData.karma = karmaRatio;
         PlayerData.lastRoomIdx = 0;
+        SaveData();
     }
 
     public void LoadScene(string name)
     {
         UIController.Instance.DialogueCanvasSetFalse();
+        if(isClear) Instance.ResetScene(name);
+        else SaveData();
         PageManger.Instance.LoadScene(name);
     }
     public void RetryScene() {
@@ -180,5 +191,24 @@ public partial class GameManager : MonoBehaviour
         PopupManager.Instance.PausePop(isPause);
     }
 
+    public void Clear(bool isclear) => this.isClear = isclear;
+
     public void Quit() => PageManger.Instance.Quit();
+
+    private void SaveData()
+    {
+        Debug.Log("SaveData");
+        if(SystemManager.Instance.saveData.mapDatas == null)
+        {
+            var mapDatas = new MapData[maps.Count];
+            for (int i = 0; i < maps.Count; i++) mapDatas[i] = maps[i].mapData;
+        }
+        if(SystemManager.Instance.saveData.eventTriggerDatas == null)
+        {
+            var eventTriggerDatas = new EventTriggerData[eventTriggers.Count];
+            for (int i = 0; i < eventTriggers.Count; i++) eventTriggerDatas[i] = eventTriggers[i].eventTriggerData;
+        }
+        SystemManager.Instance.saveData.chapterIdx = PlayerData.lastRoomIdx;
+        SystemManager.Instance.SaveData(SystemManager.Instance.saveIndex);
+    }
 }

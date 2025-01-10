@@ -40,7 +40,7 @@ public class MainMenuManager : MonoBehaviour
         if(progress < moveSpeed)
         {
             progress += Time.deltaTime;
-            Camera.main.transform.position = Vector3.Lerp(prevPosition, targetPosition, Utils.EaseFromTo(0, moveSpeed, progress));
+            Camera.main.transform.position = Vector3.Lerp(prevPosition, targetPosition, Com.LuisPedroFonseca.ProCamera2D.Utils.EaseFromTo(0, moveSpeed, progress));
             eventSystem.SetActive(false);
         }
         else 
@@ -84,11 +84,35 @@ public class MainMenuManager : MonoBehaviour
     public void SetKeybind() => SystemManager.Instance.SetKeybind();
     public void ResetKeybindData() => SystemManager.Instance.ResetKeybindData();
 
-    public void PlayGame(string scene) => StartCoroutine(LoadScene(scene));
-    private IEnumerator<WaitForSeconds> LoadScene(string scene)
+    public void PlayGame(int idx) => StartCoroutine(LoadScene(idx));
+    private IEnumerator<WaitForSeconds> LoadScene(int idx)
     {
+        SystemManager.Instance.SetSaveIndex(idx);
+        var save = SystemManager.Instance.saveData;
+        if(save == null) 
+        {
+            SystemManager.Instance.CreateData(idx);
+            save = SystemManager.Instance.saveData;
+        }
+        if(save.mapDatas != null)
+        {
+            foreach(var map in save.mapDatas)
+            {
+                var mapData = Resources.Load<MapData>(map.path);
+                mapData.Init(map);
+            }
+        }
+        if(save.eventTriggerDatas != null)
+        {
+            foreach(var et in save.eventTriggerDatas)
+            {
+                var eventTrigger = Resources.Load<EventTriggerData>(et.path);
+                eventTrigger.Init(et);
+            }
+        }
+        PlayerData.lastRoomIdx = save.chapterIdx;
         yield return new WaitForSeconds(moveSpeed);
-        PageManger.Instance.LoadScene(scene);
+        PageManger.Instance.LoadScene(save.chapter);
     }
     public void QuitGame() => StartCoroutine(Quit());
     private IEnumerator<WaitForSeconds> Quit()
@@ -97,4 +121,5 @@ public class MainMenuManager : MonoBehaviour
         Application.Quit();
     }
 
+    public void SaveDelete(int idx) => SystemManager.Instance.DeleteData(idx);
 }

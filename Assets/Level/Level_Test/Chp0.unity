@@ -425,10 +425,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c72af648c5115d4cbf2b4d9a2ffac99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 0
   eventLists:
-  - prerequisites: {fileID: 0}
+  - enterPrerequisites: {fileID: 0}
     keyCode: 0
     action:
       m_PersistentCalls:
@@ -445,7 +446,7 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-    lockTime: 0
+    exitPrerequisites: {fileID: 0}
   autoTrigger: 1
   keyCode: 0
 --- !u!61 &23739585
@@ -11795,10 +11796,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c72af648c5115d4cbf2b4d9a2ffac99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 1
   eventLists:
-  - prerequisites: {fileID: 0}
+  - enterPrerequisites: {fileID: 0}
     keyCode: 0
     action:
       m_PersistentCalls:
@@ -11827,8 +11829,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-    lockTime: 0
-  - prerequisites: {fileID: 372171833}
+    exitPrerequisites: {fileID: 0}
+  - enterPrerequisites: {fileID: 0}
     keyCode: 0
     action:
       m_PersistentCalls:
@@ -11869,8 +11871,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
-    lockTime: 0
-  - prerequisites: {fileID: 304780445}
+    exitPrerequisites: {fileID: 0}
+  - enterPrerequisites: {fileID: 0}
     keyCode: 0
     action:
       m_PersistentCalls:
@@ -11911,8 +11913,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
-    lockTime: 0
-  - prerequisites: {fileID: 1476177444}
+    exitPrerequisites: {fileID: 0}
+  - enterPrerequisites: {fileID: 0}
     keyCode: 0
     action:
       m_PersistentCalls:
@@ -11953,12 +11955,24 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
-    lockTime: 0
-  - prerequisites: {fileID: 473144933}
+    exitPrerequisites: {fileID: 0}
+  - enterPrerequisites: {fileID: 0}
     keyCode: 0
     action:
       m_PersistentCalls:
         m_Calls:
+        - m_Target: {fileID: 525140351}
+          m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+          m_MethodName: Clear
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: Chp1
+            m_BoolArgument: 1
+          m_CallState: 2
         - m_Target: {fileID: 525140351}
           m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
           m_MethodName: LoadScene
@@ -11971,7 +11985,7 @@ MonoBehaviour:
             m_StringArgument: Chp1
             m_BoolArgument: 0
           m_CallState: 2
-    lockTime: 0
+    exitPrerequisites: {fileID: 0}
   autoTrigger: 1
   keyCode: 0
 --- !u!114 &372171833
@@ -14084,10 +14098,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f49bdbb8c0cb17849aad9634ebf4bc97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 0
   eventLists:
-  - prerequisites: {fileID: 0}
+  - enterPrerequisites: {fileID: 0}
     keyCode: 0
     action:
       m_PersistentCalls:
@@ -14152,7 +14167,7 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
-    lockTime: 0
+    exitPrerequisites: {fileID: 0}
 --- !u!61 &569215468
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -67303,10 +67318,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f49bdbb8c0cb17849aad9634ebf4bc97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 0
   eventLists:
-  - prerequisites: {fileID: 0}
+  - enterPrerequisites: {fileID: 0}
     keyCode: 0
     action:
       m_PersistentCalls:
@@ -67371,7 +67387,7 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-    lockTime: 0
+    exitPrerequisites: {fileID: 0}
 --- !u!61 &1058506861
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -67445,10 +67461,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f49bdbb8c0cb17849aad9634ebf4bc97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  eventTriggerData: {fileID: 0}
   targetTag: NPC2
   limit: 1
   eventLists:
-  - prerequisites: {fileID: 0}
+  - enterPrerequisites: {fileID: 0}
     keyCode: 0
     action:
       m_PersistentCalls:
@@ -67465,7 +67482,7 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-    lockTime: 0
+    exitPrerequisites: {fileID: 0}
 --- !u!114 &1058506864
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67478,10 +67495,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f49bdbb8c0cb17849aad9634ebf4bc97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  eventTriggerData: {fileID: 0}
   targetTag: NPC1
   limit: 1
   eventLists:
-  - prerequisites: {fileID: 0}
+  - enterPrerequisites: {fileID: 0}
     keyCode: 0
     action:
       m_PersistentCalls:
@@ -67498,7 +67516,7 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-    lockTime: 0
+    exitPrerequisites: {fileID: 0}
 --- !u!1 &1091115875
 GameObject:
   m_ObjectHideFlags: 0
@@ -74739,7 +74757,7 @@ Camera:
   far clip plane: 1000
   field of view: 152.1
   orthographic: 1
-  orthographic size: 7.9111013
+  orthographic size: 3.5
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -74764,7 +74782,7 @@ Transform:
   m_GameObject: {fileID: 1705891306}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 228.94519, y: 22.010471, z: -18.705145}
+  m_LocalPosition: {x: 152.96, y: -2.1850765, z: -4.274467}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -76089,6 +76107,8 @@ MonoBehaviour:
       dir: "right\r"
   num: 0
   indexNum: 0
+  command:
+  - 
 --- !u!114 &1741852988
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77565,7 +77585,7 @@ Camera:
   far clip plane: 1000
   field of view: 152.1
   orthographic: 1
-  orthographic size: 7.9111013
+  orthographic size: 3.5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -77590,7 +77610,7 @@ Transform:
   m_GameObject: {fileID: 1900477501}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 219.27661, y: 23.819216, z: -20.861298}
+  m_LocalPosition: {x: 143.29143, y: -0.37633157, z: -6.43062}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -77906,6 +77926,7 @@ MonoBehaviour:
   - {fileID: 1000090905}
   - {fileID: 1422953312}
   edgeCollider2D: {fileID: 0}
+  mapData: {fileID: 0}
 --- !u!1 &1913032364
 GameObject:
   m_ObjectHideFlags: 0
