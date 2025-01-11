@@ -11,7 +11,6 @@ public class ControllerManager : MonoBehaviour
     {
         if(instance.controllers.Contains(@base)) return;
         if(instance.controllers.Count > 0) instance.controllers.Peek().onDown?.Invoke();
-        if(instance.controllers.Count > 0) Debug.Log(@instance.controllers.Peek());
         instance.controllers.Push(@base);
     }
     public static void PopController(IBaseController @base)

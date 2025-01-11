@@ -95,7 +95,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
 
     public void DeathFeedBack(Vector2 dir)
     {
-        changedForm.SetHorizontalVelocity(dir.x * 5);
+        changedForm.SetHorizontalVelocity(Mathf.Sign(dir.x) * 5);
     }
     public bool Crouch(KeyState crouchKey) => changedForm.Crouch(crouchKey);
 

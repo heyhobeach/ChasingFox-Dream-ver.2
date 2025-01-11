@@ -104,7 +104,7 @@ public class EnemyController : MonoBehaviour
         var hit = Physics2D.OverlapCircle(transform.position, distance, layerMask);//죽은 적군 찾는 변수
 
         if(!hit) return;
-        if(hit.transform.GetComponent<UnitBase>()?.UnitState == UnitState.Death)
+        if(hit.transform.GetComponent<PlayerUnit>()?.UnitState == UnitState.Death)
         {
             blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Default;
             blackboard.target = null;
