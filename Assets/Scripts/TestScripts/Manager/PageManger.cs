@@ -49,4 +49,14 @@ public class PageManger : MonoBehaviour
             unloadAo.completed += (uao) => SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
         };
     }
+
+    public void Quit()
+    {
+        StartCoroutine(QuitCoroutine());
+    }
+    private IEnumerator QuitCoroutine()
+    {
+        yield return new WaitForSeconds(1f);
+        Application.Quit();
+    }
 }

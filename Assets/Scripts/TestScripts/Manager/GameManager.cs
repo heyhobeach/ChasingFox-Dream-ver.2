@@ -34,17 +34,17 @@ public partial class GameManager : MonoBehaviour
     public HumanDatas humanDatas;
 
     private const int karma = 100;
-    [SerializeField] [Range(0, 100)] private int karmaRatio = 65;
+    [SerializeField][Range(0, 100)] private int karmaRatio = 65;
 
     public static int Humanity { get => instance.karmaRatio; set { instance.karmaRatio = value; instance.ClampRatio(); } }
-    public static int Brutality { get => karma-instance.karmaRatio; set { instance.karmaRatio = -value; instance.ClampRatio(); } }
+    public static int Brutality { get => karma - instance.karmaRatio; set { instance.karmaRatio = -value; instance.ClampRatio(); } }
     private int ClampRatio() => Mathf.Clamp(karmaRatio, 0, 100);
 
-    public static int GetHumanData() => instance.humanDatas.counts[Humanity/10];
-    public static BrutalData GetBrutalData() => instance.brutalDatas.brutalDatas[Brutality/10];
+    public static int GetHumanData() => instance.humanDatas.counts[Humanity / 10];
+    public static BrutalData GetBrutalData() => instance.brutalDatas.brutalDatas[Brutality / 10];
 
     public Player player;
-    
+
     public List<Map> maps = new List<Map>();
     public List<EventTrigger> eventTriggers = new List<EventTrigger>();
 
@@ -52,14 +52,14 @@ public partial class GameManager : MonoBehaviour
     private float deltaTime = 0f;
     public static float fps { get; private set; }
 
-    public bool isPaused  { get; private set; }
+    public bool isPaused { get; private set; }
 
     public void TimeScale(float t) => Time.timeScale = t;
 
     private void OnDestroy()
     {
         instance = null;
-        if(isPaused) Pause();
+        if (isPaused) Pause();
         maps.Clear();
         eventTriggers.Clear();
         BehaviourNode.clone.Clear();
@@ -85,14 +85,14 @@ public partial class GameManager : MonoBehaviour
     private void Start()
     {
         StartCoroutine(MapSearchStart());
-        if(maps[PlayerData.lastRoomIdx].used) 
+        if (maps[PlayerData.lastRoomIdx].used)
         {
             player.GetComponent<Player>().Init(maps[PlayerData.lastRoomIdx].playerData);
             player.transform.position = maps[PlayerData.lastRoomIdx].position;
             ProCamera2D.Instance.MoveCameraInstantlyToPosition(player.transform.position);
         }
         else player.GetComponent<Player>().Init();
-        for(int i=0; i<maps.Count; i++) CreateWallRoom(i).enabled = false;
+        for (int i = 0; i < maps.Count; i++) CreateWallRoom(i).enabled = false;
         CameraManager.Instance?.proCamera2DRooms.OnStartedTransition.AddListener(MoveNextRoom);
     }
 
@@ -112,9 +112,9 @@ public partial class GameManager : MonoBehaviour
         CreateWallRoom(currentRoomIndex);
         isLoad = true;
 
-        if(!maps[currentRoomIndex].used) PlayerData.lastRoomIdx = currentRoomIndex;
-        if(!maps[currentRoomIndex].cleared) maps[currentRoomIndex].OnStart(player.transform.position);
-        if(previousRoomIndex >= 0 && previousRoomIndex != currentRoomIndex) maps[previousRoomIndex].OnEnd();
+        if (!maps[currentRoomIndex].used) PlayerData.lastRoomIdx = currentRoomIndex;
+        if (!maps[currentRoomIndex].cleared) maps[currentRoomIndex].OnStart(player.transform.position);
+        if (previousRoomIndex >= 0 && previousRoomIndex != currentRoomIndex) maps[previousRoomIndex].OnEnd();
     }
     public EdgeCollider2D CreateWallRoom(int currentRoomIndex)
     {
@@ -122,12 +122,12 @@ public partial class GameManager : MonoBehaviour
         GameObject go;
 
         rect = CameraManager.Instance.proCamera2DRooms.Rooms[currentRoomIndex].Dimensions;
-        var bl = new Vector2(rect.x-(rect.width*0.5f), rect.y-(rect.height*0.5f));
-        var tr = new Vector2(rect.x+(rect.width*0.5f), rect.y+(rect.height*0.5f));
+        var bl = new Vector2(rect.x - (rect.width * 0.5f), rect.y - (rect.height * 0.5f));
+        var tr = new Vector2(rect.x + (rect.width * 0.5f), rect.y + (rect.height * 0.5f));
 
-        if(!maps[currentRoomIndex].edgeCollider2D)
+        if (!maps[currentRoomIndex].edgeCollider2D)
         {
-            go = new GameObject(){
+            go = new GameObject() {
                 name = "wall",
                 // layer = LayerMask.NameToLayer("Map"),
                 // tag = "Map"
@@ -144,21 +144,28 @@ public partial class GameManager : MonoBehaviour
             maps[currentRoomIndex].edgeCollider2D = edge;
         }
 
-        bottomLeft = new Vector2Int(Mathf.RoundToInt(rect.x-(rect.width*0.5f)-2), Mathf.RoundToInt(rect.y-(rect.height*0.5f)-2));
-        topRight = new Vector2Int(Mathf.RoundToInt(rect.x+(rect.width*0.5f)+2), Mathf.RoundToInt(rect.y+(rect.height*0.5f)+2));
+        bottomLeft = new Vector2Int(Mathf.RoundToInt(rect.x - (rect.width * 0.5f) - 2), Mathf.RoundToInt(rect.y - (rect.height * 0.5f) - 2));
+        topRight = new Vector2Int(Mathf.RoundToInt(rect.x + (rect.width * 0.5f) + 2), Mathf.RoundToInt(rect.y + (rect.height * 0.5f) + 2));
 
         return maps[currentRoomIndex].edgeCollider2D;
     }
 
     public void ResetScene()
     {
-        foreach(var map in maps) map.Reset();
-        foreach(var trigger in eventTriggers) trigger.used = false;
+        foreach (var map in maps) map.Reset();
+        foreach (var trigger in eventTriggers) trigger.used = false;
         PlayerData.lastRoomIdx = 0;
     }
 
-    public void LoadScene(string name) => PageManger.Instance.LoadScene(name);
-    public void RetryScene() => PageManger.Instance.LoadScene(SceneManager.GetActiveScene().name);
+    public void LoadScene(string name)
+    {
+        UIController.Instance.DialogueCanvasSetFalse();
+        PageManger.Instance.LoadScene(name);
+    }
+    public void RetryScene() {
+        PageManger.Instance.LoadScene(SceneManager.GetActiveScene().name);
+        UIController.Instance.DialogueCanvasSetFalse();
+    }
     public void Pause()
     {
         Pause(!isPaused);
@@ -170,4 +177,6 @@ public partial class GameManager : MonoBehaviour
         Time.timeScale = isPause ? 0 : 1;
         PopupManager.Instance.PausePop(isPause);
     }
+
+    public void Quit() => PageManger.Instance.Quit();
 }

@@ -131,7 +131,7 @@ public class EnemyController : MonoBehaviour
 
     }
 
-    private void SoundCheck(Transform transform, Vector2 pos, Vector2 size)
+    private void SoundCheck(Transform tr, Vector2 pos, Vector2 size)
     {
         if(blackboard.enemy_state.stateCase == Blackboard.Enemy_State.StateCase.Chase) return;
 
@@ -139,7 +139,7 @@ public class EnemyController : MonoBehaviour
         if(subvec.magnitude <= viewInnerRange + (size.x * 0.5f))
         {
             blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Alert;
-            blackboard.target = transform;
+            blackboard.target = tr;
             blackboard.enemy_state.Increase_Sight++;
         }
     }

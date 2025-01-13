@@ -50,7 +50,7 @@ public class SetCharImage : MonoBehaviour
 
         Sprite image_sprite = null;//이미지 받아오는 변수
         //Debug.Log("위치" + image_dir);
-        //Debug.Log("이미지명" + image_name);
+        Debug.Log("이미지명" + image_name);
         image_name = string.Format("illustration\\{0}", image_name);
         image_sprite = Resources.Load<Sprite>(image_name);
         Image target = null;

@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -8,13 +7,18 @@ using UnityEngine.EventSystems;
 public class TempDeathPopup : MonoBehaviour, IPointerClickHandler, IBaseController
 {
     public TMP_Text text;
+    
+    private Action _onDown;
+    public Action onDown { get => _onDown; set => throw new NotImplementedException(); }
+    private Action _onUp;
+    public Action onUp { get => _onUp; set => throw new NotImplementedException(); }
 
     public void Controller() 
     {
         if (Input.anyKeyDown&&!Input.GetKeyDown(KeyCode.Escape)) 
         {
-            unityEvent?.Invoke();
             transform.gameObject.SetActive(false);
+            unityEvent?.Invoke();
         }
     }
 

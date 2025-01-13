@@ -18,7 +18,7 @@ public class TimeLineBranchContoller : MonoBehaviour
 
         PlayableDirector currentDirector = this.gameObject.GetComponent<PlayableDirector>();
 
-        currentDirector.Stop();
+        currentDirector.Stop();//여기 부분 none으로 해야하는가?
         currentObj.SetActive(false);
 
         //branchscriptorble.branch1.

@@ -93,7 +93,7 @@ public class EventTrigger : MonoBehaviour
         if(action != null) action.Invoke();
     }
 
-    private IEnumerator LockTime(float lockTime)
+    protected IEnumerator LockTime(float lockTime)
     {
         eventLock = true;
         yield return new WaitForSecondsRealtime(lockTime);
