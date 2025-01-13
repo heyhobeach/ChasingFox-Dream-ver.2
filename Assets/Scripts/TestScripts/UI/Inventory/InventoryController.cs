@@ -19,8 +19,8 @@ public class InventoryController : MonoBehaviour
 
     public void NewsInventorySet()
     {
-        //inventorydata=InventoryManager.Instance.GetInventoryAll();
-        //Debug.Log("invenData +" + inventorydata.inventory.Count);
+        inventorydata=InventoryManager.Instance.GetInventoryAll();
+        Debug.Log("invenData +" + inventorydata.inventory.Count);
     }
     public void TraceInventorySet()
     {
