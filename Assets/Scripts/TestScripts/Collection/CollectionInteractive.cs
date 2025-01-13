@@ -12,7 +12,7 @@ public class CollectionInteractive : EventTrigger
         Collider2D collider = this.gameObject.GetComponent<BoxCollider2D>();
         Vector2 pos = new Vector2(this.gameObject.transform.position.x, this.gameObject.transform.position.y+collider.bounds.extents.y*2);
         Vector2 vec=Camera.main.WorldToScreenPoint(pos);
-        CollectionCanvasController.Instance.SetPosition(vec); 
+        CollectionCanvasController.Instance.SetPosition(this.gameObject.transform.position); 
         CollectionCanvasController.Instance.Popup();
 
         CollectionCanvasController.Instance.SetContentText(scriptorbleobj._context);
