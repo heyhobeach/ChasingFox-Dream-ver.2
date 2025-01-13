@@ -7,8 +7,8 @@ using UnityEngine.Events;
 [Serializable]
 public class EventList
 {
-    public QTE_Prerequisites prerequisites;
+    public QTE_Prerequisites enterPrerequisites;
     public KeyCode keyCode;
     public UnityEvent action;
-    public float lockTime;
+    public QTE_Prerequisites exitPrerequisites;
 }

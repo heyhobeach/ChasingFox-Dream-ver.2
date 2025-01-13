@@ -1,22 +1,29 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.Audio;
+using static JsonUtils.Utils;
 
 public class SystemManager : MonoBehaviour
 {
     private static SystemManager instance;
     public static SystemManager Instance { get => instance; }
 
-    public const string optionDataPath = "OptionData.json";
-    public const string keybindDataPath = "KeybindData.json";
+    public const string optionDataPath = "OptionData.od";
+    public const string keybindDataPath = "KeybindData.kb";
 
     public OptionData optionData;
     private OptionData defaultOptionData = new OptionData();
 
     public KeybindData keybindData;
     private KeybindData defaultKeybindData = new KeybindData();
+
+    private SaveData[] saveDatas = new SaveData[3];
+    public int saveIndex = 0;
+    public SaveData saveData { get => saveDatas[saveIndex]; }
+    private SaveData defaultSaveData = new SaveData();
     
     [SerializeField] private AudioMixer audioMixer;
     
@@ -65,6 +72,15 @@ public class SystemManager : MonoBehaviour
             formChange = KeyCode.LeftShift,
             retry = KeyCode.R
         };
+        defaultSaveData = new SaveData{
+            chapter = "Chp0",
+            mapDatas = null,
+            eventTriggerDatas = null,
+            eventTriggerInstanceID = 0,
+            eventIdx = 0,
+            karma = 65
+        };
+
         resolutions = new Resolution[]{
             new Resolution{width = 1920, height = 1080},
             new Resolution{width = 1600, height = 900},
@@ -90,6 +106,8 @@ public class SystemManager : MonoBehaviour
             SaveJson(keybindDataPath, keybindData); 
         }
 
+        for(int i = 0; i < saveDatas.Length; i++) LoadData(i);
+
         resolutionIndex = optionData.resolutionIndex;
         languageIndex = System.Array.IndexOf(languages, optionData.language);
 
@@ -102,25 +120,7 @@ public class SystemManager : MonoBehaviour
         if(DatabaseManager.instance && optionData.language != null) DatabaseManager.instance.ChangeLanguage(DatabaseManager.GetLangEnum(optionData.language));
     }
 
-    public T LoadJson<T>(string fileName)
-    {
-        string path = Path.Combine(Application.persistentDataPath, fileName);
-        string jsonData = File.ReadAllText(path);
-        return JsonUtility.FromJson<T>(jsonData);
-    }
-    public void LoadJson<T>(string fileName, ref T data)
-    {
-        string path = Path.Combine(Application.persistentDataPath, fileName);
-        string jsonData = File.ReadAllText(path);
-        data = JsonUtility.FromJson<T>(jsonData);
-    }
-
-    public void SaveJson<T>(string fileName, T data)
-    {
-        string path = Path.Combine(Application.persistentDataPath, fileName);
-        string jsonData = JsonUtility.ToJson(data, true);
-        File.WriteAllText(path, jsonData);
-    }
+    // ------------------- Option -------------------
 
     public void SetOption() => SetOption(optionData);
     public void SetOption(OptionData data)
@@ -238,5 +238,50 @@ public class SystemManager : MonoBehaviour
         }
         
         return 0;
+    }
+
+    // ------------------- Save -------------------
+
+    public void SetSaveIndex(int index) => saveIndex = index;
+    public SaveData GetSaveData(int index) => saveDatas[index];
+
+    public void SaveData(int index)
+    {
+        if(index < 0 || index >= saveDatas.Length) return;
+        SaveJson("SaveData" + index + ".sv", saveDatas[index]);
+    }
+    public SaveData LoadData(int index)
+    {
+        if(index < 0 || index >= saveDatas.Length) return null;
+        try { saveDatas[index] = LoadJson<SaveData>("SaveData" + index + ".sv"); }
+        catch (FileNotFoundException e)
+        { 
+            Debug.Log("SaveData" + index + " not found.\n" + e);
+            saveDatas[index] = null; 
+        }
+        return saveDatas[index];
+    }
+    public void DeleteData(int index)
+    {
+        if(index < 0 || index >= saveDatas.Length) return;
+        try { DeleteJson("SaveData" + index + ".json"); }
+        catch (FileNotFoundException e) { Debug.Log("SaveData" + index + " not found.\n" + e); }
+        saveDatas[index] = null;
+    }
+    public void CreateData(int index)
+    {
+        if(index < 0 || index >= saveDatas.Length) return;
+        saveDatas[index] = new SaveData();
+        saveDatas[index].Init(DateTime.Now, defaultSaveData);
+        SaveData(index);
+    }
+
+    public SaveData GetData() => saveDatas[saveIndex];
+
+    public void UpdateDataForEventTrigger(int eventTriggerInstanceID, int eventIdx)
+    {
+        if(saveData == null) return;
+        saveData.eventTriggerInstanceID = eventTriggerInstanceID;
+        saveData.eventIdx = eventIdx;
     }
 }

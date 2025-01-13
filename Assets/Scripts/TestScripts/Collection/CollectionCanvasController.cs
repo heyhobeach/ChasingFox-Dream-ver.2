@@ -26,9 +26,11 @@ public class CollectionCanvasController : MonoBehaviour
     }
     public void SetPosition(Vector2 vec)
 
-    { 
+    {
         //Vector2 _vec = new Vector2(vec.x,vec.y+ypos);
-        panel.gameObject.transform.position = vec;
+        this.gameObject.transform.localScale = new Vector3(0.01f, 0.01f, this.transform.localScale.z);
+        this.gameObject.transform.position = vec;
+        //panel.gameObject.transform.position = vec;
         //panel.gameObject.transform.localPosition = vec;
     }
 
