@@ -26,39 +26,46 @@ public class FixedEventTrigger : EventTrigger, IBaseController
     public new void Controller()
     {
         if(eventLock || GameManager.Instance.isPaused) return;
+        if(eventIdx >= eventLists.Length)
+        {
+            ((IBaseController)this).RemoveController();
+            SystemManager.Instance.UpdateDataForEventTrigger(0, 0);
+            eventIdx = 0;
+            if(limit) used = true;
+        }
 
         if(Input.GetButtonDown("Cancel")) GameManager.Instance.Pause();
 
         if(eventIdx < eventLists.Length && 
-            (eventLists[eventIdx].prerequisites == null || eventLists[eventIdx].prerequisites.isSatisfied) &&
+            (eventLists[eventIdx].enterPrerequisites == null || eventLists[eventIdx].enterPrerequisites.isSatisfied) &&
             (eventLists[eventIdx].keyCode == KeyCode.None || Input.GetKeyDown(eventLists[eventIdx].keyCode)))
         {
+            SystemManager.Instance.UpdateDataForEventTrigger(GetInstanceID(), eventIdx);
             eventLists[eventIdx].action?.Invoke();
-            if(eventLists[eventIdx].lockTime > 0) StartCoroutine(LockTime(eventLists[eventIdx].lockTime));
+            if(eventLists[eventIdx].exitPrerequisites != null) StartCoroutine(LockTime(eventLists[eventIdx].exitPrerequisites));
             eventIdx++;
-        }
-        if(eventIdx >= eventLists.Length)
-        {
-            ((IBaseController)this).RemoveController();
-            eventIdx = 0;
-            if(limit) used = true;
         }
     }
 
     /// <summary>
     /// 트리거를 작동시키는 메서드
     /// </summary>
-    public new void OnTrigger()
+    public override void OnTrigger()
     {
         if(limit ? used : false) return;
-        used = true;
+        ((IBaseController)this).AddController();
+    }
+    public override void OnTrigger(int idx)
+    {
+        if(limit ? used : false) return;
+        eventIdx = idx;
         ((IBaseController)this).AddController();
     }
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        if((limit ? used : false) || (autoTrigger ? false : !Input.GetKeyDown(keyCode)) || !collider.CompareTag(targetTag)) return;
-        used = true;
-        ((IBaseController)this).AddController();
+        if((autoTrigger ? false : !Input.GetKeyDown(keyCode)) || !collider.CompareTag(targetTag)) return;
+        targetPosition = collider.transform.position;
+        OnTrigger();
     }
 }

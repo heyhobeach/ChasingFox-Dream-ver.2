@@ -17,8 +17,9 @@ public class MainMenuManager : MonoBehaviour
     private bool _isMoving = false;
     public bool isMoving { get => _isMoving; }
 
-    public MainPopupUI popupUI;
-    public GameObject eventSystem;
+    [SerializeField] private MainPopupUI popupUI;
+    [SerializeField] private GameObject eventSystem;
+    [SerializeField] private SaveSlot[] saveSlots;
 
     void Start()
     {
@@ -40,7 +41,7 @@ public class MainMenuManager : MonoBehaviour
         if(progress < moveSpeed)
         {
             progress += Time.deltaTime;
-            Camera.main.transform.position = Vector3.Lerp(prevPosition, targetPosition, Utils.EaseFromTo(0, moveSpeed, progress));
+            Camera.main.transform.position = Vector3.Lerp(prevPosition, targetPosition, Com.LuisPedroFonseca.ProCamera2D.Utils.EaseFromTo(0, moveSpeed, progress));
             eventSystem.SetActive(false);
         }
         else 
@@ -84,7 +85,42 @@ public class MainMenuManager : MonoBehaviour
     public void SetKeybind() => SystemManager.Instance.SetKeybind();
     public void ResetKeybindData() => SystemManager.Instance.ResetKeybindData();
 
-    public void PlayGame(string scene) => PageManger.Instance.LoadScene(scene);
-    public void QuitGame() => PageManger.Instance.Quit();
+    public void PlayGame(int idx) => StartCoroutine(LoadScene(idx));
+    private IEnumerator<WaitForSeconds> LoadScene(int idx)
+    {
+        SystemManager.Instance.SetSaveIndex(idx);
+        var save = SystemManager.Instance.saveData;
+        if(save == null) 
+        {
+            SystemManager.Instance.CreateData(idx);
+            save = SystemManager.Instance.saveData;
+        }
+        if(save.mapDatas != null)
+        {
+            foreach(var map in save.mapDatas)
+            {
+                var mapData = Resources.Load<MapData>(map.path);
+                mapData.Init(map);
+            }
+        }
+        if(save.eventTriggerDatas != null)
+        {
+            foreach(var et in save.eventTriggerDatas)
+            {
+                var eventTrigger = Resources.Load<EventTriggerData>(et.path);
+                eventTrigger.Init(et);
+            }
+        }
+        PlayerData.lastRoomIdx = save.chapterIdx;
+        yield return new WaitForSeconds(moveSpeed);
+        PageManger.Instance.LoadScene(save.chapter);
+    }
+    public void QuitGame() => StartCoroutine(Quit());
+    private IEnumerator<WaitForSeconds> Quit()
+    {
+        yield return new WaitForSeconds(moveSpeed);
+        Application.Quit();
+    }
 
+    public void SaveDelete(int idx) => popupUI.SetPopup("삭제 ㄱ?", () => saveSlots[idx].DeleteData());
 }

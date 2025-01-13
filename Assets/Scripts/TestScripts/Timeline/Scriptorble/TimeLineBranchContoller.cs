@@ -13,7 +13,7 @@ public class TimeLineBranchContoller : MonoBehaviour
 
     [SerializeField]
     private int branch_brutality = 50;
-    public void branchfunc(TimeLineBranchScriptorble branchscriptorble)
+    public void branchfunc()
     {
 
         PlayableDirector currentDirector = this.gameObject.GetComponent<PlayableDirector>();
@@ -36,6 +36,7 @@ public class TimeLineBranchContoller : MonoBehaviour
             upBranchTimeline.gameObject.SetActive(true);
             upBranchTimeline.Play();
         }
+        Debug.Log("branch func");
 
         //
     }

@@ -11,11 +11,17 @@ using UnityEditor;
 [RequireComponent(typeof(BoxCollider2D))]
 public class EventTrigger : MonoBehaviour
 {
-    protected EventTriggerData eventTriggerData;
+    public EventTriggerData eventTriggerData;
     /// <summary>
     /// 이벤트를 작동시킬 대상의 태그
     /// </summary>
     public string targetTag;
+    private Vector2 _targetPosition;
+    public Vector2 targetPosition
+    {
+        get => _targetPosition;
+        protected set => _targetPosition = value;
+    }
 
     /// <summary>
     /// <para>이벤트 작동 횟수 제한 여부</para>
@@ -35,38 +41,50 @@ public class EventTrigger : MonoBehaviour
     public void Controller()
     {
         if(eventLock) return;
-        if(eventIdx < eventLists.Length && 
-            (eventLists[eventIdx].prerequisites == null || eventLists[eventIdx].prerequisites.isSatisfied) &&
-            (eventLists[eventIdx].keyCode == KeyCode.None || Input.GetKeyDown(eventLists[eventIdx].keyCode)))
-        {
-            eventLists[eventIdx].action?.Invoke();
-            if(eventLists[eventIdx].lockTime > 0) StartCoroutine(LockTime(eventLists[eventIdx].lockTime));
-            eventIdx++;
-        }
         if(eventIdx >= eventLists.Length)
         {
             if(limit) used = true;
             eventIdx = 0;
             action = null;
+            SystemManager.Instance.UpdateDataForEventTrigger(0, 0);
+            return;
+        }
+        if(eventIdx < eventLists.Length && 
+            (eventLists[eventIdx].enterPrerequisites == null || eventLists[eventIdx].enterPrerequisites.isSatisfied) &&
+            (eventLists[eventIdx].keyCode == KeyCode.None || Input.GetKeyDown(eventLists[eventIdx].keyCode)))
+        {
+            SystemManager.Instance.UpdateDataForEventTrigger(GetInstanceID(), eventIdx);
+            eventLists[eventIdx].action?.Invoke();
+            if(eventLists[eventIdx].exitPrerequisites != null) StartCoroutine(LockTime(eventLists[eventIdx].exitPrerequisites));
+            eventIdx++;
         }
     }
 
     /// <summary>
     /// 트리거를 작동시키는 메서드
     /// </summary>
-    public void OnTrigger()
+    public virtual void OnTrigger()
     {
         if(limit ? used : false) return;
+        action = Controller;
+    }
+    public virtual void OnTrigger(int idx)
+    {
+        if(limit ? used : false) return;
+        eventIdx = idx;
+        action = Controller;
     }
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        if((limit ? used : false) || !collider.CompareTag(targetTag)) return;
-        action = Controller;
+        if(!collider.CompareTag(targetTag)) return;
+        targetPosition = collider.transform.position;
+        OnTrigger();
     }
     private void OnTriggerExit2D(Collider2D collider)
     {
         if(!collider.CompareTag(targetTag)) return;
+        targetPosition = Vector2.zero;
         action = null;
     }
 
@@ -83,6 +101,7 @@ public class EventTrigger : MonoBehaviour
             AssetDatabase.Refresh();
 #endif
             eventTriggerData = asset;
+            eventTriggerData.path = path;
         }
         GetComponent<BoxCollider2D>().isTrigger = true;
         if(GameManager.Instance) GameManager.Instance.eventTriggers.Add(this);
@@ -93,10 +112,10 @@ public class EventTrigger : MonoBehaviour
         if(action != null) action.Invoke();
     }
 
-    protected IEnumerator LockTime(float lockTime)
+    protected IEnumerator LockTime(QTE_Prerequisites prerequisites)
     {
         eventLock = true;
-        yield return new WaitForSecondsRealtime(lockTime);
+        yield return new WaitUntil(() => prerequisites.isSatisfied);
         eventLock = false;
     }
 }

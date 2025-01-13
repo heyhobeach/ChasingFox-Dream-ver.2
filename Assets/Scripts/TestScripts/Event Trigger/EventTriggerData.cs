@@ -9,7 +9,18 @@ using UnityEditor;
 [System.Serializable, CreateAssetMenu(menuName = "ScriptableObjectDatas/EventTriggerData")]
 public class EventTriggerData : ScriptableObject
 {
+    public string path;
     public bool used;
+    public Vector2 targetPosition;
+
+    public void Init()
+    {
+        used = false;
+    }
+    public void Init(EventTriggerData eventTriggerData)
+    {
+        used = eventTriggerData.used;
+    }
 
 #if UNITY_EDITOR
     void OnEnable()

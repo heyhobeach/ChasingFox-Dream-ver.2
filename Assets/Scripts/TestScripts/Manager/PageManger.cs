@@ -43,7 +43,6 @@ public class PageManger : MonoBehaviour
     {
         var loadAo = SceneManager.LoadSceneAsync("Loading", LoadSceneMode.Additive);
         var currentScene = SceneManager.GetActiveScene();
-        if(GameManager.Instance && !currentScene.name.Equals(sceneName)) GameManager.Instance.ResetScene();
         loadAo.completed += (ao) => { 
             var unloadAo = SceneManager.UnloadSceneAsync(currentScene);
             unloadAo.completed += (uao) => SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);

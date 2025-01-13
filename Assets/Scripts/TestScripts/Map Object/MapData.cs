@@ -9,6 +9,7 @@ using UnityEditor;
 [System.Serializable, CreateAssetMenu(menuName = "ScriptableObjectDatas/MapData")]
 public class MapData : ScriptableObject
 {
+    public string path;
     public Vector3 position;
     public bool used;
     public bool cleared;
@@ -20,6 +21,14 @@ public class MapData : ScriptableObject
         used = false;
         playerData = CreateInstance<PlayerData>();
         playerData.Init();
+    }
+
+    public void Init(MapData mapData)
+    {
+        position = mapData.position;
+        used = mapData.used;
+        playerData = CreateInstance<PlayerData>();
+        playerData.Init(mapData.playerData);
     }
 
 #if UNITY_EDITOR
