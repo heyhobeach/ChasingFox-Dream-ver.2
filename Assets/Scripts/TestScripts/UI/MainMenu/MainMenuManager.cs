@@ -17,8 +17,9 @@ public class MainMenuManager : MonoBehaviour
     private bool _isMoving = false;
     public bool isMoving { get => _isMoving; }
 
-    public MainPopupUI popupUI;
-    public GameObject eventSystem;
+    [SerializeField] private MainPopupUI popupUI;
+    [SerializeField] private GameObject eventSystem;
+    [SerializeField] private SaveSlot[] saveSlots;
 
     void Start()
     {
@@ -121,5 +122,5 @@ public class MainMenuManager : MonoBehaviour
         Application.Quit();
     }
 
-    public void SaveDelete(int idx) => SystemManager.Instance.DeleteData(idx);
+    public void SaveDelete(int idx) => popupUI.SetPopup("삭제 ㄱ?", () => saveSlots[idx].DeleteData());
 }

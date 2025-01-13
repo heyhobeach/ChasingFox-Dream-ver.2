@@ -38,4 +38,10 @@ public class SaveSlot : MonoBehaviour
             slotImage.sprite = images[index];
         }
     }
+
+    public void DeleteData()
+    {
+        SystemManager.Instance.DeleteData(slotIdx);
+        SlotUpdate();
+    }
 }

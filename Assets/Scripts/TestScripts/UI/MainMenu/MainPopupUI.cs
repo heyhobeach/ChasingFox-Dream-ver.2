@@ -10,19 +10,24 @@ public class MainPopupUI : MonoBehaviour
 
     private void Start()
     {
-        calcelButton.onClick.AddListener(() => gameObject.SetActive(false));
-        gameObject.SetActive(false);
+        calcelButton.onClick.AddListener(() => {
+            confirmButton.onClick.RemoveAllListeners();
+            gameObject.SetActive(false);
+    });
     }
 
     private void OnEnable()
     {
-        transform.position = Camera.main.transform.position;
+        var pos = Camera.main.transform.position;
+        pos.z = 0;
+        transform.position = pos;
     }
 
-    public void SetPopup(string info, System.Action confirmAction)
+    public void SetPopup(string info, System.Action confirmAction, bool enable = true)
     {
         SetConfirmButtonAction(confirmAction);
         SetInfoText(info);
+        gameObject.SetActive(enable);
     }
 
     public void SetConfirmButtonAction(System.Action action)

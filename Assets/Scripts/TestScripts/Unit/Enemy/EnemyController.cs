@@ -101,7 +101,16 @@ public class EnemyController : MonoBehaviour
             return;
         }
         int layerMask = 1 << LayerMask.NameToLayer("Player");//enemy와 gunsound 객체 총알이 만약 바닥에 박히면 gunsound객체를 생성했다가 일정시간 이후 지우는식
-        var hit = Physics2D.OverlapCircle(transform.position, distance, layerMask);//죽은 적군 찾는 변수
+        var hits = Physics2D.OverlapCircleAll(transform.position, distance, layerMask);//죽은 적군 찾는 변수
+        Collider2D hit = null;
+        foreach(var h in hits)
+        {
+            if(h.CompareTag("Player")) 
+            {
+                hit = h;
+                break;
+            }
+        }
 
         if(!hit) return;
         if(hit.transform.GetComponent<PlayerUnit>()?.UnitState == UnitState.Death)
