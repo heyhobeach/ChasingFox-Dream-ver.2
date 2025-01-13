@@ -10,6 +10,7 @@ namespace JsonUtils
             string path = Path.Combine(Application.persistentDataPath, fileName);
             string jsonData = File.ReadAllText(path);
 			byte[] bytes = System.Convert.FromBase64String(jsonData);
+            ByteConvert(ref bytes);
 			string decodedJson = System.Text.Encoding.UTF8.GetString(bytes);
             return JsonUtility.FromJson<T>(decodedJson);
         }
@@ -18,6 +19,7 @@ namespace JsonUtils
             string path = Path.Combine(Application.persistentDataPath, fileName);
             string jsonData = File.ReadAllText(path);
 			byte[] bytes = System.Convert.FromBase64String(jsonData);
+            ByteConvert(ref bytes);
 			string decodedJson = System.Text.Encoding.UTF8.GetString(bytes);
             data = JsonUtility.FromJson<T>(decodedJson);
         }
@@ -27,6 +29,7 @@ namespace JsonUtils
             string path = Path.Combine(Application.persistentDataPath, fileName);
             string jsonData = JsonUtility.ToJson(data, true);
             byte[] bytes = System.Text.Encoding.UTF8.GetBytes(jsonData);
+            ByteConvert(ref bytes);
             string encodedJson = System.Convert.ToBase64String(bytes);
             File.WriteAllText(path, encodedJson);
         }
@@ -41,6 +44,14 @@ namespace JsonUtils
         {
             string path = Path.Combine(Application.persistentDataPath, fileName);
             return new FileInfo(path);
+        }
+
+        private static void ByteConvert(ref byte[] bytes)
+        {
+            for(int i = 0; i < bytes.Length; i++)
+            {
+                bytes[i] = (byte)~bytes[i];
+            }
         }
     }
 }
