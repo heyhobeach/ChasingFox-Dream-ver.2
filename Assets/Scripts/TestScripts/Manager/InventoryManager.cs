@@ -9,14 +9,21 @@ using UnityEngine;
 public class InventoryManager : Inventory
 
 {
+
+    private static InventoryManager instance;
+
+    public static InventoryManager Instance {  get { return instance; } }
     InventoryScripable invendata;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created\
     private void Awake()
     {
 
-
         invendata = Resources.Load("Inventory") as InventoryScripable;
-
+        if (instance == null)
+        {
+            instance = this;
+        }
     }
 
     /// <summary>
