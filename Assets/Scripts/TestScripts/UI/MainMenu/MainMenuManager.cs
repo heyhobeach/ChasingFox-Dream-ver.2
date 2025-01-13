@@ -122,5 +122,5 @@ public class MainMenuManager : MonoBehaviour
         Application.Quit();
     }
 
-    public void SaveDelete(int idx) => popupUI.SetPopup("삭제 ㄱ?", () => saveSlots[idx].DeleteData());
+    public void SaveDelete(int idx) => popupUI.SetPopup("정말 삭제하시겠습니까?\n <color=#f00000>삭제한 데이터는 복구할 수 없습니다.</color>", () => saveSlots[idx].DeleteData());
 }
