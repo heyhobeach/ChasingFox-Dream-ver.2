@@ -90,7 +90,8 @@ public partial class GameManager : MonoBehaviour
     private void Start()
     {
         StartCoroutine(MapSearchStart());
-        karmaRatio = SystemManager.Instance.saveData.karma;
+        var saveData = SystemManager.Instance.saveData;
+        karmaRatio = saveData.karma;
         if (maps[PlayerData.lastRoomIdx].used)
         {
             player.GetComponent<Player>().Init(maps[PlayerData.lastRoomIdx].playerData);
@@ -100,6 +101,12 @@ public partial class GameManager : MonoBehaviour
         else player.GetComponent<Player>().Init();
         for (int i = 0; i < maps.Count; i++) CreateWallRoom(i).enabled = false;
         CameraManager.Instance?.proCamera2DRooms.OnStartedTransition.AddListener(MoveNextRoom);
+        if (saveData.eventTriggerInstanceID != 0)
+        {
+            var trigger = eventTriggers.Find(x => x.GetInstanceID() == saveData.eventTriggerInstanceID);
+            if (trigger) trigger.OnTrigger(saveData.eventIdx);
+            player.transform.position = trigger.targetPosition;
+        }
     }
 
     private void Update()

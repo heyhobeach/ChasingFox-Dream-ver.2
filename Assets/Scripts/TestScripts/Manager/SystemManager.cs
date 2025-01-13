@@ -11,8 +11,8 @@ public class SystemManager : MonoBehaviour
     private static SystemManager instance;
     public static SystemManager Instance { get => instance; }
 
-    public const string optionDataPath = "OptionData.json";
-    public const string keybindDataPath = "KeybindData.json";
+    public const string optionDataPath = "OptionData.od";
+    public const string keybindDataPath = "KeybindData.kb";
 
     public OptionData optionData;
     private OptionData defaultOptionData = new OptionData();
@@ -76,6 +76,8 @@ public class SystemManager : MonoBehaviour
             chapter = "Chp0",
             mapDatas = null,
             eventTriggerDatas = null,
+            eventTriggerInstanceID = 0,
+            eventIdx = 0,
             karma = 65
         };
 
@@ -246,12 +248,12 @@ public class SystemManager : MonoBehaviour
     public void SaveData(int index)
     {
         if(index < 0 || index >= saveDatas.Length) return;
-        SaveJson("SaveData" + index + ".json", saveDatas[index]);
+        SaveJson("SaveData" + index + ".sv", saveDatas[index]);
     }
     public SaveData LoadData(int index)
     {
         if(index < 0 || index >= saveDatas.Length) return null;
-        try { saveDatas[index] = LoadJson<SaveData>("SaveData" + index + ".json"); }
+        try { saveDatas[index] = LoadJson<SaveData>("SaveData" + index + ".sv"); }
         catch (FileNotFoundException e)
         { 
             Debug.Log("SaveData" + index + " not found.\n" + e);
@@ -275,4 +277,11 @@ public class SystemManager : MonoBehaviour
     }
 
     public SaveData GetData() => saveDatas[saveIndex];
+
+    public void UpdateDataForEventTrigger(int eventTriggerInstanceID, int eventIdx)
+    {
+        if(saveData == null) return;
+        saveData.eventTriggerInstanceID = eventTriggerInstanceID;
+        saveData.eventIdx = eventIdx;
+    }
 }

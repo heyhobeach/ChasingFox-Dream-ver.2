@@ -16,6 +16,12 @@ public class EventTrigger : MonoBehaviour
     /// 이벤트를 작동시킬 대상의 태그
     /// </summary>
     public string targetTag;
+    private Vector2 _targetPosition;
+    public Vector2 targetPosition
+    {
+        get => _targetPosition;
+        protected set => _targetPosition = value;
+    }
 
     /// <summary>
     /// <para>이벤트 작동 횟수 제한 여부</para>
@@ -40,12 +46,14 @@ public class EventTrigger : MonoBehaviour
             if(limit) used = true;
             eventIdx = 0;
             action = null;
+            SystemManager.Instance.UpdateDataForEventTrigger(0, 0);
             return;
         }
         if(eventIdx < eventLists.Length && 
             (eventLists[eventIdx].enterPrerequisites == null || eventLists[eventIdx].enterPrerequisites.isSatisfied) &&
             (eventLists[eventIdx].keyCode == KeyCode.None || Input.GetKeyDown(eventLists[eventIdx].keyCode)))
         {
+            SystemManager.Instance.UpdateDataForEventTrigger(GetInstanceID(), eventIdx);
             eventLists[eventIdx].action?.Invoke();
             if(eventLists[eventIdx].exitPrerequisites != null) StartCoroutine(LockTime(eventLists[eventIdx].exitPrerequisites));
             eventIdx++;
@@ -55,19 +63,28 @@ public class EventTrigger : MonoBehaviour
     /// <summary>
     /// 트리거를 작동시키는 메서드
     /// </summary>
-    public void OnTrigger()
+    public virtual void OnTrigger()
     {
         if(limit ? used : false) return;
+        action = Controller;
+    }
+    public virtual void OnTrigger(int idx)
+    {
+        if(limit ? used : false) return;
+        eventIdx = idx;
+        action = Controller;
     }
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        if((limit ? used : false) || !collider.CompareTag(targetTag)) return;
-        action = Controller;
+        if(!collider.CompareTag(targetTag)) return;
+        targetPosition = collider.transform.position;
+        OnTrigger();
     }
     private void OnTriggerExit2D(Collider2D collider)
     {
         if(!collider.CompareTag(targetTag)) return;
+        targetPosition = Vector2.zero;
         action = null;
     }
 

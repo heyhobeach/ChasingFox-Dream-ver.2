@@ -14,6 +14,9 @@ public class SaveData
     public MapData[] mapDatas;
     public EventTriggerData[] eventTriggerDatas;
 
+    public int eventTriggerInstanceID;
+    public int eventIdx;
+
     public int karma;
 
     // TODO : Add inventory data
@@ -25,6 +28,8 @@ public class SaveData
         chapterIdx = saveData.chapterIdx;
         mapDatas = saveData.mapDatas;
         eventTriggerDatas = saveData.eventTriggerDatas;
+        eventTriggerInstanceID = saveData.eventTriggerInstanceID;
+        eventIdx = saveData.eventIdx;
         karma = saveData.karma;
     }
 }
