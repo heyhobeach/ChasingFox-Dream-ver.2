@@ -71,6 +71,9 @@ public class EventTrigger : MonoBehaviour
     public virtual void OnTrigger(int idx)
     {
         if(limit ? used : false) return;
+#if UNITY_EDITOR
+        return;
+#endif
         eventIdx = idx;
         action = Controller;
     }
@@ -81,7 +84,7 @@ public class EventTrigger : MonoBehaviour
         targetPosition = collider.transform.position;
         OnTrigger();
     }
-    private void OnTriggerExit2D(Collider2D collider)
+    protected virtual void OnTriggerExit2D(Collider2D collider)
     {
         if(!collider.CompareTag(targetTag)) return;
         targetPosition = Vector2.zero;

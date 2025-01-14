@@ -24,12 +24,12 @@ public class Inventory : MonoBehaviour
 
     public int invenCount;
 
-    private new void Awake()
+    private void Awake()
     {
         //base.Awake();
 
-        invendata = Resources.Load("Inventory") as InventoryScripable;
-        inventory = new Dictionary<int, Info>();
+
+
 
     }
      public void testFunc1()
@@ -47,6 +47,11 @@ public class Inventory : MonoBehaviour
     }
     public void AddInventory(Collection.CollectionScriptorble collection)
     {
+        if (invendata == null)
+        {
+            invendata = Resources.Load("Inventory") as InventoryScripable;
+            inventory = new Dictionary<int, Info>();
+        }
         if (!inventory.ContainsKey(collection.id))
         {
             inventory.Add(collection.id, SetInfoStruct(collection));

@@ -23,6 +23,7 @@ public partial class GameManager : MonoBehaviour
     private GunsoundDel onGunsound;
 
     public InventoryManager inventoryManager;
+    public GameObject inventoryCanvas;
 
     public void AddEnemyDeath(EnemyDeathDel del) => onEnemyDeath += del;
     public void AddGunsound(GunsoundDel del) => onGunsound += del;
@@ -188,6 +189,7 @@ public partial class GameManager : MonoBehaviour
     }
     public void Pause()
     {
+        InventoryDisable();
         Pause(!isPaused);
     }
 
@@ -217,5 +219,15 @@ public partial class GameManager : MonoBehaviour
         }
         SystemManager.Instance.saveData.chapterIdx = PlayerData.lastRoomIdx;
         SystemManager.Instance.SaveData(SystemManager.Instance.saveIndex);
+    }
+
+    public void InventoryEnable()
+    {
+        inventoryCanvas.SetActive(true);
+    }
+
+    public void InventoryDisable()
+    {
+        inventoryCanvas.SetActive(false);
     }
 }
