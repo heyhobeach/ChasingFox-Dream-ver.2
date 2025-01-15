@@ -10,6 +10,8 @@ public class InventoryController : MonoBehaviour
     public GameObject list;
 
     public GameObject TextBox;
+
+    public static int select_num;
     void Start()
     {
         
@@ -35,22 +37,30 @@ public class InventoryController : MonoBehaviour
     public void SetListBox()
     {
         ClearListBox();
-        for(int i = 0; i < inventorydata.inventory.Count; i++)
+        int i = 0;
+        foreach(var item in inventorydata.inventory)
         {
             GameObject gobj=list.transform.GetChild(i).gameObject;
             gobj.SetActive(true);
+            ButtonInfo buttonInfo=gobj.GetComponent<ButtonInfo>();
+
             //gobj=Instantiate(TextBox);
             //gobj.transform.SetParent(list.transform);
-
+            buttonInfo.button_info = new System.Tuple<int, Inventory.Info>(item.Key,item.Value);//button에 Info 매칭 하는 부분
             GameObject text = gobj.transform.GetChild(0).gameObject;// 텍스트 부분
             Debug.Log(text.name);
-            text.GetComponent<TMP_Text>().text = inventorydata.inventory[i].name;
+            text.GetComponent<TMP_Text>().text = buttonInfo.button_info.Item2._name;
         }
     }
 
-    public void SetContent(int i)
+    public void SetContent()
     {
+        GameObject contentObj=this.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject;
+        Debug.Log("id" + select_num + "content" + inventorydata.inventory[select_num].context);
 
+        //Debug.Log(contentObj.name);
+
+        contentObj.GetComponent<TMP_Text>().text = inventorydata.inventory[select_num].context;
     }
 
     public void ClearListBox()

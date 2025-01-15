@@ -13,7 +13,7 @@ public class Inventory : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public class Info
     {
-        public string name;
+        public string _name;
         public string context;
         public Sprite image;
     }
@@ -40,7 +40,7 @@ public class Inventory : MonoBehaviour
     private Info SetInfoStruct(Collection.CollectionScriptorble collection)
     {
         Info info=new Info();
-        info.name = collection.name;
+        info._name = collection._name;
         info.context = collection._context;
         info.image = collection.image;
         return info;
