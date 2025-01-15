@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -9,26 +11,39 @@ using UnityEditor;
 [System.Serializable, CreateAssetMenu(menuName = "ScriptableObjectDatas/MapData")]
 public class MapData : ScriptableObject
 {
-    public string path;
+    [Serializable]
+    public class JsonData
+    {
+        public bool used;
+        public bool cleared;
+        public Vector3 position;
+
+        public static implicit operator JsonData(MapData data)
+        {
+            return new JsonData {
+                used = data.used,
+                cleared = data.cleared,
+                position = data.position
+            };
+        }
+    }
+
     public Vector3 position;
     public bool used;
     public bool cleared;
-    public PlayerData playerData;
 
     public void Init()
     {
         position = Vector3.zero;
         used = false;
-        playerData = CreateInstance<PlayerData>();
-        playerData.Init();
+        cleared = false;
     }
 
-    public void Init(MapData mapData)
+    public void Init(JsonData mapData)
     {
         position = mapData.position;
         used = mapData.used;
-        playerData = CreateInstance<PlayerData>();
-        playerData.Init(mapData.playerData);
+        cleared = mapData.cleared;
     }
 
 #if UNITY_EDITOR
@@ -48,8 +63,6 @@ public class MapData : ScriptableObject
             used = false;
             cleared = false;
             position = Vector3.zero;
-            playerData = CreateInstance<PlayerData>();
-            playerData.Init();
         }
     }
 #endif

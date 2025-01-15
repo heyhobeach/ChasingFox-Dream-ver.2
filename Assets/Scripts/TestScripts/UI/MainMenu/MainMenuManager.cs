@@ -95,23 +95,6 @@ public class MainMenuManager : MonoBehaviour
             SystemManager.Instance.CreateData(idx);
             save = SystemManager.Instance.saveData;
         }
-        if(save.mapDatas != null)
-        {
-            foreach(var map in save.mapDatas)
-            {
-                var mapData = Resources.Load<MapData>(map.path);
-                mapData.Init(map);
-            }
-        }
-        if(save.eventTriggerDatas != null)
-        {
-            foreach(var et in save.eventTriggerDatas)
-            {
-                var eventTrigger = Resources.Load<EventTriggerData>(et.path);
-                eventTrigger.Init(et);
-            }
-        }
-        PlayerData.lastRoomIdx = save.chapterIdx;
         yield return new WaitForSeconds(moveSpeed);
         PageManger.Instance.LoadScene(save.chapter);
     }

@@ -28,10 +28,12 @@ public class FixedEventTrigger : EventTrigger, IBaseController
         if(eventLock || GameManager.Instance.isPaused) return;
         if(eventIdx >= eventLists.Length)
         {
-            ((IBaseController)this).RemoveController();
             SystemManager.Instance.UpdateDataForEventTrigger(0, 0);
+            targetPosition = Vector2.zero;
             eventIdx = 0;
             if(limit) used = true;
+            ((IBaseController)this).RemoveController();
+            return;
         }
 
         if(Input.GetButtonDown("Cancel")) GameManager.Instance.Pause();
