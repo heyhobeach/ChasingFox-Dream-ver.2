@@ -677,7 +677,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &84951120
 Transform:
   m_ObjectHideFlags: 0
@@ -760,10 +760,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c72af648c5115d4cbf2b4d9a2ffac99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 1
   eventLists:
-  - prerequisites: {fileID: 0}
+  - enterPrerequisites: {fileID: 0}
     keyCode: 0
     action:
       m_PersistentCalls:
@@ -780,8 +781,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-    lockTime: 0
-  - prerequisites: {fileID: 0}
+    exitPrerequisites: {fileID: 0}
+  - enterPrerequisites: {fileID: 0}
     keyCode: 0
     action:
       m_PersistentCalls:
@@ -810,7 +811,7 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
-    lockTime: 0
+    exitPrerequisites: {fileID: 0}
   autoTrigger: 1
   keyCode: 0
 --- !u!61 &84951124
@@ -898,7 +899,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &85435872
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1836,7 +1837,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &123036445
 Transform:
   m_ObjectHideFlags: 0
@@ -1874,7 +1875,7 @@ PlayableDirector:
   - key: {fileID: 6222631484360873699, guid: c1098ddc12737ed40bc1fd23036b29d3, type: 2}
     value: {fileID: 1359668660}
   - key: {fileID: -2094894149599827913, guid: c1098ddc12737ed40bc1fd23036b29d3, type: 2}
-    value: {fileID: 0}
+    value: {fileID: 1219963443}
   - key: {fileID: 3450016570743143613, guid: c1098ddc12737ed40bc1fd23036b29d3, type: 2}
     value: {fileID: 85435872}
   - key: {fileID: -2746679651902056594, guid: c1098ddc12737ed40bc1fd23036b29d3, type: 2}
@@ -1943,10 +1944,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c72af648c5115d4cbf2b4d9a2ffac99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 1
   eventLists:
-  - prerequisites: {fileID: 0}
+  - enterPrerequisites: {fileID: 0}
     keyCode: 0
     action:
       m_PersistentCalls:
@@ -1963,8 +1965,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-    lockTime: 0
-  - prerequisites: {fileID: 0}
+    exitPrerequisites: {fileID: 0}
+  - enterPrerequisites: {fileID: 0}
     keyCode: 0
     action:
       m_PersistentCalls:
@@ -1993,7 +1995,7 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-    lockTime: 0
+    exitPrerequisites: {fileID: 0}
   autoTrigger: 1
   keyCode: 0
 --- !u!61 &123036450
@@ -2184,6 +2186,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyUnits: []
   edgeCollider2D: {fileID: 0}
+  mapData: {fileID: 0}
 --- !u!156049354 &139443448
 Grid:
   m_ObjectHideFlags: 0
@@ -2500,6 +2503,7 @@ MonoBehaviour:
   - {fileID: 1882769487}
   - {fileID: 1956303002}
   edgeCollider2D: {fileID: 0}
+  mapData: {fileID: 0}
 --- !u!156049354 &209500797
 Grid:
   m_ObjectHideFlags: 0
@@ -18720,6 +18724,7 @@ MonoBehaviour:
   - {fileID: 1935063352}
   - {fileID: 1128004351}
   edgeCollider2D: {fileID: 0}
+  mapData: {fileID: 0}
 --- !u!156049354 &522901666
 Grid:
   m_ObjectHideFlags: 0
@@ -19031,6 +19036,7 @@ MonoBehaviour:
   - {fileID: 1564628305}
   - {fileID: 773924127}
   edgeCollider2D: {fileID: 0}
+  mapData: {fileID: 0}
 --- !u!156049354 &558622875
 Grid:
   m_ObjectHideFlags: 0
@@ -22144,10 +22150,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c72af648c5115d4cbf2b4d9a2ffac99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 1
   eventLists:
-  - prerequisites: {fileID: 0}
+  - enterPrerequisites: {fileID: 0}
     keyCode: 0
     action:
       m_PersistentCalls:
@@ -22164,8 +22171,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-    lockTime: 0
-  - prerequisites: {fileID: 0}
+    exitPrerequisites: {fileID: 0}
+  - enterPrerequisites: {fileID: 0}
     keyCode: 0
     action:
       m_PersistentCalls:
@@ -22194,7 +22201,7 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-    lockTime: 0
+    exitPrerequisites: {fileID: 0}
   autoTrigger: 1
   keyCode: 0
 --- !u!61 &776934581
@@ -22279,6 +22286,7 @@ MonoBehaviour:
   - {fileID: 1381110560}
   - {fileID: 98709246}
   edgeCollider2D: {fileID: 0}
+  mapData: {fileID: 0}
 --- !u!156049354 &777961451
 Grid:
   m_ObjectHideFlags: 0
@@ -24631,6 +24639,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyUnits: []
   edgeCollider2D: {fileID: 0}
+  mapData: {fileID: 0}
 --- !u!156049354 &945236383
 Grid:
   m_ObjectHideFlags: 0
@@ -25794,10 +25803,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c72af648c5115d4cbf2b4d9a2ffac99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 1
   eventLists:
-  - prerequisites: {fileID: 0}
+  - enterPrerequisites: {fileID: 0}
     keyCode: 0
     action:
       m_PersistentCalls:
@@ -25850,8 +25860,8 @@ MonoBehaviour:
             m_StringArgument: 6 1 14
             m_BoolArgument: 1
           m_CallState: 2
-    lockTime: 0
-  - prerequisites: {fileID: 1008434157}
+    exitPrerequisites: {fileID: 0}
+  - enterPrerequisites: {fileID: 0}
     keyCode: 0
     action:
       m_PersistentCalls:
@@ -25892,8 +25902,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
-    lockTime: 0
-  - prerequisites: {fileID: 107771774}
+    exitPrerequisites: {fileID: 0}
+  - enterPrerequisites: {fileID: 0}
     keyCode: 0
     action:
       m_PersistentCalls:
@@ -25946,8 +25956,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
-    lockTime: 0
-  - prerequisites: {fileID: 1695477385}
+    exitPrerequisites: {fileID: 0}
+  - enterPrerequisites: {fileID: 0}
     keyCode: 0
     action:
       m_PersistentCalls:
@@ -25964,7 +25974,7 @@ MonoBehaviour:
             m_StringArgument: Chp2
             m_BoolArgument: 0
           m_CallState: 2
-    lockTime: 0
+    exitPrerequisites: {fileID: 0}
   autoTrigger: 1
   keyCode: 0
 --- !u!61 &1008434159
@@ -26466,10 +26476,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c72af648c5115d4cbf2b4d9a2ffac99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 1
   eventLists:
-  - prerequisites: {fileID: 0}
+  - enterPrerequisites: {fileID: 0}
     keyCode: 0
     action:
       m_PersistentCalls:
@@ -26510,8 +26521,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
-    lockTime: 0
-  - prerequisites: {fileID: 1017276237}
+    exitPrerequisites: {fileID: 0}
+  - enterPrerequisites: {fileID: 0}
     keyCode: 0
     action:
       m_PersistentCalls:
@@ -26589,7 +26600,7 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
-    lockTime: 0
+    exitPrerequisites: {fileID: 0}
   autoTrigger: 1
   keyCode: 0
 --- !u!61 &1017276240
@@ -28153,7 +28164,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1148973499
 Transform:
   m_ObjectHideFlags: 0
@@ -31927,10 +31938,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c72af648c5115d4cbf2b4d9a2ffac99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 1
   eventLists:
-  - prerequisites: {fileID: 0}
+  - enterPrerequisites: {fileID: 0}
     keyCode: 0
     action:
       m_PersistentCalls:
@@ -31947,8 +31959,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-    lockTime: 0
-  - prerequisites: {fileID: 0}
+    exitPrerequisites: {fileID: 0}
+  - enterPrerequisites: {fileID: 0}
     keyCode: 0
     action:
       m_PersistentCalls:
@@ -31989,7 +32001,7 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
-    lockTime: 0
+    exitPrerequisites: {fileID: 0}
   autoTrigger: 1
   keyCode: 0
 --- !u!61 &1178653010
@@ -33182,9 +33194,9 @@ PlayableDirector:
   - key: {fileID: -4972265314890599435, guid: ffb24fcc57cb2594986a40eb3be2252a, type: 2}
     value: {fileID: 85435872}
   - key: {fileID: 6795985756219890813, guid: ffb24fcc57cb2594986a40eb3be2252a, type: 2}
-    value: {fileID: 0}
+    value: {fileID: 278872540}
   - key: {fileID: -8084716305505957489, guid: ffb24fcc57cb2594986a40eb3be2252a, type: 2}
-    value: {fileID: 0}
+    value: {fileID: 468240930}
   - key: {fileID: -4304009959121687291, guid: ffb24fcc57cb2594986a40eb3be2252a, type: 2}
     value: {fileID: 1522565345}
   - key: {fileID: 3142152426946621505, guid: ffb24fcc57cb2594986a40eb3be2252a, type: 2}
@@ -33229,10 +33241,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c72af648c5115d4cbf2b4d9a2ffac99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 1
   eventLists:
-  - prerequisites: {fileID: 0}
+  - enterPrerequisites: {fileID: 0}
     keyCode: 0
     action:
       m_PersistentCalls:
@@ -33249,8 +33262,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-    lockTime: 0
-  - prerequisites: {fileID: 0}
+    exitPrerequisites: {fileID: 0}
+  - enterPrerequisites: {fileID: 0}
     keyCode: 0
     action:
       m_PersistentCalls:
@@ -33279,7 +33292,7 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-    lockTime: 0
+    exitPrerequisites: {fileID: 0}
   autoTrigger: 1
   keyCode: 0
 --- !u!61 &1223142108
@@ -48449,7 +48462,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1766943394
 Transform:
   m_ObjectHideFlags: 0
@@ -48719,7 +48732,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1825500757
 RectTransform:
   m_ObjectHideFlags: 0
@@ -49249,7 +49262,7 @@ Transform:
   m_GameObject: {fileID: 1886473775}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -158.8, y: -7.2, z: -11.9943285}
+  m_LocalPosition: {x: 31.54, y: -7.2, z: -11.9943285}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -49357,7 +49370,7 @@ Transform:
   m_GameObject: {fileID: 1888959372}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.22000122, y: 19.34, z: -199.61671}
+  m_LocalPosition: {x: -158.8, y: -7.2, z: -11.9943285}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -55724,6 +55737,7 @@ MonoBehaviour:
   - {fileID: 972800045}
   - {fileID: 1298928621}
   edgeCollider2D: {fileID: 0}
+  mapData: {fileID: 0}
 --- !u!156049354 &2018677508
 Grid:
   m_ObjectHideFlags: 0
