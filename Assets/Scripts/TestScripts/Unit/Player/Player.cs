@@ -30,7 +30,8 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
 
     [SerializeField] private int _maxHealth;    //?private아닌가 A : 맞음
     public int maxHealth { get => _maxHealth; set => _maxHealth = value; }
-    public int health { get; set; }
+    [SerializeField] private int _health;
+    public int health { get => _health; set => _health = value; }
     public bool invalidation { get; set; }
 
     public static GameObject pObject;
@@ -109,18 +110,9 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         return changedForm.Move(dir);
     }
 
-    public bool Attack(Vector3 clickPos)
-    {
-        bool temp = false;
-        changedForm.Attack(clickPos);
-        return temp;
-    }
+    public bool Attack(Vector3 clickPos) => changedForm.Attack(clickPos);
 
-    public bool Dash() 
-    {
-        changedForm.Dash();
-        return true;
-    }
+    public bool Dash() => changedForm.Dash();
 
     public void Death()
     {
@@ -141,14 +133,16 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
 
     public bool FormChange()
     {
-        if(changedForm.GetType() == typeof(Human)) 
+        if(changedForm.GetType() == typeof(Human) && ((Werewolf) forms[1]).isFormChangeReady())
         {
+            invalidation = true;
             changedForm.gameObject.SetActive(false);
             changedForm = forms[1];
             changedForm.gameObject.SetActive(true);
         }
         else if(changedForm.GetType() == typeof(Werewolf)) 
         {
+            invalidation = false;
             changedForm.gameObject.SetActive(false);
             changedForm = forms[0];
             changedForm.gameObject.SetActive(true);
@@ -161,17 +155,22 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     void Update()
     {
         pObject = this.gameObject;
+        if(changedForm.GetType() != typeof(Werewolf))
+        {
+            if (changedForm.UnitState == UnitState.Dash) invalidation = true;
+            else invalidation = false;
+        }
         // if(changedForm.GetType() == typeof(Werewolf) && ((Werewolf) changedForm).isFormChangeReady) FormChange();
-        if (changedForm.UnitState == UnitState.Dash)
-        {
-            invalidation = true;
-            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Bullet"), true);
-        }
-        else
-        {
-            invalidation = false;
-            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Bullet"), false);
-        }
+        // if (changedForm.UnitState == UnitState.Dash)
+        // {
+        //     invalidation = true;
+        //     Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Bullet"), true);
+        // }
+        // else
+        // {
+        //     invalidation = false;
+        //     Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Bullet"), false);
+        // }
 
         //OverlapTest();
     }

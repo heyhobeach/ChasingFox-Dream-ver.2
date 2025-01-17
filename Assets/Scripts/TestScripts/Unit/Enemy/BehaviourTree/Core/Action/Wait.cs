@@ -13,6 +13,7 @@ namespace BehaviourTree
 
         protected override void OnStart()
         {
+            blackboard.thisUnit.SetAni(false);
             time = 0;
             blackboard.thisUnit.Move(blackboard.thisUnit.transform.position);
         }

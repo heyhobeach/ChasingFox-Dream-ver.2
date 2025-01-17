@@ -62,8 +62,6 @@ public partial class GameManager : MonoBehaviour
     {
         instance = null;
         if (isPaused) Pause();
-        maps.Clear();
-        eventTriggers.Clear();
         BehaviourNode.clone.Clear();
         StopAllCoroutines();
         CameraManager.Instance?.proCamera2DRooms.OnStartedTransition.RemoveListener(MoveNextRoom);
@@ -80,8 +78,8 @@ public partial class GameManager : MonoBehaviour
             return;
         }
         instance = this;
-        player = FindObjectOfType<Player>();
-        interactionEvent = FindObjectOfType<InteractionEvent>();
+        player = FindFirstObjectByType<Player>();
+        interactionEvent = FindFirstObjectByType<InteractionEvent>();
         popupManager = PopupManager.Instance;
         controllerManager = ControllerManager.Instance;
     }
@@ -177,15 +175,9 @@ public partial class GameManager : MonoBehaviour
         return maps[currentRoomIndex].edgeCollider2D;
     }
 
-    public void ResetScene()
-    {
-        foreach (var map in maps) map.Reset();
-        foreach (var trigger in eventTriggers) trigger.used = false;
-    }
-
     public void LoadScene(string name)
     {
-        UIController.Instance.DialogueCanvasSetFalse();
+        UIController.Instance?.DialogueCanvasSetFalse();
         SaveData();
         PageManger.Instance.LoadScene(name);
     }

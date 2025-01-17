@@ -9,7 +9,7 @@ namespace BehaviourTree
     {
         protected override void OnEnd() {}
 
-        protected override void OnStart() {}
+        protected override void OnStart() => blackboard.thisUnit.SetAni(false);
 
         protected override NodeState OnUpdate()
         {
