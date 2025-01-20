@@ -53,5 +53,6 @@ public class PopupManager : MonoBehaviour
     public void PausePop(bool enabled)
     {
         pausePopup.SetActive(enabled);
+        pausePopup.GetComponent<Canvas>().sortingOrder = 101;
     }
 }
