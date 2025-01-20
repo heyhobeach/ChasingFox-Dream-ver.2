@@ -9,14 +9,21 @@ using UnityEngine;
 public class InventoryManager : Inventory
 
 {
+
+    private static InventoryManager instance;
+
+    public static InventoryManager Instance {  get { return instance; } }
     InventoryScripable invendata;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created\
     private void Awake()
     {
 
-
         invendata = Resources.Load("Inventory") as InventoryScripable;
-
+        if (instance == null)
+        {
+            instance = this;
+        }
     }
 
     /// <summary>
@@ -39,7 +46,7 @@ public class InventoryManager : Inventory
             Debug.Log("수집품 존재");
             for (int i = 0; i < invenCount; i++)
             {
-                Debug.Log(string.Format("수집품 목록확인+{0} : {1},{2}", i, inventory[i].name, inventory[i].context));
+                Debug.Log(string.Format("수집품 목록확인+{0} : {1},{2}", i, inventory[i]._name, inventory[i].context));
             }
         }
         else
