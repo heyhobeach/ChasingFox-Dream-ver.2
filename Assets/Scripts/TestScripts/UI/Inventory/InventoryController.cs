@@ -6,10 +6,16 @@ public class InventoryController : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
+    /// <summary>
+    /// 인벤토리 데이터 스크립터블을 갈아끼우기 위한 inventorydata
+    /// </summary>
     public InventoryScripable inventorydata;
     public GameObject list;
 
-    public GameObject TextBox;
+    /// <summary>
+    /// 
+    /// </summary>
+    public GameObject content;
 
     public static int select_num;
     void Start()
@@ -23,6 +29,26 @@ public class InventoryController : MonoBehaviour
          
     }
 
+    private void OnEnable()
+    {
+        //Viewport = list.transform.GetChild(0).transform.GetChild(0).gameObject;
+        content = list.transform.parent.gameObject;
+        RectTransform content_rect = content.GetComponent<RectTransform>();
+
+        int count = 0;
+        for(int i=0;i<list.transform.childCount;i++)
+        {
+            if (list.transform.GetChild(i).gameObject.activeSelf)
+            {
+                count++;
+            }
+            
+        }
+        //Debug.Log("count =" + count);
+        content_rect.sizeDelta = new Vector2(content_rect.sizeDelta.x, count * 95);
+        list.GetComponent<RectTransform>().sizeDelta = new Vector2(content_rect.sizeDelta.x, count * 95);
+    }
+
     public void NewsInventorySet()
     {
         inventorydata=InventoryManager.Instance.GetInventoryAll();
@@ -31,8 +57,9 @@ public class InventoryController : MonoBehaviour
     }
     public void TraceInventorySet()
     {
-        inventorydata = null;
+        inventorydata = InventoryManager.Instance.GetNewsDataAll();
         SetListBox();
+        Debug.Log("NewsData +" + inventorydata.inventory.Count);
     }
     public void SetListBox()
     {
@@ -55,8 +82,6 @@ public class InventoryController : MonoBehaviour
             gobj.SetActive(true);
             ButtonInfo buttonInfo=gobj.GetComponent<ButtonInfo>();
 
-            //gobj=Instantiate(TextBox);
-            //gobj.transform.SetParent(list.transform);
             buttonInfo.button_info = new System.Tuple<int, Inventory.Info>(item.Key,item.Value);//button에 Info 매칭 하는 부분
             GameObject text = gobj.transform.GetChild(0).gameObject;// 텍스트 부분
             Debug.Log(text.name);
