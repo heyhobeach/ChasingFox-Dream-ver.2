@@ -37,8 +37,19 @@ public class InventoryController : MonoBehaviour
     public void SetListBox()
     {
         ClearListBox();
+
+        if (4> inventorydata.inventory.Count)
+        //if (list.transform.childCount<inventorydata.inventory.Count)
+        {
+            for(int j = 0; j < 4; j++)
+            {
+                GameObject obj=Instantiate(list.transform.GetChild(j).gameObject);
+                obj.transform.SetParent(list.transform);
+            }
+            //5개씩 추가 생성 안 부서지도록? 만약 매번 하면 지금 인벤토리 열때마다
+        }
         int i = 0;
-        foreach(var item in inventorydata.inventory)
+        foreach(var item in inventorydata.inventory)//인벤 데이터 만큼 반복하면서 true 함
         {
             GameObject gobj=list.transform.GetChild(i).gameObject;
             gobj.SetActive(true);
@@ -69,6 +80,11 @@ public class InventoryController : MonoBehaviour
         {
             list.transform.GetChild(i).gameObject.SetActive(false);
         }
+    }
+
+    public void SetScrollHeight()//스크롤 길이 정하는 함수  
+    {
+
     }
 
     
