@@ -84,6 +84,11 @@ public class SetCharImage : MonoBehaviour
             SetDisable( other);
         }
 
+        if(image_dir.Equals("none")) {
+            SetDisable( other);
+            SetDisable(target);
+        }
+
     }
 
     public void SetDarkImage(Image charactor)
