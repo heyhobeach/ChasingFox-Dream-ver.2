@@ -13,9 +13,9 @@ public class InventoryController : MonoBehaviour
     public GameObject list;
 
     /// <summary>
-    /// 
+    /// 버튼 개수 확인용
     /// </summary>
-    public GameObject content;
+    private GameObject content;
 
     public static int select_num;
     void Start()
@@ -107,9 +107,9 @@ public class InventoryController : MonoBehaviour
         }
     }
 
-    public void SetScrollHeight()//스크롤 길이 정하는 함수  
+    public void InventoryImage()//스크롤 길이 정하는 함수  
     {
-
+        //구현해야함
     }
 
     
