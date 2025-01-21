@@ -134,10 +134,11 @@ public class UIManager : MonoBehaviour
 
         //아래는 ver을 맞추기위해
         content.fontSize = intRect.sizeDelta.y * fontRatio;
-        Vertical.GetComponent<RectTransform>().sizeDelta = intRect.sizeDelta * 0.68f;//해당 0.75는 intRect크기에 비례한 intRect의 크기
+        //Vertical.GetComponent<RectTransform>().sizeDelta = intRect.sizeDelta* 0.68f;//해당 0.75는 intRect크기에 비례한 intRect의 크기
+        Vertical.GetComponent<RectTransform>().sizeDelta = new Vector2(intRect.sizeDelta.x*0.9f,intRect.sizeDelta.y * 0.68f);//해당 0.75는 intRect크기에 비례한 intRect의 크기
         // Vertical.GetComponent<RectTransform>().sizeDelta.y/2
         //                                                                          왜 0.38이지? 계산 사으로 안 맞는 느낌인데, 0.34가 딱코
-        Vertical.GetComponent<RectTransform>().position = new Vector3(intRect.sizeDelta.x*0.38f,Vertical.GetComponent<RectTransform>().sizeDelta.y/2,intRect.position.z);
+        Vertical.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,0);
 
 
         //이름 부분 위치 수정
