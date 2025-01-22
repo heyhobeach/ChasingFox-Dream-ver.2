@@ -54,6 +54,11 @@ public class Inventory : MonoBehaviour
         }
         if (!inventory.ContainsKey(collection.id))
         {
+
+            if (!collection.is_collect)
+            {
+                return;
+            }
             inventory.Add(collection.id, SetInfoStruct(collection));
 
             invendata.inventory = inventory;

@@ -7,6 +7,7 @@ namespace Collection
     [CreateAssetMenu(fileName = "CollectionScriptorble", menuName = "CollectionScriptorble/CollectionScriptorble")]
     public class CollectionScriptorble : ScriptableObject
     {
+        public bool is_collect = true;
         public int id;
         public Sprite image;
         public string _name;
