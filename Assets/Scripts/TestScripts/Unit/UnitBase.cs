@@ -17,7 +17,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     /// <summary>
     /// 중력 상수
     /// </summary>
-    public const float gravity = -9.81f;
+    public float gravity = -5.81f;
 
     /// <summary>
     /// 이동속도
