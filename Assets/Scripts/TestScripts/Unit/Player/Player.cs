@@ -25,9 +25,13 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     private PlayerUnit changedForm;
     public PlayerUnit ChagedForm { get => changedForm; }
 
+    public BrutalData brutalData { get => ((Werewolf)forms[1]).brutalData; set => ((Werewolf)forms[1]).brutalData = value; }
+    public int currentGauge { get => ((Werewolf)forms[1]).currentGauge; set => ((Werewolf)forms[1]).currentGauge = value; }
+
     [SerializeField] private int _maxHealth;    //?private아닌가 A : 맞음
     public int maxHealth { get => _maxHealth; set => _maxHealth = value; }
-    public int health { get; set; }
+    [SerializeField] private int _health;
+    public int health { get => _health; set => _health = value; }
     public bool invalidation { get; set; }
 
     public static GameObject pObject;
@@ -59,36 +63,35 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
 
     public void Init(PlayerData playerData = null)
     {
-        foreach(PlayerUnit form in forms) 
-        {
-            form.gameObject.SetActive(false);
-            form.Init();
-        }
-        health = maxHealth; // 체력 초기화
         fixedDir = 1;
         invalidation = false;
 
         if(playerData == null) 
         {
-            forms[0].gameObject.SetActive(true);
-            changedForm = forms[0];
-            return;
+            playerData = new PlayerData();
+            playerData.Init();
+            SystemManager.Instance.saveData.playerData = playerData;
         }
         health = playerData.health;
-        forms[playerData.formIdx].gameObject.SetActive(true);
         changedForm = forms[playerData.formIdx];
         ((Werewolf)forms[1]).brutalData = playerData.brutalData;
-        ((Werewolf)forms[1]).changeGauge = playerData.brutalGaugeRemaining;
-        // foreach(PlayerUnit form in forms) form.Init();
+        ((Werewolf)forms[1]).currentGauge = playerData.brutalGaugeRemaining;
+        ((Werewolf)forms[1]).formChangeTest += () => FormChange();
+        foreach(PlayerUnit form in forms) 
+        {
+            form.gameObject.SetActive(false);
+            form.Init();
+        }
+        changedForm.gameObject.SetActive(true);
         pObject = this.gameObject;
     }
     public PlayerData DataSet()
     {
-        PlayerData playerData = ScriptableObject.CreateInstance<PlayerData>();
+        PlayerData playerData = new();
         playerData.health = health;
         playerData.formIdx = Array.FindIndex(forms, (form) => form == changedForm);
         playerData.brutalData = ((Werewolf)forms[1]).brutalData;
-        playerData.brutalGaugeRemaining = ((Werewolf)forms[1]).changeGauge;
+        playerData.brutalGaugeRemaining = ((Werewolf)forms[1]).currentGauge;
 
         return playerData;
     }
@@ -107,18 +110,9 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         return changedForm.Move(dir);
     }
 
-    public bool Attack(Vector3 clickPos)
-    {
-        bool temp = false;
-        changedForm.Attack(clickPos);
-        return temp;
-    }
+    public bool Attack(Vector3 clickPos) => changedForm.Attack(clickPos);
 
-    public bool Dash() 
-    {
-        changedForm.Dash();
-        return true;
-    }
+    public bool Dash() => changedForm.Dash();
 
     public void Death()
     {
@@ -137,24 +131,46 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
 
     }
 
-    public bool FormChange() => false;
+    public bool FormChange()
+    {
+        if(changedForm.GetType() == typeof(Human) && ((Werewolf) forms[1]).isFormChangeReady())
+        {
+            invalidation = true;
+            changedForm.gameObject.SetActive(false);
+            changedForm = forms[1];
+            changedForm.gameObject.SetActive(true);
+        }
+        else if(changedForm.GetType() == typeof(Werewolf)) 
+        {
+            invalidation = false;
+            changedForm.gameObject.SetActive(false);
+            changedForm = forms[0];
+            changedForm.gameObject.SetActive(true);
+        }
+        return true;
+    }
 
     public bool Reload() => changedForm.Reload(); 
 
     void Update()
     {
         pObject = this.gameObject;
-        if(changedForm.GetType() == typeof(Werewolf) && ((Werewolf) changedForm).isFormChangeReady) FormChange();
-        if (changedForm.UnitState == UnitState.Dash)
+        if(changedForm.GetType() != typeof(Werewolf))
         {
-            invalidation = true;
-            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Bullet"), true);
+            if (changedForm.UnitState == UnitState.Dash) invalidation = true;
+            else invalidation = false;
         }
-        else
-        {
-            invalidation = false;
-            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Bullet"), false);
-        }
+        // if(changedForm.GetType() == typeof(Werewolf) && ((Werewolf) changedForm).isFormChangeReady) FormChange();
+        // if (changedForm.UnitState == UnitState.Dash)
+        // {
+        //     invalidation = true;
+        //     Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Bullet"), true);
+        // }
+        // else
+        // {
+        //     invalidation = false;
+        //     Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Bullet"), false);
+        // }
 
         //OverlapTest();
     }

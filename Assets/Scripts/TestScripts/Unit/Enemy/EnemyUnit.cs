@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Com.LuisPedroFonseca.ProCamera2D;
 using Damageables;
 using UnityEngine;
 
@@ -25,12 +22,22 @@ public class EnemyUnit : UnitBase, IDamageable
     public int health { get; set; }
     public bool invalidation { get; set; }
 
+    private MaterialPropertyBlock mpb;
+
     protected override void OnEnable() {}
     protected override void Start()
     {
         base.Start();
         unitState = UnitState.Default;
         health = _maxHealth;
+        
+        mpb = new MaterialPropertyBlock();
+    }    void LateUpdate()
+    {
+        // 플립 상태를 셰이더에 전달
+        mpb.SetFloat("_FlipX", spriteRenderer.flipX ? 1.0f : 0.0f);
+        mpb.SetFloat("_FlipY", spriteRenderer.flipY ? 1.0f : 0.0f);
+        spriteRenderer.SetPropertyBlock(mpb);
     }
 
     public override bool Move(Vector2 dir)
@@ -71,5 +78,19 @@ public class EnemyUnit : UnitBase, IDamageable
         //hzForce= 2000 * Mathf.Sign(dir.x);
         rb.AddForceX(1000    * Mathf.Sign(dir.x), ForceMode2D.Force);
         Debug.Log("벨로시티" + rb.linearVelocityX);
+    }
+
+    public void OnMouseEnter()
+    {
+        if (mpb == null) return;
+        mpb.SetFloat("_Selected", 1);
+        spriteRenderer.SetPropertyBlock(mpb);
+    }
+
+    public void OnMouseExit()
+    {
+        if (mpb == null) return;
+        mpb.SetFloat("_Selected", 0);
+        spriteRenderer.SetPropertyBlock(mpb);
     }
 }

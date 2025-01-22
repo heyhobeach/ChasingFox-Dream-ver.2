@@ -14,7 +14,7 @@ namespace BehaviourTree
         Vector2 aimPos;
         Rigidbody2D targetRigidbody;
         
-        protected override void OnEnd() => blackboard.thisUnit.SetAni(false);
+        protected override void OnEnd() {}
 
         protected override void OnStart()
         {

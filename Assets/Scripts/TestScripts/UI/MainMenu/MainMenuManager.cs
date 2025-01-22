@@ -95,23 +95,6 @@ public class MainMenuManager : MonoBehaviour
             SystemManager.Instance.CreateData(idx);
             save = SystemManager.Instance.saveData;
         }
-        if(save.mapDatas != null)
-        {
-            foreach(var map in save.mapDatas)
-            {
-                var mapData = Resources.Load<MapData>(map.path);
-                mapData.Init(map);
-            }
-        }
-        if(save.eventTriggerDatas != null)
-        {
-            foreach(var et in save.eventTriggerDatas)
-            {
-                var eventTrigger = Resources.Load<EventTriggerData>(et.path);
-                eventTrigger.Init(et);
-            }
-        }
-        PlayerData.lastRoomIdx = save.chapterIdx;
         yield return new WaitForSeconds(moveSpeed);
         PageManger.Instance.LoadScene(save.chapter);
     }
@@ -122,5 +105,5 @@ public class MainMenuManager : MonoBehaviour
         Application.Quit();
     }
 
-    public void SaveDelete(int idx) => popupUI.SetPopup("삭제 ㄱ?", () => saveSlots[idx].DeleteData());
+    public void SaveDelete(int idx) => popupUI.SetPopup("정말 삭제하시겠습니까?\n <color=#f00000>삭제한 데이터는 복구할 수 없습니다.</color>", () => saveSlots[idx].DeleteData());
 }

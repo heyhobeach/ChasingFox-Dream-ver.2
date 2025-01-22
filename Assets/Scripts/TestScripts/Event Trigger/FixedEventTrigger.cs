@@ -25,16 +25,19 @@ public class FixedEventTrigger : EventTrigger, IBaseController
     /// </summary>
     public new void Controller()
     {
+        if(Input.GetButtonDown("Cancel")) GameManager.Instance.Pause();
+        
         if(eventLock || GameManager.Instance.isPaused) return;
         if(eventIdx >= eventLists.Length)
         {
-            ((IBaseController)this).RemoveController();
             SystemManager.Instance.UpdateDataForEventTrigger(0, 0);
+            PopupManager.Instance.RestartButtonEnable(true);
+            targetPosition = Vector2.zero;
             eventIdx = 0;
             if(limit) used = true;
+            ((IBaseController)this).RemoveController();
+            return;
         }
-
-        if(Input.GetButtonDown("Cancel")) GameManager.Instance.Pause();
 
         if(eventIdx < eventLists.Length && 
             (eventLists[eventIdx].enterPrerequisites == null || eventLists[eventIdx].enterPrerequisites.isSatisfied) &&
@@ -54,12 +57,14 @@ public class FixedEventTrigger : EventTrigger, IBaseController
     {
         if(limit ? used : false) return;
         ((IBaseController)this).AddController();
+        PopupManager.Instance.RestartButtonEnable(false);
     }
     public override void OnTrigger(int idx)
     {
         if(limit ? used : false) return;
         eventIdx = idx;
         ((IBaseController)this).AddController();
+        PopupManager.Instance.RestartButtonEnable(false);
     }
 
     private void OnTriggerEnter2D(Collider2D collider)

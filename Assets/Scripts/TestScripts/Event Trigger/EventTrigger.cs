@@ -45,8 +45,8 @@ public class EventTrigger : MonoBehaviour
         {
             if(limit) used = true;
             eventIdx = 0;
-            action = null;
             SystemManager.Instance.UpdateDataForEventTrigger(0, 0);
+            action = null;
             return;
         }
         if(eventIdx < eventLists.Length && 
@@ -91,6 +91,8 @@ public class EventTrigger : MonoBehaviour
         action = null;
     }
 
+    public void Init(EventTriggerData.JsonData data) => eventTriggerData.Init(data);
+
     void Awake()
     {
         var path = $"ScriptableObject Datas/{SceneManager.GetActiveScene().name}_{gameObject.name}";
@@ -104,8 +106,8 @@ public class EventTrigger : MonoBehaviour
             AssetDatabase.Refresh();
 #endif
             eventTriggerData = asset;
-            eventTriggerData.path = path;
         }
+
         GetComponent<BoxCollider2D>().isTrigger = true;
         if(GameManager.Instance) GameManager.Instance.eventTriggers.Add(this);
     }

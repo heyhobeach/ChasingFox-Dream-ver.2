@@ -283,6 +283,5 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
 
     public void SetFlipX(bool b) => spriteRenderer.flipX = b;
 
-    public void OnResolver() => spriteResolver.enabled = true;
-    public void OffResolver() => spriteResolver.enabled = false;
+    public void SetColisionHorizontalDirection(int b) => GetComponent<CapsuleCollider2D>().direction = (CapsuleDirection2D)b;
 }

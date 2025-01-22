@@ -4,11 +4,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public struct BrutalData
+public class BrutalData
 {
-    public bool canBerserker;
+    public bool isDoubleTime;
+    public int defaultGage;
+
     public int maxGage;
-    public int sec;
-    public int atk;
-    public int frm;
+    public int useGage;
+    public int getGage;
+
+    public float brutalTime;
+
+    public Vector2 brutalArea;
 }

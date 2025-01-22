@@ -14,6 +14,7 @@ public class InventoryManager : Inventory
 
     public static InventoryManager Instance {  get { return instance; } }
     InventoryScripable invendata;
+    InventoryScripable Newsdata;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created\
     private void Awake()
@@ -78,5 +79,15 @@ public class InventoryManager : Inventory
     public InventoryScripable GetInventoryAll()
     {
         return invendata;
+    }
+
+
+    /// <summary>
+    /// 스크립터블 오브젝트가 저장 되어있으므로 인벤데이터 사용하려 하면 invendata.inventory로 접근
+    /// </summary>
+    /// <returns>InventoryScripable</returns>
+    public InventoryScripable GetNewsDataAll()
+    {
+        return Newsdata;
     }
 }
