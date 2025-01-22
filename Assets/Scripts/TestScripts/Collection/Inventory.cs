@@ -67,6 +67,37 @@ public class Inventory : MonoBehaviour
             //Debug.Log(string.Format("수집품 추가 완료+{0} : {1},{2}", collection.id, inventory[collection.id].name, inventory[collection.id].context));
         }
     }
+
+
+    //추후 void> int
+    public void GetcurrentChaper()
+    {
+
+    }
+
+    //여기를 나중에 collection배열을 주고 이후에 현재 챕터를 가져와야함
+    public void AddNews(Collection.CollectionScriptorble collection)
+    {
+        if (invendata == null)
+        {
+            invendata = Resources.Load("Inventory") as InventoryScripable;
+            inventory = new Dictionary<int, Info>();
+        }
+        if (!inventory.ContainsKey(collection.id))
+        {
+
+            if (!collection.is_collect)
+            {
+                return;
+            }
+            inventory.Add(collection.id, SetInfoStruct(collection));
+
+            invendata.inventory = inventory;
+            invenCount = invendata.inventory.Count;
+            Debug.Log("inventory 개수" + inventory.Count);
+            //Debug.Log(string.Format("수집품 추가 완료+{0} : {1},{2}", collection.id, inventory[collection.id].name, inventory[collection.id].context));
+        }
+    }
     public Info GetInfo(int id)
     {
         if (inventory.ContainsKey(id))
