@@ -55,4 +55,6 @@ public class PopupManager : MonoBehaviour
         pausePopup.SetActive(enabled);
         pausePopup.GetComponent<Canvas>().sortingOrder = 101;
     }
+
+    public void RestartButtonEnable(bool enabled) => pausePopup.GetComponent<TempPausePopup>().SetRestartButton(enabled);
 }

@@ -9,29 +9,32 @@ namespace JsonUtils
         {
             string path = Path.Combine(Application.persistentDataPath, fileName);
             string jsonData = File.ReadAllText(path);
-			byte[] bytes = System.Convert.FromBase64String(jsonData);
-            ByteConvert(ref bytes);
-			string decodedJson = System.Text.Encoding.UTF8.GetString(bytes);
-            return JsonUtility.FromJson<T>(decodedJson);
+			// byte[] bytes = System.Convert.FromBase64String(jsonData);
+            // ByteConvert(ref bytes);
+			// string decodedJson = System.Text.Encoding.UTF8.GetString(bytes);
+            // return JsonUtility.FromJson<T>(decodedJson);
+            return JsonUtility.FromJson<T>(jsonData);
         }
         public static void LoadJson<T>(string fileName, ref T data)
         {
             string path = Path.Combine(Application.persistentDataPath, fileName);
             string jsonData = File.ReadAllText(path);
-			byte[] bytes = System.Convert.FromBase64String(jsonData);
-            ByteConvert(ref bytes);
-			string decodedJson = System.Text.Encoding.UTF8.GetString(bytes);
-            data = JsonUtility.FromJson<T>(decodedJson);
+			// byte[] bytes = System.Convert.FromBase64String(jsonData);
+            // ByteConvert(ref bytes);
+			// string decodedJson = System.Text.Encoding.UTF8.GetString(bytes);
+            // data = JsonUtility.FromJson<T>(decodedJson);
+            data = JsonUtility.FromJson<T>(jsonData);
         }
 
         public static void SaveJson<T>(string fileName, T data)
         {
             string path = Path.Combine(Application.persistentDataPath, fileName);
             string jsonData = JsonUtility.ToJson(data, true);
-            byte[] bytes = System.Text.Encoding.UTF8.GetBytes(jsonData);
-            ByteConvert(ref bytes);
-            string encodedJson = System.Convert.ToBase64String(bytes);
-            File.WriteAllText(path, encodedJson);
+            // byte[] bytes = System.Text.Encoding.UTF8.GetBytes(jsonData);
+            // ByteConvert(ref bytes);
+            // string encodedJson = System.Convert.ToBase64String(bytes);
+            // File.WriteAllText(path, encodedJson);
+            File.WriteAllText(path, jsonData);
         }
 
         public static void DeleteJson(string fileName)

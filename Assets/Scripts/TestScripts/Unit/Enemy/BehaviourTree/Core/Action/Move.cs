@@ -14,17 +14,16 @@ namespace BehaviourTree
         private bool isRunning;
         private Vector2 moveDir;
 
-        protected override void OnEnd() { }
+        protected override void OnEnd() => blackboard.thisUnit.Move(blackboard.thisUnit.transform.position);
 
-        protected override void OnStart() { }
+        protected override void OnStart() => blackboard.thisUnit.SetAni(false);
 
         protected override NodeState OnUpdate()
         {
-            if(blackboard.target != null && (blackboard.target.transform.position-blackboard.thisUnit.transform.position).magnitude < 1f) 
+            if(blackboard.target != null && (blackboard.target.transform.position-blackboard.thisUnit.transform.position).magnitude < blackboard.thisUnit.attackDistance * 0.7f && blackboard.thisUnit.AttackCheck(blackboard.target.transform.position))
             {
-                blackboard.thisUnit.Move(blackboard.thisUnit.transform.position);
-                blackboard.thisUnit.SetFlipX(Mathf.Sign((blackboard.target.transform.position-blackboard.thisUnit.transform.position).x) > 0);
-                return NodeState.Failure;
+                blackboard.thisUnit.SetFlipX(Mathf.Sign((blackboard.thisUnit.transform.position-blackboard.target.transform.position).x) > 0);
+                return NodeState.Success;
             }
             if(!isRunning) startTime += Time.deltaTime;
             if(!isRunning && blackboard.target != null && (startTime >= reloadTime || blackboard.FinalNodeList == null))
@@ -42,11 +41,12 @@ namespace BehaviourTree
                 }
                 return NodeState.Failure;
             }
-            moveDir = new Vector3(blackboard.FinalNodeList[blackboard.nodeIdx].x+GameManager.Instance.correctionPos.x, blackboard.FinalNodeList[blackboard.nodeIdx].y+(blackboard.thisUnit.BoxSizeY*2)+1f) - blackboard.thisUnit.transform.position;
+            var tempDir = new Vector3(blackboard.FinalNodeList[blackboard.nodeIdx].x+GameManager.Instance.correctionPos.x, blackboard.FinalNodeList[blackboard.nodeIdx].y+(blackboard.thisUnit.BoxSizeY*2)+1f);
+            moveDir = tempDir - blackboard.thisUnit.transform.position;
             moveDir = moveDir.normalized;
-            blackboard.thisUnit.Move(new Vector2(blackboard.FinalNodeList[blackboard.nodeIdx].x+GameManager.Instance.correctionPos.x, blackboard.FinalNodeList[blackboard.nodeIdx].y+(blackboard.thisUnit.BoxSizeY*2)+1f));
-            if((blackboard.thisUnit.transform.position - new Vector3(blackboard.FinalNodeList[blackboard.nodeIdx].x+GameManager.Instance.correctionPos.x, blackboard.FinalNodeList[blackboard.nodeIdx].y+(blackboard.thisUnit.BoxSizeY*2)+1f, blackboard.thisUnit.transform.position.z)).magnitude < 0.1f) blackboard.nodeIdx++;
-            return NodeState.Success;
+            blackboard.thisUnit.Move(tempDir);
+            if((blackboard.thisUnit.transform.position - tempDir).magnitude < 0.1f) blackboard.nodeIdx++;
+            return NodeState.Running;
         }
 
         [MesageTarget] public async void GetPathAsync()
@@ -81,10 +81,10 @@ namespace BehaviourTree
             finally { isRunning = false;}
         }
 
-        public async void Backstep()
-        {
-            //backsteppoint =>구해주기만 하면 되나?
-            //blackboart.target = backsteppoint;
-        }
+        // public async void Backstep()
+        // {
+        //     //backsteppoint =>구해주기만 하면 되나?
+        //     //blackboart.target = backsteppoint;
+        // }
     }
 }

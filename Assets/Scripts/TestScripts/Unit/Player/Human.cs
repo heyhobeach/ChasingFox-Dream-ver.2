@@ -114,6 +114,7 @@ public class Human : PlayerUnit
     public override bool Attack(Vector3 clickPos)
     {
         if (ControllerChecker() || unitState == UnitState.FormChange || unitState == UnitState.Dash || unitState == UnitState.Reload || shootingAnimationController.isAttackAni || residualAmmo <= 0) return false;
+        if (((Vector2)transform.position-(Vector2)clickPos).magnitude < ((Vector2)transform.position-shootingAnimationController.GetShootPosition()).magnitude) return false;
         isAttack = true;
         this.clickPos = clickPos;
         return true;

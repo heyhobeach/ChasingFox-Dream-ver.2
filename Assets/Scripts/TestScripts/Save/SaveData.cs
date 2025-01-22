@@ -4,6 +4,7 @@ using UnityEngine;
 
 // [CreateAssetMenu(fileName = "SaveData", menuName = "Scriptable Objects/SaveData")]
 // public class SaveData : ScriptableObject
+[Serializable]
 public class SaveData
 {
     public DateTime createdTime;
@@ -11,13 +12,14 @@ public class SaveData
     public string chapter;
     public int chapterIdx;
 
-    public MapData[] mapDatas;
-    public EventTriggerData[] eventTriggerDatas;
+    public MapData.JsonData[] mapDatas;
+    public EventTriggerData.JsonData[] eventTriggerDatas;
 
     public int eventTriggerInstanceID;
     public int eventIdx;
 
     public int karma;
+    public PlayerData playerData;
 
     // TODO : Add inventory data
 
@@ -31,5 +33,6 @@ public class SaveData
         eventTriggerInstanceID = saveData.eventTriggerInstanceID;
         eventIdx = saveData.eventIdx;
         karma = saveData.karma;
+        playerData = saveData.playerData;
     }
 }

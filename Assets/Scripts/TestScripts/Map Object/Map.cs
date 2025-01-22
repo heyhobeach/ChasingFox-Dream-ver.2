@@ -16,11 +16,11 @@ public class Map : MonoBehaviour
     public bool used { get => mapData.used; set => mapData.used = value; }
     public bool cleared { get => mapData.cleared; set => mapData.cleared = value; }
     public Vector3 position { get => mapData.position; set => mapData.position = value; }
-    public PlayerData playerData { get => mapData.playerData; set => mapData.playerData = value; }
 
     public MapData mapData;
 
     public void Reset() => mapData.Init();
+    public void Init(MapData.JsonData data) => mapData.Init(data);
 
     void Awake()
     {
@@ -36,7 +36,6 @@ public class Map : MonoBehaviour
 #endif
             mapData = asset;
             mapData.Init();
-            mapData.path = path;
         }
 
         enemyCount= enemyUnits.Count;
@@ -65,8 +64,8 @@ public class Map : MonoBehaviour
         if(enemyCount > 0) edgeCollider2D.enabled = true;
         mapData.used = true;
         mapData.position = pos;
-        mapData.playerData = GameManager.Instance.player.GetComponent<Player>().DataSet();
-        mapData.playerData.pcm = GameManager.Instance.player.GetComponent<PlayerController>().DataSet();
+        SystemManager.Instance.saveData.playerData = GameManager.Instance.player.GetComponent<Player>().DataSet();
+        SystemManager.Instance.saveData.playerData.pcm = GameManager.Instance.player.GetComponent<PlayerController>().DataSet();
     }
     public void OnEnd()
     {

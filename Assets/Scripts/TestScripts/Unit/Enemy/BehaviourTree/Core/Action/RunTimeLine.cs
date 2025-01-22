@@ -14,6 +14,7 @@ namespace BehaviourTree
 
         private void OnEnable()
         {
+            blackboard.thisUnit?.SetAni(false);
             playableDirector = blackboard.playableDirector;
             isCan = true;
             playableDirector.stopped -= OnTimeLineStoped;
