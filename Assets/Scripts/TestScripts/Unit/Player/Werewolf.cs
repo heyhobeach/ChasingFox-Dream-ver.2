@@ -83,8 +83,9 @@ public class Werewolf : PlayerUnit
     {
         MeleeAttack.SetActive(true);
         Time.timeScale = 0.3f;
-        yield return new WaitForSecondsRealtime(0.5f);
+        yield return null;
         MeleeAttack.SetActive(false);
+        yield return new WaitForSecondsRealtime(0.5f);
         Time.timeScale = 1f;
         if(currentCount <= 0 || !isFormChangeReady()) formChangeTest?.Invoke();
         attackCoroutine = null;

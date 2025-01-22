@@ -108,7 +108,6 @@ public partial class GameManager : MonoBehaviour
             SystemManager.Instance.saveData.mapDatas = mapDatas;
         }
         for (int i = 0; i < maps.Count; i++) maps[i].Init(saveData.mapDatas[i]);
-        Debug.Log(maps.Count + " asdf " + maps[maps.Count-1].mapData);
 
         if(saveData.eventTriggerDatas == null || saveData.eventTriggerDatas.Length == 0)
         {

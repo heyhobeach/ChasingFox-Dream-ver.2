@@ -54,4 +54,6 @@ public class PopupManager : MonoBehaviour
     {
         pausePopup.SetActive(enabled);
     }
+
+    public void RestartButtonEnable(bool enabled) => pausePopup.GetComponent<TempPausePopup>().SetRestartButton(enabled);
 }

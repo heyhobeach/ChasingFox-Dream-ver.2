@@ -26,4 +26,9 @@ public class TempPausePopup : MonoBehaviour
         // optionButton.onClick.AddListener(() => );
         mainMenuButton.onClick.AddListener(() => GameManager.Instance.LoadScene("MainMenu"));
     }
+
+    public void SetRestartButton(bool enabled)
+    {
+        restartButton.interactable = enabled;
+    }
 }
