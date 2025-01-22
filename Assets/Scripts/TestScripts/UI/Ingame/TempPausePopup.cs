@@ -22,7 +22,7 @@ public class TempPausePopup : MonoBehaviour
             gameObject.SetActive(false);
         });
         restartButton.onClick.AddListener(() => GameManager.Instance.RetryScene());
-        // inventoryButton.onClick.AddListener(() => );
+        inventoryButton.onClick.AddListener(() =>GameManager.Instance.InventoryEnable() );
         // optionButton.onClick.AddListener(() => );
         mainMenuButton.onClick.AddListener(() => GameManager.Instance.LoadScene("MainMenu"));
     }

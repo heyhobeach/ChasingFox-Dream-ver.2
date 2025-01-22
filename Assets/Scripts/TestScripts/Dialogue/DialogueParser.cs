@@ -110,6 +110,7 @@ public class DialogueParser : MonoBehaviour
             if (isEnd)
             {
                 //Debug.Log("종료");
+                Debug.Log("dialogue list" + dialoguesList.Count);
                 Debug.Log(dialoguesList[dialoguesList.Count - 1].id);//id번호 확인
                 DatabaseManager.instance.endLine = int.Parse(dialoguesList[dialoguesList.Count - 1].id); //지금 parser가 어디까지 나올지 모르겠음//end라인까지 끊김//이후 start와 end수정해야함
                 DatabaseManager.instance.indexList.Add(int.Parse(dialoguesList[dialoguesList.Count - 1].id));

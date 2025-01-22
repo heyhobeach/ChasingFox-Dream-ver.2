@@ -13,7 +13,7 @@ public class Inventory : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public class Info
     {
-        public string name;
+        public string _name;
         public string context;
         public Sprite image;
     }
@@ -24,12 +24,12 @@ public class Inventory : MonoBehaviour
 
     public int invenCount;
 
-    private new void Awake()
+    private void Awake()
     {
         //base.Awake();
 
-        invendata = Resources.Load("Inventory") as InventoryScripable;
-        inventory = new Dictionary<int, Info>();
+
+
 
     }
      public void testFunc1()
@@ -40,15 +40,25 @@ public class Inventory : MonoBehaviour
     private Info SetInfoStruct(Collection.CollectionScriptorble collection)
     {
         Info info=new Info();
-        info.name = collection.name;
+        info._name = collection._name;
         info.context = collection._context;
         info.image = collection.image;
         return info;
     }
     public void AddInventory(Collection.CollectionScriptorble collection)
     {
+        if (invendata == null)
+        {
+            invendata = Resources.Load("Inventory") as InventoryScripable;
+            inventory = new Dictionary<int, Info>();
+        }
         if (!inventory.ContainsKey(collection.id))
         {
+
+            if (!collection.is_collect)
+            {
+                return;
+            }
             inventory.Add(collection.id, SetInfoStruct(collection));
 
             invendata.inventory = inventory;

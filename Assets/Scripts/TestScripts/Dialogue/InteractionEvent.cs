@@ -275,6 +275,7 @@ public class InteractionEvent : MonoBehaviour
     public Dialogue[] GetDialogue()
     {
 
+        Debug.LogFormat("indexNum " + indexNum + "indexlist legnth" + DatabaseManager.instance.indexList.Count);
         if (indexNum >= DatabaseManager.instance.indexList.Count)
         {
             indexNum = DatabaseManager.instance.indexList.Count - 1;

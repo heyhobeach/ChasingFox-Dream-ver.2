@@ -9,14 +9,22 @@ using UnityEngine;
 public class InventoryManager : Inventory
 
 {
+
+    private static InventoryManager instance;
+
+    public static InventoryManager Instance {  get { return instance; } }
     InventoryScripable invendata;
+    InventoryScripable Newsdata;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created\
     private void Awake()
     {
 
-
         invendata = Resources.Load("Inventory") as InventoryScripable;
-
+        if (instance == null)
+        {
+            instance = this;
+        }
     }
 
     /// <summary>
@@ -39,7 +47,7 @@ public class InventoryManager : Inventory
             Debug.Log("수집품 존재");
             for (int i = 0; i < invenCount; i++)
             {
-                Debug.Log(string.Format("수집품 목록확인+{0} : {1},{2}", i, inventory[i].name, inventory[i].context));
+                Debug.Log(string.Format("수집품 목록확인+{0} : {1},{2}", i, inventory[i]._name, inventory[i].context));
             }
         }
         else
@@ -71,5 +79,15 @@ public class InventoryManager : Inventory
     public InventoryScripable GetInventoryAll()
     {
         return invendata;
+    }
+
+
+    /// <summary>
+    /// 스크립터블 오브젝트가 저장 되어있으므로 인벤데이터 사용하려 하면 invendata.inventory로 접근
+    /// </summary>
+    /// <returns>InventoryScripable</returns>
+    public InventoryScripable GetNewsDataAll()
+    {
+        return Newsdata;
     }
 }

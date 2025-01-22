@@ -22,10 +22,11 @@ public class CollectionInteractive : EventTrigger
         Debug.Log("after show inven");
 
     }
-    public void OnTriggerExit2D(Collider2D collision)
+    protected override void OnTriggerExit2D(Collider2D collision)
     {
         Debug.Log("수집품 벗어남");
         CollectionCanvasController.Instance.PopupEnd();
+        base.OnTriggerExit2D (collision);
         //closepopup
     }
 
