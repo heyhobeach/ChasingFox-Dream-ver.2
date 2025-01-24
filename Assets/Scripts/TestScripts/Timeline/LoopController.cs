@@ -58,7 +58,7 @@ public class LoopController : MonoBehaviour
 
     public void SetNone()
     {
-
+        Debug.Log("set none");
         this.playableDirector.extrapolationMode = DirectorWrapMode.None;
         ResetValue();
         //Application.targetFrameRate = 60;

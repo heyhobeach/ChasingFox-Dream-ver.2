@@ -8,6 +8,17 @@ namespace JsonUtils
         public static T LoadJson<T>(string fileName)
         {
             string path = Path.Combine(Application.persistentDataPath, fileName);
+
+            // // 테스트용 코드
+            // string jsonData = null;
+            // try {
+            //     jsonData = File.ReadAllText(path);
+            // } catch (System.Exception e) {
+            //     Debug.Log(e);
+            //     SaveJson(fileName, typeof(T));
+            //     jsonData = File.ReadAllText(path);
+            // }
+            // // 테스트용 코드
             string jsonData = File.ReadAllText(path);
 			// byte[] bytes = System.Convert.FromBase64String(jsonData);
             // ByteConvert(ref bytes);
@@ -18,11 +29,19 @@ namespace JsonUtils
         public static void LoadJson<T>(string fileName, ref T data)
         {
             string path = Path.Combine(Application.persistentDataPath, fileName);
-            string jsonData = File.ReadAllText(path);
+            // string jsonData = null;
+            // try {
+            //     jsonData = File.ReadAllText(path);
+            // } catch (System.Exception e) {
+            //     Debug.Log(e);
+            //     SaveJson(fileName, typeof(T));
+            //     jsonData = File.ReadAllText(path);
+            // }
 			// byte[] bytes = System.Convert.FromBase64String(jsonData);
             // ByteConvert(ref bytes);
 			// string decodedJson = System.Text.Encoding.UTF8.GetString(bytes);
             // data = JsonUtility.FromJson<T>(decodedJson);
+            string jsonData = File.ReadAllText(path);
             data = JsonUtility.FromJson<T>(jsonData);
         }
 

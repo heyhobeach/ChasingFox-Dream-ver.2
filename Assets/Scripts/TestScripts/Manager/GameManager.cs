@@ -89,17 +89,16 @@ public partial class GameManager : MonoBehaviour
     {
         StartCoroutine(MapSearchStart());
         var saveData = SystemManager.Instance.saveData;
-        if(saveData != null && saveData.chapter != SceneManager.GetActiveScene().name) DataReset();
+        bool isNew = false;
+        if(saveData != null && saveData.chapter != SceneManager.GetActiveScene().name) 
+        {
+            DataReset();
+            isNew = true;
+        }
         var playerScript = player.GetComponent<Player>();
         playerScript.Init(saveData.playerData);
         karmaRatio = saveData.karma;
-        if (saveData.eventTriggerInstanceID != 0)
-        {
-            var trigger = eventTriggers.Find(x => x.GetInstanceID() == saveData.eventTriggerInstanceID);
-            if (trigger) trigger.OnTrigger(saveData.eventIdx);
-            //player.transform.position = trigger.targetPosition;
-        }
-        ProCamera2D.Instance.MoveCameraInstantlyToPosition(player.transform.position);
+        PlayerData.lastRoomIdx = saveData.chapterIdx;
         for (int i = 0; i < maps.Count; i++) CreateWallRoom(i).enabled = false;
 
         if(saveData.mapDatas == null || saveData.mapDatas.Length == 0)
@@ -113,10 +112,26 @@ public partial class GameManager : MonoBehaviour
         if(saveData.eventTriggerDatas == null || saveData.eventTriggerDatas.Length == 0)
         {
             var eventTriggerDatas = new EventTriggerData.JsonData[eventTriggers.Count];
-            for (int i = 0; i < eventTriggers.Count; i++) eventTriggerDatas[i] = eventTriggers[i].eventTriggerData;
+            for (int i = 0; i < eventTriggers.Count; i++) 
+            {
+                eventTriggerDatas[i] = eventTriggers[i].eventTriggerData;
+            }
             SystemManager.Instance.saveData.eventTriggerDatas = eventTriggerDatas;
         }
-        for (int i = 0; i < eventTriggers.Count; i++) eventTriggers[i].Init(saveData.eventTriggerDatas[i]);
+        for (int i = 0; i < eventTriggers.Count; i++) 
+        {
+            eventTriggers[i].Init(saveData.eventTriggerDatas[i]);
+            eventTriggers[i].gameObject.SetActive(saveData.eventTriggerDatas[i].isEneable);
+        }
+
+        if(!isNew) player.transform.position = saveData.mapDatas[PlayerData.lastRoomIdx].position;
+        if (saveData.eventTriggerInstanceID != 0)
+        {
+            var trigger = eventTriggers.Find(x => x.GetInstanceID() == saveData.eventTriggerInstanceID);
+            if (trigger) trigger.OnTrigger(saveData.eventIdx);
+            //player.transform.position = trigger.targetPosition;
+        }
+        ProCamera2D.Instance.MoveCameraInstantlyToPosition(player.transform.position);
 
         CameraManager.Instance?.proCamera2DRooms.OnStartedTransition.AddListener(MoveNextRoom);
     }
@@ -137,7 +152,7 @@ public partial class GameManager : MonoBehaviour
         CreateWallRoom(currentRoomIndex);
         isLoad = true;
 
-        if (!maps[currentRoomIndex].used) PlayerData.lastRoomIdx = currentRoomIndex;
+        if(!maps[currentRoomIndex].used) PlayerData.lastRoomIdx = currentRoomIndex;
         if (!maps[currentRoomIndex].cleared) maps[currentRoomIndex].OnStart(player.transform.position);
         if (previousRoomIndex >= 0 && previousRoomIndex != currentRoomIndex) maps[previousRoomIndex].OnEnd();
     }
@@ -225,11 +240,11 @@ public partial class GameManager : MonoBehaviour
     }
     public void InventoryEnable()
     {
-        inventoryCanvas.SetActive(true);
+        inventoryCanvas?.SetActive(true);
     }
 
     public void InventoryDisable()
     {
-        inventoryCanvas.SetActive(false);
+        inventoryCanvas?.SetActive(false);
     }
 }

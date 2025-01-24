@@ -15,28 +15,33 @@ public class EventTriggerData : ScriptableObject
     public class JsonData
     {
         public bool used;
+        public bool isEneable;
         public Vector2 targetPosition;
 
         public static implicit operator JsonData(EventTriggerData data)
         {
             return new JsonData {
                 used = data.used,
+                isEneable = data.isEneable,
                 targetPosition = data.targetPosition
             };
         }
     }
 
     public bool used;
+    public bool isEneable;
     public Vector2 targetPosition;
 
-    public void Init()
+    public void Init(bool enabled)
     {
         used = false;
+        isEneable = enabled;
         targetPosition = Vector2.zero;
     }
     public void Init(JsonData eventTriggerData)
     {
         used = eventTriggerData.used;
+        isEneable = eventTriggerData.isEneable;
         targetPosition = eventTriggerData.targetPosition;
     }
 
@@ -56,6 +61,7 @@ public class EventTriggerData : ScriptableObject
         if(playModeStateChange == PlayModeStateChange.ExitingPlayMode)
         {
             used = false;
+            isEneable = false;
             targetPosition = Vector2.zero;
         }
     }

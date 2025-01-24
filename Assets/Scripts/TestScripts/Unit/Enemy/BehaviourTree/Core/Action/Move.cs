@@ -41,7 +41,7 @@ namespace BehaviourTree
                 }
                 return NodeState.Failure;
             }
-            var tempDir = new Vector3(blackboard.FinalNodeList[blackboard.nodeIdx].x+GameManager.Instance.correctionPos.x, blackboard.FinalNodeList[blackboard.nodeIdx].y+(blackboard.thisUnit.BoxSizeY*2)+1f);
+            var tempDir = new Vector3(blackboard.FinalNodeList[blackboard.nodeIdx].x+GameManager.Instance.correctionPos.x, blackboard.FinalNodeList[blackboard.nodeIdx].y);
             moveDir = tempDir - blackboard.thisUnit.transform.position;
             moveDir = moveDir.normalized;
             blackboard.thisUnit.Move(tempDir);
