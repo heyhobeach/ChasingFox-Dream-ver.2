@@ -11,7 +11,15 @@ using UnityEditor;
 [RequireComponent(typeof(BoxCollider2D))]
 public class EventTrigger : MonoBehaviour
 {
-    public EventTriggerData eventTriggerData;
+    [SerializeField, DisableInspector] private EventTriggerData _eventTriggerData;
+    public EventTriggerData eventTriggerData
+    {
+        get
+        {
+            if(_eventTriggerData == null) Init();
+            return _eventTriggerData;
+        }
+    }
     /// <summary>
     /// 이벤트를 작동시킬 대상의 태그
     /// </summary>
@@ -71,9 +79,6 @@ public class EventTrigger : MonoBehaviour
     public virtual void OnTrigger(int idx)
     {
         if(limit ? used : false) return;
-#if UNITY_EDITOR
-        return;
-#endif
         eventIdx = idx;
         action = Controller;
     }
@@ -93,11 +98,11 @@ public class EventTrigger : MonoBehaviour
 
     public void Init(EventTriggerData.JsonData data) => eventTriggerData.Init(data);
 
-    void Awake()
+    private void Init()
     {
         var path = $"ScriptableObject Datas/{SceneManager.GetActiveScene().name}_{gameObject.name}";
-        eventTriggerData = Resources.Load<EventTriggerData>(path);
-        if(!eventTriggerData)
+        _eventTriggerData = Resources.Load<EventTriggerData>(path);
+        if(_eventTriggerData == null)
         {
             EventTriggerData asset = ScriptableObject.CreateInstance<EventTriggerData>();
 #if UNITY_EDITOR
@@ -105,11 +110,16 @@ public class EventTrigger : MonoBehaviour
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 #endif
-            eventTriggerData = asset;
+            _eventTriggerData = asset;
+            eventTriggerData.Init(gameObject.activeSelf);
         }
 
         GetComponent<BoxCollider2D>().isTrigger = true;
-        if(GameManager.Instance) GameManager.Instance.eventTriggers.Add(this);
+    }
+
+    void Awake()
+    {
+        Init();
     }
 
     private void Update()
@@ -123,4 +133,7 @@ public class EventTrigger : MonoBehaviour
         yield return new WaitUntil(() => prerequisites.isSatisfied);
         eventLock = false;
     }
+
+    private void OnEnable() => eventTriggerData.isEneable = true;
+    private void OnDisable() => eventTriggerData.isEneable = false;
 }

@@ -118,7 +118,7 @@ public class UIController : MonoBehaviour//해당 스크립트는 UI를 그리�
         Debug.Log("SetFalse");
         //DialogueCanvas.transform.gameObject.SetActive(false);
         DialogueCanvas.transform.gameObject.GetComponent<Canvas>().enabled = false;
-        backgroundImage.SetActive(false);
+        backgroundImage?.SetActive(false);
     }
     public void DialogueCanvasSetTrue()
     {
@@ -127,7 +127,7 @@ public class UIController : MonoBehaviour//해당 스크립트는 UI를 그리�
         bool is_alone = false;
         DialogueCanvas.GetComponent<UIManager>().LoadImage();
         DialogueCanvas.transform.gameObject.GetComponent<Canvas>().enabled = true;
-        backgroundImage.SetActive(true);
+        backgroundImage?.SetActive(true);
     }
 
 
