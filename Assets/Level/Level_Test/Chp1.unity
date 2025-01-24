@@ -672,7 +672,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c72af648c5115d4cbf2b4d9a2ffac99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventTriggerData: {fileID: 0}
+  _eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 1
   eventLists:
@@ -18494,6 +18494,7 @@ GameObject:
   m_Component:
   - component: {fileID: 550329932}
   - component: {fileID: 550329931}
+  - component: {fileID: 550329933}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -18581,6 +18582,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &550329933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 550329930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
 --- !u!1 &558622873
 GameObject:
   m_ObjectHideFlags: 0
@@ -25066,7 +25090,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c72af648c5115d4cbf2b4d9a2ffac99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventTriggerData: {fileID: 0}
+  _eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 1
   eventLists:
@@ -25739,7 +25763,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c72af648c5115d4cbf2b4d9a2ffac99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventTriggerData: {fileID: 0}
+  _eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 1
   eventLists:
@@ -31201,7 +31225,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c72af648c5115d4cbf2b4d9a2ffac99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventTriggerData: {fileID: 0}
+  _eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 1
   eventLists:
@@ -48874,7 +48898,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   soundManager: {fileID: 1950322370}
   interactionEvent: {fileID: 0}
-  inventoryManager: {fileID: 0}
+  inventoryManager: {fileID: 1952601968}
   inventoryCanvas: {fileID: 254435416}
   brutalDatas: {fileID: 11400000, guid: 3dd26ef704510464b8dfc1701b077cb6, type: 2}
   humanDatas: {fileID: 11400000, guid: 64b063eba2fdac44e8f9374fda825bb1, type: 2}
@@ -56099,7 +56123,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37ee79ab7a646d34686aaf5eedc7189f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventTriggerData: {fileID: 0}
+  _eventTriggerData: {fileID: 0}
   targetTag: 
   limit: 0
   eventLists:
@@ -56320,6 +56344,10 @@ PrefabInstance:
       propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9014545186419165306, guid: a925b6cfc9b345e4c917eaedf654fb6f, type: 3}
+      propertyPath: inventorydata
+      value: 
+      objectReference: {fileID: 11400000, guid: 7f926ffa9bfc2874186e28b9fffbd456, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
