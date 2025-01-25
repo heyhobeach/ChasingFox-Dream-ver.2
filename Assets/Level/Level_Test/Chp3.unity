@@ -9718,13 +9718,14 @@ GameObject:
   - component: {fileID: 289275289}
   - component: {fileID: 289275288}
   - component: {fileID: 289275287}
+  - component: {fileID: 289275291}
   m_Layer: 0
   m_Name: Timeline_3-1-2 (dream_end)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &289275286
 Transform:
   m_ObjectHideFlags: 0
@@ -9783,20 +9784,8 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 289275289}
-          m_TargetAssemblyTypeName: UnityEngine.Collider2D, UnityEngine
-          m_MethodName: set_isTrigger
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 289275285}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
+          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+          m_MethodName: set_enabled
           m_Mode: 6
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -9836,8 +9825,50 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 1799381193}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+    exitPrerequisites: {fileID: 289275291}
+  - enterPrerequisites: {fileID: 0}
+    keyCode: 0
+    action:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1799381193}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 1368519260}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
     exitPrerequisites: {fileID: 0}
-  autoTrigger: 0
+  autoTrigger: 1
   keyCode: 0
 --- !u!61 &289275289
 BoxCollider2D:
@@ -9846,7 +9877,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 289275285}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
@@ -9998,6 +10029,18 @@ PlayableDirector:
     - cdeb0f3eda1a6e24b96aa9a00e7c688a: {fileID: 2064941226}
     - ae4c25a9e8c3592479ee36ba1af64a5c: {fileID: 1969045002}
     - 9b8379f01fae650419513d6a66e37680: {fileID: 0}
+--- !u!114 &289275291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 289275285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa1ee43abf03ee242a7eb89a698bfae0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &294345613
 GameObject:
   m_ObjectHideFlags: 0
@@ -23695,7 +23738,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &599976508
 Transform:
   m_ObjectHideFlags: 0
@@ -32090,13 +32133,14 @@ GameObject:
   - component: {fileID: 873376973}
   - component: {fileID: 873376972}
   - component: {fileID: 873376971}
+  - component: {fileID: 873376975}
   m_Layer: 0
   m_Name: Timeline_3-1-1 (dream_house)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &873376970
 Transform:
   m_ObjectHideFlags: 0
@@ -32155,8 +32199,8 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 873376973}
-          m_TargetAssemblyTypeName: UnityEngine.Collider2D, UnityEngine
-          m_MethodName: set_isTrigger
+          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+          m_MethodName: set_enabled
           m_Mode: 6
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -32167,18 +32211,6 @@ MonoBehaviour:
             m_BoolArgument: 1
           m_CallState: 2
         - m_Target: {fileID: 873376969}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 1799381193}
           m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_MethodName: SetActive
           m_Mode: 6
@@ -32208,8 +32240,50 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+        - m_Target: {fileID: 1799381193}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+    exitPrerequisites: {fileID: 873376975}
+  - enterPrerequisites: {fileID: 0}
+    keyCode: 0
+    action:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1799381193}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 1368519260}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
     exitPrerequisites: {fileID: 0}
-  autoTrigger: 0
+  autoTrigger: 1
   keyCode: 0
 --- !u!61 &873376973
 BoxCollider2D:
@@ -32218,7 +32292,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 873376969}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
@@ -32346,6 +32420,18 @@ PlayableDirector:
     - 5ae01f22d5d97b2418ad625a12855352: {fileID: 0}
     - 503ed0523c4958c4ab895917ed322970: {fileID: 2064941226}
     - 9b8379f01fae650419513d6a66e37680: {fileID: 0}
+--- !u!114 &873376975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 873376969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa1ee43abf03ee242a7eb89a698bfae0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &875984914 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7498653863253748793, guid: 728a4221e9bc45945b95f25336b34151, type: 3}
@@ -58317,6 +58403,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: InventoryCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 117559184642099073, guid: a925b6cfc9b345e4c917eaedf654fb6f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3308075536441658802, guid: a925b6cfc9b345e4c917eaedf654fb6f, type: 3}
       propertyPath: m_AnchorMax.x
       value: 1
@@ -58331,11 +58421,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3308075536441658802, guid: a925b6cfc9b345e4c917eaedf654fb6f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -200
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3308075536441658802, guid: a925b6cfc9b345e4c917eaedf654fb6f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 285
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4778203353611733028, guid: a925b6cfc9b345e4c917eaedf654fb6f, type: 3}
       propertyPath: m_AnchorMax.x
@@ -58435,11 +58525,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8607068449889933722, guid: a925b6cfc9b345e4c917eaedf654fb6f, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8607068449889933722, guid: a925b6cfc9b345e4c917eaedf654fb6f, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9014545186419165306, guid: a925b6cfc9b345e4c917eaedf654fb6f, type: 3}
       propertyPath: inventorydata
@@ -62424,6 +62514,7 @@ GameObject:
   - component: {fileID: 1368519264}
   - component: {fileID: 1368519263}
   - component: {fileID: 1368519262}
+  - component: {fileID: 1368519266}
   m_Layer: 0
   m_Name: Timeline_3-2 (hideout / wingman)
   m_TagString: Untagged
@@ -62488,10 +62579,10 @@ MonoBehaviour:
     action:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 1368519260}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
+        - m_Target: {fileID: 1368519265}
+          m_TargetAssemblyTypeName: UnityEngine.Playables.PlayableDirector, UnityEngine
+          m_MethodName: Play
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -62512,16 +62603,16 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
-    exitPrerequisites: {fileID: 0}
-  - enterPrerequisites: {fileID: 0}
+    exitPrerequisites: {fileID: 1368519266}
+  - enterPrerequisites: {fileID: 1368519266}
     keyCode: 0
     action:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 1368519265}
-          m_TargetAssemblyTypeName: UnityEngine.Playables.PlayableDirector, UnityEngine
-          m_MethodName: Play
-          m_Mode: 1
+        - m_Target: {fileID: 509197422}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -62531,7 +62622,7 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
     exitPrerequisites: {fileID: 0}
-  autoTrigger: 0
+  autoTrigger: 1
   keyCode: 0
 --- !u!61 &1368519264
 BoxCollider2D:
@@ -62676,6 +62767,18 @@ PlayableDirector:
     - 503ed0523c4958c4ab895917ed322970: {fileID: 1666673891}
     - 8e0cc7cdadb5f0c41b0a31c20441dc45: {fileID: 1666673891}
     - 9b8379f01fae650419513d6a66e37680: {fileID: 0}
+--- !u!114 &1368519266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1368519260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa1ee43abf03ee242a7eb89a698bfae0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1369157703
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -63881,11 +63984,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 533140820793892913, guid: 019c1accf40bb5341be365e384d2c644, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -24.64
       objectReference: {fileID: 0}
     - target: {fileID: 533140820793892913, guid: 019c1accf40bb5341be365e384d2c644, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -2.79
       objectReference: {fileID: 0}
     - target: {fileID: 533140820793892913, guid: 019c1accf40bb5341be365e384d2c644, type: 3}
       propertyPath: m_LocalPosition.z
@@ -64914,7 +65017,7 @@ PlayableDirector:
   - key: {fileID: -651385046270707470, guid: 93eefd589b9621e4d8461f993de246c4, type: 2}
     value: {fileID: 1477461389}
   - key: {fileID: 6241536158255957230, guid: 93eefd589b9621e4d8461f993de246c4, type: 2}
-    value: {fileID: 1969045003}
+    value: {fileID: 0}
   - key: {fileID: -342016069381010766, guid: 93eefd589b9621e4d8461f993de246c4, type: 2}
     value: {fileID: 5795939}
   - key: {fileID: -8737270539625216427, guid: 93eefd589b9621e4d8461f993de246c4, type: 2}
@@ -88325,7 +88428,24 @@ MonoBehaviour:
   - {fileID: 852611109}
   - {fileID: 1406864320}
   - {fileID: 1173241753}
-  eventTriggers: []
+  eventTriggers:
+  - {fileID: 873376972}
+  - {fileID: 289275288}
+  - {fileID: 1368519263}
+  - {fileID: 1056597794}
+  - {fileID: 940648524}
+  - {fileID: 164152010}
+  - {fileID: 1497923344}
+  - {fileID: 278074733}
+  - {fileID: 852982525}
+  - {fileID: 919185988}
+  - {fileID: 1687579327}
+  - {fileID: 1521253185}
+  - {fileID: 599976510}
+  - {fileID: 491450867}
+  - {fileID: 531350564}
+  - {fileID: 1589723880}
+  - {fileID: 1790528229}
   targetFrame: 60
   showNodes: 0
   showPath: 0
@@ -89284,31 +89404,41 @@ MonoBehaviour:
   m_GameObject: {fileID: 1969044992}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ShowDebugText: 0
-  m_ShowCameraFrustum: 1
-  m_IgnoreTimeScale: 0
-  m_WorldUpOverride: {fileID: 0}
-  m_UpdateMethod: 2
-  m_BlendUpdateMethod: 1
-  m_DefaultBlend:
-    m_Style: 1
-    m_Time: 2
-    m_CustomCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-  m_CustomBlends: {fileID: 0}
-  m_CameraCutEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_CameraActivatedEvent:
-    m_PersistentCalls:
-      m_Calls: []
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_AllowHDROutput: 1
+  m_UseScreenCoordOverride: 0
+  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
+  m_TaaSettings:
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!1001 &1981353153
 PrefabInstance:
   m_ObjectHideFlags: 0
