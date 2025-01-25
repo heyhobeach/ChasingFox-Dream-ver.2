@@ -83,9 +83,8 @@ public class Bullet : MonoBehaviour
         if(life > 0 && collision.gameObject.tag == "Enemy" && !parentGo.CompareTag("Enemy"))//플레이어 총알이 적군에게 충돌시
         {
             var temp = collision.gameObject.GetComponent<IDamageable>();
-            Func<Collider2D, Vector2> func = null;
-            func += DamagedFeedBack;
-            if(temp != null) isDamaged = temp.GetDamage(damage,collision,func);
+            damagedFeedBack += DamagedFeedBack;
+            if(temp != null) isDamaged = temp.GetDamage(damage,collision,damagedFeedBack);
             if (isDamaged) 
             {
                 Destroy(gameObject);

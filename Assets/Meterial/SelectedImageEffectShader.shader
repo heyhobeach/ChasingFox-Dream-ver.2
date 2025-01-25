@@ -7,14 +7,14 @@ Shader "Hidden/SelectedImageEffectShader"
         [HDR]_HoveredColor ("Hovered Color", Color) = (1, 0, 0, 1)
         [HDR]_SelectedColor ("Selected Color", Color) = (0, 1, 0, 1)
         [Toggle] _Selected ("Selected", float) = 0 
-        _OutlineThickness ("Outline Thickness", Range(0, 0.01)) = 0.001
+        _OutlineThickness ("Outline Thickness", Range(0, 5)) = 0.001
     }
     SubShader
     {
         Pass
         {
             Name "GlowPass"
-            Tags { "RenderType"="Opaque" "Queue"="Transparent" "LightMode"="GlowPass" }
+            Tags { "RenderType"="Opaque" "Queue"="Transparent+1" "LightMode"="GlowPass" }
             Stencil { Ref 1 Comp Equal }
             ZWrite Off ZTest Always
     
@@ -33,6 +33,8 @@ Shader "Hidden/SelectedImageEffectShader"
             sampler2D _MainTex;
             sampler2D _GlowTex;
             sampler2D _OutlineTex;
+
+            float4 _MainTex_TexelSize;
 
             #include "UnityCG.cginc"
 
@@ -65,13 +67,13 @@ Shader "Hidden/SelectedImageEffectShader"
             {
                 UNITY_SETUP_INSTANCE_ID(i);
                 fixed4 mainTexColor = tex2D(_MainTex, i.uv);
-                fixed4 glowTexColor = tex2D(_GlowTex, i.uv);
+                fixed4 glowTexColor = tex2D(_MainTex, i.uv);
 
                 fixed4 finalColor = mainTexColor;
                 
-                glowTexColor.rgb *= _HoveredColor.rgb;
-                glowTexColor.a = mainTexColor.a;
-                finalColor = lerp(mainTexColor, glowTexColor, glowTexColor.a);
+                glowTexColor.rgb = _HoveredColor.rgb;
+                finalColor = lerp(finalColor, glowTexColor, glowTexColor.a);
+                finalColor.a *= _HoveredColor.a;
 
                 if (UNITY_ACCESS_INSTANCED_PROP(Props, _Selected) > 0.5)
                 {
@@ -80,12 +82,13 @@ Shader "Hidden/SelectedImageEffectShader"
                     {
                         for (int y = -1; y <= 1; y++)
                         {
-                            float2 offset = float2(x, y) * _OutlineThickness;
+                            float2 offset = float2(x, y) * _MainTex_TexelSize * _OutlineThickness;
                             outlineTexColor += tex2D(_MainTex, i.uv + offset);
                         }
                     }
                     outlineTexColor.a = clamp(outlineTexColor.a, 0, 1);
-                    outlineTexColor.a -= mainTexColor.a;
+                    outlineTexColor.a *= _SelectedColor.a;
+                    outlineTexColor.a -= tex2D(_MainTex, i.uv).a;
 
                     outlineTexColor.rgb = _SelectedColor.rgb;
                     finalColor = lerp(finalColor, outlineTexColor, outlineTexColor.a);
@@ -99,7 +102,7 @@ Shader "Hidden/SelectedImageEffectShader"
         Pass
         {
             Name "BasePass"
-            Tags { "RenderType"="Opaque" "Queue"="Geometry" "LightMode"="BasePass" }
+            Tags { "RenderType"="Opaque" "Queue"="Transparent+1" "LightMode"="BasePass" }
             Stencil { Ref 1 Comp NotEqual }
             ZWrite Off ZTest Always
     

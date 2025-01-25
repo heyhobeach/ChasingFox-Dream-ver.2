@@ -30,6 +30,8 @@ public class Werewolf : PlayerUnit
     public Action formChangeTest;
 
     private Coroutine attackCoroutine;
+
+    public GameObject playerArea;  // Stencil Test용 Material
     
     protected override void OnEnable()
     {
@@ -62,13 +64,22 @@ public class Werewolf : PlayerUnit
     protected override void Update()
     {
         base.Update();
+        if(attackCoroutine != null) return;
         if(currentTime > 0 && !GameManager.Instance.isPaused) currentTime -= Time.unscaledDeltaTime;
         else formChangeTest?.Invoke();
+    }
+
+    private void LateUpdate()
+    {
+        playerArea.transform.position = transform.position;
+        playerArea.transform.localScale = brutalData.brutalArea;
     }
 
     public override bool Attack(Vector3 clickPos)
     {
         if(!isFormChangeReady() || attackCoroutine != null) return false;
+        if(brutalData.brutalArea.x * 0.5f < Vector2.Distance(transform.position, clickPos)) return false;
+        if(Physics2D.OverlapPoint(clickPos, 1<<LayerMask.NameToLayer("Enemy") | 1<<LayerMask.NameToLayer("GimmickObject")) == null) return false;
         currentCount--;
         currentTime = brutalData.brutalTime;
         currentGauge -= brutalData.useGage;
@@ -83,10 +94,12 @@ public class Werewolf : PlayerUnit
     {
         MeleeAttack.SetActive(true);
         Time.timeScale = 0.3f;
+        Time.fixedDeltaTime = 0.02f * Time.timeScale;
         yield return null;
         MeleeAttack.SetActive(false);
         yield return new WaitForSecondsRealtime(0.5f);
         Time.timeScale = 1f;
+        Time.fixedDeltaTime = 0.02f;
         if(currentCount <= 0 || !isFormChangeReady()) formChangeTest?.Invoke();
         attackCoroutine = null;
     }
