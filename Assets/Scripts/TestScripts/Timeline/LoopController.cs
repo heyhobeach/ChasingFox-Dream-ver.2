@@ -122,7 +122,7 @@ public class LoopController : MonoBehaviour
         Application.targetFrameRate = fixed_timeline_frame;
         playableDirector = GetComponent<PlayableDirector>();
 
-        Debug.Log("타임라인 길이" + playableDirector.duration);
+        //Debug.Log("타임라인 길이" + playableDirector.duration);
         //playableDirector.Evaluate();
         //playableDirector.RebuildGraph();
         //playableDirector.playableGraph.SetTimeUpdateMode(DirectorUpdateMode.Manual);
@@ -210,7 +210,7 @@ public class LoopController : MonoBehaviour
 
         if (playableDirector.time >= none_time[noneListNum])
         {
-            Debug.Log("setnone");
+            //Debug.Log("setnone");
             SetNone();
         }
 
@@ -220,10 +220,10 @@ public class LoopController : MonoBehaviour
         if (Input.anyKeyDown && !(Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow)
                                                                   || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D)))
         {
-            Debug.Log("anyKeyDonw");
+            //Debug.Log("anyKeyDonw");
             if (isHold > 2 || isHold < 1)
             {//해당부분은 int로 수정해서 int로 진행할까함 0 = null, 1 = loop, 2 = hold, else error
-                Debug.Log("checky isHold num" + isHold);
+                //Debug.Log("checky isHold num" + isHold);
                 return;
             }
             EndLoop();

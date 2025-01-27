@@ -159,7 +159,7 @@ public class UIManager : MonoBehaviour
             transform.GetChild(0).GetChild(i).GetComponent<RectTransform>().sizeDelta = new Vector2(transform.GetComponent<RectTransform>().rect.width*0.328f, transform.GetComponent<RectTransform>().rect.width * 0.36645f);
             float yPox = transform.GetChild(0).GetChild(0).transform.GetComponent<RectTransform>().rect.height;
 
-            Debug.Log(yPox + "yPos");
+            //Debug.Log(yPox + "yPos");
             if (i == 0)//이렇게 한 이유는 이미지는 공간 2개 밖에없을거같아서
             {
                 transform.GetChild(0).GetChild(i).GetComponent<RectTransform>().position = new Vector3(transform.GetComponent<RectTransform>().rect.width * 0.3f / 2, yPox*0.95f, 0); //yPox/2
