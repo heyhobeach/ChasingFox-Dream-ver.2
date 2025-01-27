@@ -23,7 +23,7 @@ public class InteractionEvent : MonoBehaviour
     //코루틴으로 계속 오브젝트를 살려놓는다면 해결 되지 않을까 결국에는 int를 불러오지 못 해서 생기는 일들 
     private static InteractionEvent instance;
     public static InteractionEvent Instance { get => instance; }
-    
+
 
 
     public static bool isSkip = false;
@@ -101,7 +101,7 @@ public class InteractionEvent : MonoBehaviour
         public int end;
         public int _speed;
         public string _str;
-        public SpeedCommand(string[] args,string str, UIManager manager)
+        public SpeedCommand(string[] args, string str, UIManager manager)
         {
             start = int.Parse(args[0]);
             end = int.Parse(args[1]);
@@ -130,7 +130,7 @@ public class InteractionEvent : MonoBehaviour
         {
             //base.OnExecute();
             Debug.Log("Skip onExecute테스트");
-            _manager.skipco=_manager.StartCoroutine(_manager.ChocieTimer(5, true, null));
+            _manager.skipco = _manager.StartCoroutine(_manager.ChocieTimer(5, true, null));
             //_uiManger.
         }
     }
@@ -155,7 +155,7 @@ public class InteractionEvent : MonoBehaviour
     {
         public override void OnExecute()
         {
-            Debug.Log("onExecute alone 테스트"); 
+            Debug.Log("onExecute alone 테스트");
         }
     }
 
@@ -264,7 +264,7 @@ public class InteractionEvent : MonoBehaviour
         public override void OnExecute()
         {
             //base.OnExecute();
-            Debug.Log("branch onExecute테스트"+branch_id);
+            Debug.Log("branch onExecute테스트" + branch_id);
             _event.Branch(branch_id);
             //_event.move(branch_id);
             //_uiManger.ani(start, end, size);
@@ -288,7 +288,7 @@ public class InteractionEvent : MonoBehaviour
         }
         dialogue.dialouses = null;
         dialogue.dialouses = DatabaseManager.instance.GetDialogues((int)dialogue.line.x, (int)dialogue.line.y);//y값 찾아오는 법
-        if(dialogue.dialouses == null)
+        if (dialogue.dialouses == null)
         {
             Debug.Log("GetDialogues error");
         }
@@ -333,11 +333,12 @@ public class InteractionEvent : MonoBehaviour
         //}
     }
 
-    public void SetSkip(bool skip) {
-        Debug.Log("int setskip");
-        isSkip = skip; 
+    public void SetSkip(bool skip)
+    {
+        // Debug.Log("int setskip");
+        isSkip = skip;
     }
-    public void SetSkip(Transform tf) {}
+    public void SetSkip(Transform tf) { }
 
     private void HandleCommand()
     {
@@ -397,7 +398,7 @@ public class InteractionEvent : MonoBehaviour
         if (num < dialogue.dialouses.Length)
         {
             _Uimanager.EnableUI();//해당라인 수정필요, 사용 안 하는 라인 같은데
-            Debug.Log("precommand");
+            //Debug.Log("precommand");
             CallCommand(ref precommands);//이전에 실행되어야할 명령어들
                                          //이게 두번 일어나는듯?
 
@@ -409,9 +410,10 @@ public class InteractionEvent : MonoBehaviour
                                                              //Debug.Log(string.Format("num => {0} contentnum ={1}", num, contentNum));
             contentlength = dialogue.dialouses[num].context.Length;
             //Debug.Log("contentLength"+contentlength);//지금 자꾸 길이가 0이라고 나옴
-            if (contentlength == 1)
+            if (contentlength == 1)//선택지 아닐때
             {
-                _Uimanager.SetContent(string.Join("", dialogue.dialouses[num].context[contentNum]));
+                StartCoroutine(CallSetcontentStay(dialogue.dialouses[num].context[contentNum]));
+                //_Uimanager.SetContent(string.Join("", dialogue.dialouses[num].context[contentNum]));
 
             }
             else
@@ -436,13 +438,13 @@ public class InteractionEvent : MonoBehaviour
 
 
 
-                //Debug.Log(string.Format("num {3}, name {0}: content{1} , 명령어{2}", dialogue.dialouses[num].name, dialogue.dialouses[num].context[contentNum], dialogue.dialouses[num].command[contentNum],num));
-                if (++num == dialogue.dialouses.Length)
-                {
-                    //command = Regex.Split(dialogue.dialouses[num-1].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);//여기까지는 순서 맞음 command받기전에 num이 증가되어야함
-                    return;
-                }
-                command = Regex.Split(dialogue.dialouses[num].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);//여기까지는 순서 맞음 command받기전에 num이 증가되어야함
+            //Debug.Log(string.Format("num {3}, name {0}: content{1} , 명령어{2}", dialogue.dialouses[num].name, dialogue.dialouses[num].context[contentNum], dialogue.dialouses[num].command[contentNum],num));
+            if (++num == dialogue.dialouses.Length)
+            {
+                //command = Regex.Split(dialogue.dialouses[num-1].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);//여기까지는 순서 맞음 command받기전에 num이 증가되어야함
+                return;
+            }
+            command = Regex.Split(dialogue.dialouses[num].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);//여기까지는 순서 맞음 command받기전에 num이 증가되어야함
 
 
             //Debug.Log("command length"+command.Length);
@@ -460,7 +462,7 @@ public class InteractionEvent : MonoBehaviour
     }
     public void HandleDialogue()
     {
-        if (( isSkip) && !_Uimanager.is_closing)//f누를때 문제 생기는듯?
+        if ((isSkip) && !_Uimanager.is_closing)//f누를때 문제 생기는듯?
         {
             isSkip = false;
             if (skipco != null)
@@ -489,7 +491,7 @@ public class InteractionEvent : MonoBehaviour
             //여기서 precommand와 postcommand를 초기화 한다면?
             //precommands.Clear();
             //postcommands.Clear();
-            int temp = num-1;
+            int temp = num - 1;
             if (num > dialogue.dialouses.Length - 1)
             {
                 temp = dialogue.dialouses.Length - 1;
@@ -500,24 +502,24 @@ public class InteractionEvent : MonoBehaviour
             //    start = true;
             //    StartCoroutine(ChocieTimer(5, start, Timeover));
             //}
-            if (Input.GetKeyDown(KeyCode.RightArrow)||Input.GetKeyDown(KeyCode.A))//오른쪽
+            if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.A))//오른쪽
             {
                 //countnum은 downArrow가 실행 되면 값이 변하게 되어있음
                 if (contentlength - 1 > (contentNum))
                 {
                     _Uimanager.DownArrow(ref contentNum);
                     //Debug.Log("content num" + contentNum + "ID" +temp);
-                    Debug.Log("content num" + contentNum+"내용" + dialogue.dialouses[temp].command[contentNum]);
+                    Debug.Log("content num" + contentNum + "내용" + dialogue.dialouses[temp].command[contentNum]);
                     command = Regex.Split(dialogue.dialouses[temp].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);// 선택지 명령어 관련이 현재 문제
                     return;
                 }
 
             }
 
-            if ((Input.GetKeyDown(KeyCode.LeftArrow)||Input.GetKeyDown(KeyCode.D)) & (contentNum > 0))//왼쪽
+            if ((Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.D)) & (contentNum > 0))//왼쪽
             {
                 _Uimanager.UpArrow(ref contentNum);
-                    Debug.Log("content num" + contentNum+"내용" + dialogue.dialouses[temp].command[contentNum]);
+                Debug.Log("content num" + contentNum + "내용" + dialogue.dialouses[temp].command[contentNum]);
                 command = Regex.Split(dialogue.dialouses[temp].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);// 선택지 명령어 관련이 현재 문제
                 return;
             }
@@ -557,7 +559,7 @@ public class InteractionEvent : MonoBehaviour
         //    isSkip = false;
         //    return;
         //}
-        if ( (indexNum < DatabaseManager.instance.indexList.Count))
+        if ((indexNum < DatabaseManager.instance.indexList.Count))
         //if (Input.GetKeyDown(KeyCode.X) & (indexNum < DatabaseManager.instance.indexList.Count))
         {
             dialogue.line.x = ++dialogue.line.y;//기존 ++dialogue.line.y
@@ -581,7 +583,7 @@ public class InteractionEvent : MonoBehaviour
     private void SetCommands(string[] _functions)
     {
         int temp = num;
-        if (num> dialogue.dialouses.Length-1)
+        if (num > dialogue.dialouses.Length - 1)
         {
             temp = dialogue.dialouses.Length - 1;
         }
@@ -639,8 +641,8 @@ public class InteractionEvent : MonoBehaviour
                     }
                     break;
                 case "anime":
-                    { 
-                        precommands.Add(new AnimCommand(filteredSubstrings,_Uimanager));
+                    {
+                        precommands.Add(new AnimCommand(filteredSubstrings, _Uimanager));
                         //anime(filteredSubstrings); 
                     }
                     break;
@@ -652,7 +654,7 @@ public class InteractionEvent : MonoBehaviour
                     break;
                 case "higher"://시작 전 혹은 후 라고 되어있는데 언제 어떻게 될지
                     {
-                        postcommands.Add(new HigherCommand(filteredSubstrings,this));
+                        postcommands.Add(new HigherCommand(filteredSubstrings, this));
                         //precommands.Add(new HigherCommand(filteredSubstrings, this));
                     }
                     break;
@@ -758,14 +760,14 @@ public class InteractionEvent : MonoBehaviour
         Debug.Log("time over");
         if (contentlength > 1 && num <= dialogue.dialouses.Length)
         {
-            Debug.Log(string.Format("{0} num {1} contentNum", num - 1, contentNum));    
+            Debug.Log(string.Format("{0} num {1} contentNum", num - 1, contentNum));
             Debug.Log("Time over" + dialogue.dialouses[num - 1].context[0]);
             //_Uimanager.CloseSelceet(0);
             //command = Regex.Split(dialogue.dialouses[num - 1].command[0], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);
             contentNum = 0;
-            foreach(var i in command)
+            foreach (var i in command)
             {
-                Debug.Log("Command"+ i );
+                Debug.Log("Command" + i);
 
             }
             isSkip = true;
@@ -799,19 +801,19 @@ public class InteractionEvent : MonoBehaviour
     /// 현재 텍스트 번호에서 다른 위치에서 로딩이 될 사진들을 튜플로 가져옴
     /// </summary>
     /// <returns>성공시 tuple 실패시 null</returns>
-    public Tuple<string,string>[] GetImageNameList()
+    public Tuple<string, string>[] GetImageNameList()
     {
         Debug.Log("GetNum " + num);
-        Tuple<string, string>[]name_tuple_list= new Tuple<string, string>[2];
-        string[] name_list= new string[2];
+        Tuple<string, string>[] name_tuple_list = new Tuple<string, string>[2];
+        string[] name_list = new string[2];
         if (dialogue.dialouses[num].image_name == null || dialogue.dialouses[num].dir == null)
         {
             return null;
         }
-        name_tuple_list[0] = new Tuple<string, string>(dialogue.dialouses[num].image_name, dialogue.dialouses[num].dir);
+        name_tuple_list[0] = new Tuple<string, string>(dialogue.dialouses[num - 1].image_name, dialogue.dialouses[num - 1].dir);//num->num-1
 
         name_list[0] = dialogue.dialouses[num].image_name;
-        for(int i = num+1; i < dialogue.dialouses.Length; i++)
+        for (int i = num; i < dialogue.dialouses.Length; i++)//num+1->num
         {
             Debug.Log(string.Format("이름 {0} 위치 {1}", dialogue.dialouses[i].image_name, dialogue.dialouses[i].dir));
             Debug.Log(string.Format("비교 {0} 과 {1} ", name_tuple_list[0].Item2, dialogue.dialouses[i].dir));
@@ -825,5 +827,15 @@ public class InteractionEvent : MonoBehaviour
         }
 
         return null;
+    }
+
+    public IEnumerator CallSetcontentStay(string str)
+    {
+        while (!UIController.Instance.is_dialogue_on)
+        {
+            yield return null;
+        }
+        _Uimanager.SetContent(string.Join("", str));
+        yield return null;
     }
 }

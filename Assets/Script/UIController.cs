@@ -12,6 +12,8 @@ public class UIController : MonoBehaviour//해당 스크립트는 UI를 그리�
     public bool reloadDoon = true;//재장전 완료를 알려주는 변수
     [SerializeField] private float duration = 1f;//그림 그리는데 필요한 시간
     public bool startCor = false;
+
+    public bool is_dialogue_on = false;
     // Start is called before the first frame update
     public Canvas DialogueCanvas;
 
@@ -117,12 +119,14 @@ public class UIController : MonoBehaviour//해당 스크립트는 UI를 그리�
     {
         Debug.Log("SetFalse");
         //DialogueCanvas.transform.gameObject.SetActive(false);
+        is_dialogue_on = false;
         DialogueCanvas.transform.gameObject.GetComponent<Canvas>().enabled = false;
         backgroundImage?.SetActive(false);
     }
     public void DialogueCanvasSetTrue()
     {
         Debug.Log("SetTrue");
+        is_dialogue_on= true; 
         //DialogueCanvas.transform.gameObject.SetActive(true);
         //bool is_alone = false;
         DialogueCanvas.GetComponent<UIManager>().LoadImage();

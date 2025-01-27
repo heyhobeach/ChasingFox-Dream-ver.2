@@ -314,6 +314,7 @@ public class UIManager : MonoBehaviour
 
     public void SetContent(string _content)
     {
+        //while (!UIController.Instance.is_dialogue_on)
         StopCoroutine(co);
         int br_count = 0;
         //float width=content.fontSize* GetContentLength(_content, ref br_count);
