@@ -803,9 +803,15 @@ public class InteractionEvent : MonoBehaviour
     /// <returns>성공시 tuple 실패시 null</returns>
     public Tuple<string, string>[] GetImageNameList()
     {
-        Debug.Log("GetNum " + num);
+        Debug.Log("GetNum " + num+"dialogues length"+dialogue.dialouses.Length);
         Tuple<string, string>[] name_tuple_list = new Tuple<string, string>[2];
         string[] name_list = new string[2];
+        if (dialogue.dialouses.Length ==1)//일단 1개만 있을때 예외 처리용
+        {
+            name_tuple_list[0] = new Tuple<string, string>(dialogue.dialouses[num - 1].image_name, dialogue.dialouses[num - 1].dir);//num->num-1
+            name_tuple_list[1] = new Tuple<string, string>("dumy", "left");//num->num-1
+            return name_tuple_list;
+        }
         if (dialogue.dialouses[num].image_name == null || dialogue.dialouses[num].dir == null)
         {
             return null;
@@ -815,11 +821,11 @@ public class InteractionEvent : MonoBehaviour
         name_list[0] = dialogue.dialouses[num].image_name;
         for (int i = num; i < dialogue.dialouses.Length; i++)//num+1->num
         {
-            Debug.Log(string.Format("이름 {0} 위치 {1}", dialogue.dialouses[i].image_name, dialogue.dialouses[i].dir));
-            Debug.Log(string.Format("비교 {0} 과 {1} ", name_tuple_list[0].Item2, dialogue.dialouses[i].dir));
+            //Debug.Log(string.Format("이름 {0} 위치 {1}", dialogue.dialouses[i].image_name, dialogue.dialouses[i].dir));
+            //Debug.Log(string.Format("비교 {0} 과 {1} ", name_tuple_list[0].Item2, dialogue.dialouses[i].dir));
             if (name_tuple_list[0].Item2 != dialogue.dialouses[i].dir)
             {
-                Debug.Log("다른곳은 " + i + "번째 입니다");
+                //Debug.Log("다른곳은 " + i + "번째 입니다");
                 name_list[1] = dialogue.dialouses[i].image_name;
                 name_tuple_list[1] = new Tuple<string, string>(dialogue.dialouses[i].image_name, dialogue.dialouses[i].dir);
                 return name_tuple_list;
