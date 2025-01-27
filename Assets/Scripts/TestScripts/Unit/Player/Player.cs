@@ -24,6 +24,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     /// </summary>
     private PlayerUnit changedForm;
     public PlayerUnit ChagedForm { get => changedForm; }
+    public UnitState UnitState { get => changedForm.UnitState; set => changedForm.UnitState = value; }
 
     public BrutalData brutalData { get => ((Werewolf)forms[1]).brutalData; set => ((Werewolf)forms[1]).brutalData = value; }
     public int currentGauge { get => ((Werewolf)forms[1]).currentGauge; set => ((Werewolf)forms[1]).currentGauge = value; }
@@ -70,6 +71,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         {
             playerData = new PlayerData();
             playerData.Init();
+            playerData.health = maxHealth;
             SystemManager.Instance.saveData.playerData = playerData;
         }
         health = playerData.health;

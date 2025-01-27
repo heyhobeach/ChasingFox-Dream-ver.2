@@ -24,11 +24,10 @@ public class EventTrigger : MonoBehaviour
     /// 이벤트를 작동시킬 대상의 태그
     /// </summary>
     public string targetTag;
-    private Vector2 _targetPosition;
     public Vector2 targetPosition
     {
-        get => _targetPosition;
-        protected set => _targetPosition = value;
+        get => eventTriggerData.targetPosition;
+        protected set => eventTriggerData.targetPosition = value;
     }
 
     /// <summary>
@@ -62,7 +61,8 @@ public class EventTrigger : MonoBehaviour
             (eventLists[eventIdx].keyCode == KeyCode.None || Input.GetKeyDown(eventLists[eventIdx].keyCode)))
         {
             SystemManager.Instance.UpdateDataForEventTrigger(GetInstanceID(), eventIdx);
-            eventLists[eventIdx].action?.Invoke();
+            try { eventLists[eventIdx].action?.Invoke(); }
+            catch (Exception e) { Debug.LogError(e); }
             if(eventLists[eventIdx].exitPrerequisites != null) StartCoroutine(LockTime(eventLists[eventIdx].exitPrerequisites));
             eventIdx++;
         }

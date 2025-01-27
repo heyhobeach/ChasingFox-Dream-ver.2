@@ -13,6 +13,8 @@ public class Map : MonoBehaviour
     [HideInInspector] public EdgeCollider2D edgeCollider2D;
     private int enemyCount = 0;
 
+    public bool enemyClear { get => enemyCount <= 0; }
+
     public bool used { get => mapData.used; set => mapData.used = value; }
     public bool cleared { get => mapData.cleared; set => mapData.cleared = value; }
     public Vector3 position { get => mapData.position; set => mapData.position = value; }
@@ -69,6 +71,7 @@ public class Map : MonoBehaviour
     }
     public void OnEnd()
     {
+        if(GameManager.Instance.player.GetComponent<Player>().UnitState == UnitState.Death) return;
         edgeCollider2D.enabled = false;
         mapData.cleared = true;
         foreach (EnemyUnit unit in enemyUnits) unit.gameObject.SetActive(false);

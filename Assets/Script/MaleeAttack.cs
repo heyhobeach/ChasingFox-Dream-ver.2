@@ -15,20 +15,6 @@ public class MaleeAttack : MonoBehaviour
         this.parentGo = go;
     }
 
-    // Start is called before the first frame update
-    public void OnCollisionEnter2D(Collision2D collision)
-    {
-        Debug.Log(collision.gameObject.name);
-    }
-
-    private void OntriggerStay(Collider2D collision)
-    {
-        if (collision.gameObject.tag == "Hatch")
-        {
-            collision.gameObject.SetActive(false);
-        }
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         bool isDamaged = false;

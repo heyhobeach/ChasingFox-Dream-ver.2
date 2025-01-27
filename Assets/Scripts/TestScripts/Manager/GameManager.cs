@@ -89,12 +89,7 @@ public partial class GameManager : MonoBehaviour
     {
         StartCoroutine(MapSearchStart());
         var saveData = SystemManager.Instance.saveData;
-        bool isNew = false;
-        if(saveData != null && saveData.chapter != SceneManager.GetActiveScene().name) 
-        {
-            DataReset();
-            isNew = true;
-        }
+        if(saveData != null && saveData.chapter != SceneManager.GetActiveScene().name) DataReset();
         var playerScript = player.GetComponent<Player>();
         playerScript.Init(saveData.playerData);
         karmaRatio = saveData.karma;
@@ -105,7 +100,7 @@ public partial class GameManager : MonoBehaviour
         {
             var mapDatas = new MapData.JsonData[maps.Count];
             for (int i = 0; i < maps.Count; i++) mapDatas[i] = maps[i].mapData;
-            SystemManager.Instance.saveData.mapDatas = mapDatas;
+            saveData.mapDatas = mapDatas;
         }
         for (int i = 0; i < maps.Count; i++) maps[i].Init(saveData.mapDatas[i]);
 
@@ -116,7 +111,7 @@ public partial class GameManager : MonoBehaviour
             {
                 eventTriggerDatas[i] = eventTriggers[i].eventTriggerData;
             }
-            SystemManager.Instance.saveData.eventTriggerDatas = eventTriggerDatas;
+            saveData.eventTriggerDatas = eventTriggerDatas;
         }
         for (int i = 0; i < eventTriggers.Count; i++) 
         {
@@ -124,7 +119,9 @@ public partial class GameManager : MonoBehaviour
             eventTriggers[i].gameObject.SetActive(saveData.eventTriggerDatas[i].isEneable);
         }
 
-        if(!isNew) player.transform.position = saveData.mapDatas[PlayerData.lastRoomIdx].position;
+        SystemManager.Instance.saveData = saveData;
+
+        if(saveData.mapDatas[PlayerData.lastRoomIdx].used) player.transform.position = saveData.mapDatas[PlayerData.lastRoomIdx].position;
         if (saveData.eventTriggerInstanceID != 0)
         {
             var trigger = eventTriggers.Find(x => x.GetInstanceID() == saveData.eventTriggerInstanceID);
@@ -224,6 +221,7 @@ public partial class GameManager : MonoBehaviour
         for (int i = 0; i < eventTriggers.Count; i++) eventTriggerDatas[i] = eventTriggers[i].eventTriggerData;
         SystemManager.Instance.saveData.mapDatas = mapDatas;
         SystemManager.Instance.saveData.eventTriggerDatas = eventTriggerDatas;
+        SystemManager.Instance.saveData.karma = karmaRatio;
         SystemManager.Instance.saveData.chapterIdx = PlayerData.lastRoomIdx;
         SystemManager.Instance.SaveData(SystemManager.Instance.saveIndex);
     }
@@ -236,6 +234,7 @@ public partial class GameManager : MonoBehaviour
         SystemManager.Instance.saveData.karma = karmaRatio;
         SystemManager.Instance.saveData.playerData = null;
         PlayerData.lastRoomIdx = 0;
+        SystemManager.Instance.saveData.chapterIdx = 0;
         SystemManager.Instance.UpdateDataForEventTrigger(0, 0);
     }
     public void InventoryEnable()

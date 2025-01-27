@@ -14,6 +14,7 @@ public class FixedEventTrigger : EventTrigger, IBaseController
     /// <para>후에 키 설정 도입 시 GetButtonDown기반 (string)으로 변경 필요</para>
     /// </summary>
     public KeyCode keyCode;
+    public QTE_Prerequisites prerequisites;
     
     private Action _onDown;
     public Action onDown { get => _onDown; set => throw new NotImplementedException(); }
@@ -69,7 +70,7 @@ public class FixedEventTrigger : EventTrigger, IBaseController
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        if((autoTrigger ? false : !Input.GetKeyDown(keyCode)) || !collider.CompareTag(targetTag)) return;
+        if((autoTrigger ? false : !Input.GetKeyDown(keyCode)) || !collider.CompareTag(targetTag) || (prerequisites != null && !prerequisites.isSatisfied)) return;
         targetPosition = collider.transform.position;
         OnTrigger();
     }

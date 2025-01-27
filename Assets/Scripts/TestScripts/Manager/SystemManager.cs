@@ -22,7 +22,7 @@ public class SystemManager : MonoBehaviour
 
     private SaveData[] saveDatas = new SaveData[3];
     public int saveIndex = 0;
-    public SaveData saveData { get => saveDatas[saveIndex]; }
+    public SaveData saveData { get => saveDatas[saveIndex]; set => saveDatas[saveIndex] = value; }
     private SaveData defaultSaveData = new SaveData();
     
     [SerializeField] private AudioMixer audioMixer;
