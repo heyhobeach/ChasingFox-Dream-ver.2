@@ -24,13 +24,16 @@ public class InteractionEvent : MonoBehaviour
     private static InteractionEvent instance;
     public static InteractionEvent Instance { get => instance; }
 
+    public IEnumerator choiceTimer;
 
+    public int user_select = 0;
 
     public static bool isSkip = false;
 
     [Tooltip("해당 아이디로 이동")]
     public int num = 0;
-    int contentNum = 0;
+
+    public int contentNum = 0;
 
     [Tooltip("대화 뭉텅이 번호")]
     public int indexNum = 0;
@@ -130,7 +133,7 @@ public class InteractionEvent : MonoBehaviour
         {
             //base.OnExecute();
             Debug.Log("Skip onExecute테스트");
-            _manager.skipco = _manager.StartCoroutine(_manager.ChocieTimer(5, true, null));
+            _manager.skipco = _manager.StartCoroutine(_manager.ChoiceTimer(5, true, null));
             //_uiManger.
         }
     }
@@ -265,6 +268,7 @@ public class InteractionEvent : MonoBehaviour
         {
             //base.OnExecute();
             Debug.Log("branch onExecute테스트" + branch_id);
+
             _event.Branch(branch_id);
             //_event.move(branch_id);
             //_uiManger.ani(start, end, size);
@@ -353,10 +357,10 @@ public class InteractionEvent : MonoBehaviour
         if (command.Length > 0)
         {
             command = spaceremove(command);
-            //foreach (var com in command)
-            //{
-            //    //Debug.Log("명령어 확인" + com);
-            //}
+            foreach (var com in command)
+            {
+                Debug.Log("명령어 확인" + com);
+            }
             SetCommands(command);
 
             //Debug.Log("command size is " + command.Length+"command [0]" + command[0]);
@@ -388,6 +392,23 @@ public class InteractionEvent : MonoBehaviour
 
         }
         _commandList.RemoveAll(x => true);
+    }
+
+    public void CheckRemainCommand()
+    {
+        Debug.Log("Branch contentnum" + contentNum);
+        user_select = contentNum;
+        StopAllCoroutines();
+        if (precommands.Count > 0)
+        {
+            Debug.Log("명령어 남음");
+            CallCommand(ref precommands);
+        }
+        if (postcommands.Count > 0)
+        {
+            Debug.Log("명령어 남음");
+            CallCommand(ref postcommands);
+        }
     }
     public void SetNextContext()
     {
@@ -432,7 +453,8 @@ public class InteractionEvent : MonoBehaviour
                 if (start == false)
                 {
                     start = true;
-                    StartCoroutine(ChocieTimer(10, start, Timeover));//선택지 제한시간 부분
+                    choiceTimer = ChoiceTimer(10, start, Timeover);
+                    StartCoroutine(choiceTimer);//선택지 제한시간 부분
                 }
             }
 
@@ -445,7 +467,10 @@ public class InteractionEvent : MonoBehaviour
                 return;
             }
             command = Regex.Split(dialogue.dialouses[num].command[contentNum], SPLIT_COMMAND_PASER, RegexOptions.IgnorePatternWhitespace);//여기까지는 순서 맞음 command받기전에 num이 증가되어야함
-
+            //foreach (var com in command)
+            //{
+            //    Debug.Log("명령어 " + com);
+            //}
 
             //Debug.Log("command length"+command.Length);
             //Debug.Log("Getdialoogues succese" + dialogue.dialouses.Length);
@@ -599,7 +624,7 @@ public class InteractionEvent : MonoBehaviour
             string[] filteredSubstrings = strarr.Where(s => s != Regex.Match(s, SPLIT_NUM).ToString()).ToArray();
             int n;
             //string[] numarr = Array.FindAll(strarr, s => !string.IsNullOrEmpty(s) && (int.TryParse(s, out n)));
-            //Debug.Log(string.Format("mat 체크=>{0}", func));
+            Debug.Log(string.Format("mat 체크=>{0}", func));
             var mat = Regex.Matches(func, GET_COMMAND);
             //Debug.Log(string.Format("커맨드 체크 =>{0}", mat[0]));
             switch (mat[0].ToString())
@@ -701,26 +726,26 @@ public class InteractionEvent : MonoBehaviour
         Debug.Log(string.Format("switch_speed {0} {1} {2}", command_args[0], command_args[1], command_args[2]));
         //_Uimanager.TypingSpeed(int.Parse(command_args[0]), int.Parse(command_args[1]), int.Parse(command_args[2]));
     }
-    public void time()
-    {
-        Debug.Log("switch_time");
-    }
-    public void brutal()
-    {
-        Debug.Log("switch_brutal");
-    }
-    public void police()
-    {
-        Debug.Log("switch_plice");
-    }
-    public void play()
-    {
-        Debug.Log("switch_play");
-    }
-    public void anime(string[] command_args)//시작 끝 종류
-    {
-        Debug.Log(string.Format("switch_anime {0} {1} {2}", command_args[0], command_args[1], command_args[2]));
-    }
+    //public void time()
+    //{
+    //    Debug.Log("switch_time");
+    //}
+    //public void brutal()
+    //{
+    //    Debug.Log("switch_brutal");
+    //}
+    //public void police()
+    //{
+    //    Debug.Log("switch_plice");
+    //}
+    //public void play()
+    //{
+    //    Debug.Log("switch_play");
+    //}
+    //public void anime(string[] command_args)//시작 끝 종류
+    //{
+    //    Debug.Log(string.Format("switch_anime {0} {1} {2}", command_args[0], command_args[1], command_args[2]));
+    //}
     public void move(int id)//호출 순서? 조금 수정 필요
     {
         Debug.Log(string.Format("switch_move {0} current {1} ", id, dialogue.dialouses[num].id));
@@ -750,7 +775,11 @@ public class InteractionEvent : MonoBehaviour
 
     public void Branch(int id)
     {
+
+
+        StopCoroutine(choiceTimer);
         TimelineBranchManager.Instance.TimelineBranch(id);
+
     }
 
 
@@ -773,7 +802,7 @@ public class InteractionEvent : MonoBehaviour
             isSkip = true;
         }
     }
-    IEnumerator ChocieTimer(float seconds, bool start, Action? act)
+    IEnumerator ChoiceTimer(float seconds, bool start, Action? act)
     {
         if (start)
         {
@@ -795,6 +824,7 @@ public class InteractionEvent : MonoBehaviour
         }
 
     }
+
 
     //public string[] GetImageNameList()
     /// <summary>

@@ -1,8 +1,9 @@
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class TimelineBranchManager : MonoBehaviour
 {
-    public TimeLineBranchContoller[] timeLineBranches;
+    public GameObject[] timeLineBranches;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
     private static TimelineBranchManager instance = null;
@@ -24,8 +25,18 @@ public class TimelineBranchManager : MonoBehaviour
         instance = this;
     }
 
-    public void TimelineBranch(int branch_id)
+    public  void TimelineBranch(int branch_id)
     {
-        timeLineBranches[branch_id-1].branchfunc();
+        
+        timeLineBranches[branch_id-1].GetComponent<TimeLineBranchContoller>().branchfunc();
+        //await RestartTimeline(branch_id-1);
+        //while(timeLineBranches[branch_id - 1].GetComponent<PlayableDirector>().time == 0)
+        //{
+        //    Debug.Log("time 0 restart");
+        //    timeLineBranches[branch_id - 1].GetComponent<TimeLineBranchContoller>().branchfunc();
+        //}
     }
+    //while (timeLineBranches[id].GetComponent<PlayableDirector>().time == 0)
+
+
 }

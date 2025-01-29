@@ -21628,6 +21628,7 @@ GameObject:
   m_Component:
   - component: {fileID: 550329932}
   - component: {fileID: 550329931}
+  - component: {fileID: 550329933}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -21715,6 +21716,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &550329933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 550329930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
 --- !u!1 &559709849
 GameObject:
   m_ObjectHideFlags: 0
@@ -30799,7 +30823,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &754639852
 Transform:
   m_ObjectHideFlags: 0
@@ -62535,6 +62559,7 @@ GameObject:
   - component: {fileID: 1185950241}
   - component: {fileID: 1185950243}
   - component: {fileID: 1185950244}
+  - component: {fileID: 1185950245}
   m_Layer: 0
   m_Name: Timeline_2-1 (photo)
   m_TagString: Untagged
@@ -62761,6 +62786,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa1ee43abf03ee242a7eb89a698bfae0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1185950245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1185950238}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc71b6b44ed3a894398f9bf48f28d43b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  upBranchobj: {fileID: 1353169835}
+  downBranchobj: {fileID: 346439627}
+  currentObj: {fileID: 253208164}
+  upBranchTimeline: {fileID: 754639856}
+  downBranchTimeline: {fileID: 894469874}
+  targetBranch: {fileID: 0}
+  branch_brutality: 50
 --- !u!1 &1193489194
 GameObject:
   m_ObjectHideFlags: 0
@@ -89867,6 +89911,7 @@ GameObject:
   - component: {fileID: 1952601966}
   - component: {fileID: 1952601968}
   - component: {fileID: 1952601967}
+  - component: {fileID: 1952601969}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -89980,6 +90025,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   invenCount: 0
   newsCount: 0
+--- !u!114 &1952601969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1952601963}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e1ad5261a9cf2b43b344f5925692983, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeLineBranches:
+  - {fileID: 1185950238}
 --- !u!1 &1956027085
 GameObject:
   m_ObjectHideFlags: 0

@@ -61,6 +61,7 @@ public class LoopController : MonoBehaviour
         Debug.Log("set none");
         this.playableDirector.extrapolationMode = DirectorWrapMode.None;
         ResetValue();
+        InteractionEvent.Instance.CheckRemainCommand();
         //Application.targetFrameRate = 60;
         //QualitySettings.vSyncCount = 1;
     }
@@ -198,6 +199,10 @@ public class LoopController : MonoBehaviour
 
         if (!noHold)
         {
+            if (holdListNum >= hold_time.Count)
+            {
+                return;
+            }
             if (playableDirector.time >= hold_time[holdListNum])//현재 이 부분에서 자꾸 빨간 에러 뜨는데 컴파일러 상에서는 문제없어보임 나중에 빌드로 확인 필요 2024.10.23->loop부분을 다 지우니 에러 없어짐 2024.11.04 
             {
                 isHold = 2;
@@ -207,12 +212,18 @@ public class LoopController : MonoBehaviour
                 //playableDirector.time = hold_time[holdListNum];
             }
         }
-
-        if (playableDirector.time >= none_time[noneListNum])
-        {
-            //Debug.Log("setnone");
-            SetNone();
-        }
+        //if (holdListNum >= hold_time.Count)
+        //{
+        //    return;
+        //}
+        //if (playableDirector.time >= none_time[noneListNum])//이거 반응 안함 ㅋㅋㅋㅋ 시바
+        //{
+        //
+        //    //??????
+        //    Debug.Log("time setnone");
+        //    SetNone();
+        //    noneListNum++;
+        //}
 
     }
     private void Update()

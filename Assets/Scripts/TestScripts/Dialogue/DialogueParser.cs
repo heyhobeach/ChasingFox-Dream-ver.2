@@ -46,18 +46,18 @@ public class DialogueParser : MonoBehaviour
 
         string[] data =csvData.text.Split(new char[] { '\n' });//공백분리 split('\n')
 
-        Debug.Log("last index " + DatabaseManager.instance.lastIndex+"data length"+(data.Length-1));
+        //Debug.Log("last index " + DatabaseManager.instance.lastIndex+"data length"+(data.Length-1));
         for(int i=1+DatabaseManager.instance.lastIndex;i<data.Length-1;)//ID 1번 부터 위에는 다른거라서 필요없음
         {
             int command_num = 0;
             List<string> commandList = new List<string>();
             List<string> testarr = new List<string>();
             row = Regex.Split(data[i], SPLIT_RE);
-            Debug.Log(i + "번째 파싱중");//에러 발견 위치용 디버깅
-            foreach (var txt in row)
-            {
-                Debug.Log(txt);
-            }
+            //Debug.Log(i + "번째 파싱중");//에러 발견 위치용 디버깅
+            //foreach (var txt in row)
+            //{
+            //    Debug.Log(txt);
+            //}
             Dialogue dialogue = new Dialogue();//
             //Debug.Log("i번째 " + dialoguesList.Count);
             //dialogue.command = new string[10][];
