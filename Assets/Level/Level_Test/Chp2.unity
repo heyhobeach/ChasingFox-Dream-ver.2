@@ -33893,6 +33893,7 @@ GameObject:
   - component: {fileID: 758902653}
   - component: {fileID: 758902652}
   - component: {fileID: 758902656}
+  - component: {fileID: 758902657}
   m_Layer: 0
   m_Name: Timeline_2-2 (sullivan)
   m_TagString: Untagged
@@ -34108,7 +34109,7 @@ PlayableDirector:
   - key: {fileID: -6340132293473518731, guid: fde94d2b3c7d9664e8073b67618919a8, type: 2}
     value: {fileID: 2052044718}
   - key: {fileID: 2913525346017109442, guid: fde94d2b3c7d9664e8073b67618919a8, type: 2}
-    value: {fileID: 0}
+    value: {fileID: 2095237600}
   - key: {fileID: 6094651568495341814, guid: fde94d2b3c7d9664e8073b67618919a8, type: 2}
     value: {fileID: 1020122642}
   - key: {fileID: -39415569788285353, guid: fde94d2b3c7d9664e8073b67618919a8, type: 2}
@@ -34134,6 +34135,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa1ee43abf03ee242a7eb89a698bfae0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &758902657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 758902650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc71b6b44ed3a894398f9bf48f28d43b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  upBranchobj: {fileID: 1875047301}
+  downBranchobj: {fileID: 1875047301}
+  currentObj: {fileID: 1699895451}
+  upBranchTimeline: {fileID: 679970478}
+  downBranchTimeline: {fileID: 1814807168}
+  targetBranch: {fileID: 0}
+  branch_brutality: 50
 --- !u!1 &761175331
 GameObject:
   m_ObjectHideFlags: 0
@@ -62798,11 +62818,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc71b6b44ed3a894398f9bf48f28d43b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  upBranchobj: {fileID: 1353169835}
-  downBranchobj: {fileID: 346439627}
+  upBranchobj: {fileID: 346439627}
+  downBranchobj: {fileID: 1353169835}
   currentObj: {fileID: 253208164}
-  upBranchTimeline: {fileID: 754639856}
-  downBranchTimeline: {fileID: 894469874}
+  upBranchTimeline: {fileID: 894469874}
+  downBranchTimeline: {fileID: 754639856}
   targetBranch: {fileID: 0}
   branch_brutality: 50
 --- !u!1 &1193489194
@@ -90039,6 +90059,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeLineBranches:
   - {fileID: 1185950238}
+  - {fileID: 758902650}
 --- !u!1 &1956027085
 GameObject:
   m_ObjectHideFlags: 0
