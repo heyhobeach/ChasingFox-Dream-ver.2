@@ -61,7 +61,7 @@ public class Inventory : MonoBehaviour
         News _news=new News();
         _news.image = news.image;
         _news.image_name=news.image_name;
-        Debug.Log(string.Format("{0},{1}", _news.image_name, "news"));
+        Debug.Log(string.Format("{0},{1}", _news.image_name, news.image));
         return _news;
     }
     public void AddInventory(Collection.CollectionScriptorble collection)
