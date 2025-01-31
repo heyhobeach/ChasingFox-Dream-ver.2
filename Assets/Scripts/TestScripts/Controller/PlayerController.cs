@@ -8,12 +8,13 @@ public class PlayerController : MonoBehaviour, IBaseController
     {
         None = 0,
         FormChange = 1<<1,
-        Reload = 1<<2,
-        Attack = 1<<3,
-        Dash = 1<<4,
-        Crouch = 1<<5,
-        Jump = 1<<6,
-        Move = 1<<7
+        Skill1 = 1<<2,
+        Reload = 1<<3,
+        Attack = 1<<4,
+        Dash = 1<<5,
+        Crouch = 1<<6,
+        Jump = 1<<7,
+        Move = 1<<8
     }
 
     private IUnitController unitController;
@@ -58,6 +59,7 @@ public class PlayerController : MonoBehaviour, IBaseController
 
         // Player Control
         if(SystemManager.GetButtonDown("formChange") && KeyControl(PlayerControllerMask.FormChange, ref isKeyDown)) unitController.FormChange();
+        if(SystemManager.GetButtonDown("skill1") && KeyControl(PlayerControllerMask.Skill1, ref isKeyDown)) unitController.Skile1(ClickPos());
         if(SystemManager.GetButtonDown("reload") && KeyControl(PlayerControllerMask.Reload, ref isKeyDown)) unitController.Reload();
         if(SystemManager.GetButtonDown("attack") && KeyControl(PlayerControllerMask.Attack, ref isKeyDown)) unitController.Attack(ClickPos());
         if(SystemManager.GetButtonDown("dash") && KeyControl(PlayerControllerMask.Dash, ref isKeyDown)) unitController.Dash();

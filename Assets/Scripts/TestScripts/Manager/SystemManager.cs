@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
 using static JsonUtils.Utils;
@@ -22,7 +23,7 @@ public class SystemManager : MonoBehaviour
 
     private SaveData[] saveDatas = new SaveData[3];
     public int saveIndex = 0;
-    public SaveData saveData { get => saveDatas[saveIndex]; }
+    public SaveData saveData { get => saveDatas[saveIndex]; set => saveDatas[saveIndex] = value; }
     private SaveData defaultSaveData = new SaveData();
     
     [SerializeField] private AudioMixer audioMixer;
@@ -69,7 +70,8 @@ public class SystemManager : MonoBehaviour
             attack = KeyCode.Mouse0,
             reload = KeyCode.R,
             dash = KeyCode.Space,
-            formChange = KeyCode.LeftShift,
+            formChange = KeyCode.E,
+            skill1 = KeyCode.Mouse1,
             retry = KeyCode.R
         };
         defaultSaveData = new SaveData{
@@ -203,21 +205,29 @@ public class SystemManager : MonoBehaviour
 
     // ------------------- Keybind -------------------
 
+    public event Action onKeybindeReset;
     public void ResetKeybindData()
     {
-        keybindData = defaultKeybindData;
+        keybindData = (KeybindData) defaultKeybindData.Clone();
         SetKeybind();
+        onKeybindeReset?.Invoke();
     }
 
     public KeyCode GetKeybind(string keyName) => keybinds[keyName];
 
     public void SetKeybind()
     {
+        // TODO : IEnumerable 활용
         foreach(FieldInfo key in keybindData.GetType().GetFields())
         {
-            SetKeybind(key.Name, keybinds[key.Name]);
+            SetKeybind(key, (KeyCode) key.GetValue(keybindData));
         }
         SaveJson(keybindDataPath, keybindData);
+    }
+    public void SetKeybind(FieldInfo info, KeyCode keyCode)
+    {
+        keybinds[info.Name] = keyCode;
+        info.SetValue(keybindData, keyCode);
     }
     public void SetKeybind(string keyName, KeyCode keyCode)
     {

@@ -10,7 +10,9 @@ public class KeybindOptionText : MonoBehaviour
     private void Start()
     {
         text.text = SystemManager.Instance.GetKeybind(keyName).ToString();
+        SystemManager.Instance.onKeybindeReset += TextUpdate;
     }
+    private void OnDestroy() => SystemManager.Instance.onKeybindeReset -= TextUpdate;
 
     public void ChangeKeybind()
     {
@@ -36,4 +38,6 @@ public class KeybindOptionText : MonoBehaviour
         }
         bindingPanel?.SetActive(false);
     }
+
+    public void TextUpdate() => text.text = SystemManager.Instance.GetKeybind(keyName).ToString();
 }

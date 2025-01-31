@@ -19,8 +19,8 @@ public partial class GameManager : MonoBehaviour
     private ControllerManager controllerManager;
     public InteractionEvent interactionEvent;
 
-    private EnemyDeathDel onEnemyDeath;
-    private GunsoundDel onGunsound;
+    private event EnemyDeathDel onEnemyDeath;
+    private event GunsoundDel onGunsound;
 
     public InventoryManager inventoryManager;
     public GameObject inventoryCanvas;
@@ -93,6 +93,35 @@ public partial class GameManager : MonoBehaviour
         var playerScript = player.GetComponent<Player>();
         playerScript.Init(saveData.playerData);
         karmaRatio = saveData.karma;
+        PlayerData.lastRoomIdx = saveData.chapterIdx;
+        for (int i = 0; i < maps.Count; i++) CreateWallRoom(i).enabled = false;
+
+        if(saveData.mapDatas == null || saveData.mapDatas.Length == 0)
+        {
+            var mapDatas = new MapData.JsonData[maps.Count];
+            for (int i = 0; i < maps.Count; i++) mapDatas[i] = maps[i].mapData;
+            saveData.mapDatas = mapDatas;
+        }
+        for (int i = 0; i < maps.Count; i++) maps[i].Init(saveData.mapDatas[i]);
+
+        if(saveData.eventTriggerDatas == null || saveData.eventTriggerDatas.Length == 0)
+        {
+            var eventTriggerDatas = new EventTriggerData.JsonData[eventTriggers.Count];
+            for (int i = 0; i < eventTriggers.Count; i++) 
+            {
+                eventTriggerDatas[i] = eventTriggers[i].eventTriggerData;
+            }
+            saveData.eventTriggerDatas = eventTriggerDatas;
+        }
+        for (int i = 0; i < eventTriggers.Count; i++) 
+        {
+            eventTriggers[i].Init(saveData.eventTriggerDatas[i]);
+            eventTriggers[i].gameObject.SetActive(saveData.eventTriggerDatas[i].isEneable);
+        }
+
+        SystemManager.Instance.saveData = saveData;
+
+        if(saveData.mapDatas[PlayerData.lastRoomIdx].used) player.transform.position = saveData.mapDatas[PlayerData.lastRoomIdx].position;
         if (saveData.eventTriggerInstanceID != 0)
         {
             var trigger = eventTriggers.Find(x => x.GetInstanceID() == saveData.eventTriggerInstanceID);
@@ -100,23 +129,6 @@ public partial class GameManager : MonoBehaviour
             //player.transform.position = trigger.targetPosition;
         }
         ProCamera2D.Instance.MoveCameraInstantlyToPosition(player.transform.position);
-        for (int i = 0; i < maps.Count; i++) CreateWallRoom(i).enabled = false;
-
-        if(saveData.mapDatas == null || saveData.mapDatas.Length == 0)
-        {
-            var mapDatas = new MapData.JsonData[maps.Count];
-            for (int i = 0; i < maps.Count; i++) mapDatas[i] = maps[i].mapData;
-            SystemManager.Instance.saveData.mapDatas = mapDatas;
-        }
-        for (int i = 0; i < maps.Count; i++) maps[i].Init(saveData.mapDatas[i]);
-
-        if(saveData.eventTriggerDatas == null || saveData.eventTriggerDatas.Length == 0)
-        {
-            var eventTriggerDatas = new EventTriggerData.JsonData[eventTriggers.Count];
-            for (int i = 0; i < eventTriggers.Count; i++) eventTriggerDatas[i] = eventTriggers[i].eventTriggerData;
-            SystemManager.Instance.saveData.eventTriggerDatas = eventTriggerDatas;
-        }
-        for (int i = 0; i < eventTriggers.Count; i++) eventTriggers[i].Init(saveData.eventTriggerDatas[i]);
 
         CameraManager.Instance?.proCamera2DRooms.OnStartedTransition.AddListener(MoveNextRoom);
     }
@@ -137,7 +149,7 @@ public partial class GameManager : MonoBehaviour
         CreateWallRoom(currentRoomIndex);
         isLoad = true;
 
-        if (!maps[currentRoomIndex].used) PlayerData.lastRoomIdx = currentRoomIndex;
+        if(!maps[currentRoomIndex].used) PlayerData.lastRoomIdx = currentRoomIndex;
         if (!maps[currentRoomIndex].cleared) maps[currentRoomIndex].OnStart(player.transform.position);
         if (previousRoomIndex >= 0 && previousRoomIndex != currentRoomIndex) maps[previousRoomIndex].OnEnd();
     }
@@ -209,6 +221,7 @@ public partial class GameManager : MonoBehaviour
         for (int i = 0; i < eventTriggers.Count; i++) eventTriggerDatas[i] = eventTriggers[i].eventTriggerData;
         SystemManager.Instance.saveData.mapDatas = mapDatas;
         SystemManager.Instance.saveData.eventTriggerDatas = eventTriggerDatas;
+        SystemManager.Instance.saveData.karma = karmaRatio;
         SystemManager.Instance.saveData.chapterIdx = PlayerData.lastRoomIdx;
         SystemManager.Instance.SaveData(SystemManager.Instance.saveIndex);
     }
@@ -221,15 +234,16 @@ public partial class GameManager : MonoBehaviour
         SystemManager.Instance.saveData.karma = karmaRatio;
         SystemManager.Instance.saveData.playerData = null;
         PlayerData.lastRoomIdx = 0;
+        SystemManager.Instance.saveData.chapterIdx = 0;
         SystemManager.Instance.UpdateDataForEventTrigger(0, 0);
     }
     public void InventoryEnable()
     {
-        inventoryCanvas.SetActive(true);
+        inventoryCanvas?.SetActive(true);
     }
 
     public void InventoryDisable()
     {
-        inventoryCanvas.SetActive(false);
+        inventoryCanvas?.SetActive(false);
     }
 }

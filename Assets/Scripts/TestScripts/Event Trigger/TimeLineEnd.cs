@@ -5,14 +5,29 @@ using UnityEngine.Playables;
 
 public class TimeLineEnd : QTE_Prerequisites
 {
+    FixedEventTrigger fixedEventTrigger;
     PlayableDirector playableDirector;
     bool isPlaying;
-    public override bool isSatisfied { get => isPlaying; set => isPlaying = value; }
+    public override bool isSatisfied 
+    { 
+        get
+        {
+            if(fixedEventTrigger == null) Init();
+            return fixedEventTrigger.used ? true : isPlaying; 
+        }
+        set => isPlaying = value; 
+    }
+
+    private void Init()
+    {
+        playableDirector = GetComponent<PlayableDirector>();
+        fixedEventTrigger = GetComponent<FixedEventTrigger>();
+        playableDirector.stopped += (x) => isPlaying = true;
+    }
 
     void Start()
     {
-        playableDirector = GetComponent<PlayableDirector>();
-        playableDirector.stopped += (x) => isPlaying = true;
+        Init();
     }
 
     [ContextMenu("PDPlay")]

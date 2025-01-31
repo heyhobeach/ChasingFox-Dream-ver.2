@@ -22,13 +22,15 @@ public class Bullet : MonoBehaviour
     private Rigidbody2D rg;
     private float startTime;
 
+    private Func<Collider2D, Vector2> damagedFeedBack;
+
     /// <summary>
     /// 벽과 충돌시 총알이 남아있는 시간
     /// </summary>
     // 이거 이번 프레임에만 활성화 되어있게 변경함
     public float soundTime = 0.3f;
 
-    public void Set(Vector3 shootPos, Vector3 targetPos, Vector3 rotation, int damage, float speed, GameObject gobj, Vector3 addPos = new Vector3())
+    public void Set(Vector3 shootPos, Vector3 targetPos, Vector3 rotation, int damage, float speed, GameObject gobj, Vector3 addPos = new Vector3(), Func<Collider2D, Vector2> func = null)
     {
         // Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Bullet"), gobj.layer);
         parentGo = gobj;
@@ -37,6 +39,7 @@ public class Bullet : MonoBehaviour
         transform.GetChild(0).transform.localEulerAngles = rotation;
         this.damage = damage;
         this.speed = speed;
+        damagedFeedBack = func;
         gameObject.SetActive(true);
     }
 
@@ -80,9 +83,8 @@ public class Bullet : MonoBehaviour
         if(life > 0 && collision.gameObject.tag == "Enemy" && !parentGo.CompareTag("Enemy"))//플레이어 총알이 적군에게 충돌시
         {
             var temp = collision.gameObject.GetComponent<IDamageable>();
-            Func<Collider2D, Vector2> func = null;
-            func += DamagedFeedBack;
-            if(temp != null) isDamaged = temp.GetDamage(damage,collision,func);
+            damagedFeedBack += DamagedFeedBack;
+            if(temp != null) isDamaged = temp.GetDamage(damage,collision,damagedFeedBack);
             if (isDamaged) 
             {
                 Destroy(gameObject);
@@ -141,7 +143,7 @@ public class Bullet : MonoBehaviour
             var temp = collision.gameObject.GetComponent<IDamageable>();
             Debug.Log(temp.health);
             bool isDamaged = false;
-            if(temp != null) isDamaged = temp.GetDamage(damage, collision);//이거 작동안함
+            if(temp != null) isDamaged = temp.GetDamage(damage, collision, damagedFeedBack);//이거 작동안함
             if (isDamaged)
             {
                 Debug.Log("데미지 받음");

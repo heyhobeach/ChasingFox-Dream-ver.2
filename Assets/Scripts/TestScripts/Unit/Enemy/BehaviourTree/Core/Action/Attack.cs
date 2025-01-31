@@ -20,7 +20,8 @@ namespace BehaviourTree
         {
             time = 0;
             isAttacking = false;
-            if(blackboard.target) targetRigidbody = blackboard.target.GetComponent<PlayerUnit>()?.rg;
+            if(blackboard.target) targetRigidbody = blackboard.target.GetComponent<Rigidbody2D>();
+            if(!targetRigidbody) targetRigidbody = blackboard.target.GetComponent<PlayerUnit>()?.rg;
             if(targetRigidbody) aimPos = targetRigidbody.worldCenterOfMass;
             else aimPos = blackboard.target.position;
             canAttack = blackboard.thisUnit.AttackCheck(aimPos);

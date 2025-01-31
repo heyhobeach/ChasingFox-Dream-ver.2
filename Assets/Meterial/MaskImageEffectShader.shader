@@ -3,12 +3,14 @@ Shader "Hidden/MaskImageEffectShader"
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
+        _CoverColor ("Cover Color", Color) = (0, 0, 0, 1)
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" "Queue"="Transparent-1" }
+        Tags { "RenderType"="Transparent" "Queue"="Overlay" }
 
-        Stencil { Ref 1 Comp Never Fail Replace }
+        Stencil { Ref 1 Comp NotEqual Fail Replace Pass Replace }
+        Blend SrcAlpha OneMinusSrcAlpha // 투명도 처리
 
         Pass
         {
@@ -17,6 +19,8 @@ Shader "Hidden/MaskImageEffectShader"
             #pragma fragment frag
 
             #include "UnityCG.cginc"
+
+            fixed4 _CoverColor;
 
             struct appdata
             {
@@ -42,7 +46,10 @@ Shader "Hidden/MaskImageEffectShader"
 
             fixed4 frag (v2f i) : SV_Target
             {
-                return float4(0, 0, 0, 0);
+                fixed4 color = tex2D(_MainTex, i.uv);
+                color.rgb = _CoverColor.rgb;
+                color.a = _CoverColor.a;
+                return color;
             }
             ENDCG
         }
