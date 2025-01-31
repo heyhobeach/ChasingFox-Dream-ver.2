@@ -17,9 +17,9 @@ public class CollectionInteractive : EventTrigger
 
         CollectionCanvasController.Instance.SetContentText(scriptorbleobj._context);
 
-        Debug.Log("before show inven");
-        GameManager.Instance.inventoryManager.showinven();
-        Debug.Log("after show inven");
+        //Debug.Log("before show inven");
+        //GameManager.Instance.inventoryManager.showinven();
+        //Debug.Log("after show inven");
 
     }
     protected override void OnTriggerExit2D(Collider2D collision)

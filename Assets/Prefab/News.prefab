@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &5903539734779887750
+--- !u!1 &5838153889480549614
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,23 +8,23 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8582863820110487245}
-  - component: {fileID: 6695553469641676831}
-  - component: {fileID: 2729917046875322917}
+  - component: {fileID: 3036926293773365423}
+  - component: {fileID: 811455047242998802}
+  - component: {fileID: 5350301289140563559}
   m_Layer: 0
-  m_Name: Collection
+  m_Name: News
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8582863820110487245
+--- !u!4 &3036926293773365423
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5903539734779887750}
+  m_GameObject: {fileID: 5838153889480549614}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -33,13 +33,13 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6695553469641676831
+--- !u!114 &811455047242998802
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5903539734779887750}
+  m_GameObject: {fileID: 5838153889480549614}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 37ee79ab7a646d34686aaf5eedc7189f, type: 3}
@@ -56,7 +56,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: Inventory, Assembly-CSharp
-          m_MethodName: AddInventory
+          m_MethodName: 
           m_Mode: 2
           m_Arguments:
             m_ObjectArgument: {fileID: 11400000, guid: 6a1b966f0c722c34fb208d2b56cb78fe, type: 2}
@@ -66,7 +66,7 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-        - m_Target: {fileID: 6695553469641676831}
+        - m_Target: {fileID: 811455047242998802}
           m_TargetAssemblyTypeName: CollectionInteractive, Assembly-CSharp
           m_MethodName: CallCollectionPopup
           m_Mode: 1
@@ -80,13 +80,13 @@ MonoBehaviour:
           m_CallState: 2
     exitPrerequisites: {fileID: 0}
   scriptorbleobj: {fileID: 11400000, guid: 6a1b966f0c722c34fb208d2b56cb78fe, type: 2}
---- !u!61 &2729917046875322917
+--- !u!61 &5350301289140563559
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5903539734779887750}
+  m_GameObject: {fileID: 5838153889480549614}
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
