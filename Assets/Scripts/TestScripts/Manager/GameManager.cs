@@ -19,8 +19,8 @@ public partial class GameManager : MonoBehaviour
     private ControllerManager controllerManager;
     public InteractionEvent interactionEvent;
 
-    private EnemyDeathDel onEnemyDeath;
-    private GunsoundDel onGunsound;
+    private event EnemyDeathDel onEnemyDeath;
+    private event GunsoundDel onGunsound;
 
     public InventoryManager inventoryManager;
     public GameObject inventoryCanvas;

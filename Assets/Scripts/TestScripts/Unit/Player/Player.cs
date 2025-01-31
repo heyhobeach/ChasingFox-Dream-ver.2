@@ -78,7 +78,9 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         changedForm = forms[playerData.formIdx];
         ((Werewolf)forms[1]).brutalData = playerData.brutalData;
         ((Werewolf)forms[1]).currentGauge = playerData.brutalGaugeRemaining;
-        ((Werewolf)forms[1]).formChangeTest += () => FormChange();
+        ((Werewolf)forms[1]).formChangeTest = () => FormChange();
+        formChangeDelegate = HumanToWerewolf;
+        ((Werewolf)forms[1]).currentCount = brutalData.isDoubleTime ? 2 : 1;
         foreach(PlayerUnit form in forms) 
         {
             form.gameObject.SetActive(false);
@@ -133,21 +135,44 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
 
     }
 
-    public bool FormChange()
+    public bool Skile1(Vector2 pos)
     {
-        if(changedForm.GetType() == typeof(Human) && ((Werewolf) forms[1]).isFormChangeReady())
+        if(changedForm.GetType() == typeof(Werewolf)) return ((Werewolf)changedForm).Skile1(pos);
+        return false;
+    }
+
+    private delegate bool FormChangeDelegate();
+    private FormChangeDelegate formChangeDelegate;
+
+    public bool FormChange() => formChangeDelegate.Invoke();
+    private bool HumanToWerewolf()
+    {
+        if(((Werewolf) forms[1]).isFormChangeReady())
         {
             invalidation = true;
             changedForm.gameObject.SetActive(false);
             changedForm = forms[1];
             changedForm.gameObject.SetActive(true);
+            formChangeDelegate = WerewolfToHuman;
         }
-        else if(changedForm.GetType() == typeof(Werewolf)) 
+        return true;
+    }
+    private bool WerewolfToHuman()
+    {
+        if(!((Werewolf) forms[1]).isFormChangeReady()) 
         {
-            invalidation = false;
+            Debug.Log("폼체인지");
             changedForm.gameObject.SetActive(false);
             changedForm = forms[0];
             changedForm.gameObject.SetActive(true);
+            Dash();
+            Reload(); 
+            formChangeDelegate = HumanToWerewolf;
+        }
+        else 
+        {
+            Debug.Log("공격");
+            changedForm.FormChange();
         }
         return true;
     }

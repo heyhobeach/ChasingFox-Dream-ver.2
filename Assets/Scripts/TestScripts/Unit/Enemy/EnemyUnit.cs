@@ -76,14 +76,14 @@ public class EnemyUnit : UnitBase, IDamageable
 
     public void OnMouseEnter()
     {
-        if (mpb == null) return;
+        var brutalArea = GameManager.Instance.player.GetComponent<Player>().brutalData.brutalArea;
+        if ((transform.position - GameManager.Instance.player.transform.position).magnitude > brutalArea.x * 0.5f) return;
         mpb.SetFloat("_Selected", 1);
         spriteRenderer.SetPropertyBlock(mpb);
     }
 
     public void OnMouseExit()
     {
-        if (mpb == null) return;
         mpb.SetFloat("_Selected", 0);
         spriteRenderer.SetPropertyBlock(mpb);
     }
