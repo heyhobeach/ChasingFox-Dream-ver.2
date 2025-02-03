@@ -382,7 +382,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f49bdbb8c0cb17849aad9634ebf4bc97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventTriggerData: {fileID: 0}
+  _eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 1
   eventLists:
@@ -3910,7 +3910,9 @@ MonoBehaviour:
       - 
       image_name: Fugitive
       dir: "right\r"
+  user_select: 0
   num: 0
+  contentNum: 0
   indexNum: 0
   command:
   - 
@@ -4425,7 +4427,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f49bdbb8c0cb17849aad9634ebf4bc97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventTriggerData: {fileID: 0}
+  _eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 1
   eventLists:
@@ -4573,7 +4575,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c72af648c5115d4cbf2b4d9a2ffac99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventTriggerData: {fileID: 0}
+  _eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 1
   eventLists:
@@ -4627,6 +4629,7 @@ MonoBehaviour:
     exitPrerequisites: {fileID: 0}
   autoTrigger: 0
   keyCode: 0
+  prerequisites: {fileID: 0}
 --- !u!61 &164152011
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6597,6 +6600,63 @@ Transform:
   - {fileID: 1960346309}
   m_Father: {fileID: 585919258}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &198434567
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5113383210845655243, guid: 3c69424c2822b3a48a883aefce39e8f4, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.24
+      objectReference: {fileID: 0}
+    - target: {fileID: 5113383210845655243, guid: 3c69424c2822b3a48a883aefce39e8f4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -2.51
+      objectReference: {fileID: 0}
+    - target: {fileID: 5113383210845655243, guid: 3c69424c2822b3a48a883aefce39e8f4, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.1345519
+      objectReference: {fileID: 0}
+    - target: {fileID: 5113383210845655243, guid: 3c69424c2822b3a48a883aefce39e8f4, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5113383210845655243, guid: 3c69424c2822b3a48a883aefce39e8f4, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5113383210845655243, guid: 3c69424c2822b3a48a883aefce39e8f4, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5113383210845655243, guid: 3c69424c2822b3a48a883aefce39e8f4, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5113383210845655243, guid: 3c69424c2822b3a48a883aefce39e8f4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5113383210845655243, guid: 3c69424c2822b3a48a883aefce39e8f4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5113383210845655243, guid: 3c69424c2822b3a48a883aefce39e8f4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7061611062933928299, guid: 3c69424c2822b3a48a883aefce39e8f4, type: 3}
+      propertyPath: m_Name
+      value: Wingman
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3c69424c2822b3a48a883aefce39e8f4, type: 3}
 --- !u!1 &205176889
 GameObject:
   m_ObjectHideFlags: 0
@@ -9225,7 +9285,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c72af648c5115d4cbf2b4d9a2ffac99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventTriggerData: {fileID: 0}
+  _eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 1
   eventLists:
@@ -9279,6 +9339,7 @@ MonoBehaviour:
     exitPrerequisites: {fileID: 0}
   autoTrigger: 0
   keyCode: 0
+  prerequisites: {fileID: 0}
 --- !u!61 &278074734
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -17445,7 +17506,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c72af648c5115d4cbf2b4d9a2ffac99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventTriggerData: {fileID: 0}
+  _eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 1
   eventLists:
@@ -17499,6 +17560,7 @@ MonoBehaviour:
     exitPrerequisites: {fileID: 0}
   autoTrigger: 0
   keyCode: 0
+  prerequisites: {fileID: 0}
 --- !u!61 &491450868
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -17914,7 +17976,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c72af648c5115d4cbf2b4d9a2ffac99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventTriggerData: {fileID: 0}
+  _eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 1
   eventLists:
@@ -17968,6 +18030,7 @@ MonoBehaviour:
     exitPrerequisites: {fileID: 0}
   autoTrigger: 0
   keyCode: 0
+  prerequisites: {fileID: 0}
 --- !u!61 &531350565
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -18222,7 +18285,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f49bdbb8c0cb17849aad9634ebf4bc97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventTriggerData: {fileID: 0}
+  _eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 1
   eventLists:
@@ -22740,7 +22803,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c72af648c5115d4cbf2b4d9a2ffac99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventTriggerData: {fileID: 0}
+  _eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 1
   eventLists:
@@ -22794,6 +22857,7 @@ MonoBehaviour:
     exitPrerequisites: {fileID: 0}
   autoTrigger: 0
   keyCode: 0
+  prerequisites: {fileID: 0}
 --- !u!61 &599976511
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -28511,7 +28575,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c72af648c5115d4cbf2b4d9a2ffac99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventTriggerData: {fileID: 0}
+  _eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 1
   eventLists:
@@ -28565,6 +28629,7 @@ MonoBehaviour:
     exitPrerequisites: {fileID: 0}
   autoTrigger: 0
   keyCode: 0
+  prerequisites: {fileID: 0}
 --- !u!61 &852982526
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -35086,7 +35151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c72af648c5115d4cbf2b4d9a2ffac99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventTriggerData: {fileID: 0}
+  _eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 1
   eventLists:
@@ -35140,6 +35205,7 @@ MonoBehaviour:
     exitPrerequisites: {fileID: 0}
   autoTrigger: 0
   keyCode: 0
+  prerequisites: {fileID: 0}
 --- !u!61 &919185989
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -35848,7 +35914,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c72af648c5115d4cbf2b4d9a2ffac99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventTriggerData: {fileID: 0}
+  _eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 1
   eventLists:
@@ -35902,6 +35968,7 @@ MonoBehaviour:
     exitPrerequisites: {fileID: 0}
   autoTrigger: 0
   keyCode: 0
+  prerequisites: {fileID: 0}
 --- !u!61 &940648525
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -41307,7 +41374,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c72af648c5115d4cbf2b4d9a2ffac99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventTriggerData: {fileID: 0}
+  _eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 1
   eventLists:
@@ -41361,6 +41428,7 @@ MonoBehaviour:
     exitPrerequisites: {fileID: 0}
   autoTrigger: 0
   keyCode: 0
+  prerequisites: {fileID: 0}
 --- !u!61 &1056597795
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -59803,7 +59871,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c72af648c5115d4cbf2b4d9a2ffac99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventTriggerData: {fileID: 0}
+  _eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 1
   eventLists:
@@ -59857,6 +59925,7 @@ MonoBehaviour:
     exitPrerequisites: {fileID: 0}
   autoTrigger: 0
   keyCode: 0
+  prerequisites: {fileID: 0}
 --- !u!61 &1368519264
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -61442,7 +61511,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c72af648c5115d4cbf2b4d9a2ffac99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventTriggerData: {fileID: 0}
+  _eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 1
   eventLists:
@@ -61496,6 +61565,7 @@ MonoBehaviour:
     exitPrerequisites: {fileID: 0}
   autoTrigger: 0
   keyCode: 0
+  prerequisites: {fileID: 0}
 --- !u!61 &1497923345
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -61723,7 +61793,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c72af648c5115d4cbf2b4d9a2ffac99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventTriggerData: {fileID: 0}
+  _eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 1
   eventLists:
@@ -61777,6 +61847,7 @@ MonoBehaviour:
     exitPrerequisites: {fileID: 0}
   autoTrigger: 0
   keyCode: 0
+  prerequisites: {fileID: 0}
 --- !u!61 &1521253186
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -63911,7 +63982,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c72af648c5115d4cbf2b4d9a2ffac99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventTriggerData: {fileID: 0}
+  _eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 1
   eventLists:
@@ -63965,6 +64036,7 @@ MonoBehaviour:
     exitPrerequisites: {fileID: 0}
   autoTrigger: 0
   keyCode: 0
+  prerequisites: {fileID: 0}
 --- !u!61 &1687579328
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -70595,7 +70667,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f49bdbb8c0cb17849aad9634ebf4bc97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventTriggerData: {fileID: 0}
+  _eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 1
   eventLists:
@@ -84579,7 +84651,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f49bdbb8c0cb17849aad9634ebf4bc97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventTriggerData: {fileID: 0}
+  _eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 1
   eventLists:
@@ -89507,7 +89579,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f49bdbb8c0cb17849aad9634ebf4bc97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventTriggerData: {fileID: 0}
+  _eventTriggerData: {fileID: 0}
   targetTag: Player
   limit: 1
   eventLists:
@@ -89724,7 +89796,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2063048094
 Transform:
   m_ObjectHideFlags: 0
@@ -93546,3 +93618,4 @@ SceneRoots:
   - {fileID: 97656094}
   - {fileID: 81773035}
   - {fileID: 2063048094}
+  - {fileID: 198434567}

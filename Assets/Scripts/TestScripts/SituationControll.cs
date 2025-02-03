@@ -78,7 +78,12 @@ public class SituationControll : MonoBehaviour
 
     public void Receive()
     {
-
+        if (wingman_news == null)
+        {
+            Debug.LogError("윙맨 뉴스 없음 뉴스 넣어주세요");
+            return;
+        }
+        Debug.Log("현재 챕터"+DatabaseManager.instance.chapter);
         foreach(var i in wingman_news)
         {
             Debug.Log(i.name);
