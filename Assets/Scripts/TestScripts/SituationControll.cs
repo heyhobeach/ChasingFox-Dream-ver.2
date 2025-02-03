@@ -1,8 +1,12 @@
+using Collection;
+using System.Net.Mail;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class SituationControll : MonoBehaviour
 {
+
+    public NewsScriptorble[] wingman_news;
 
     public enum Situation
     {
@@ -56,6 +60,7 @@ public class SituationControll : MonoBehaviour
                 break;
             case Situation.Wingman:
                 Debug.Log("Wingman");
+                Receive();
                 break;
             case Situation.door:
                 Debug.Log("door");
@@ -74,6 +79,11 @@ public class SituationControll : MonoBehaviour
     public void Receive()
     {
 
+        foreach(var i in wingman_news)
+        {
+            Debug.Log(i.name);
+        }
+        Debug.Log("Receive");
     }
 
 

@@ -84,7 +84,7 @@ public class Inventory : MonoBehaviour
             invendata.inventory = invenDic;
             invenCount = invendata.inventory.Count;
             Debug.Log("inventory 흔적 개수" + invendata.inventory.Count);
-            Debug.Log(string.Format("흔적 추가 완료+{0} : {1},{2}", collection.id, invenDic[collection.id].image_name, invenDic[collection.id].context));
+            Debug.Log(string.Format("흔적 추가 완료+{0} : {1},{2}",   collection.id, invenDic[collection.id].image_name, invenDic[collection.id].context));
         }
     }
     public void AddNews(Collection.NewsScriptorble collection)
