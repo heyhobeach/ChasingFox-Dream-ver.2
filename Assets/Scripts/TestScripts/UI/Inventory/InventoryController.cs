@@ -57,10 +57,10 @@ public class InventoryController : MonoBehaviour
     }
     public void TraceInventorySet()
     {
-        Debug.Log("Before invendataData " + inventorydata.inventory.Count);
+        //Debug.Log("Before invendataData " + inventorydata.inventory.Count);
         inventorydata = InventoryManager.Instance.GetInventoryAll();//inventoryCanvas ->trace 오브젝트 버튼에 할당 되어있는 오브젝트
         SetTraceListBox();
-        Debug.Log("After invendataData " + inventorydata.inventory.Count);
+        //Debug.Log("After invendataData " + inventorydata.inventory.Count);
     }
     public void SetTraceListBox()
     {
@@ -68,8 +68,12 @@ public class InventoryController : MonoBehaviour
 
         if (inventorydata==null)//inventorydata.inventory null에러
         {
-            Debug.LogError("수집품이 없음");
+            Debug.LogError("인벤토리 데이터 없음");
             return;
+        }
+        if(inventorydata.news.Count <= 0)
+        {
+            Debug.LogError("수집품 없음");
         }
         Debug.Log("set Trace List"+inventorydata.inventory.Count);
         if (4> inventorydata.inventory.Count)//아마 화면에 뜨는게 4개 뜨던가

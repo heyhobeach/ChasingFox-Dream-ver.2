@@ -66,9 +66,10 @@ public class Inventory : MonoBehaviour
     }
     public void AddInventory(Collection.CollectionScriptorble collection)
     {
+        Debug.Log("AddInventory");
         if (invendata == null)
         {
-            //invendata = Resources.Load("Inventory") as InventoryScripable;
+            invendata = Resources.Load("Inventory") as InventoryScripable;
             //inventory = new Dictionary<int, Info>();
         }
         if (!invenDic.ContainsKey(collection.id))

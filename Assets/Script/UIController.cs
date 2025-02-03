@@ -126,9 +126,10 @@ public class UIController : MonoBehaviour//해당 스크립트는 UI를 그리�
     public void DialogueCanvasSetTrue()
     {
         Debug.Log("SetTrue"); 
-        is_dialogue_on= true; 
+        is_dialogue_on= true;
         //DialogueCanvas.transform.gameObject.SetActive(true);
         //bool is_alone = false;
+        //InteractionEvent.Instance.SetSkip(true);
         DialogueCanvas.GetComponent<UIManager>().LoadImage();
         DialogueCanvas.transform.gameObject.GetComponent<Canvas>().enabled = true;
         backgroundImage?.SetActive(true);

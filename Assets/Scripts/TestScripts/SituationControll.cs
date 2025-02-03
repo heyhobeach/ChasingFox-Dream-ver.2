@@ -9,6 +9,8 @@ public class SituationControll : MonoBehaviour
 
     public NewsScriptorble[] wingman_news;
 
+    public bool is_get_nesw = false;
+
     public enum Situation
     {
         InventoryBox,
@@ -22,13 +24,13 @@ public class SituationControll : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void OnTriggerEnter2D(Collider2D collision)
@@ -79,18 +81,33 @@ public class SituationControll : MonoBehaviour
 
     public void Receive()
     {
-        if (wingman_news == null)
+        if (!is_get_nesw)
         {
-            Debug.LogError("윙맨 뉴스 없음 뉴스 넣어주세요");
-            return;
+            if (wingman_news == null)
+            {
+                Debug.LogError("윙맨 뉴스 없음 뉴스 넣어주세요");
+                return;
+            }
+
+            int chp = DatabaseManager.instance.chapter;
+            if (chp < 3)
+            {
+                Debug.LogError("윙맨이 신문을 가지고 있지 않는 챕터 입니다");
+                return;
+            }
+            Debug.Log(wingman_news[chp - 3].image);
+            //UIController.Instance.DialogueCanvasSetTrue();
+            //InventoryManager.Instance.AddNews(wingman_news[DatabaseManager.instance.chapter-3]);//될것 같음
+            is_get_nesw = true;
         }
-        if (DatabaseManager.instance.chapter < 3)
+        else
         {
-            Debug.LogError("윙맨이 신문을 가지고 있지 않는 챕터 입니다");
-            return;
+            int id =Random.Range(1, 4);//여기 숫자는 윙맨의 대사 id에 따라 달라질 예정입니다
+            InteractionEvent.Instance.move(id);
         }
-        Debug.Log(wingman_news[DatabaseManager.instance.chapter-3].image);
-        //InventoryManager.Instance.AddInventory();
+
+
+
     }
 
 
