@@ -18,7 +18,7 @@ public class Bullet : MonoBehaviour
 
     private Vector2 destination;
 
-    private GameObject parentGo;
+    public GameObject parentGo;
     private Rigidbody2D rg;
     private float startTime;
 

@@ -54,7 +54,7 @@ public class FallingTrap : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (joint2D != null&&collision.gameObject.layer==LayerMask.NameToLayer("Bullet"))
+        if (joint2D != null&&collision.gameObject.layer==LayerMask.NameToLayer("Bullet")&&collision.GetComponent<Bullet>().parentGo.tag == "Player")
         {
             Destroy(collision.gameObject);
             joint2D.useConnectedAnchor = false;

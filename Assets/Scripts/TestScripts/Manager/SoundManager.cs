@@ -84,6 +84,7 @@ public class SoundManager:MonoBehaviour
         drawobj.Add(obj);
 #endif
         
+        yield return new WaitForFixedUpdate();
         obj.SetActive(true);
         GameManager.Instance.OnGunsound(obj.transform, obj.transform.position, obj.GetComponent<CircleCollider2D>().bounds.extents);
         if (isQueue && obj.gameObject.layer == LayerMask.NameToLayer("GunSound"))
@@ -94,7 +95,7 @@ public class SoundManager:MonoBehaviour
 
         // yield return new WaitForSeconds(bulletTime);
         // yield return new WaitForSecondsRealtime(Time.unscaledDeltaTime);
-        yield return new WaitForEndOfFrame();
+        yield return new WaitForFixedUpdate();
 
         obj.SetActive(false);
 

@@ -208,6 +208,12 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         return true;
     }
 
+    public virtual bool Skile1(Vector2 pos)
+    {
+        anim.SetTrigger("skill1");
+        return true;
+    }
+
     public virtual bool Reload()
     {
         if(!longRangeUnit) return false;

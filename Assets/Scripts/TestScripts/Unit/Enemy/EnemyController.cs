@@ -30,6 +30,7 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
+        transform.position = new Vector3Int((int)transform.position.x, (int)transform.position.y, 0);
         if(spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
         behaviorTree.blackboard.thisUnit = GetComponent<EnemyUnit>();
         var posObj = new GameObject(){
@@ -65,13 +66,13 @@ public class EnemyController : MonoBehaviour
     private bool ViewCheck(Collider2D hit)
     {
         int layerMapMask = 1 << LayerMask.NameToLayer("Map") | 1 << LayerMask.NameToLayer("Wall");
-        var subvec = (Vector2)hit.transform.position - (Vector2)transform.position;// ray2d=>tartget_ray2d[index_player]
+        var subvec = (Vector2)hit.transform.position - (Vector2)(transform.position+Vector3.up);// ray2d=>tartget_ray2d[index_player]
         float deg = Mathf.Atan2(subvec.y, subvec.x);//mathf.de
         deg *= Mathf.Rad2Deg;
         bool inAngle = 180-viewAngle*0.5f < MathF.Abs(deg) || Mathf.Abs(deg) < viewAngle*0.5f;
         bool isForword = Mathf.Sign(subvec.normalized.x)>0&&!spriteRenderer.flipX ? true : Mathf.Sign(subvec.normalized.x)<0&&spriteRenderer.flipX ? true : false;
         if((subvec.magnitude <= viewInnerRange || (subvec.magnitude <= viewOuterRange && inAngle && isForword))
-            && !Physics2D.Raycast(transform.position, subvec.normalized, subvec.magnitude, layerMapMask))
+            && !Physics2D.Raycast(transform.position+Vector3.up, subvec.normalized, subvec.magnitude, layerMapMask))
         {                
             return true;
         }
@@ -80,13 +81,13 @@ public class EnemyController : MonoBehaviour
     private bool ViewCheck(Vector2 pos)
     {
         int layerMapMask = 1 << LayerMask.NameToLayer("Map") | 1 << LayerMask.NameToLayer("Wall");
-        var subvec = pos - (Vector2)transform.position;// ray2d=>tartget_ray2d[index_player]
+        var subvec = pos - (Vector2)(transform.position+Vector3.up);// ray2d=>tartget_ray2d[index_player]
         float deg = Mathf.Atan2(subvec.y, subvec.x);//mathf.de
         deg *= Mathf.Rad2Deg;
         bool inAngle = 180-viewAngle*0.5f < MathF.Abs(deg) || Mathf.Abs(deg) < viewAngle*0.5f;
         bool isForword = Mathf.Sign(subvec.normalized.x)>0&&!spriteRenderer.flipX ? true : Mathf.Sign(subvec.normalized.x)<0&&spriteRenderer.flipX ? true : false;
         if((subvec.magnitude <= viewInnerRange || (subvec.magnitude <= viewOuterRange && inAngle && isForword))
-            && !Physics2D.Raycast(transform.position, subvec.normalized, subvec.magnitude, layerMapMask))
+            && !Physics2D.Raycast(transform.position+Vector3.up, subvec.normalized, subvec.magnitude, layerMapMask))
         {                
             return true;
         }
@@ -101,7 +102,7 @@ public class EnemyController : MonoBehaviour
             return;
         }
         int layerMask = 1 << LayerMask.NameToLayer("Player");//enemy와 gunsound 객체 총알이 만약 바닥에 박히면 gunsound객체를 생성했다가 일정시간 이후 지우는식
-        var hits = Physics2D.OverlapCircleAll(transform.position, distance, layerMask);//죽은 적군 찾는 변수
+        var hits = Physics2D.OverlapCircleAll(transform.position+Vector3.up, distance, layerMask);//죽은 적군 찾는 변수
         Collider2D hit = null;
         foreach(var h in hits)
         {
@@ -130,7 +131,7 @@ public class EnemyController : MonoBehaviour
     {
         if(blackboard.enemy_state.stateCase == Blackboard.Enemy_State.StateCase.Chase && enemy == blackboard.thisUnit) return;
 
-        if(ViewCheck(enemy.transform.position))
+        if(ViewCheck(enemy.transform.position+Vector3.up))
         {               
             if(GameManager.Instance.player.GetComponent<Player>().ChagedForm.UnitState == UnitState.Death) return;
             blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Chase;
@@ -166,11 +167,11 @@ public class EnemyController : MonoBehaviour
         Vector3 startOuter = Quaternion.Euler(0, 0, viewAngle*0.5f) * vec * viewOuterRange;
         Vector3 endOuter = Quaternion.Euler(0, 0, -viewAngle*0.5f) * vec * viewOuterRange;
 
-        Handles.DrawWireArc(transform.position, Vector3.forward, startInner, 360-viewAngle, viewInnerRange);
-        Handles.DrawWireArc(transform.position, Vector3.forward, endInner, viewAngle, viewOuterRange);
+        Handles.DrawWireArc(transform.position+Vector3.up, Vector3.forward, startInner, 360-viewAngle, viewInnerRange);
+        Handles.DrawWireArc(transform.position+Vector3.up, Vector3.forward, endInner, viewAngle, viewOuterRange);
 
-        Handles.DrawLine(transform.position + startInner, transform.position + startOuter);
-        Handles.DrawLine(transform.position + endInner, transform.position + endOuter);
+        Handles.DrawLine(transform.position+Vector3.up + startInner, transform.position+Vector3.up + startOuter);
+        Handles.DrawLine(transform.position+Vector3.up + endInner, transform.position+Vector3.up + endOuter);
     }
 #endif
 }

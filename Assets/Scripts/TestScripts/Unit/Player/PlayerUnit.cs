@@ -31,11 +31,24 @@ public abstract class PlayerUnit : UnitBase
         switch (CheckMapType(collision))
         {
             case MapType.Ground:
+                if(isJumping) 
+                {
+                    SetVerticalForce(0);
+                    SetVerticalVelocity(0);
+                    isJumping = false;
+                }
+                break;
             case MapType.Platform:
                 if(!_isGrounded)
                 {
                     _isGrounded = true;
                     currentGorundObject = collision.gameObject;
+                }
+                if(isJumping) 
+                {
+                    SetVerticalForce(0);
+                    SetVerticalVelocity(0);
+                    isJumping = false;
                 }
                 break;
             case MapType.Floor:

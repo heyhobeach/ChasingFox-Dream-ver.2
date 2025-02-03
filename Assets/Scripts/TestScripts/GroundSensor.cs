@@ -30,8 +30,8 @@ public class GroundSensor : MonoBehaviour
         offset = targetCol.offset;
         size = targetCol.bounds.size * 0.5f;
 
-        defaultPoints[0] = new Vector2(-size.x + 0.05f, -size.y);
-        defaultPoints[1] = new Vector2(size.x - 0.05f, -size.y);
+        defaultPoints[0] = new Vector2(-size.x + 0.05f, -size.y - 0.1f);
+        defaultPoints[1] = new Vector2(size.x - 0.05f, -size.y - 0.1f);
         groundPoints[0] = new Vector2(-size.x - 0.1f, -size.y - 0.1f);
         groundPoints[1] = new Vector2(size.x + 0.1f, -size.y - 0.1f);
 
@@ -109,7 +109,9 @@ public class GroundSensor : MonoBehaviour
         switch(CheckMapType(collision))
         {
             case MapType.Wall:
-                _isGrounded = false;
+                var normal = collision.GetContact(0).normal;
+                if(normal == Vector2.right || normal == Vector2.left) _isGrounded = true;
+                else _isGrounded = false;
                 break;
             case MapType.Ground:
                 _isGrounded = true;
