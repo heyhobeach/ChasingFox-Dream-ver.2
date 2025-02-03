@@ -1,4 +1,5 @@
 using Collection;
+using System.Linq;
 using System.Net.Mail;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -83,12 +84,13 @@ public class SituationControll : MonoBehaviour
             Debug.LogError("윙맨 뉴스 없음 뉴스 넣어주세요");
             return;
         }
-        Debug.Log("현재 챕터"+DatabaseManager.instance.chapter);
-        foreach(var i in wingman_news)
+        if (DatabaseManager.instance.chapter < 3)
         {
-            Debug.Log(i.name);
+            Debug.LogError("윙맨이 신문을 가지고 있지 않는 챕터 입니다");
+            return;
         }
-        Debug.Log("Receive");
+        Debug.Log(wingman_news[DatabaseManager.instance.chapter-3].image);
+        //InventoryManager.Instance.AddInventory();
     }
 
 

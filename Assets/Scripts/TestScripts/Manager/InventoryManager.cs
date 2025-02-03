@@ -20,7 +20,7 @@ public class InventoryManager : Inventory
     private void Awake()
     {
 
-        invendata = Resources.Load("Inventory") as InventoryScripable;
+        invendata = Resources.Load("Inventory") as InventoryScripable;//이걸 가져오면 저장이 어떻게 되는지?
         if (instance == null)
         {
             instance = this;
@@ -39,6 +39,8 @@ public class InventoryManager : Inventory
     public void SaveInvenInfo()
     { }
 
+
+    [ContextMenu("인벤 확인")]
     public void showinven()
     {
         Debug.Log("수집품 목록 확인 함수");
