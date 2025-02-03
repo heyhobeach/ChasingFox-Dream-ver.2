@@ -6,4 +6,5 @@ using static Inventory;
 public class InventoryScripable : ScriptableObject
 {
     public Dictionary<int, Info> inventory;
+    public Dictionary<int, News> news;
 }

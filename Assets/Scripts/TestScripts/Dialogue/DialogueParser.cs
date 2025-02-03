@@ -45,8 +45,9 @@ public class DialogueParser : MonoBehaviour
         }
 
         string[] data =csvData.text.Split(new char[] { '\n' });//공백분리 split('\n')
-        
-        for(int i=1+DatabaseManager.instance.lastIndex;i<data.Length-1; )//ID 1번 부터 위에는 다른거라서 필요없음
+
+        //Debug.Log("last index " + DatabaseManager.instance.lastIndex+"data length"+(data.Length-1));
+        for(int i=1+DatabaseManager.instance.lastIndex;i<data.Length-1;)//ID 1번 부터 위에는 다른거라서 필요없음
         {
             int command_num = 0;
             List<string> commandList = new List<string>();
@@ -58,6 +59,7 @@ public class DialogueParser : MonoBehaviour
             //    Debug.Log(txt);
             //}
             Dialogue dialogue = new Dialogue();//
+            //Debug.Log("i번째 " + dialoguesList.Count);
             //dialogue.command = new string[10][];
             dialogue.name = row[2];//
             dialogue.id = row[0];
@@ -75,7 +77,7 @@ public class DialogueParser : MonoBehaviour
             List<string> contextList = new List<string>();
             do//동일 id에서 대화 창 변경 한 경우 표시
             {
-                Debug.Log("ID Check" + row[0]+"Context Text" + row[3]);
+                //Debug.Log("ID Check" + row[0]+"Context Text" + row[3]);
                 commandList.Add(row[4]);
                 //testarr.Add(row[5]);//메모 넣는부분
                 //dialogue.command[command_num++] = command;
@@ -102,7 +104,7 @@ public class DialogueParser : MonoBehaviour
 
             foreach(var coms in contextList)
             {
-                Debug.Log("대사 " + coms);
+                //Debug.Log("대사 " + coms);
             }
             dialogue.context = contextList.ToArray();
 
@@ -110,8 +112,8 @@ public class DialogueParser : MonoBehaviour
             if (isEnd)
             {
                 //Debug.Log("종료");
-                Debug.Log("dialogue list" + dialoguesList.Count);
-                Debug.Log(dialoguesList[dialoguesList.Count - 1].id);//id번호 확인
+                //Debug.Log("dialogue list" + dialoguesList.Count);
+                //Debug.Log(dialoguesList[dialoguesList.Count - 1].id);//id번호 확인
                 DatabaseManager.instance.endLine = int.Parse(dialoguesList[dialoguesList.Count - 1].id); //지금 parser가 어디까지 나올지 모르겠음//end라인까지 끊김//이후 start와 end수정해야함
                 DatabaseManager.instance.indexList.Add(int.Parse(dialoguesList[dialoguesList.Count - 1].id));
                 //break;

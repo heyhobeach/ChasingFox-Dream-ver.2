@@ -37,7 +37,8 @@ public class DatabaseManager : MonoBehaviour
             theParser = GetComponent<DialogueParser>();
 
             //if(csv_FileName.Equals("")) csv_FileName = "테스트파일";
-            eLang = GetLangEnum(SystemManager.Instance?.optionData.language);
+            //eLang = GetLangEnum(SystemManager.Instance?.optionData.language);
+            eLang = Lang.KOR;
             csv_FileName= string.Format("{0}\\{1}\\Chapter{2}\\Chapter{3}", "FindTest", CheckLangugea(eLang), chapter,chapter);
             //Dialogue[] dialogues =theParser.Parse(csv_FileName);//여기서 지금 대화 모든 내용을 다 파싱 한 상태//주석 풀고 사용 하면 됨
             //csv_FileName = "테스트파일";//테스트용 csv파일 주석 풀면 실행됨
