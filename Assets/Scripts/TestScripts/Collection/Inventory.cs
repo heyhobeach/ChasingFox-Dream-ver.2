@@ -92,10 +92,14 @@ public class Inventory : MonoBehaviour
     {
         if (invendata == null)
         {
-            //invendata = Resources.Load("Inventory") as InventoryScripable;
+            invendata = Resources.Load("Inventory") as InventoryScripable;
             //newsDic = new Dictionary<int, News>();
         }
-        if (!newsDic.ContainsKey(collection.id))
+        else
+        {
+            Debug.Log(invenDic.Count + "뉴스 개수");
+        }
+        if (!newsDic.ContainsKey(collection.id))    
         {
 
             //if (!collection.is_collect)
