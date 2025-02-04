@@ -62,7 +62,7 @@ public class InventoryController : MonoBehaviour
         SetTraceListBox();
         //Debug.Log("After invendataData " + inventorydata.inventory.Count);
     }
-    public void SetTraceListBox()
+    public void SetTraceListBox()//흔적 리스트 박스 부분
     {
         ClearListBox();
 
@@ -71,7 +71,7 @@ public class InventoryController : MonoBehaviour
             Debug.LogError("인벤토리 데이터 없음");
             return;
         }
-        if(inventorydata.news.Count <= 0)
+        if(inventorydata.inventory.Count <= 0)
         {
             Debug.LogError("수집품 없음");
         }
