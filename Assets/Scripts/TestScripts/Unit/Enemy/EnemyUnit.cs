@@ -76,8 +76,9 @@ public class EnemyUnit : UnitBase, IDamageable
 
     public void OnMouseEnter()
     {
-        var brutalArea = GameManager.Instance.player.GetComponent<Player>().brutalData.brutalArea;
-        if ((transform.position - GameManager.Instance.player.transform.position).magnitude > brutalArea.x * 0.5f) return;
+        var brutalArea = GameManager.Instance.player.GetComponent<Player>().brutalData.brutalArea.x * 0.5f;
+        if (((transform.position + Vector3.up) - GameManager.Instance.player.transform.position).magnitude > brutalArea ||
+            Physics2D.Linecast((transform.position + Vector3.up), GameManager.Instance.player.transform.position, 1<<LayerMask.NameToLayer("Map"))) return;
         mpb.SetFloat("_Selected", 1);
         spriteRenderer.SetPropertyBlock(mpb);
     }
