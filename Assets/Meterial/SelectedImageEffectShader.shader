@@ -14,7 +14,7 @@ Shader "Hidden/SelectedImageEffectShader"
         Pass
         {
             Name "GlowPass"
-            Tags { "RenderType"="Opaque" "Queue"="Transparent+1" "LightMode"="GlowPass" }
+            Tags { "Queue"="Transparent+1" "LightMode"="GlowPass" }
             Stencil { Ref 1 Comp Equal }
             ZWrite Off ZTest Always
     
@@ -102,7 +102,7 @@ Shader "Hidden/SelectedImageEffectShader"
         Pass
         {
             Name "BasePass"
-            Tags { "RenderType"="Opaque" "Queue"="Transparent+1" "LightMode"="BasePass" }
+            Tags { "Queue"="Transparent+1" "LightMode"="BasePass" }
             Stencil { Ref 1 Comp NotEqual }
             ZWrite Off ZTest Always
     
