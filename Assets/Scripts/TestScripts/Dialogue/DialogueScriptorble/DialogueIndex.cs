@@ -8,5 +8,6 @@ public class DialogueIndex : ScriptableObject
     [Tooltip("번호")]
     public int num;
 
+    //[Tooltip("시작 위치")]
     //public int x;
 }
