@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5113383210845655243}
   - component: {fileID: 2632652394534180092}
   - component: {fileID: 8961748499652829455}
+  - component: {fileID: 3632943477844943851}
   m_Layer: 0
   m_Name: Wingman
   m_TagString: Untagged
@@ -56,6 +57,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 19e2e45bb46bf5e4182cfdd6473935f2, type: 2}
   - {fileID: 11400000, guid: cce2ef40497e0724daa3799f2bcb603c, type: 2}
   - {fileID: 11400000, guid: 1442eb0fe59567047b0f5b6c7b77c5b2, type: 2}
+  WingmanTimelines: {fileID: 0}
+  chapter: 3
+  is_get_nesw: 0
+  door_canvas: {fileID: 0}
   situation: 1
 --- !u!61 &8961748499652829455
 BoxCollider2D:
@@ -103,3 +108,40 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &3632943477844943851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7061611062933928299}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c72af648c5115d4cbf2b4d9a2ffac99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _eventTriggerData: {fileID: 0}
+  targetTag: Player
+  limit: 0
+  eventLists:
+  - enterPrerequisites: {fileID: 0}
+    keyCode: 0
+    action:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2632652394534180092}
+          m_TargetAssemblyTypeName: SituationControll, Assembly-CSharp
+          m_MethodName: Receive
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    exitPrerequisites: {fileID: 0}
+  autoTrigger: 0
+  keyCode: 0
+  prerequisites: {fileID: 0}

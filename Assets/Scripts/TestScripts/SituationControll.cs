@@ -20,7 +20,7 @@ public class SituationControll : MonoBehaviour
 
     GameObject target_timeline;
 
-    public Canvas door_canvas;
+    public GameObject door_canvas;
 
     public SceneNode[] scenearr = new SceneNode[CHP_COUNT];
 
@@ -202,7 +202,8 @@ public class SituationControll : MonoBehaviour
 
     public void CallDoorSystem()
     {
-        door_canvas.gameObject.SetActive(true);
+        this.gameObject.transform.GetChild(0).gameObject.SetActive(true);
+        //door_canvas.gameObject.SetActive(true);
     }
 
     public void NextSatge()
@@ -210,6 +211,7 @@ public class SituationControll : MonoBehaviour
         
         int current = chapter;
         current = 1;//테스트용
+        Debug.Log(scenearr[current].stage_branch.Count);
         if (scenearr[current].stage_branch.Count > 0)
         {
             //branch 관련 로드
@@ -223,6 +225,15 @@ public class SituationControll : MonoBehaviour
 
     public void CloseDoorPop()
     {
-        door_canvas.gameObject.SetActive(false);
+        if (door_canvas == null)
+        {
+            Debug.LogError("NUll 에러");
+            Debug.Log(this.gameObject.GetComponent<SituationControll>().door_canvas);
+            return;
+        }
+        this.gameObject.transform.GetChild(0).gameObject.SetActive(false);
+        //door_canvas.GetComponent<Canvas>().enabled = false;
+        //Debug.Log(door_canvas.gameObject.name);
+        //door_canvas.gameObject.SetActive(false);
     }
 }
