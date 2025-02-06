@@ -121,7 +121,7 @@ public partial class GameManager : MonoBehaviour
 
         SystemManager.Instance.saveData = saveData;
 
-        if(saveData.mapDatas[PlayerData.lastRoomIdx].used) player.transform.position = saveData.mapDatas[PlayerData.lastRoomIdx].position;
+        if(saveData.mapDatas.Length > 0 && saveData.mapDatas[PlayerData.lastRoomIdx].used) player.transform.position = saveData.mapDatas[PlayerData.lastRoomIdx].position;
         if (saveData.eventTriggerInstanceID != 0)
         {
             var trigger = eventTriggers.Find(x => x.GetInstanceID() == saveData.eventTriggerInstanceID);
