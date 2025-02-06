@@ -834,6 +834,10 @@ public class InteractionEvent : MonoBehaviour
     public Tuple<string, string>[] GetImageNameList()
     {
         Debug.Log("GetNum " + num+"dialogues length"+dialogue.dialouses.Length);
+        if (num >= dialogue.dialouses.Length)
+        {
+            return null;
+        }
         Tuple<string, string>[] name_tuple_list = new Tuple<string, string>[2];
         string[] name_list = new string[2];
         if (dialogue.dialouses.Length ==1)//일단 1개만 있을때 예외 처리용
@@ -844,6 +848,7 @@ public class InteractionEvent : MonoBehaviour
         }
         if (dialogue.dialouses[num].image_name == null || dialogue.dialouses[num].dir == null)
         {
+            Debug.Log("num" + num + "max" + dialogue.dialouses.Length);
             return null;
         }
         name_tuple_list[0] = new Tuple<string, string>(dialogue.dialouses[num - 1].image_name, dialogue.dialouses[num - 1].dir);//num->num-1

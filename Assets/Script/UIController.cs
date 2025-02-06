@@ -120,6 +120,10 @@ public class UIController : MonoBehaviour//해당 스크립트는 UI를 그리�
         Debug.Log("SetFalse");
         //DialogueCanvas.transform.gameObject.SetActive(false);
         is_dialogue_on = false;
+        if (DialogueCanvas.transform.gameObject.GetComponent<Canvas>() == null)
+        {
+            Debug.LogError("Null입니다");
+        }
         DialogueCanvas.transform.gameObject.GetComponent<Canvas>().enabled = false;
         backgroundImage?.SetActive(false);
     }
@@ -132,6 +136,8 @@ public class UIController : MonoBehaviour//해당 스크립트는 UI를 그리�
         //InteractionEvent.Instance.SetSkip(true);
         DialogueCanvas.GetComponent<UIManager>().LoadImage();
         DialogueCanvas.transform.gameObject.GetComponent<Canvas>().enabled = true;
+        backgroundImage.transform.localPosition = new Vector3(0, 0, 1);
+        backgroundImage.GetComponent<SpriteRenderer>().color = new Color(0, 0, 0, 0.88f);
         backgroundImage?.SetActive(true);
     }
     public void TestSignal()
