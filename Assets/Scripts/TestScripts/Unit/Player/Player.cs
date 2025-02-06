@@ -147,7 +147,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     public bool FormChange() => formChangeDelegate.Invoke();
     private bool HumanToWerewolf()
     {
-        if(((Werewolf) forms[1]).isFormChangeReady())
+        if(changedForm.UnitState == UnitState.Default && changedForm.GetType() == typeof(Human) && ((Werewolf) forms[1]).isFormChangeReady())
         {
             invalidation = true;
             changedForm.gameObject.SetActive(false);
@@ -159,9 +159,8 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     }
     private bool WerewolfToHuman()
     {
-        if(!((Werewolf) forms[1]).isFormChangeReady()) 
+        if(changedForm.GetType() == typeof(Werewolf)) 
         {
-            Debug.Log("폼체인지");
             changedForm.gameObject.SetActive(false);
             changedForm = forms[0];
             changedForm.gameObject.SetActive(true);
@@ -171,7 +170,6 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         }
         else 
         {
-            Debug.Log("공격");
             changedForm.FormChange();
         }
         return true;

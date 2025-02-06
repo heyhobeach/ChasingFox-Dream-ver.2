@@ -23,10 +23,10 @@ public class FalllingWreck : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         bool isDamaged = false;//적에게 바로 충돌하는 함수
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))//
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy") || collision.gameObject.layer == LayerMask.NameToLayer("Player"))//
         {
-            Debug.Log("적충돌");
             var temp = collision.gameObject.GetComponent<IDamageable>();
+            SoundManager.Instance.CoStartBullet(this.gameObject);
             Func<Collider2D, Vector2> func = null;
             //func += DamagedFeedBack;
             if (temp != null) 
@@ -42,6 +42,10 @@ public class FalllingWreck : MonoBehaviour
             {
                 Debug.Log("isDamaged is null");
             }
+        }
+        if(collision.gameObject.layer == LayerMask.NameToLayer("Map"))
+        {
+            Destroy(this.gameObject);
         }
     }
 

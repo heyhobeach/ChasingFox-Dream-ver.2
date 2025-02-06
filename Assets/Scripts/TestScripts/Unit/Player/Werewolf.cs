@@ -3,6 +3,7 @@ using System.Collections;
 using Com.LuisPedroFonseca.ProCamera2D;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// 늑대인간 상태 클래스, PlayerUnit 클래스를 상속함
@@ -35,7 +36,9 @@ public class Werewolf : PlayerUnit
 
     private Coroutine attackCoroutine;
 
-    public GameObject playerArea;  // Stencil Test용 Material
+    public GameObject playerArea;
+    public Image maskImage;
+    private Coroutine unscaledTimeCoroutine;
     
     protected override void OnEnable()
     {
@@ -46,19 +49,21 @@ public class Werewolf : PlayerUnit
         pi.InfluenceSmoothness = 0.2f;
         CameraManager.Instance.ChangeSize = 5.45f;
 
-        currentTime = brutalData.brutalTime;
         Time.timeScale = 0.3f;
         Time.fixedDeltaTime = 0.02f * Time.timeScale;
         playerArea.transform.position = transform.position;
-        playerArea.transform.localScale = brutalData.brutalArea;
+        playerArea.transform.localScale = brutalData.brutalArea - Vector2.one;
         currentTime = brutalData.brutalTime;
         currentGauge -= brutalData.useGage;
+
+        unscaledTimeCoroutine = StartCoroutine(UnscaledTime());
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
         if(attackCoroutine != null) StopCoroutine(attackCoroutine);
+        if(unscaledTimeCoroutine != null) StopCoroutine(unscaledTimeCoroutine);
         Time.timeScale = 1f;
         Time.fixedDeltaTime = 0.02f;
         currentCount = brutalData.isDoubleTime ? 2 : 1;
@@ -69,18 +74,24 @@ public class Werewolf : PlayerUnit
         Init();
         meleeAttack.GetComponent<MaleeAttack>().Set(3, gameObject);
     }
-    protected override void Update()
+
+    private IEnumerator UnscaledTime()
     {
-        base.Update();
-        if(attackCoroutine != null) return;
-        if(currentTime > 0 && !GameManager.Instance.isPaused) currentTime -= Time.unscaledDeltaTime;
-        else formChangeTest?.Invoke();
+        while(true)
+        {
+            yield return new WaitForSecondsRealtime(0.02f);
+            yield return new WaitUntil(() => !GameManager.Instance.isPaused || attackCoroutine != null);
+            if(currentTime >= 0) 
+            {
+                currentTime -= 0.02f;
+                maskImage.material.SetFloat("_Alpha", Utils.EaseFromTo(0, brutalData.brutalTime, currentTime, EaseType.EaseOut) / brutalData.brutalTime);
+            }
+            else formChangeTest?.Invoke();
+            if(unitState == UnitState.Death) formChangeTest?.Invoke();
+        }
     }
 
-    public override bool Attack(Vector3 clickPos)
-    {
-        return RangedAttack(clickPos);
-    }
+    public override bool Attack(Vector3 clickPos) => MeleeAttack(clickPos);
 
     private bool RangedAttack(Vector3 clickPos)
     {
@@ -110,9 +121,7 @@ public class Werewolf : PlayerUnit
         {
             GameObject _bullet = Instantiate(BulletAttack);//총알을 공격포지션에서 생성함
             GameObject gObj = this.gameObject;
-            _bullet.GetComponent<Bullet>().Set(shootingAnimationController.GetShootPosition(), clickPos, shootingAnimationController.GetShootRotation(), 1, 100, gObj, Vector2.zero, (x) => {
-                return Vector2.zero;
-            });
+            _bullet.GetComponent<Bullet>().Set(shootingAnimationController.GetShootPosition(), clickPos, shootingAnimationController.GetShootRotation(), 1, 100, gObj, Vector2.zero);
         };
         attackCoroutine = null;
         yield return new WaitForSecondsRealtime(0.5f);
@@ -121,10 +130,13 @@ public class Werewolf : PlayerUnit
 
     private bool MeleeAttack(Vector3 clickPos)
     {
-        Debug.Log("MeleeAttack");
         if(attackCoroutine != null) return false;
         if(brutalData.brutalArea.x * 0.5f < Vector2.Distance(transform.position, clickPos)) return false;
-        if(Physics2D.OverlapPoint(clickPos, 1<<LayerMask.NameToLayer("Enemy") | 1<<LayerMask.NameToLayer("GimmickObject")) == null) return false;
+        if(Physics2D.Linecast(transform.position, clickPos, 1<<LayerMask.NameToLayer("Map"))) return false;
+        var hit = Physics2D.OverlapPoint(clickPos, 1<<LayerMask.NameToLayer("Enemy") | 1<<LayerMask.NameToLayer("GimmickObject"));
+        if(!hit) return false;
+        if(hit.CompareTag("Enemy") && hit.GetComponent<EnemyUnit>().UnitState == UnitState.Death) return false;
+
         currentCount--;
         var addPos = ((Vector2)clickPos - (Vector2)transform.position).normalized;
         rg.transform.position = (Vector3)((Vector2)clickPos + (addPos * 1.5f));
@@ -152,14 +164,15 @@ public class Werewolf : PlayerUnit
     public override bool Crouch(KeyState crouchKey) => false;
 
     public override bool Move(Vector2 dir) => false;
+    public override bool Jump(KeyState jumpKey) => false;
 
-    public override bool Dash() => false;
-    public override bool FormChange() => base.FormChange();
-    public override bool Skile1(Vector2 pos)
+    public override bool Dash()
     {
-        MeleeAttack(pos); 
-        return base.Skile1(pos);
+        formChangeTest?.Invoke();
+        return true;
     }
+    public override bool FormChange() => base.FormChange();
+    public override bool Skile1(Vector2 pos) => RangedAttack(pos);
 
     public override bool Reload() => false;
 
@@ -167,8 +180,7 @@ public class Werewolf : PlayerUnit
 
     public bool isFormChangeReady()
     {
-        var hit = Physics2D.OverlapCircle(transform.position, brutalData.brutalArea.x*0.5f, 1<<LayerMask.NameToLayer("Enemy") | 1<<LayerMask.NameToLayer("GimmickObject"));
-        return currentGauge >= brutalData.useGage && hit && currentCount > 0;
+        return currentGauge >= brutalData.useGage && currentCount > 0;
     }
 }
 

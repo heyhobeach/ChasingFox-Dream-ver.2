@@ -45,7 +45,8 @@ Shader "Custom/StencilTest"
             fixed4 frag(v2f i) : SV_Target
             {
                 fixed4 color = tex2D(_MainTex, i.uv);
-                return color * _MaskColor.a; // 마스킹된 영역에 적용될 색상
+                color.a = _MaskColor.a;
+                return color;
             }
             ENDCG
         }

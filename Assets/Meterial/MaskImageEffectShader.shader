@@ -4,6 +4,7 @@ Shader "Hidden/MaskImageEffectShader"
     {
         _MainTex ("Texture", 2D) = "white" {}
         _CoverColor ("Cover Color", Color) = (0, 0, 0, 1)
+        _Alpha ("Alpha", Range(0, 1)) = 1
     }
     SubShader
     {
@@ -21,6 +22,7 @@ Shader "Hidden/MaskImageEffectShader"
             #include "UnityCG.cginc"
 
             fixed4 _CoverColor;
+            float _Alpha;
 
             struct appdata
             {
@@ -48,7 +50,7 @@ Shader "Hidden/MaskImageEffectShader"
             {
                 fixed4 color = tex2D(_MainTex, i.uv);
                 color.rgb = _CoverColor.rgb;
-                color.a = _CoverColor.a;
+                color.a = _CoverColor.a * _Alpha;
                 return color;
             }
             ENDCG
