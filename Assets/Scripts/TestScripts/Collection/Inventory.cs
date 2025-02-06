@@ -61,14 +61,15 @@ public class Inventory : MonoBehaviour
         News _news=new News();
         _news.image = news.image;
         _news.image_name=news.image_name;
-        Debug.Log(string.Format("{0},{1}", _news.image_name, news.image));
+        Debug.Log(string.Format("{0},{1}", _news.image_name, "news"));
         return _news;
     }
     public void AddInventory(Collection.CollectionScriptorble collection)
     {
+        Debug.Log("AddInventory");
         if (invendata == null)
         {
-            //invendata = Resources.Load("Inventory") as InventoryScripable;
+            invendata = Resources.Load("Inventory") as InventoryScripable;
             //inventory = new Dictionary<int, Info>();
         }
         if (!invenDic.ContainsKey(collection.id))
@@ -84,17 +85,21 @@ public class Inventory : MonoBehaviour
             invendata.inventory = invenDic;
             invenCount = invendata.inventory.Count;
             Debug.Log("inventory 흔적 개수" + invendata.inventory.Count);
-            Debug.Log(string.Format("흔적 추가 완료+{0} : {1},{2}", collection.id, invenDic[collection.id].image_name, invenDic[collection.id].context));
+            Debug.Log(string.Format("흔적 추가 완료+{0} : {1},{2}",   collection.id, invenDic[collection.id].image_name, invenDic[collection.id].context));
         }
     }
     public void AddNews(Collection.NewsScriptorble collection)
     {
         if (invendata == null)
         {
-            //invendata = Resources.Load("Inventory") as InventoryScripable;
+            invendata = Resources.Load("Inventory") as InventoryScripable;
             //newsDic = new Dictionary<int, News>();
         }
-        if (!newsDic.ContainsKey(collection.id))
+        else
+        {
+            Debug.Log(invenDic.Count + "뉴스 개수");
+        }
+        if (!newsDic.ContainsKey(collection.id))    
         {
 
             //if (!collection.is_collect)
