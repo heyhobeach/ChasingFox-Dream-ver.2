@@ -9,8 +9,8 @@ public class DialogueParser : MonoBehaviour
     // Start is called before the first frame update
 
     string SPLIT_RE = @",(?=(?:[^""]*""[^""]*"")*(?![^""]*""))";//정규식 from chat gpt
-    string SPLIT_COMMAND_PASER = @"[""!,]";//명령어 분리 정규식
-    string SPLIT_NUM = @"([^1-9]{1,})";//공백 분리 정규식
+    // string SPLIT_COMMAND_PASER = @"[""!,]";//명령어 분리 정규식
+    // string SPLIT_NUM = @"([^1-9]{1,})";//공백 분리 정규식
     string[] row;
     //string[] command;
     string[] testarr;
@@ -30,7 +30,7 @@ public class DialogueParser : MonoBehaviour
     }
     public Dialogue[] Parse(string _CSVFileName)
     {
-        int chap = 1;
+        // int chap = 1;
         List<Dialogue> dialoguesList = new List<Dialogue>();
         TextAsset csvData = Resources.Load<TextAsset>(_CSVFileName);//csv파일 로드
 
@@ -49,7 +49,7 @@ public class DialogueParser : MonoBehaviour
         //Debug.Log("last index " + DatabaseManager.instance.lastIndex+"data length"+(data.Length-1));
         for(int i=1+DatabaseManager.instance.lastIndex;i<data.Length-1;)//ID 1번 부터 위에는 다른거라서 필요없음
         {
-            int command_num = 0;
+            // int command_num = 0;
             List<string> commandList = new List<string>();
             List<string> testarr = new List<string>();
             row = Regex.Split(data[i], SPLIT_RE);

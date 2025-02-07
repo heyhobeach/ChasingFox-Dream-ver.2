@@ -1,9 +1,7 @@
-using NUnit.Framework.Constraints;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,7 +25,7 @@ public class Inventory : MonoBehaviour
     public  Dictionary<int, Info> invenDic;//static으로 해결은 가능한데
     public Dictionary<int, News> newsDic;//static으로 해결은 가능한데
     //public Dictionary<int, int> inventory2;
-    public  event Action<int, Info> OnItemAdded;//static으로 해결은 가능한데
+    // public  event Action<int, Info> OnItemAdded;//static으로 해결은 가능한데
     InventoryScripable invendata;
     //InventoryScripable newsdata;
 

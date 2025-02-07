@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using UnityEditor;
-using UnityEditor.Search;
 using UnityEngine;
 
 //싱글톤으로 구현할지 연결을 시킬지 생각해봐야함 

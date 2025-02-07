@@ -10,14 +10,14 @@ using System.Linq;
 
 namespace BehaviourTree.Editor
 {
-    public class BehaviourTreeView : GraphView
+    [UxmlElement("BehaviourTreeView")]
+    public partial class BehaviourTreeView : GraphView
     {
         public Action<NodeView> OnNodeSelected;
         public BehaviourTree behaviourTree;
 
         private Vector2 mousePos;
 
-        public new class UxmlFactory : UxmlFactory<BehaviourTreeView, UxmlTraits> {}
         public BehaviourTreeView() 
         {
             Insert(0, new GridBackground());

@@ -5,10 +5,8 @@ using System.Net.Mime;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-// using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class UIManager : MonoBehaviour
 {
@@ -180,7 +178,7 @@ public class UIManager : MonoBehaviour
     /// <param name="pos"></param>
     public void SetTextPosition(Vector3 pos)//추후 대사 2개이상 발생시 가운데값
     {
-        Vector3 _pos;
+        // Vector3 _pos;
         Transform dialogueUiTransform = this.transform.GetChild(1).GetComponent<Transform>();//스크린 좌표로 변환 필요, 0
         //dialogueUiTransform.position = pos;
         dialogueUiTransform.position=Camera.main.WorldToScreenPoint(new Vector3(pos.x,pos.y+1,pos.z));//타겟 오브젝트 위치에 대사 오브젝트 위치 움직임
@@ -320,21 +318,22 @@ public class UIManager : MonoBehaviour
     {
         //while (!UIController.Instance.is_dialogue_on)
         StopCoroutine(co);
-        int br_count = 0;
+        // int br_count = 0;
         //float width=content.fontSize* GetContentLength(_content, ref br_count);
         //float hight = content.fontSize + (content.fontSize * br_count);
         //content.rectTransform.sizeDelta = new Vector2(width, hight);
         co = Typing(_content,isTyping);
         StartCoroutine(co);
     }
-    public async void SetContent(string[] _contentArr)//배열로 받을 예정 선택지 관련 내용 , 여기서 배열로 사용 예정
+    // public async void SetContent(string[] _contentArr)//배열로 받을 예정 선택지 관련 내용 , 여기서 배열로 사용 예정
+    public void SetContent(string[] _contentArr)//배열로 받을 예정 선택지 관련 내용 , 여기서 배열로 사용 예정
     {
         //StopCoroutine(co);
-        int br_count = 0;
+        // int br_count = 0;
         //float width = content.fontSize * GetContentLength(_contentArr, ref br_count);//여기부분은 수정 해야하는데 아마 선택지에 br이 안들어갈거같아서 방치
         //float hight = content.fontSize + (content.fontSize * br_count);              //
         //content.rectTransform.sizeDelta = new Vector2(width, hight);                 //
-
+    
         CreatSelect(_contentArr);
         Debug.Log("비동기 시작");
         //await ImageSliding();
@@ -397,7 +396,7 @@ public class UIManager : MonoBehaviour
         GameObject fixedVertical = content.transform.parent.gameObject;
         //fixedVertical.GetComponent<VerticalLayoutGroup>().enabled = true;
         //첫 설정때 contentArr 설정 필요 지금 contentArr이 아무것도 없다고 되어있음 따라서 contentArr[0]에는 content가 들어가야함
-        string pattern = "<[^>]*>?";
+        // string pattern = "<[^>]*>?";
         if(isTyping)
         {
             Array.Clear(typing_speed_arr,0,typing_speed_arr.Length);
@@ -418,7 +417,7 @@ public class UIManager : MonoBehaviour
         {
             yield return null;
         }
-        string tag = "<";
+        // string tag = "<";
         for (int i = 0; i < str.Length; i++)
         {
             IgnoreTag(str, ref i, ref typing_speed_arr);

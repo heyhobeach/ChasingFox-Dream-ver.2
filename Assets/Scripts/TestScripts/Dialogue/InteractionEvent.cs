@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using System.Linq;
 using Unity.Loading;
@@ -11,7 +10,6 @@ using Unity.VisualScripting.Antlr3.Runtime;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Runtime.InteropServices.WindowsRuntime;
-using UnityEditor.Recorder.Encoder;
 
 
 public class InteractionEvent : MonoBehaviour
@@ -622,7 +620,7 @@ public class InteractionEvent : MonoBehaviour
             //Debug.Log("num=>" +num+ "func"+func);
             string[] strarr = Regex.Split(func, SPLIT_NUM);//
             string[] filteredSubstrings = strarr.Where(s => s != Regex.Match(s, SPLIT_NUM).ToString()).ToArray();
-            int n;
+            // int n;
             //string[] numarr = Array.FindAll(strarr, s => !string.IsNullOrEmpty(s) && (int.TryParse(s, out n)));
             Debug.Log(string.Format("mat 체크=>{0}", func));
             var mat = Regex.Matches(func, GET_COMMAND);
@@ -802,7 +800,7 @@ public class InteractionEvent : MonoBehaviour
             isSkip = true;
         }
     }
-    IEnumerator ChoiceTimer(float seconds, bool start, Action? act)
+    IEnumerator ChoiceTimer(float seconds, bool start, Action act)
     {
         if (start)
         {

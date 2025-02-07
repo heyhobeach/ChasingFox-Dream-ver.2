@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class SplitView : TwoPaneSplitView
+[UxmlElement("SplitView")]
+public partial class SplitView : TwoPaneSplitView
 {
-    public new class UxmlFactory : UxmlFactory<SplitView, UxmlTraits> {}
-    public SplitView() {}
+    public SplitView() { }
 }
