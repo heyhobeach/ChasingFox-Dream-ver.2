@@ -19,11 +19,11 @@ public partial class GameManager : MonoBehaviour
     private ControllerManager controllerManager;
     public InteractionEvent interactionEvent;
 
-    private event EnemyDeathDel onEnemyDeath;
-    private event GunsoundDel onGunsound;
-
     public InventoryManager inventoryManager;
     public GameObject inventoryCanvas;
+
+    private event EnemyDeathDel onEnemyDeath;
+    private event GunsoundDel onGunsound;
 
     public void AddEnemyDeath(EnemyDeathDel del) => onEnemyDeath += del;
     public void AddGunsound(GunsoundDel del) => onGunsound += del;

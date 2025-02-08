@@ -8,7 +8,7 @@ Shader "Hidden/MaskImageEffectShader"
     }
     SubShader
     {
-        Tags { "RenderType"="Transparent" "Queue"="Overlay" }
+        Tags { "RenderType"="Transparent-1" "Queue"="Overlay" }
 
         Stencil { Ref 1 Comp NotEqual Fail Replace Pass Replace }
         Blend SrcAlpha OneMinusSrcAlpha // 투명도 처리

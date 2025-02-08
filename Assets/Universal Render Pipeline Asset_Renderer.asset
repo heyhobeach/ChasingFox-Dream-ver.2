@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-6635200849465403447
+--- !u!114 &-7617421733594960035
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10,21 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6b3d386ba5cd94485973aee1479b272e, type: 3}
-  m_Name: RenderObjects
+  m_Name: Glow Object
   m_EditorClassIdentifier: 
   m_Active: 1
   settings:
-    passTag: RenderObjects
+    passTag: GlowEnemy
     Event: 500
     filterSettings:
-      RenderQueueType: 0
+      RenderQueueType: 1
       LayerMask:
         serializedVersion: 2
         m_Bits: 1024
-      PassNames:
-      - GlowPass
-      - BasePass
-    overrideMaterial: {fileID: 0}
+      PassNames: []
+    overrideMaterial: {fileID: 2100000, guid: bae23baefff795a4c81c19ce09d1475f, type: 2}
     overrideMaterialPassIndex: 0
     overrideShader: {fileID: 0}
     overrideShaderPassIndex: 0
@@ -34,8 +32,8 @@ MonoBehaviour:
     enableWrite: 1
     stencilSettings:
       overrideStencilState: 0
-      stencilReference: 0
-      stencilCompareFunction: 6
+      stencilReference: 1
+      stencilCompareFunction: 3
       passOperation: 0
       failOperation: 0
       zFailOperation: 0
@@ -69,8 +67,8 @@ MonoBehaviour:
     probeSamplingDebugTexture: {fileID: 0}
     probeVolumeBlendStatesCS: {fileID: 0}
   m_RendererFeatures:
-  - {fileID: -6635200849465403447}
-  m_RendererFeatureMap: c9973e72fb07eba3
+  - {fileID: -7617421733594960035}
+  m_RendererFeatureMap: 5d6fbbc84a7b4996
   m_UseNativeRenderPass: 0
   m_TransparencySortMode: 0
   m_TransparencySortAxis: {x: 0, y: 1, z: 0}

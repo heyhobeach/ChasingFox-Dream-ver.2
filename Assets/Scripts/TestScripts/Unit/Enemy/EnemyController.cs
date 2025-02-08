@@ -96,7 +96,7 @@ public class EnemyController : MonoBehaviour
 
     private void CircleRay()//유저 탐색할 레이 관련 함수
     {
-        if(blackboard.thisUnit.UnitState == UnitState.Death)
+        if(blackboard.thisUnit.UnitState == UnitState.Death || GameManager.Instance.player.GetComponent<Player>().ChagedForm.UnitState == UnitState.Death)
         {
             blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Default;
             return;
@@ -132,8 +132,7 @@ public class EnemyController : MonoBehaviour
         if(blackboard.enemy_state.stateCase == Blackboard.Enemy_State.StateCase.Chase && enemy == blackboard.thisUnit) return;
 
         if(ViewCheck(enemy.transform.position+Vector3.up))
-        {               
-            if(GameManager.Instance.player.GetComponent<Player>().ChagedForm.UnitState == UnitState.Death) return;
+        {
             blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Chase;
             blackboard.target = GameManager.Instance.player.transform;
             blackboard.enemy_state.Increase_Sight++;
