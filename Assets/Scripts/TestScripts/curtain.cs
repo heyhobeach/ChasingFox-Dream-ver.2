@@ -1,4 +1,3 @@
-using UnityEditor;
 using UnityEngine;
 
 public class curtain : MonoBehaviour
@@ -14,7 +13,7 @@ public class curtain : MonoBehaviour
         //color=spriteRenderer.color;
     }
 
-    private async void OnTriggerStay2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {

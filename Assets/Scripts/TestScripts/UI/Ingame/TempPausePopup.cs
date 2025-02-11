@@ -21,10 +21,16 @@ public class TempPausePopup : MonoBehaviour
             GameManager.Instance.Pause(false);
             gameObject.SetActive(false);
         });
-        restartButton.onClick.AddListener(() => GameManager.Instance.RetryScene());
+        restartButton.onClick.AddListener(() => {
+            GameManager.Instance.RetryScene();
+            gameObject.SetActive(false);
+        });
         inventoryButton.onClick.AddListener(() =>GameManager.Instance.InventoryEnable() );
         // optionButton.onClick.AddListener(() => );
-        mainMenuButton.onClick.AddListener(() => GameManager.Instance.LoadScene("MainMenu"));
+        mainMenuButton.onClick.AddListener(() => {
+            GameManager.Instance.LoadScene("MainMenu");
+            gameObject.SetActive(false);
+        });
     }
 
     public void SetRestartButton(bool enabled)

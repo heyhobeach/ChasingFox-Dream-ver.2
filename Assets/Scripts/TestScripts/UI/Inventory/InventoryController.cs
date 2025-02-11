@@ -79,7 +79,7 @@ public class InventoryController : MonoBehaviour
         int i = 0;
         foreach (var item in inventorydata.news)//인벤 데이터 만큼 반복하면서 true 함
         {
-            GameObject gobj = list.transform.GetChild(i).gameObject;
+            GameObject gobj = list.transform.GetChild(i++).gameObject;
             gobj.SetActive(true);
             ButtonInfo buttonInfo = gobj.GetComponent<ButtonInfo>();
 
@@ -118,7 +118,7 @@ public class InventoryController : MonoBehaviour
         int i = 0;
         foreach (var item in inventorydata.inventory)//인벤 데이터 만큼 반복하면서 true 함
         {
-            GameObject gobj = list.transform.GetChild(i).gameObject;
+            GameObject gobj = list.transform.GetChild(i++).gameObject;
             gobj.SetActive(true);
             ButtonInfo buttonInfo = gobj.GetComponent<ButtonInfo>();
 

@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using System.Linq;
 using Unity.Loading;
@@ -11,7 +10,6 @@ using Unity.VisualScripting.Antlr3.Runtime;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Runtime.InteropServices.WindowsRuntime;
-using UnityEditor.Recorder.Encoder;
 
 
 public class InteractionEvent : MonoBehaviour
@@ -622,7 +620,7 @@ public class InteractionEvent : MonoBehaviour
             //Debug.Log("num=>" +num+ "func"+func);
             string[] strarr = Regex.Split(func, SPLIT_NUM);//
             string[] filteredSubstrings = strarr.Where(s => s != Regex.Match(s, SPLIT_NUM).ToString()).ToArray();
-            int n;
+            // int n;
             //string[] numarr = Array.FindAll(strarr, s => !string.IsNullOrEmpty(s) && (int.TryParse(s, out n)));
             Debug.Log(string.Format("mat 체크=>{0}", func));
             var mat = Regex.Matches(func, GET_COMMAND);
@@ -802,7 +800,7 @@ public class InteractionEvent : MonoBehaviour
             isSkip = true;
         }
     }
-    IEnumerator ChoiceTimer(float seconds, bool start, Action? act)
+    IEnumerator ChoiceTimer(float seconds, bool start, Action act)
     {
         if (start)
         {
@@ -834,6 +832,10 @@ public class InteractionEvent : MonoBehaviour
     public Tuple<string, string>[] GetImageNameList()
     {
         Debug.Log("GetNum " + num+"dialogues length"+dialogue.dialouses.Length);
+        if (num >= dialogue.dialouses.Length)
+        {
+            return null;
+        }
         Tuple<string, string>[] name_tuple_list = new Tuple<string, string>[2];
         string[] name_list = new string[2];
         if (dialogue.dialouses.Length ==1)//일단 1개만 있을때 예외 처리용
@@ -844,6 +846,7 @@ public class InteractionEvent : MonoBehaviour
         }
         if (dialogue.dialouses[num].image_name == null || dialogue.dialouses[num].dir == null)
         {
+            Debug.Log("num" + num + "max" + dialogue.dialouses.Length);
             return null;
         }
         name_tuple_list[0] = new Tuple<string, string>(dialogue.dialouses[num - 1].image_name, dialogue.dialouses[num - 1].dir);//num->num-1

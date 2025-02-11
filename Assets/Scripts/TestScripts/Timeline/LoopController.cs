@@ -23,7 +23,7 @@ public class LoopController : MonoBehaviour
     private int stopListNum = 0;
     private int loopListNum = 0;
     private int holdListNum = 0;
-    private int noneListNum = 0;
+    // private int noneListNum = 0;
 
     /// <summary>
     /// 현재 상태가 홀드인지 루프인지 판단위한 변수
@@ -71,7 +71,7 @@ public class LoopController : MonoBehaviour
         stopListNum = 0;
         loopListNum = 0;
         holdListNum = 0;
-        noneListNum = 0;
+        // noneListNum = 0;
         stop_time.Clear();
         loop_time.Clear();
         hold_time.Clear();

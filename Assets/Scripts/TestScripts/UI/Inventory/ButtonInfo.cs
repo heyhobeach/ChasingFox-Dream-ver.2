@@ -6,8 +6,8 @@ public class ButtonInfo : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
-    public Tuple<int,Inventory.Info> button_info;
-    public Tuple<int,Inventory.News> button_news;
+    public Tuple<int, Inventory.Info> button_info;
+    public Tuple<int, Inventory.News> button_news;
     GameObject gobj;
 
     private void Awake()

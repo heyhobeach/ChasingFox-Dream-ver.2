@@ -1,9 +1,9 @@
 using System;
 using System.Collections;
 using Com.LuisPedroFonseca.ProCamera2D;
-using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Assertions;
 
 /// <summary>
 /// 늑대인간 상태 클래스, PlayerUnit 클래스를 상속함
