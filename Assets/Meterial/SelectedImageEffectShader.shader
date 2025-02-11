@@ -4,8 +4,8 @@ Shader "Hidden/SelectedImageEffectShader"
     {
         _MainTex ("Texture", 2D) = "white" {}
         _GlowTex ("Glow Texture", 2D) = "white" {}
-        [HDR]_HoveredColor ("Hovered Color", Color) = (1, 0, 0, 1)
-        [HDR]_SelectedColor ("Selected Color", Color) = (0, 1, 0, 1)
+        [HDR] _HoveredColor ("Hovered Color", Color) = (1, 0, 0, 1)
+        [HDR] _SelectedColor ("Selected Color", Color) = (0, 1, 0, 1)
         [Toggle] _Selected ("Selected", float) = 0 
         _OutlineThickness ("Outline Thickness", Range(0, 5)) = 0.001
     }
