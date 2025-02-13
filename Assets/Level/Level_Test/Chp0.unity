@@ -15774,7 +15774,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6997027430149551743, guid: 7abada79b3adc4e48b9201d263d8f42b, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -36511,6 +36511,7 @@ GameObject:
   - component: {fileID: 1705588431}
   - component: {fileID: 1705588430}
   - component: {fileID: 1705588434}
+  - component: {fileID: 1705588435}
   m_Layer: 0
   m_Name: Timeline Camera
   m_TagString: Untagged
@@ -36595,7 +36596,7 @@ Camera:
   far clip plane: 1000
   field of view: 40
   orthographic: 1
-  orthographic size: 3.5
+  orthographic size: 5.15
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -36620,7 +36621,7 @@ Transform:
   m_GameObject: {fileID: 1705588429}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 143.7879, y: -1.427989, z: -59.478313}
+  m_LocalPosition: {x: -82.2, y: -1.427989, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -36671,6 +36672,18 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &1705588435
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1705588429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64513349ebb49dc4ab46ea498673d407, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1720240790
 GameObject:
   m_ObjectHideFlags: 0
@@ -37657,7 +37670,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1773823436
 Transform:
   m_ObjectHideFlags: 0
