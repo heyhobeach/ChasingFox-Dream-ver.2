@@ -32,7 +32,7 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
-        transform.position = new Vector3Int((int)transform.position.x, (int)transform.position.y, 0);
+        transform.position = new Vector3Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y), 0);
         if(spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
         behaviorTree.blackboard.thisUnit = GetComponent<EnemyUnit>();
         var posObj = new GameObject(){

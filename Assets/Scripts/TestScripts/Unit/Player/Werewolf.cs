@@ -29,7 +29,7 @@ public class Werewolf : PlayerUnit
         }
     }
     public int currentCount;
-    private float currentTime;
+    [SerializeField] private float currentTime;
 
     public BrutalData brutalData;
     public GaugeBar<Werewolf>.GaugeUpdateDel brutalGauge;
@@ -93,7 +93,7 @@ public class Werewolf : PlayerUnit
         while(true)
         {
             yield return new WaitForSecondsRealtime(0.02f);
-            yield return new WaitUntil(() => !GameManager.Instance.isPaused && attackCoroutine != null);
+            if(GameManager.Instance.isPaused || attackCoroutine != null) continue;
             Time.timeScale = 0.3f;
             Time.fixedDeltaTime = 0.02f * Time.timeScale;
             if(currentTime >= 0) 
@@ -138,8 +138,8 @@ public class Werewolf : PlayerUnit
             GameObject gObj = this.gameObject;
             _bullet.GetComponent<Bullet>().Set(shootingAnimationController.GetShootPosition(), clickPos, shootingAnimationController.GetShootRotation(), 1, 100, gObj, Vector2.zero);
         };
-        attackCoroutine = null;
         yield return new WaitForSecondsRealtime(0.5f);
+        attackCoroutine = null;
         if(currentCount <= 0) formChangeTest?.Invoke();
     }
 
@@ -147,13 +147,14 @@ public class Werewolf : PlayerUnit
     {
         if(attackCoroutine != null) return false;
         if(brutalData.brutalArea.x * 0.5f < Vector2.Distance(transform.position, clickPos)) return false;
-        if(Physics2D.Linecast(transform.position, clickPos, 1<<LayerMask.NameToLayer("Map"))) return false;
+        if(Physics2D.Linecast(transform.position, clickPos, 1<<LayerMask.NameToLayer("Map") | 1<<LayerMask.NameToLayer("Wall"))) return false;
         var hit = Physics2D.OverlapPoint(clickPos, 1<<LayerMask.NameToLayer("Enemy") | 1<<LayerMask.NameToLayer("GimmickObject"));
         if(!hit) return false;
         if(hit.CompareTag("Enemy") && hit.GetComponent<EnemyUnit>().UnitState == UnitState.Death) return false;
 
         currentCount--;
         var addPos = ((Vector2)clickPos - (Vector2)transform.position).normalized;
+        rg.transform.position = (Vector3)clickPos;
         // rg.transform.position = (Vector3)(((Vector2)clickPos + (addPos * 0.5f)) - Vector2.down *0.5f);
         base.Attack(clickPos);
         meleeAttack.transform.position = clickPos;
@@ -207,7 +208,7 @@ public class Werewolf : PlayerUnit
         foreach(var hit in hits)
         {
             if (((hit.transform.position + Vector3.up) - playerArea.transform.position).magnitude > brutalData.brutalArea.x*0.5f ||
-                Physics2D.Linecast((hit.transform.position + Vector3.up), playerArea.transform.position, 1<<LayerMask.NameToLayer("Map"))) break;
+                Physics2D.Linecast((hit.transform.position + Vector3.up), playerArea.transform.position, 1<<LayerMask.NameToLayer("Map") | 1<<LayerMask.NameToLayer("Wall"))) break;
             hit.gameObject.GetInterface<ISelectObject>().Hover();
             i++;
         }

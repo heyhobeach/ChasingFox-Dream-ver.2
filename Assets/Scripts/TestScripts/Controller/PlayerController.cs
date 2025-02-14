@@ -100,6 +100,8 @@ public class PlayerController : MonoBehaviour, IBaseController
     {
         var screenPoint = Input.mousePosition;//마우스 위치 가져옴
         screenPoint.z = Camera.main.transform.position.z;
-        return Camera.main.ScreenToWorldPoint(screenPoint);
+        Vector3 pos = Camera.main.ScreenToWorldPoint(screenPoint);
+        pos.z = 0;
+        return pos;
     }
 }
