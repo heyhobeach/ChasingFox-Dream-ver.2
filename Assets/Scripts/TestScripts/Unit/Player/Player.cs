@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using Com.LuisPedroFonseca.ProCamera2D;
 using Damageables;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
 
 [RequireComponent(typeof(PlayerController))]
@@ -102,7 +101,9 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
 
     public void DeathFeedBack(Vector2 dir)
     {
-        changedForm.SetHorizontalVelocity(Mathf.Sign(dir.x) * 5);
+        var impulse = Mathf.Sign(((Vector2)transform.position - dir).normalized.x) * 5;
+        changedForm.SetHorizontalVelocity(impulse);
+        changedForm.SetHorizontalForce(impulse);
     }
     public bool Crouch(KeyState crouchKey) => changedForm.Crouch(crouchKey);
 

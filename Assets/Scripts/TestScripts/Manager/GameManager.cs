@@ -197,8 +197,8 @@ public partial class GameManager : MonoBehaviour
 
     public void Pause()
     {
-        InventoryDisable();
         Pause(!isPaused);
+        InventoryDisable();
     }
     public void Pause(bool isPause)
     {

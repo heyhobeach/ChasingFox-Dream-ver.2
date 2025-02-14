@@ -28,6 +28,8 @@ public class EnemyController : MonoBehaviour
     public float appendDistance;
     private float distance { get => viewOuterRange; }
 
+    private bool isStop;
+
     void Start()
     {
         transform.position = new Vector3Int((int)transform.position.x, (int)transform.position.y, 0);
@@ -55,12 +57,12 @@ public class EnemyController : MonoBehaviour
     }
     void Update()
     {
-        behaviorTree.Update();
+        if(!isStop) behaviorTree.Update();
     }
 
     void FixedUpdate()
     {
-        CircleRay();
+        if(!isStop) CircleRay();
     }
 
     private bool ViewCheck(Collider2D hit)
@@ -99,6 +101,7 @@ public class EnemyController : MonoBehaviour
         if(blackboard.thisUnit.UnitState == UnitState.Death || GameManager.Instance.player.GetComponent<Player>().ChagedForm.UnitState == UnitState.Death)
         {
             blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Default;
+            isStop = true;
             return;
         }
         int layerMask = 1 << LayerMask.NameToLayer("Player");//enemy와 gunsound 객체 총알이 만약 바닥에 박히면 gunsound객체를 생성했다가 일정시간 이후 지우는식

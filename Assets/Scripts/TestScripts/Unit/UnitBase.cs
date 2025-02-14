@@ -223,12 +223,8 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         return true;
     }
     
-    public abstract void StopAllC();
     public void Death()
     {
-        StopAllC();
-        //여기서 수정예정
-        
         anim.SetTrigger("death");
         anim.SetBool("isDeath", true);
         // GetComponent<Collider2D>().enabled = false;

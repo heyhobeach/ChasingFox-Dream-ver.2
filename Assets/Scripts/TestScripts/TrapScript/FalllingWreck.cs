@@ -27,11 +27,10 @@ public class FalllingWreck : MonoBehaviour
         {
             var temp = collision.gameObject.GetComponent<IDamageable>();
             SoundManager.Instance.CoStartBullet(this.gameObject);
-            Func<Collider2D, Vector2> func = null;
             //func += DamagedFeedBack;
             if (temp != null) 
             {
-                isDamaged = temp.GetDamage(damage, collision, func);
+                isDamaged = temp.GetDamage(damage, transform);
             }
         
             if (isDamaged) { 

@@ -103,7 +103,7 @@ public abstract class PlayerUnit : UnitBase
         base.Update();
     }
 
-    private void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         isGrounded = groundSensor.isGrounded && _isGrounded;
         AddGravity();

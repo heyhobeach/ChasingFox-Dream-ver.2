@@ -1,9 +1,9 @@
 using System.IO;
 using UnityEngine;
 
-namespace JsonUtils
+namespace MyUtils
 {
-    public class Utils
+    public class JsonUtils
     {
         public static T LoadJson<T>(string fileName)
         {

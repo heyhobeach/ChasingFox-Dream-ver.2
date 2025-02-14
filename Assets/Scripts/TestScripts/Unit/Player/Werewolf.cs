@@ -4,6 +4,8 @@ using Com.LuisPedroFonseca.ProCamera2D;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Assertions;
+using MyUtiles;
+using System.Linq;
 
 /// <summary>
 /// 늑대인간 상태 클래스, PlayerUnit 클래스를 상속함
@@ -39,6 +41,8 @@ public class Werewolf : PlayerUnit
     public GameObject playerArea;
     public Image maskImage;
     private Coroutine unscaledTimeCoroutine;
+
+    private Collider2D[] selectObjects;
     
     protected override void OnEnable()
     {
@@ -51,10 +55,12 @@ public class Werewolf : PlayerUnit
 
         Time.timeScale = 0.3f;
         Time.fixedDeltaTime = 0.02f * Time.timeScale;
-        playerArea.transform.position = transform.position;
+        playerArea.transform.position = transform.position + Vector3.up;
         playerArea.transform.localScale = brutalData.brutalArea - Vector2.one;
         currentTime = brutalData.brutalTime;
         currentGauge -= brutalData.useGage;
+
+        SelectObjects();
 
         unscaledTimeCoroutine = StartCoroutine(UnscaledTime());
     }
@@ -73,6 +79,13 @@ public class Werewolf : PlayerUnit
     {
         Init();
         meleeAttack.GetComponent<MaleeAttack>().Set(3, gameObject);
+        unitState = UnitState.FormChange;
+    }
+
+    protected override void FixedUpdate()
+    {
+        base.FixedUpdate();
+        // SelectObjects();
     }
 
     private IEnumerator UnscaledTime()
@@ -80,7 +93,9 @@ public class Werewolf : PlayerUnit
         while(true)
         {
             yield return new WaitForSecondsRealtime(0.02f);
-            yield return new WaitUntil(() => !GameManager.Instance.isPaused || attackCoroutine != null);
+            yield return new WaitUntil(() => !GameManager.Instance.isPaused && attackCoroutine != null);
+            Time.timeScale = 0.3f;
+            Time.fixedDeltaTime = 0.02f * Time.timeScale;
             if(currentTime >= 0) 
             {
                 currentTime -= 0.02f;
@@ -139,7 +154,7 @@ public class Werewolf : PlayerUnit
 
         currentCount--;
         var addPos = ((Vector2)clickPos - (Vector2)transform.position).normalized;
-        rg.transform.position = (Vector3)((Vector2)clickPos + (addPos * 1.5f));
+        // rg.transform.position = (Vector3)(((Vector2)clickPos + (addPos * 0.5f)) - Vector2.down *0.5f);
         base.Attack(clickPos);
         meleeAttack.transform.position = clickPos;
         attackCoroutine = StartCoroutine(Attacking());
@@ -166,21 +181,36 @@ public class Werewolf : PlayerUnit
     public override bool Move(Vector2 dir) => false;
     public override bool Jump(KeyState jumpKey) => false;
 
-    public override bool Dash()
-    {
-        formChangeTest?.Invoke();
-        return true;
-    }
+    public override bool Dash() => false;
     public override bool FormChange() => base.FormChange();
     public override bool Skile1(Vector2 pos) => RangedAttack(pos);
 
     public override bool Reload() => false;
 
-    public override void StopAllC() {}
-
     public bool isFormChangeReady()
     {
         return currentGauge >= brutalData.useGage && currentCount > 0;
+    }
+    private void SelectObjects()
+    {
+        int i=0;
+        if(selectObjects != null && selectObjects.Length > 0)
+        {
+            for(; i<selectObjects.Length; i++)
+            {
+                selectObjects[i].gameObject.GetInterface<ISelectObject>().Leave();
+            }
+        }
+        var hits = Physics2D.OverlapCircleAll(playerArea.transform.position, brutalData.brutalArea.x, 1<<LayerMask.NameToLayer("Enemy")|1<<LayerMask.NameToLayer("GimmickObject"));
+        selectObjects = hits.ToArray();
+        i = 0;
+        foreach(var hit in hits)
+        {
+            if (((hit.transform.position + Vector3.up) - playerArea.transform.position).magnitude > brutalData.brutalArea.x*0.5f ||
+                Physics2D.Linecast((hit.transform.position + Vector3.up), playerArea.transform.position, 1<<LayerMask.NameToLayer("Map"))) break;
+            hit.gameObject.GetInterface<ISelectObject>().Hover();
+            i++;
+        }
     }
 }
 

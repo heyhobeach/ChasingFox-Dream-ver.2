@@ -6,6 +6,7 @@ Shader "Hidden/SelectedImageEffectShader"
         _GlowTex ("Glow Texture", 2D) = "white" {}
         [HDR] _HoveredColor ("Hovered Color", Color) = (1, 0, 0, 1)
         [HDR] _SelectedColor ("Selected Color", Color) = (0, 1, 0, 1)
+        [Toggle] _Hovered ("Hovered", float) = 0 
         [Toggle] _Selected ("Selected", float) = 0 
         _OutlineThickness ("Outline Thickness", Range(0, 5)) = 0.001
     }
@@ -50,6 +51,7 @@ Shader "Hidden/SelectedImageEffectShader"
             };
 
             UNITY_INSTANCING_BUFFER_START(Props)
+                UNITY_DEFINE_INSTANCED_PROP(float, _Hovered)
                 UNITY_DEFINE_INSTANCED_PROP(float, _Selected)
             UNITY_INSTANCING_BUFFER_END(Props)
 
@@ -70,9 +72,12 @@ Shader "Hidden/SelectedImageEffectShader"
 
                 fixed4 finalColor = mainTexColor;
                 
-                glowTexColor.rgb = _HoveredColor.rgb;
-                finalColor = lerp(finalColor, glowTexColor, glowTexColor.a);
-                finalColor.a *= _HoveredColor.a;
+                if (UNITY_ACCESS_INSTANCED_PROP(Props, _Hovered) > 0.5)
+                {
+                        glowTexColor.rgb = _HoveredColor.rgb;
+                        finalColor = lerp(finalColor, glowTexColor, glowTexColor.a);
+                        finalColor.a *= _HoveredColor.a;
+                }
 
                 if (UNITY_ACCESS_INSTANCED_PROP(Props, _Selected) > 0.5)
                 {

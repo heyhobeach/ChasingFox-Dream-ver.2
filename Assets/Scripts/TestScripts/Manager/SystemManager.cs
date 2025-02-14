@@ -5,7 +5,7 @@ using System.Reflection;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Audio;
-using static JsonUtils.Utils;
+using static MyUtils.JsonUtils;
 
 public class SystemManager : MonoBehaviour
 {

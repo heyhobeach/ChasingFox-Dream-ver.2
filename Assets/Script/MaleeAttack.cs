@@ -23,7 +23,7 @@ public class MaleeAttack : MonoBehaviour
             // collision.gameObject.SetActive(false);
             var temp = collision.gameObject.GetComponent<IDamageable>();
             if(temp == null) temp = collision.gameObject.GetComponentInParent<IDamageable>();
-            if(temp != null) isDamaged = temp.GetDamage(damage, collision);
+            if(temp != null) isDamaged = temp.GetDamage(damage, parentGo.transform);
         }
         // if(collision.CompareTag("ground") || collision.CompareTag("Wall") || collision.CompareTag("Map")) return;
         // if (collision.gameObject.tag == "guard")//필요없어보임
@@ -35,12 +35,12 @@ public class MaleeAttack : MonoBehaviour
             // Debug.Log("플레이어 충돌");
             var temp = collision.gameObject.GetComponent<IDamageable>();
             if(temp == null) temp = collision.gameObject.GetComponentInParent<IDamageable>();
-            if(temp != null) isDamaged = temp.GetDamage(damage, collision);
+            if(temp != null) isDamaged = temp.GetDamage(damage, parentGo.transform);
         }
         if(collision.gameObject.tag == "Enemy" && !parentGo.CompareTag("Enemy"))//플레이어 총알이 적군에게 충돌시
         {
             var temp = collision.gameObject.GetComponent<IDamageable>();
-            if(temp != null) isDamaged = temp.GetDamage(damage, collision);
+            if(temp != null) isDamaged = temp.GetDamage(damage, parentGo.transform);
         }
 
         if(isDamaged)

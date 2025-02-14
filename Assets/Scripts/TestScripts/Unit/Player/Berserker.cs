@@ -64,8 +64,4 @@ public class Berserker : PlayerUnit
     public override bool FormChange() => false;
 
     public override bool Reload() => false;
-
-    public override void StopAllC()
-    {
-    }
 }

@@ -141,11 +141,9 @@ public class Human : PlayerUnit
             {
                 GameObject _bullet = Instantiate(bullet);//총알을 공격포지션에서 생성함
                 GameObject gObj = this.gameObject;
-                _bullet.GetComponent<Bullet>().Set(shootingAnimationController.GetShootPosition(), clickPos, shootingAnimationController.GetShootRotation(), bulletDamage, bulletSpeed, gObj, Vector2.zero, (x) => {
-                    Debug.Log("AAA");
+                _bullet.GetComponent<Bullet>().Set(shootingAnimationController.GetShootPosition(), clickPos, shootingAnimationController.GetShootRotation(), bulletDamage, bulletSpeed, gObj, Vector2.zero, () => {
                     var player = rg.GetComponent<Player>();
                     ((Werewolf)player.forms[1]).currentGauge += player.brutalData.getGage;
-                    return Vector2.zero;
                 });
                 residualAmmo--;
             }
@@ -248,13 +246,6 @@ public class Human : PlayerUnit
         if(reloadCoroutine != null) StopCoroutine(reloadCoroutine);
         shootingAnimationController?.NomalAni();
         reloadCoroutine = null;
-    }
-
-    public override void StopAllC()
-    {
-        StopDash();
-        ReloadCancel();
-        unitState = UnitState.Death;
     }
 }
 
