@@ -38,6 +38,7 @@ public class TimeLineBranchContoller : MonoBehaviour
         GameObject targetBranchObj;
         PlayableDirector targetBranch;
         Debug.Log("branch 선택지 번호" + InteractionEvent.Instance.user_select);
+        Debug.Log("기준 브루탈 수치 확인 " + branch_brutality + "유저 브루탈" + GameManager.Brutality);
         if (InteractionEvent.Instance.user_select==0)
         {
             targetBranchObj = downBranchobj;
