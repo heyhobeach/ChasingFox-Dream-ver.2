@@ -19,7 +19,11 @@ public class DialogueController : MonoBehaviour
         interaction.GetDialogue();
         interaction.num = scriptorble.num;
         interaction.command[0] = "";
-        interaction.command[1] = "";
+        if (interaction.command[1] != "")
+        {
+            interaction.command[1] = "";//여기서 문제 발생
+
+        }
         interaction.postcommands.Clear();
         interaction.precommands.Clear();
         //InteractionEvent.Instance.indexNum = scriptorble.indexNum;
