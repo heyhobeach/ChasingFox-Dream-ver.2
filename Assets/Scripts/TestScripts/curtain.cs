@@ -4,12 +4,14 @@ public class curtain : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     SpriteRenderer spriteRenderer;
+    private Color baseColor;
 
     public float curtainTime = 0.8f;
    // private Color color;
     private void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        baseColor = spriteRenderer.color;
         //color=spriteRenderer.color;
     }
 
@@ -48,10 +50,10 @@ public class curtain : MonoBehaviour
             current += Time.deltaTime / time;
             value_a=Mathf.Lerp(255,0, current);
             Debug.Log("알파값" + value_a);
-            spriteRenderer.color = new Color(spriteRenderer.color.r/255f, spriteRenderer.color.g/255f, spriteRenderer.color.b / 255f, value_a/255f);
+            spriteRenderer.color = new Color(baseColor.r, baseColor.g, baseColor.b, value_a/255f);
             //spriteRenderer.color.a= value_a;
         }
-        spriteRenderer.color = new Color(spriteRenderer.color.r / 255f, spriteRenderer.color.g / 255f, spriteRenderer.color.b / 255f, 0);
+        spriteRenderer.color = new Color(baseColor.r, baseColor.g, baseColor.b, 0);
     }
 
     public async Awaitable ColseRoom(float time)//지금 스프라이트 랜더러에서 값이 변경이 안되는듯함
@@ -64,9 +66,9 @@ public class curtain : MonoBehaviour
             current += Time.deltaTime / time;
             value_a = Mathf.Lerp(0, 255, current);
             Debug.Log("알파값" + value_a);
-            spriteRenderer.color = new Color(spriteRenderer.color.r / 255f, spriteRenderer.color.g / 255f, spriteRenderer.color.b / 255f, value_a / 255f);
+            spriteRenderer.color = new Color(baseColor.r, baseColor.g, baseColor.b, value_a / 255f);
             //spriteRenderer.color.a= value_a;
         }
-        spriteRenderer.color = new Color(spriteRenderer.color.r / 255f, spriteRenderer.color.g / 255f, spriteRenderer.color.b / 255f, 1);
+        spriteRenderer.color = new Color(baseColor.r, baseColor.g, baseColor.b, 1);
     }
 }
