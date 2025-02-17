@@ -39,8 +39,11 @@ namespace Damageables
 
             action?.Invoke();
             health -= dmg;
-            if(health <= 0) Death();
-            DeathFeedBack(trf.position);
+            if(health <= 0) 
+            {
+                Death();
+                DeathFeedBack(trf.position);
+            }
 
             return true;
         }

@@ -122,8 +122,8 @@ public class Bullet : MonoBehaviour
             BulletSound();
             DamagedFeedBack(collision);
             Destroy(gameObject);
+            life--;
         }
-        life--;
     }
 
     public void DamagedFeedBack(Collider2D collision)

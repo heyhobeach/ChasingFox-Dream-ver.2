@@ -70,9 +70,7 @@ public class EnemyUnit : UnitBase, IDamageable, ISelectObject
     {
         base.Death();
         invalidation = true;
-        mpb.SetFloat("_Hovered", 0);
-        mpb.SetFloat("_Selected", 0);
-        spriteRenderer.SetPropertyBlock(mpb);
+        Leave();
     }
 
     public void DeathFeedBack(Vector2 dir)

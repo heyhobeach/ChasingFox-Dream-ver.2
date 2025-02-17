@@ -85,8 +85,13 @@ public class Werewolf : PlayerUnit
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
-        // SelectObjects();
+        SelectObjects();
     }
+
+    // private void LateUpdate()
+    // {
+    //     SelectObjects();
+    // }
 
     private IEnumerator UnscaledTime()
     {
@@ -152,6 +157,7 @@ public class Werewolf : PlayerUnit
         if(!hit) return false;
         if(hit.CompareTag("Enemy") && hit.GetComponent<EnemyUnit>().UnitState == UnitState.Death) return false;
 
+        base.FormChange();
         currentCount--;
         var addPos = ((Vector2)clickPos - (Vector2)transform.position).normalized;
         rg.transform.position = (Vector3)clickPos;
@@ -207,8 +213,9 @@ public class Werewolf : PlayerUnit
         i = 0;
         foreach(var hit in hits)
         {
+            if(hit.gameObject.layer == LayerMask.NameToLayer("Enemy") && hit.GetComponent<UnitBase>()?.UnitState != UnitState.Default) continue;
             if (((hit.transform.position + Vector3.up) - playerArea.transform.position).magnitude > brutalData.brutalArea.x*0.5f ||
-                Physics2D.Linecast((hit.transform.position + Vector3.up), playerArea.transform.position, 1<<LayerMask.NameToLayer("Map") | 1<<LayerMask.NameToLayer("Wall"))) break;
+                Physics2D.Linecast((hit.transform.position + Vector3.up), playerArea.transform.position, 1<<LayerMask.NameToLayer("Map") | 1<<LayerMask.NameToLayer("Wall"))) continue;
             hit.gameObject.GetInterface<ISelectObject>().Hover();
             i++;
         }
