@@ -68,7 +68,7 @@ public partial class GameManager : MonoBehaviour
         CameraManager.Instance?.proCamera2DRooms.OnStartedTransition.RemoveListener(MoveNextRoom);
     }
 
-    private void OnApllicationQuit() => SaveData();
+    private void OnApplicationQuit() => SaveData();
 
     private void Awake()
     {
@@ -126,7 +126,7 @@ public partial class GameManager : MonoBehaviour
         {
             var trigger = eventTriggers.Find(x => x.GetInstanceID() == saveData.eventTriggerInstanceID);
             if (trigger) trigger.OnTrigger(saveData.eventIdx);
-            //player.transform.position = trigger.targetPosition;
+            player.transform.position = trigger.targetPosition;
         }
         ProCamera2D.Instance.MoveCameraInstantlyToPosition(player.transform.position);
 

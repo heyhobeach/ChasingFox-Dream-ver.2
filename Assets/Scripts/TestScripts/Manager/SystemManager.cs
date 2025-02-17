@@ -274,7 +274,7 @@ public class SystemManager : MonoBehaviour
     public void DeleteData(int index)
     {
         if(index < 0 || index >= saveDatas.Length) return;
-        try { DeleteJson("SaveData" + index + ".json"); }
+        try { DeleteJson("SaveData" + index + ".sv"); }
         catch (FileNotFoundException e) { Debug.Log("SaveData" + index + " not found.\n" + e); }
         saveDatas[index] = null;
     }

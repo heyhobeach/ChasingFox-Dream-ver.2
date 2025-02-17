@@ -92,7 +92,6 @@ public class EventTrigger : MonoBehaviour
     protected virtual void OnTriggerExit2D(Collider2D collider)
     {
         if(!collider.CompareTag(targetTag)) return;
-        targetPosition = Vector2.zero;
         action = null;
     }
 

@@ -8,6 +8,7 @@ public class TimeLineCamera : MonoBehaviour
         var triggers = GameManager.Instance.eventTriggers;
         foreach(var trigg in triggers) 
         {
+            Debug.Log("AAA");
             PlayableDirector temp = null;
             trigg.TryGetComponent(out temp);
             if(temp) 
@@ -15,6 +16,7 @@ public class TimeLineCamera : MonoBehaviour
                 temp.played += (x) => gameObject.SetActive(true);
                 temp.stopped += (x) => gameObject.SetActive(false);
             }
+            Debug.Log("AAA" + temp);
         }
         gameObject.SetActive(false);
     }
