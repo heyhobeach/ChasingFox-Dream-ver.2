@@ -91,7 +91,7 @@ public class EnemyUnit : UnitBase, IDamageable, ISelectObject
     {
         yield return new WaitForSeconds(0.5f);
         var rg = GetComponent<Rigidbody2D>();
-        rg.constraints = RigidbodyConstraints2D.FreezePositionX;
+        rg.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
     }
 
     public void Hover()
