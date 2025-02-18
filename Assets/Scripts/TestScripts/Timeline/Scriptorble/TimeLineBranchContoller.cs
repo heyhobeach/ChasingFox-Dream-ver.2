@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Playables;
 
@@ -12,8 +13,8 @@ public class TimeLineBranchContoller : MonoBehaviour
     /// <summary>
     /// 여기 밑에 얘네 확인은 아직 안 했는데 시그널 까지 존재 할지는 모르겠음
     /// </summary>
-    public EventTrigger upBranchTimeline;
-    public EventTrigger downBranchTimeline;
+    public FixedEventTrigger upBranchTimeline;
+    public FixedEventTrigger downBranchTimeline;
 
     // public EventTrigger targetBranch;
 
@@ -36,7 +37,7 @@ public class TimeLineBranchContoller : MonoBehaviour
         //currentDirector.Play();
         //InteractionEvent.Instance.contentNum
         // GameObject targetBranchObj;
-        EventTrigger targetBranch;
+        FixedEventTrigger targetBranch;
         Debug.Log("branch 선택지 번호" + InteractionEvent.Instance.user_select);
         Debug.Log("기준 브루탈 수치 확인 " + branch_brutality + "유저 브루탈" + GameManager.Brutality);
         if (InteractionEvent.Instance.user_select==0)
@@ -66,6 +67,7 @@ public class TimeLineBranchContoller : MonoBehaviour
 
         currentDirector.gameObject.SetActive(false);
         // targetBranch.Play();
+        ((IBaseController)targetBranch).RemoveController();
         targetBranch.OnTrigger();
 
         Debug.Log("branch func");

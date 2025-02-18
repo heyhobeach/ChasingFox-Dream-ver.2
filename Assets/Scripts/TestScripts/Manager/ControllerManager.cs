@@ -20,8 +20,13 @@ public class ControllerManager : MonoBehaviour
             Stack<IBaseController> temp = new();
             while(instance.controllers.Count > 0 && !temp.Equals(instance.controllers.Peek())) temp.Push(instance.controllers.Pop());
             while(temp.Count > 0) instance.controllers.Push(temp.Pop());
+            Debug.Log("NotTop" + instance.controllers.Peek());
         }
-        if(instance.controllers.Count > 0) instance.controllers.Pop();
+        if(instance.controllers.Count > 0) 
+        {
+            instance.controllers.Pop();
+            Debug.Log("Top" + instance.controllers.Peek());
+        }
         if(instance.controllers.Count > 0) instance.controllers.Peek().onUp?.Invoke();
     }
     public static IBaseController GetTopController() => instance.controllers.Peek();

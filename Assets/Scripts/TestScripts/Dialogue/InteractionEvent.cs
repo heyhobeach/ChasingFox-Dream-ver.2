@@ -525,7 +525,7 @@ public class InteractionEvent : MonoBehaviour
             //    start = true;
             //    StartCoroutine(ChocieTimer(5, start, Timeover));
             //}
-            if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.A))//오른쪽
+            if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))//오른쪽
             {
                 //countnum은 downArrow가 실행 되면 값이 변하게 되어있음
                 if (contentlength - 1 > (contentNum))
@@ -539,7 +539,7 @@ public class InteractionEvent : MonoBehaviour
 
             }
 
-            if ((Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.D)) & (contentNum > 0))//왼쪽
+            if ((Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A)) & (contentNum > 0))//왼쪽
             {
                 _Uimanager.UpArrow(ref contentNum);
                 Debug.Log("content num" + contentNum + "내용" + dialogue.dialouses[temp].command[contentNum]);

@@ -80,6 +80,7 @@ public partial class GameManager : MonoBehaviour
         }
         instance = this;
         player = FindFirstObjectByType<Player>();
+        Debug.Log(player);
         interactionEvent = FindFirstObjectByType<InteractionEvent>();
         popupManager = PopupManager.Instance;
         controllerManager = ControllerManager.Instance;
