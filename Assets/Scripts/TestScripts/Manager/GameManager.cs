@@ -102,6 +102,7 @@ public partial class GameManager : MonoBehaviour
             var mapDatas = new MapData.JsonData[maps.Count];
             for (int i = 0; i < maps.Count; i++) mapDatas[i] = maps[i].mapData;
             saveData.mapDatas = mapDatas;
+            Debug.Log("AAA" + mapDatas.Length);
         }
         for (int i = 0; i < maps.Count; i++) maps[i].Init(saveData.mapDatas[i]);
 
