@@ -87,6 +87,8 @@ public class SetCharImage : MonoBehaviour
         if(image_dir.Equals("none")) {
             SetDisable( other);
             SetDisable(target);
+            target = null;
+            other = null;
         }
 
     }

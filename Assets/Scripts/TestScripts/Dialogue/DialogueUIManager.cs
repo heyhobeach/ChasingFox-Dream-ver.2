@@ -5,6 +5,7 @@ using System.Net.Mime;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -52,6 +53,10 @@ public class UIManager : MonoBehaviour
     public float BoxSizeRatio = 0.34f;
     public float fontRatio;
     public float nameRatio;
+
+    public bool none_state = false;
+
+
 
     /// <summary>
     /// start,end,speed
@@ -230,6 +235,15 @@ public class UIManager : MonoBehaviour
             image_dir = image_dir.Substring(6);
         }
         image_dir = Regex.Replace(image_dir, @"[^a-zA-Z]", "");
+        if (image_dir == "none")
+        {
+            none_state = true;
+        }
+        else
+        {
+            none_state = false;
+        }
+
         Debug.Log("변경후"+image_dir);
         
         //나중에 선택지때 중앙만 오게 된다면 여기서 설정 할 예정
