@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Damageables;
 using UnityEngine;
 
@@ -83,6 +84,14 @@ public class EnemyUnit : UnitBase, IDamageable, ISelectObject
         var col = GetComponent<Collider2D>();
         col.isTrigger = false;
         rg.AddForceX(Mathf.Sign(((Vector2)transform.position - dir).normalized.x) * 4, ForceMode2D.Impulse);
+        StartCoroutine(DeathCoroutine());
+    }
+
+    private IEnumerator DeathCoroutine()
+    {
+        yield return new WaitForSeconds(0.5f);
+        var rg = GetComponent<Rigidbody2D>();
+        rg.constraints = RigidbodyConstraints2D.FreezePositionX;
     }
 
     public void Hover()
