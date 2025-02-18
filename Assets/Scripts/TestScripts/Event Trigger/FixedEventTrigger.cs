@@ -31,7 +31,7 @@ public class FixedEventTrigger : EventTrigger, IBaseController
         if(eventLock || GameManager.Instance.isPaused) return;
         if(eventIdx >= eventLists.Length)
         {
-            SystemManager.Instance.UpdateDataForEventTrigger(0, 0);
+            SystemManager.Instance.UpdateDataForEventTrigger(null, 0);
             PopupManager.Instance.RestartButtonEnable(true);
             targetPosition = Vector2.zero;
             eventIdx = 0;
@@ -44,7 +44,7 @@ public class FixedEventTrigger : EventTrigger, IBaseController
             (eventLists[eventIdx].enterPrerequisites == null || eventLists[eventIdx].enterPrerequisites.isSatisfied) &&
             (eventLists[eventIdx].keyCode == KeyCode.None || Input.GetKeyDown(eventLists[eventIdx].keyCode)))
         {
-            SystemManager.Instance.UpdateDataForEventTrigger(GetInstanceID(), eventIdx);
+            SystemManager.Instance.UpdateDataForEventTrigger(eventTriggerData.guid, eventIdx);
             eventLists[eventIdx].action?.Invoke();
             if(eventLists[eventIdx].exitPrerequisites != null) StartCoroutine(LockTime(eventLists[eventIdx].exitPrerequisites));
             eventIdx++;

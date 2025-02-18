@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -32,6 +34,7 @@ public class Map : MonoBehaviour
         {
             MapData asset = ScriptableObject.CreateInstance<MapData>();
 #if UNITY_EDITOR
+            asset.guid = Guid.NewGuid().ToString();
             AssetDatabase.CreateAsset(asset, "Assets/Resources/" + path + ".asset");
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();

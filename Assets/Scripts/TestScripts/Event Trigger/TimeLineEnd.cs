@@ -13,6 +13,7 @@ public class TimeLineEnd : QTE_Prerequisites
         get
         {
             if(fixedEventTrigger == null) Init();
+            Debug.Log(playableDirector.state);
             return fixedEventTrigger.used ? true : isPlaying; 
         }
         set => isPlaying = value; 

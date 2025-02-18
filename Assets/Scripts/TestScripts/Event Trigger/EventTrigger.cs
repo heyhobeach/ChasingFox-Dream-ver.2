@@ -52,7 +52,7 @@ public class EventTrigger : MonoBehaviour
         {
             if(limit) used = true;
             eventIdx = 0;
-            SystemManager.Instance.UpdateDataForEventTrigger(0, 0);
+            SystemManager.Instance.UpdateDataForEventTrigger(null, 0);
             action = null;
             return;
         }
@@ -60,7 +60,7 @@ public class EventTrigger : MonoBehaviour
             (eventLists[eventIdx].enterPrerequisites == null || eventLists[eventIdx].enterPrerequisites.isSatisfied) &&
             (eventLists[eventIdx].keyCode == KeyCode.None || Input.GetKeyDown(eventLists[eventIdx].keyCode)))
         {
-            SystemManager.Instance.UpdateDataForEventTrigger(GetInstanceID(), eventIdx);
+            SystemManager.Instance.UpdateDataForEventTrigger(eventTriggerData.guid, eventIdx);
             try { eventLists[eventIdx].action?.Invoke(); }
             catch (Exception e) { Debug.LogError(e); }
             if(eventLists[eventIdx].exitPrerequisites != null) StartCoroutine(LockTime(eventLists[eventIdx].exitPrerequisites));
@@ -105,6 +105,7 @@ public class EventTrigger : MonoBehaviour
         {
             EventTriggerData asset = ScriptableObject.CreateInstance<EventTriggerData>();
 #if UNITY_EDITOR
+            asset.guid = Guid.NewGuid().ToString();
             AssetDatabase.CreateAsset(asset, "Assets/Resources/" + path + ".asset");
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();

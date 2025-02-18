@@ -28,6 +28,7 @@ public class EventTriggerData : ScriptableObject
         }
     }
 
+    [DisableInspector] public string guid;
     public bool used;
     public bool isEneable;
     public Vector2 targetPosition;

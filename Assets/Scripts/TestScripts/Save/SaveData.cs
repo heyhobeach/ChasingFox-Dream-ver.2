@@ -15,7 +15,7 @@ public class SaveData
     public MapData.JsonData[] mapDatas;
     public EventTriggerData.JsonData[] eventTriggerDatas;
 
-    public int eventTriggerInstanceID;
+    public string eventTriggerInstanceID;
     public int eventIdx;
 
     public int karma;

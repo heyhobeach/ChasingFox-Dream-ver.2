@@ -78,7 +78,7 @@ public class SystemManager : MonoBehaviour
             chapter = "Chp0",
             mapDatas = null,
             eventTriggerDatas = null,
-            eventTriggerInstanceID = 0,
+            eventTriggerInstanceID = null,
             eventIdx = 0,
             karma = 65
         };
@@ -288,7 +288,7 @@ public class SystemManager : MonoBehaviour
 
     public SaveData GetData() => saveDatas[saveIndex];
 
-    public void UpdateDataForEventTrigger(int eventTriggerInstanceID, int eventIdx)
+    public void UpdateDataForEventTrigger(string eventTriggerInstanceID, int eventIdx)
     {
         if(saveData == null) return;
         saveData.eventTriggerInstanceID = eventTriggerInstanceID;

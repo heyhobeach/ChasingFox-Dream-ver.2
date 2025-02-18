@@ -122,11 +122,14 @@ public partial class GameManager : MonoBehaviour
         SystemManager.Instance.saveData = saveData;
 
         if(saveData.mapDatas.Length > 0 && saveData.mapDatas[PlayerData.lastRoomIdx].used) player.transform.position = saveData.mapDatas[PlayerData.lastRoomIdx].position;
-        if (saveData.eventTriggerInstanceID != 0)
+        if (!string.IsNullOrEmpty(saveData.eventTriggerInstanceID))
         {
-            var trigger = eventTriggers.Find(x => x.GetInstanceID() == saveData.eventTriggerInstanceID);
-            if (trigger) trigger.OnTrigger(saveData.eventIdx);
-            player.transform.position = trigger.targetPosition;
+            var trigger = eventTriggers.Find(x => x.eventTriggerData.guid.Equals(saveData.eventTriggerInstanceID));
+            if (trigger) 
+            {
+                trigger.OnTrigger(saveData.eventIdx);
+                player.transform.position = trigger.targetPosition;
+            }
         }
         ProCamera2D.Instance.MoveCameraInstantlyToPosition(player.transform.position);
 
@@ -235,7 +238,7 @@ public partial class GameManager : MonoBehaviour
         SystemManager.Instance.saveData.playerData = null;
         PlayerData.lastRoomIdx = 0;
         SystemManager.Instance.saveData.chapterIdx = 0;
-        SystemManager.Instance.UpdateDataForEventTrigger(0, 0);
+        SystemManager.Instance.UpdateDataForEventTrigger(null, 0);
     }
     public void InventoryEnable()
     {
