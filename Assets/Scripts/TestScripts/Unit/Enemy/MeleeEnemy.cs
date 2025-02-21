@@ -19,17 +19,17 @@ public class MeleeEnemy : EnemyUnit
 
     public override bool AttackCheck(Vector3 attackPos)
     {
-        var pos = attackPos-transform.position;
+        var pos = attackPos-(transform.position+Vector3.up);
         bool inRange = (pos.magnitude < attackDistance) && (pos.magnitude >= attackDistance*(1-attackRange));
         bool isForword = Mathf.Sign(pos.normalized.x)>0&&!spriteRenderer.flipX ? true : Mathf.Sign(pos.normalized.x)<0&&spriteRenderer.flipX ? true : false;
-        var hit = Physics2D.Raycast(transform.position, pos, pos.magnitude, 1<<LayerMask.NameToLayer("Map"));
+        var hit = Physics2D.Raycast(transform.position+Vector3.up, pos, pos.magnitude, 1<<LayerMask.NameToLayer("Map"));
         if(ControllerChecker() || hit || !inRange || !isForword) return false;
         else return true;
     }
 
     public override bool Attack(Vector3 attackPos)
     {
-        Vector2 subvec = attackPos - transform.position;
+        Vector2 subvec = attackPos - (transform.position+Vector3.up);
         float deg = Mathf.Atan2(subvec.y, subvec.x) ;//mathf.de
         //deg*=Mathf.Deg2Rad;//라디안으로 바꿔주기는 하는데 이렇게 하면 좀 문제생김
         //Debug.Log(deg);

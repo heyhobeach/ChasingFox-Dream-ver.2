@@ -15,11 +15,11 @@ public class RangedEnemy : EnemyUnit
 
     public override bool AttackCheck(Vector3 attackPos)
     {
-        var pos = attackPos-transform.position;
+        var pos = attackPos-(transform.position+Vector3.up);
         bool inRange = (pos.magnitude < attackDistance) && (pos.magnitude >= attackDistance*(1-attackRange));
         bool isForword = Mathf.Sign(pos.normalized.x)>0&&!spriteRenderer.flipX ? true : Mathf.Sign(pos.normalized.x)<0&&spriteRenderer.flipX ? true : false;
         bool isInner = pos.magnitude < boxSizeX*2;
-        var hit = Physics2D.Raycast(transform.position, pos, pos.magnitude, 1<<LayerMask.NameToLayer("Map"));
+        var hit = Physics2D.Raycast(transform.position+Vector3.up, pos, pos.magnitude, 1<<LayerMask.NameToLayer("Map"));
         if(ControllerChecker() || hit || !inRange || !isForword || isInner) return false;
         else return true;
     }

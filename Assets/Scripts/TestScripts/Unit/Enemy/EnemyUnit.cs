@@ -35,6 +35,11 @@ public class EnemyUnit : UnitBase, IDamageable, ISelectObject
         
         mpb = new MaterialPropertyBlock();
     }
+    protected void LateUpdate()
+    { 
+        mpb.SetTexture("_MainTex", spriteRenderer.sprite.texture);
+        spriteRenderer.SetPropertyBlock(mpb);
+    }
 
     public void OnMouseEnter() => Select();
     public void OnMouseOver()

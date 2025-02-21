@@ -11,6 +11,7 @@ Shader "Custom/StencilTest"
         Pass
         {
             Stencil { Ref 1 Comp Always Pass Replace }
+            ZWrite Off
 
             Blend SrcAlpha OneMinusSrcAlpha // 투명도 처리
 

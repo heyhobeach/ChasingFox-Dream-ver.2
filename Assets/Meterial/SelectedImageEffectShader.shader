@@ -16,7 +16,7 @@ Shader "Hidden/SelectedImageEffectShader"
         {
             Tags { "Queue"="Transparent" }
             Stencil { Ref 1 Comp Equal }
-            ZWrite Off ZTest Always
+            ZWrite Off 
     
             Blend SrcAlpha OneMinusSrcAlpha // 알파 블렌딩 설정
             Cull Off // 양면 렌더링 설정
@@ -102,7 +102,5 @@ Shader "Hidden/SelectedImageEffectShader"
             }
             ENDCG
         }
-
-
     }
 }

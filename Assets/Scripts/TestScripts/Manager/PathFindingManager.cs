@@ -71,12 +71,17 @@ public partial class GameManager : MonoBehaviour
                 bool isRoad = false;
                 bool isPoint = false;
                 bool isplatform = false;
-                foreach (Collider2D col in Physics2D.OverlapCircleAll(new Vector2(i + bottomLeft.x + correctionPos.x, j + bottomLeft.y + correctionPos.y), 0.4f))
+                var temp = Physics2D.OverlapBoxAll(new Vector2(i + bottomLeft.x + correctionPos.x, j + bottomLeft.y + correctionPos.y), Vector2.one*0.9f, 0);
+                foreach (Collider2D col in temp)
                 {
                     if (col.gameObject.layer == LayerMask.NameToLayer("Wall")) isWall = true;
                     if (col.gameObject.layer == LayerMask.NameToLayer("Ground")) isRoad = true;
                     if (col.gameObject.layer == LayerMask.NameToLayer("Point")) isPoint = true;
-                    if (col.gameObject.layer == LayerMask.NameToLayer("EnemyPlatform")) isplatform = true;
+                    if (col.gameObject.layer == LayerMask.NameToLayer("EnemyPlatform")) 
+                    {
+                        isRoad = true;
+                        isplatform = true;
+                    }
                 }
                 if(!isWall) isWall = !isRoad && !isplatform;
 
@@ -88,6 +93,7 @@ public partial class GameManager : MonoBehaviour
     {
         if(NodeArray == null || isLoad)
         {
+            // Debug.Log("Node Array not set");
             isLoad = true;
             NodeArray = null;
             return new List<Node>();
@@ -99,10 +105,13 @@ public partial class GameManager : MonoBehaviour
         StartNode = NodeArray[startPos.x - bottomLeft.x, startPos.y - bottomLeft.y];//���� �� �κ� ������ �߱��� �۵����� ������ ����
         TargetNode = NodeArray[targetPos.x - bottomLeft.x, targetPos.y - bottomLeft.y];
         int tempNum = 0;
-        while(!NodeArray[TargetNode.x - bottomLeft.x, TargetNode.y - bottomLeft.y+tempNum].isRoad)
+        Node tempNode = NodeArray[TargetNode.x - bottomLeft.x, TargetNode.y - bottomLeft.y+tempNum];
+        while(!tempNode.isRoad)
         {
             tempNum--;
+            tempNode = NodeArray[TargetNode.x - bottomLeft.x, TargetNode.y - bottomLeft.y+tempNum];
         }
+        // Debug.Log("Path Setting");
         TargetNode = NodeArray[TargetNode.x - bottomLeft.x, TargetNode.y - bottomLeft.y + tempNum];
 
         OpenList = new List<Node>() { StartNode };
@@ -121,6 +130,8 @@ public partial class GameManager : MonoBehaviour
                     CurNode = OpenList[i];
                 }
             }
+
+            // Debug.Log("Finding");
 
             OpenList.Remove(CurNode);
             ClosedList.Add(CurNode);

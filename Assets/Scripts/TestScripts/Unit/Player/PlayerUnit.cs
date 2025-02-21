@@ -142,6 +142,8 @@ public abstract class PlayerUnit : UnitBase
                 if(isJumping || !isGrounded) return false;
                 isJumping = true;
                 jumpingHight = 0;
+                SetVerticalForce(0);
+                SetVerticalVelocity(0);
                 AddVerticalVelocity(jumpImpulse);
                 return true;
             case KeyState.KeyStay:

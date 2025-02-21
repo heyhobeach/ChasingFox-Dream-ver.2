@@ -28,6 +28,8 @@ public class EnemyController : MonoBehaviour
     public float appendDistance;
     private float distance { get => viewOuterRange; }
 
+    public float soundRange;
+
     private bool isStop;
 
     void Start()
@@ -133,7 +135,6 @@ public class EnemyController : MonoBehaviour
     private void EnemyCheck(EnemyUnit enemy)
     {
         if(blackboard.enemy_state.stateCase == Blackboard.Enemy_State.StateCase.Chase && enemy == blackboard.thisUnit) return;
-
         if(ViewCheck(enemy.transform.position+Vector3.up))
         {
             blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Chase;
@@ -148,7 +149,7 @@ public class EnemyController : MonoBehaviour
         if(blackboard.enemy_state.stateCase == Blackboard.Enemy_State.StateCase.Chase) return;
 
         var subvec = pos - (Vector2)transform.position;
-        if(subvec.magnitude <= viewInnerRange + (size.x * 0.5f))
+        if(subvec.magnitude <= soundRange + (size.x * 0.5f))
         {
             blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Alert;
             blackboard.target = tr;
@@ -174,6 +175,9 @@ public class EnemyController : MonoBehaviour
 
         Handles.DrawLine(transform.position+Vector3.up + startInner, transform.position+Vector3.up + startOuter);
         Handles.DrawLine(transform.position+Vector3.up + endInner, transform.position+Vector3.up + endOuter);
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position+Vector3.up, soundRange);
     }
 #endif
 }

@@ -11,6 +11,7 @@ Shader "Hidden/MaskImageEffectShader"
         Tags { "RenderType"="Transparent-1" "Queue"="Overlay" }
 
         Stencil { Ref 1 Comp NotEqual Fail Replace Pass Replace }
+        ZWrite Off
         Blend SrcAlpha OneMinusSrcAlpha // 투명도 처리
 
         Pass
