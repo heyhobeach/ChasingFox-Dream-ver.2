@@ -26,7 +26,6 @@ public class EnemyUnit : UnitBase, IDamageable, ISelectObject
     private MaterialPropertyBlock mpb;
     private bool canSelect;
 
-    protected override void OnEnable() {}
     protected override void Start()
     {
         base.Start();

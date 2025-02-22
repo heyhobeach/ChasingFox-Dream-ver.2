@@ -11,6 +11,7 @@ public class DoorOpen : MonoBehaviour, IBaseController
 
     [SerializeField] private Transform leftPos;
     [SerializeField] private Transform rightPos;
+    [SerializeField] private Transform doorPos;
     [SerializeField] private Collider2D[] cols;
 
     private PlayableDirector timeline;
@@ -19,14 +20,14 @@ public class DoorOpen : MonoBehaviour, IBaseController
 
     private bool opened;
 
-    private GameObject target;
+    private UnitBase target;
     private PlayerUnit player;
     private EnemyController enemy;
 
     private void Awake()
     {
         timeline = GetComponent<PlayableDirector>();
-        timeline.timeUpdateMode = DirectorUpdateMode.Manual;
+        // timeline.timeUpdateMode = DirectorUpdateMode.Manual;
         var timelineAsset = timeline.playableAsset as TimelineAsset;
         leftBehaviour = timelineAsset.GetOutputTrack(1);
         rightBehaviour = timelineAsset.GetOutputTrack(2);
@@ -40,26 +41,26 @@ public class DoorOpen : MonoBehaviour, IBaseController
         };
     }
 
-    private void FixedUpdate()
-    {
-        if(timeline.state == PlayState.Playing) 
-        {        
-            if(target.CompareTag("Player")) 
-            {
-                player.SetHorizontalForce(0);
-                player.SetHorizontalVelocity(0);
-            }
-            timeline.time += Time.fixedDeltaTime;
-            timeline.Evaluate();
-            if(timeline.time >= timeline.duration) timeline.Stop();
-        }
-    }
+    // private void FixedUpdate()
+    // {
+    //     if(timeline.state == PlayState.Playing) 
+    //     {        
+    //         if(target.CompareTag("Player")) 
+    //         {
+    //             player.SetHorizontalForce(0);
+    //             player.SetHorizontalVelocity(0);
+    //         }
+    //         timeline.time += Time.fixedDeltaTime;
+    //         timeline.Evaluate();
+    //         if(timeline.time >= timeline.duration) timeline.Stop();
+    //     }
+    // }
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
         if(opened || !(collider.CompareTag("Player") || collider.CompareTag("Enemy"))) return;
         if(collider.GetComponent<UnitBase>().UnitState != UnitState.Default) return;
-        target = collider.gameObject;
+        target = collider.GetComponent<UnitBase>();
         if(target.CompareTag("Player")) 
         {
             ((IBaseController)this).AddController();
@@ -72,16 +73,18 @@ public class DoorOpen : MonoBehaviour, IBaseController
             enemy = target.GetComponent<EnemyController>();
             enemy.isStop = true;
         }
-
+        
         switch(Mathf.Sign((collider.transform.position-transform.position).x))
         {
             case -1:
                 rightPos.position += Vector3.right;
-                timeline.SetGenericBinding(leftBehaviour, collider.GetComponent<UnitBase>().rg.transform);
+                doorPos.position += Vector3.left*target.BoxSizeX;
+                timeline.SetGenericBinding(leftBehaviour, target.rg.transform);
             break;
             case 1:
                 leftPos.position += Vector3.left;
-                timeline.SetGenericBinding(rightBehaviour, collider.GetComponent<UnitBase>().rg.transform);
+                doorPos.position += Vector3.right*target.BoxSizeX;
+                timeline.SetGenericBinding(rightBehaviour, target.rg.transform);
             break;
         }
 

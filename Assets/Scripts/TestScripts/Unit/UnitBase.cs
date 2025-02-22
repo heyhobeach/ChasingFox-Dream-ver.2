@@ -68,7 +68,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     /// <summary>
     /// 유닛 콜라이더 가로 크기를 가져옴
     /// </summary>
-    public float BoxSizeX { get; private set; }
+    public float BoxSizeX { get => boxSizeX; private set => boxSizeX = value; }
 
     protected float boxOffsetY;
     /// <summary>
@@ -79,7 +79,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     /// <summary>
     /// 유닛 콜라이더 세로 크기를 가져옴
     /// </summary>
-    public float BoxSizeY { get; private set; }
+    public float BoxSizeY { get => boxSizeY; private set => boxSizeY = value; }
     
     /// <summary>
     /// 수평 힘
@@ -158,10 +158,11 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     
     protected virtual void OnEnable()
     {
-        boxSizeX = gameObject.GetComponent<Collider2D>().bounds.extents.x;
-        boxSizeY = gameObject.GetComponent<Collider2D>().bounds.extents.y;
-        boxOffsetX = gameObject.GetComponent<Collider2D>().offset.x;
-        boxOffsetY = gameObject.GetComponent<Collider2D>().offset.y;
+        var col = gameObject.GetComponent<CapsuleCollider2D>();
+        boxSizeX = col.bounds.extents.x;
+        boxSizeY = col.bounds.extents.y;
+        boxOffsetX = col.offset.x;
+        boxOffsetY = col.offset.y;
         onEnable?.Invoke();
     }
 
