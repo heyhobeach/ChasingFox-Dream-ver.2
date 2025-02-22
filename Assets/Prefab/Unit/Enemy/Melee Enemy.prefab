@@ -136,6 +136,7 @@ MonoBehaviour:
   jumpForce: 3
   jumpImpulse: 5
   jumpTime: 0.5
+  rg: {fileID: 0}
   anim: {fileID: 0}
   shootingAnimationController: {fileID: 0}
   attackDistance: 1.75
@@ -156,12 +157,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   behaviorTree: {fileID: 11400000, guid: cf6acdca7811adc4bba5dbcada481365, type: 2}
   playableDirector: {fileID: 0}
+  blackboard:
+    thisUnit: {fileID: 0}
+    target: {fileID: 0}
+    originPos: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 0
+    FinalNodeList: []
   spriteRenderer: {fileID: 0}
   _viewOuterRange: 15.5
   _viewInnerRange: 2.5
   viewAngle: 95
   appendDistance: 2
   soundRange: 5
+  isStop: 0
   showRange: 1
 --- !u!50 &6506840840629724753
 Rigidbody2D:
@@ -269,7 +281,7 @@ GameObject:
   - component: {fileID: 7742197857497897203}
   - component: {fileID: 6772414342141983162}
   - component: {fileID: 4236061026310152421}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: AttackBox
   m_TagString: DamageObj
   m_Icon: {fileID: 0}
@@ -389,7 +401,7 @@ GameObject:
   - component: {fileID: 6252235021038101589}
   - component: {fileID: 4979613921531954585}
   - component: {fileID: 757763276614998438}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
