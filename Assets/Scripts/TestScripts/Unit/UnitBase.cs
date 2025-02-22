@@ -102,6 +102,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     protected bool isGrounded;
     public bool IsGrounded { get => isGrounded; }
 
+    public Rigidbody2D rg;
     protected SpriteRenderer spriteRenderer;
 
     [HideInInspector] public Animator anim;

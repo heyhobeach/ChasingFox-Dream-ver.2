@@ -30,7 +30,7 @@ public class EnemyController : MonoBehaviour
 
     public float soundRange;
 
-    private bool isStop;
+    public bool isStop;
 
     void Start()
     {

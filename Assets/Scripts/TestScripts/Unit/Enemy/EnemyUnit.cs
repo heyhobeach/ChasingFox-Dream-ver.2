@@ -33,6 +33,7 @@ public class EnemyUnit : UnitBase, IDamageable, ISelectObject
         unitState = UnitState.Default;
         health = _maxHealth;
         
+        rg = GetComponent<Rigidbody2D>();
         mpb = new MaterialPropertyBlock();
     }
     protected void LateUpdate()

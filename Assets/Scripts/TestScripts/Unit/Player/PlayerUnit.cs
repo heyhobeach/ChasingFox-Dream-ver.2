@@ -22,7 +22,6 @@ public abstract class PlayerUnit : UnitBase
     protected float vcVel;
     protected Vector2 velocity { get => new Vector2(hzVel, vcVel); }
 
-    public Rigidbody2D rg;
     public GroundSensor groundSensor;
 
 
