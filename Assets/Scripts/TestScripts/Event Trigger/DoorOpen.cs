@@ -84,6 +84,7 @@ public class DoorOpen : MonoBehaviour, IBaseController
             case 1:
                 leftPos.position += Vector3.left;
                 doorPos.position += Vector3.right*target.BoxSizeX;
+                GetComponent<SpriteRenderer>().flipX = true;
                 timeline.SetGenericBinding(rightBehaviour, target.rg.transform);
             break;
         }
