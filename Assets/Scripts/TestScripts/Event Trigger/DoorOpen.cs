@@ -37,7 +37,7 @@ public class DoorOpen : MonoBehaviour, IBaseController
             else enemy.isStop = false;
             timeline.SetGenericBinding(leftBehaviour, null);
             timeline.SetGenericBinding(rightBehaviour, null);
-            foreach(var col in cols) col.enabled = false;
+            cols[1].enabled = false;
         };
     }
 
@@ -71,6 +71,7 @@ public class DoorOpen : MonoBehaviour, IBaseController
         else
         {
             enemy = target.GetComponent<EnemyController>();
+            enemy.blackboard.nodeIdx += 2;
             enemy.isStop = true;
         }
         
@@ -88,6 +89,8 @@ public class DoorOpen : MonoBehaviour, IBaseController
                 timeline.SetGenericBinding(rightBehaviour, target.rg.transform);
             break;
         }
+
+        cols[0].enabled = false;
 
         timeline.Play();
         opened = true;

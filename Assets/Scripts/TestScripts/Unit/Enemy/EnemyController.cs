@@ -11,7 +11,7 @@ public class EnemyController : MonoBehaviour
 {
     public BehaviourTree.BehaviourTree behaviorTree;
     public PlayableDirector playableDirector;
-    private Blackboard blackboard;
+    public Blackboard blackboard;
     public SpriteRenderer spriteRenderer;
 
     public float _viewOuterRange;
