@@ -58,6 +58,7 @@ public class Werewolf : PlayerUnit
         playerArea.transform.position = transform.position + Vector3.up;
         playerArea.transform.localScale = brutalData.brutalArea - Vector2.one;
         currentTime = brutalData.brutalTime;
+        currentCount = brutalData.isDoubleTime ? 2 : 1;
         currentGauge -= brutalData.useGage;
 
         SelectObjects();
@@ -68,11 +69,18 @@ public class Werewolf : PlayerUnit
     protected override void OnDisable()
     {
         base.OnDisable();
-        if(attackCoroutine != null) StopCoroutine(attackCoroutine);
-        if(unscaledTimeCoroutine != null) StopCoroutine(unscaledTimeCoroutine);
+        if(attackCoroutine != null) 
+        {
+            StopCoroutine(attackCoroutine);
+            attackCoroutine = null;
+        }
+        if(unscaledTimeCoroutine != null) 
+        {
+            StopCoroutine(unscaledTimeCoroutine);
+            unscaledTimeCoroutine = null;
+        }
         Time.timeScale = 1f;
         Time.fixedDeltaTime = 0.02f;
-        currentCount = brutalData.isDoubleTime ? 2 : 1;
     }
 
     protected override void Start()
@@ -87,11 +95,6 @@ public class Werewolf : PlayerUnit
         base.FixedUpdate();
         SelectObjects();
     }
-
-    // private void LateUpdate()
-    // {
-    //     SelectObjects();
-    // }
 
     private IEnumerator UnscaledTime()
     {
@@ -115,16 +118,10 @@ public class Werewolf : PlayerUnit
 
     private bool RangedAttack(Vector3 clickPos)
     {
-        if(attackCoroutine != null) return false;
-        if (((Vector2)transform.position-(Vector2)clickPos).magnitude < ((Vector2)transform.position-shootingAnimationController.GetShootPosition()).magnitude) return false;
+        if(attackCoroutine != null || currentCount <= 0) return false;
+        if(((Vector2)transform.position-(Vector2)clickPos).magnitude < ((Vector2)transform.position-shootingAnimationController.GetShootPosition()).magnitude) return false;
         shootingAnimationController.AttackAni();
-        
-        var screenPoint = Input.mousePosition;
-        screenPoint.z = Camera.main.transform.position.z;
-        screenPoint = Camera.main.ScreenToWorldPoint(screenPoint);
-        screenPoint.z = 0;
-
-        shootingAnimationController.targetPosition = screenPoint;
+        shootingAnimationController.targetPosition = clickPos;
 
         attackCoroutine = StartCoroutine(AttackDelay(clickPos));
         currentCount--;
@@ -150,7 +147,7 @@ public class Werewolf : PlayerUnit
 
     private bool MeleeAttack(Vector3 clickPos)
     {
-        if(attackCoroutine != null) return false;
+        if(attackCoroutine != null || currentCount <= 0) return false;
         if(brutalData.brutalArea.x * 0.5f < Vector2.Distance(transform.position, clickPos)) return false;
         if(Physics2D.Linecast(transform.position, clickPos, 1<<LayerMask.NameToLayer("Map") | 1<<LayerMask.NameToLayer("Wall"))) return false;
         var hit = Physics2D.OverlapPoint(clickPos, 1<<LayerMask.NameToLayer("Enemy") | 1<<LayerMask.NameToLayer("GimmickObject"));
