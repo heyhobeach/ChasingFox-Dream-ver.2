@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.Collections;
 
 public static class NativeListExtensions
@@ -32,11 +33,19 @@ public static class NativeListExtensions
         {
             if (list[i].Equals(value))
             {
-                // RemoveAtSwapBack는 삭제 시 마지막 요소와 교체한 후 요소 수를 줄입니다.
                 list.RemoveAtSwapBack(i);
                 return true;
             }
         }
         return false;
+    }
+    public static List<T> ToList<T>(this NativeList<T> nativeList) where T : unmanaged
+    {
+        List<T> list = new List<T>(nativeList.Length);
+        for (int i = 0; i < nativeList.Length; i++)
+        {
+            list.Add(nativeList[i]);
+        }
+        return list;
     }
 }
