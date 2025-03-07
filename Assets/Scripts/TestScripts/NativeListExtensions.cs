@@ -1,13 +1,15 @@
 using System.Collections.Generic;
 using Unity.Collections;
+using System;
 
 public static class NativeListExtensions
 {
-    public static bool Contains<T>(this NativeList<T> list, T value) where T : unmanaged
+    public static bool Contains<T>(this NativeList<T> list, T value) where T : unmanaged, IEquatable<T>
     {
         for (int i = 0; i < list.Length; i++)
         {
-            if (list[i].Equals(value)) return true;
+            if(list[i].Equals(value))
+                return true;
         }
         return false;
     }
@@ -16,29 +18,29 @@ public static class NativeListExtensions
     {
         int start = 0;
         int end = list.Length - 1;
-
         while (start < end)
         {
             T temp = list[start];
             list[start] = list[end];
             list[end] = temp;
-
             start++;
             end--;
         }
     }
-    public static bool Remove<T>(this NativeList<T> list, T value) where T : unmanaged
+
+    public static bool Remove<T>(this NativeList<T> list, T value) where T : unmanaged, IEquatable<T>
     {
         for (int i = 0; i < list.Length; i++)
         {
-            if (list[i].Equals(value))
-            {
+            if(list[i].Equals(value))
+            { 
                 list.RemoveAtSwapBack(i);
                 return true;
             }
         }
         return false;
     }
+
     public static List<T> ToList<T>(this NativeList<T> nativeList) where T : unmanaged
     {
         List<T> list = new List<T>(nativeList.Length);

@@ -1,13 +1,15 @@
+using System;
 using System.Collections.Generic;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
 using UnityEngine;
 
+[BurstCompile]
 public struct PathFinding : IJob
 {
     [System.Serializable]
-    public struct Node
+    public struct Node : IEquatable<Node>
     {
         public bool isWall;
         public bool isRoad;
@@ -19,26 +21,10 @@ public struct PathFinding : IJob
 
         public int F { get { return G + H; } }
 
-        public static bool operator ==(Node node1, Node node2) => node1.x == node2.x && node1.y == node2.y;
-        public static bool operator !=(Node node1, Node node2) => !(node1 == node2);
+        // public static bool operator ==(Node node1, Node node2) => node1.x == node2.x && node1.y == node2.y;
+        // public static bool operator !=(Node node1, Node node2) => !(node1 == node2);
 
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Node))
-                return false;
-            Node other = (Node)obj;
-            return x == other.x && y == other.y;
-        }
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                int hash = 17;
-                hash = hash * 23 + x.GetHashCode();
-                hash -= hash * 23 + y.GetHashCode();
-                return hash;
-            }
-        }
+        public bool Equals(Node other) => x == other.x && y == other.y;
     }
 
     public Vector2Int bottomLeft;
@@ -89,14 +75,14 @@ public struct PathFinding : IJob
             OpenList.Remove(CurNode);
             ClosedList.Add(CurNode);
 
-            if (CurNode == TargetNode)
+            if (CurNode.Equals(TargetNode))
             {
                 TargetNode.ParentNode.x = CurNode.x;
                 TargetNode.ParentNode.y = CurNode.y;
                 Node TargetCurNode = TargetNode;
                 int count = 0;
 
-                while (TargetCurNode != StartNode)
+                while (!TargetCurNode.Equals(StartNode))
                 {
                     FinalNodeList.Add(TargetCurNode);
                     int i = GetIndex(TargetCurNode.ParentNode.x - bottomLeft.x, TargetCurNode.ParentNode.y - bottomLeft.y);
