@@ -17,16 +17,18 @@ public class CollectionInteractive : EventTrigger
 
         CollectionCanvasController.Instance.SetContentText(scriptorbleobj._context);
 
-        //Debug.Log("before show inven");
-        //GameManager.Instance.inventoryManager.showinven();
-        //Debug.Log("after show inven");
+    }
 
+    public void ReadingGlassPopup()
+    {
+        CollectionCanvasController.Instance.ImageSetPosition(new Vector2(this.gameObject.transform.position.x, this.gameObject.transform.position.y ));//+ GetComponent<BoxCollider2D>().bounds.extents.y * 2)
+        CollectionCanvasController.Instance.ImagePopup();
     }
     protected override void OnTriggerExit2D(Collider2D collision)
     {
-        Debug.Log("수집품 벗어남");
         CollectionCanvasController.Instance.PopupEnd();
         base.OnTriggerExit2D (collision);
+        eventIdx = 0;
         //closepopup
     }
 
