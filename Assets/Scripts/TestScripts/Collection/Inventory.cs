@@ -10,11 +10,18 @@ using UnityEngine.UI;
 public class Inventory : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    public class Info:News//이 부분 의존성 주입으로 수정 예정
+    public class Info//이 부분 의존성 주입으로 수정 예정
     {
+        public News news;
         //public string _name;
         public string context;
         //public Sprite image;
+        public Info(News news,string context)
+        {
+            this.news.image = news.image;
+            this.news.image_name = news.image_name;
+            this.context = context;
+        }
     }
 
     public class News
@@ -38,19 +45,22 @@ public class Inventory : MonoBehaviour
         newsDic = new Dictionary<int, News>();
         invenDic = new Dictionary<int, Info>();
     }
-    public void testFunc1()
-    {
-        Debug.Log("inventory 싱글톤 테스트");
-    }
 
     private Info SetInfoStruct(Collection.CollectionScriptorble collection)
     {
 
-        Info info=new Info(); 
-        info.image_name = collection._name;
-        info.context = collection._context;
-        info.image = collection.image;
-        Debug.Log(string.Format("{0},{1},{2}", info.image_name, info.context, "collection"));
+        News news = new News
+        {
+            image = collection.image,
+            image_name = collection._name
+        };
+
+
+        Info info=new Info(news,collection._context);
+        //info.image_name = collection._name;
+        //info.context = collection._context;
+        //info.image = collection.image;
+        Debug.Log(string.Format("{0},{1},{2}", info.news.image_name, info.context, "collection"));
         return info;
     }
 
@@ -62,7 +72,7 @@ public class Inventory : MonoBehaviour
         Debug.Log(string.Format("{0},{1}", _news.image_name, "news"));
         return _news;
     }
-    public void AddInventory(Collection.CollectionScriptorble collection)
+    public void AddInventory(Collection.CollectionScriptorble collection)//흔적
     {
         Debug.Log("AddInventory");
         if (invendata == null)
@@ -80,18 +90,17 @@ public class Inventory : MonoBehaviour
             }
             invenDic.Add(collection.id, SetInfoStruct(collection));
 
-            invendata.inventory = invenDic;
+            invendata.inventory = invenDic;//이 부분은 결국 scriptorble에 저장하기 위함 아닌가? 굳이 필요한가? 구조도 추가가 아닌 덮어쓰기 처럼 보이는데
             invenCount = invendata.inventory.Count;
             Debug.Log("inventory 흔적 개수" + invendata.inventory.Count);
-            Debug.Log(string.Format("흔적 추가 완료+{0} : {1},{2}",   collection.id, invenDic[collection.id].image_name, invenDic[collection.id].context));
+            Debug.Log(string.Format("흔적 추가 완료+{0} : {1},{2}",   collection.id, invenDic[collection.id].news.image_name, invenDic[collection.id].context));
         }
     }
-    public void AddNews(Collection.NewsScriptorble collection)
+    public void AddNews(Collection.NewsScriptorble collection)//뉴스
     {
         if (invendata == null)
         {
             invendata = Resources.Load("Inventory") as InventoryScripable;
-            //newsDic = new Dictionary<int, News>();
         }
         else
         {
@@ -105,10 +114,10 @@ public class Inventory : MonoBehaviour
             //    return;
             //}
             newsDic.Add(collection.id, SetInfoStruct(collection));
-            invendata.news= newsDic;
+            invendata.news= newsDic;//이 부분은 결국 scriptorble에 저장하기 위함 아닌가? 굳이 필요한가? 구조도 추가가 아닌 덮어쓰기 처럼 보이는데
             newsCount = invendata.news.Count;
             Debug.Log("inventory 뉴스 개수" + newsDic.Count);
-            Debug.Log(string.Format("뉴스 추가 완료+{0} : {1},{2}", collection.id, invenDic[collection.id].image, invenDic[collection.id].image_name));
+            Debug.Log(string.Format("뉴스 추가 완료+{0} : {1},{2}", collection.id, newsDic[collection.id].image, newsDic[collection.id].image_name));
         }
     }
 
@@ -131,11 +140,11 @@ public class Inventory : MonoBehaviour
             return null;
         }
     }
-    protected Info GetInfo()
-    {
-        Info info = new Info();
-        return info;
-    }
+    //protected Info GetInfo()//필요없는 부분처럼 보임
+    //{
+    //    Info info = new Info();
+    //    return info;
+    //}
 
 }
 
