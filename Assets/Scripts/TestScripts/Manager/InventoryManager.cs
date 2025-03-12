@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -9,12 +10,9 @@ public class InventoryManager : MonoBehaviour
 {
 
     private static InventoryManager instance;
-    private Inventory _inven;
 
-
-    public static InventoryManager Instance {  get { return instance; } }
+    public static InventoryManager Instance { get { return instance; } }
     InventoryScripable invendata;
-    InventoryScripable Newsdata;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created\
     private void Awake()
@@ -30,7 +28,7 @@ public class InventoryManager : MonoBehaviour
     /// <summary>
     /// 저장되어있는 인벤토리의 정보를 스크립터블로 옮길 예정
     /// </summary>
-    public void LoadInvenInfo() 
+    public void LoadInvenInfo()
     { }
 
     /// <summary>
@@ -44,18 +42,15 @@ public class InventoryManager : MonoBehaviour
 
 
 
-     public Inventory.Info GetInfo_(int id)
-    {
-        //if(invendata != null)
-        //{
-        //    for (int i = 0; i < invendata.inventory.Count; i++)
-        //    {
-        //        Info info = invendata.inventory[i];
-        //        Debug.Log("scriptorble"+info.name + info.context + info.image);
-        //    }
-        //}
-        return invendata.inventory[id];
-    }
+    /// <summary>
+    /// value 를 반환함
+    /// </summary>
+    /// <param name="id">찾고자하는 내용의 id</param>
+    /// <returns></returns>
+    public Inventory.Info GetInfo_(int id) => invendata.inventory[id];
+    //{
+    //    return invendata.inventory[id];
+    //}
 
 
     /// <summary>

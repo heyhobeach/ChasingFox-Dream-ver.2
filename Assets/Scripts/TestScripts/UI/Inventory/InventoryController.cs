@@ -11,6 +11,10 @@ public class InventoryController : MonoBehaviour
     /// 인벤토리 데이터 스크립터블을 갈아끼우기 위한 inventorydata
     /// </summary>
     public InventoryScripable inventorydata;
+    /// <summary>
+    /// 뷰포트 아래에 있는 선택지 버튼 리스트 저장용
+    /// </summary>
+    [Tooltip("뷰포트 하위 오브젝트 저장용")]
     public GameObject list;
 
     /// <summary>
@@ -21,28 +25,28 @@ public class InventoryController : MonoBehaviour
 
     GameObject contentObj;
 
+    /// <summary>
+    /// 흔적, 뉴스 분류 확인용
+    /// </summary>
     public bool is_trace = true;
 
+    /// <summary>
+    /// 인벤토리 몇번을 눌렀냐 확인용
+    /// </summary>
     public static int select_num;
-    void Start()
-    {
 
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
+    /// <summary>
+    /// 오브젝트 활성화 될 때 자동 사이즈 맞춤
+    /// </summary>
     private void OnEnable()
     {
         //Viewport = list.transform.GetChild(0).transform.GetChild(0).gameObject;
         content = list.transform.parent.gameObject;
-        RectTransform content_rect = content.GetComponent<RectTransform>();
-        contentObj = this.transform.GetChild(1).gameObject;
+        RectTransform content_rect = content.GetComponent<RectTransform>();//전체 사이즈 조절을 위해
+        contentObj = this.transform.GetChild(1).gameObject;//결과 보여주는창
         int count = 0;
-        for (int i = 0; i < list.transform.childCount; i++)
+        for (int i = 0; i < list.transform.childCount; i++)//활성화 되어있는
         {
             if (list.transform.GetChild(i).gameObject.activeSelf)
             {
@@ -51,14 +55,13 @@ public class InventoryController : MonoBehaviour
 
         }
         //Debug.Log("count =" + count);
-        content_rect.sizeDelta = new Vector2(content_rect.sizeDelta.x, count * 95);
+        content_rect.sizeDelta = new Vector2(content_rect.sizeDelta.x, count * 95);//아래 ui 크기 대충 맞추기
         list.GetComponent<RectTransform>().sizeDelta = new Vector2(content_rect.sizeDelta.x, count * 95);
     }
 
     public void NewsInventorySet()//inventoryCanvas ->News 오브젝트 버튼에 할당 되어있는 오브젝트
     {
         inventorydata = InventoryManager.Instance.GetInventoryAll();
-        //SetNewsListBox();
         ClearListBox();
         if (inventorydata.news == null)
         {
@@ -66,8 +69,7 @@ public class InventoryController : MonoBehaviour
             return;
         }
         Debug.Log("set News List" + inventorydata.news.Count);
-        if (4 > inventorydata.news.Count)//아마 화면에 뜨는게 4개 뜨던가
-        //if (list.transform.childCount<inventorydata.inventory.Count)
+        if (4 > inventorydata.news.Count)//아마 화면에 뜨는게 4개 뜨던가 오브젝트 생성 부분, 정확히 잘 되는지 확인해야함
         {
             for (int j = 0; j < 4; j++)
             {
@@ -131,7 +133,7 @@ public class InventoryController : MonoBehaviour
         contentObj.transform.GetChild(1).gameObject.SetActive(false);
         is_trace = true;
     }
-    public void SetTraceListBox()
+    public void SetTraceListBox()//이거 버튼 할당 안 되어있는 부분 같은데
     {
         ClearListBox();
 
@@ -141,7 +143,7 @@ public class InventoryController : MonoBehaviour
             return;
         }
         Debug.Log("set Trace List" + inventorydata.inventory.Count);
-        if (4 > inventorydata.inventory.Count)//아마 화면에 뜨는게 4개 뜨던가
+        if (4 > inventorydata.inventory.Count)//여기 수정 해야할듯
         //if (list.transform.childCount<inventorydata.inventory.Count)
         {
             for (int j = 0; j < 4; j++)
@@ -165,7 +167,7 @@ public class InventoryController : MonoBehaviour
         }
     }
 
-    public void SetNewsListBox()
+    public void SetNewsListBox()//이거 버튼 할당 안 되어있는 부분 같은데
     {
         ClearListBox();
         if (inventorydata.news == null)
@@ -174,7 +176,7 @@ public class InventoryController : MonoBehaviour
             return;
         }
         Debug.Log("set News List" + inventorydata.news.Count);
-        if (4 > inventorydata.news.Count)//아마 화면에 뜨는게 4개 뜨던가
+        if (4 > inventorydata.news.Count)//여기 수정 해야할듯
         //if (list.transform.childCount<inventorydata.inventory.Count)
         {
             for (int j = 0; j < 4; j++)
