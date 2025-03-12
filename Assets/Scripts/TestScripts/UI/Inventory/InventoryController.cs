@@ -125,7 +125,7 @@ public class InventoryController : MonoBehaviour
             buttonInfo.button_info = new System.Tuple<int, Inventory.Info>(item.Key, item.Value);//button에 Info 매칭 하는 부분
             GameObject text = gobj.transform.GetChild(0).gameObject;// 텍스트 부분
             //Debug.Log(text.name);
-            text.GetComponent<TMP_Text>().text = buttonInfo.button_info.Item2.image_name;
+            text.GetComponent<TMP_Text>().text = buttonInfo.button_info.Item2.news.image_name;
         }
         contentObj.transform.GetChild(0).gameObject.SetActive(true);
         contentObj.transform.GetChild(1).gameObject.SetActive(false);
@@ -161,7 +161,7 @@ public class InventoryController : MonoBehaviour
             buttonInfo.button_info = new System.Tuple<int, Inventory.Info>(item.Key, item.Value);//button에 Info 매칭 하는 부분
             GameObject text = gobj.transform.GetChild(0).gameObject;// 텍스트 부분
             //Debug.Log(text.name);
-            text.GetComponent<TMP_Text>().text = buttonInfo.button_info.Item2.image_name;
+            text.GetComponent<TMP_Text>().text = buttonInfo.button_info.Item2.news.image_name;
         }
     }
 

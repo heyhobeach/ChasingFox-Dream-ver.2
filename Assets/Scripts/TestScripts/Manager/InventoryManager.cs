@@ -47,7 +47,7 @@ public class InventoryManager : Inventory
             Debug.Log("수집품 존재");
             for (int i = 0; i < invenCount; i++)
             {
-                Debug.Log(string.Format("수집품 목록확인+{0} : {1},{2}", i, invenDic[i].image_name, invenDic[i].context));
+                //Debug.Log(string.Format("수집품 목록확인+{0} : {1},{2}", i, invenDic[i].image_name, invenDic[i].context));
             }
         }
         else

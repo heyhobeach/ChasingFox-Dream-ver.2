@@ -18,6 +18,7 @@ public class Inventory : MonoBehaviour
         //public Sprite image;
         public Info(News news,string context)
         {
+            this.news = news;
             this.news.image = news.image;
             this.news.image_name = news.image_name;
             this.context = context;
@@ -57,9 +58,6 @@ public class Inventory : MonoBehaviour
 
 
         Info info=new Info(news,collection._context);
-        //info.image_name = collection._name;
-        //info.context = collection._context;
-        //info.image = collection.image;
         Debug.Log(string.Format("{0},{1},{2}", info.news.image_name, info.context, "collection"));
         return info;
     }
@@ -77,9 +75,12 @@ public class Inventory : MonoBehaviour
         Debug.Log("AddInventory");
         if (invendata == null)
         {
+            Debug.LogError("InvendataNull");
             invendata = Resources.Load("Inventory") as InventoryScripable;
             //inventory = new Dictionary<int, Info>();
         }
+
+
         if (!invenDic.ContainsKey(collection.id))
         {
 
@@ -94,6 +95,10 @@ public class Inventory : MonoBehaviour
             invenCount = invendata.inventory.Count;
             Debug.Log("inventory 흔적 개수" + invendata.inventory.Count);
             Debug.Log(string.Format("흔적 추가 완료+{0} : {1},{2}",   collection.id, invenDic[collection.id].news.image_name, invenDic[collection.id].context));
+        }
+        else
+        {
+            Debug.Log("이미 있는 데이터");
         }
     }
     public void AddNews(Collection.NewsScriptorble collection)//뉴스
