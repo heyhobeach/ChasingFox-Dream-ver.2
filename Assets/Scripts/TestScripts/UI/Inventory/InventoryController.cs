@@ -131,72 +131,72 @@ public class InventoryController : MonoBehaviour
         contentObj.transform.GetChild(1).gameObject.SetActive(false);
         is_trace = true;
     }
-    public void SetTraceListBox()
-    {
-        ClearListBox();
-
-        if (inventorydata == null)//inventorydata.inventory null에러
-        {
-            Debug.LogError("수집품이 없음");
-            return;
-        }
-        Debug.Log("set Trace List" + inventorydata.inventory.Count);
-        if (4 > inventorydata.inventory.Count)//아마 화면에 뜨는게 4개 뜨던가
-        //if (list.transform.childCount<inventorydata.inventory.Count)
-        {
-            for (int j = 0; j < 4; j++)
-            {
-                GameObject obj = Instantiate(list.transform.GetChild(j).gameObject);
-                obj.transform.SetParent(list.transform);
-            }
-            //5개씩 추가 생성 안 부서지도록? 만약 매번 하면 지금 인벤토리 열때마다
-        }
-        int i = 0;
-        foreach (var item in inventorydata.inventory)//인벤 데이터 만큼 반복하면서 true 함
-        {
-            GameObject gobj = list.transform.GetChild(i).gameObject;
-            gobj.SetActive(true);
-            ButtonInfo buttonInfo = gobj.GetComponent<ButtonInfo>();
-
-            buttonInfo.button_info = new System.Tuple<int, Inventory.Info>(item.Key, item.Value);//button에 Info 매칭 하는 부분
-            GameObject text = gobj.transform.GetChild(0).gameObject;// 텍스트 부분
-            //Debug.Log(text.name);
-            text.GetComponent<TMP_Text>().text = buttonInfo.button_info.Item2.image_name;
-        }
-    }
-
-    public void SetNewsListBox()
-    {
-        ClearListBox();
-        if (inventorydata.news == null)
-        {
-            Debug.LogError("뉴스 없음");
-            return;
-        }
-        Debug.Log("set News List" + inventorydata.news.Count);
-        if (4 > inventorydata.news.Count)//아마 화면에 뜨는게 4개 뜨던가
-        //if (list.transform.childCount<inventorydata.inventory.Count)
-        {
-            for (int j = 0; j < 4; j++)
-            {
-                GameObject obj = Instantiate(list.transform.GetChild(j).gameObject);
-                obj.transform.SetParent(list.transform);
-            }
-            //5개씩 추가 생성 안 부서지도록? 만약 매번 하면 지금 인벤토리 열때마다
-        }
-        int i = 0;
-        foreach (var item in inventorydata.news)//인벤 데이터 만큼 반복하면서 true 함
-        {
-            GameObject gobj = list.transform.GetChild(i).gameObject;
-            gobj.SetActive(true);
-            ButtonInfo buttonInfo = gobj.GetComponent<ButtonInfo>();
-
-            buttonInfo.button_news = new System.Tuple<int, Inventory.News>(item.Key, item.Value);//button에 Info 매칭 하는 부분
-            GameObject text = gobj.transform.GetChild(0).gameObject;// 텍스트 부분
-            //Debug.Log(text.name);
-            text.GetComponent<TMP_Text>().text = buttonInfo.button_news.Item2.image_name;//여기부터 문제
-        }
-    }
+    //public void SetTraceListBox()
+    //{
+    //    ClearListBox();
+    //
+    //    if (inventorydata == null)//inventorydata.inventory null에러
+    //    {
+    //        Debug.LogError("수집품이 없음");
+    //        return;
+    //    }
+    //    Debug.Log("set Trace List" + inventorydata.inventory.Count);
+    //    if (4 > inventorydata.inventory.Count)//아마 화면에 뜨는게 4개 뜨던가
+    //    //if (list.transform.childCount<inventorydata.inventory.Count)
+    //    {
+    //        for (int j = 0; j < 4; j++)
+    //        {
+    //            GameObject obj = Instantiate(list.transform.GetChild(j).gameObject);
+    //            obj.transform.SetParent(list.transform);
+    //        }
+    //        //5개씩 추가 생성 안 부서지도록? 만약 매번 하면 지금 인벤토리 열때마다
+    //    }
+    //    int i = 0;
+    //    foreach (var item in inventorydata.inventory)//인벤 데이터 만큼 반복하면서 true 함
+    //    {
+    //        GameObject gobj = list.transform.GetChild(i).gameObject;
+    //        gobj.SetActive(true);
+    //        ButtonInfo buttonInfo = gobj.GetComponent<ButtonInfo>();
+    //
+    //        buttonInfo.button_info = new System.Tuple<int, Inventory.Info>(item.Key, item.Value);//button에 Info 매칭 하는 부분
+    //        GameObject text = gobj.transform.GetChild(0).gameObject;// 텍스트 부분
+    //        //Debug.Log(text.name);
+    //        text.GetComponent<TMP_Text>().text = buttonInfo.button_info.Item2.image_name;
+    //    }
+    //}
+    //
+    //public void SetNewsListBox()
+    //{
+    //    ClearListBox();
+    //    if (inventorydata.news == null)
+    //    {
+    //        Debug.LogError("뉴스 없음");
+    //        return;
+    //    }
+    //    Debug.Log("set News List" + inventorydata.news.Count);
+    //    if (4 > inventorydata.news.Count)//아마 화면에 뜨는게 4개 뜨던가
+    //    //if (list.transform.childCount<inventorydata.inventory.Count)
+    //    {
+    //        for (int j = 0; j < 4; j++)
+    //        {
+    //            GameObject obj = Instantiate(list.transform.GetChild(j).gameObject);
+    //            obj.transform.SetParent(list.transform);
+    //        }
+    //        //5개씩 추가 생성 안 부서지도록? 만약 매번 하면 지금 인벤토리 열때마다
+    //    }
+    //    int i = 0;
+    //    foreach (var item in inventorydata.news)//인벤 데이터 만큼 반복하면서 true 함
+    //    {
+    //        GameObject gobj = list.transform.GetChild(i).gameObject;
+    //        gobj.SetActive(true);
+    //        ButtonInfo buttonInfo = gobj.GetComponent<ButtonInfo>();
+    //
+    //        buttonInfo.button_news = new System.Tuple<int, Inventory.News>(item.Key, item.Value);//button에 Info 매칭 하는 부분
+    //        GameObject text = gobj.transform.GetChild(0).gameObject;// 텍스트 부분
+    //        //Debug.Log(text.name);
+    //        text.GetComponent<TMP_Text>().text = buttonInfo.button_news.Item2.image_name;//여기부터 문제
+    //    }
+    //}
 
 
     /// <summary>
