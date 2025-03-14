@@ -14,7 +14,7 @@ public class CollectionInteractive : EventTrigger
         Vector2 vec=Camera.main.WorldToScreenPoint(pos);
         CollectionCanvasController.Instance.SetPosition(this.gameObject.transform.position); 
         CollectionCanvasController.Instance.Popup();
-
+        Debug.Log(string.Format("내용 :{0}", scriptorbleobj._context));
         CollectionCanvasController.Instance.SetContentText(scriptorbleobj._context);
 
     }

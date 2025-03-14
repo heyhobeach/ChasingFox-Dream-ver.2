@@ -75,7 +75,16 @@ public class Inventory : MonoBehaviour
             Debug.LogError("InvendataNull");
             invendata = Resources.Load("Inventory") as InventoryScripable;
         }
-
+        //CollectionInteractive collectionInteractive = new GameObject("CollectionInteractive").AddComponent<CollectionInteractive>();    
+        //if (collectionInteractive == null)
+        //{
+        //    Debug.Log("collectionInteractive null");
+        //}
+        //else
+        //{
+        //    collectionInteractive.CallCollectionPopup(collection);
+        //}
+ 
 
         if (!invenDic.ContainsKey(collection.id))
         {
