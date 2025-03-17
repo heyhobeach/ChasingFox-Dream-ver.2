@@ -19,7 +19,7 @@ public partial class GameManager : MonoBehaviour
     private ControllerManager controllerManager;
     public InteractionEvent interactionEvent;
 
-    public InventoryManager inventoryManager;
+    //public InventoryManager inventoryManager;
     public GameObject inventoryCanvas;
 
     private event EnemyDeathDel onEnemyDeath;

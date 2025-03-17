@@ -72,7 +72,15 @@ public class UIManager : MonoBehaviour
     //public delegate void TestDel();
     //public TestDel testDel;
 
+    /// <summary>
+    /// 타이핑 속도 제어 위한 변수 , 명령어가 사용되었는지 확인을 위해 사용중임
+    /// </summary>
     bool isTyping = false;
+
+    /// <summary>
+    /// typing이 끝났는지 확인 위해서, static인 이유는 다른 클래스에서 해당 동작이 끝났는지 확인 하려고
+    /// </summary>
+    public static bool isTypingEnd = false;
 
     private delegate void delayDelegeate();
 
@@ -411,7 +419,7 @@ public class UIManager : MonoBehaviour
         //fixedVertical.GetComponent<VerticalLayoutGroup>().enabled = true;
         //첫 설정때 contentArr 설정 필요 지금 contentArr이 아무것도 없다고 되어있음 따라서 contentArr[0]에는 content가 들어가야함
         // string pattern = "<[^>]*>?";
-        if(isTyping)
+        if(isTyping)//만약 타이핑 관련 명령어 사용시 해당 값에따라 defalut인지 아닌지, 명령어 사용시 false로 되어서 defalt speed가 적용이 안됨
         {
             Array.Clear(typing_speed_arr,0,typing_speed_arr.Length);
             typing_speed = DEFAULT_SPEED;
@@ -421,6 +429,7 @@ public class UIManager : MonoBehaviour
         {
           DestroySelectBox();
         }
+        isTypingEnd = false;
         content.text = null;
         // if (content.color != Color.black)
         // {
@@ -434,6 +443,10 @@ public class UIManager : MonoBehaviour
         // string tag = "<";
         for (int i = 0; i < str.Length; i++)
         {
+            if (isTypingEnd)
+            {
+                break;
+            }
             IgnoreTag(str, ref i, ref typing_speed_arr);
             if (str[i]=='>') { continue; }
 
@@ -451,7 +464,9 @@ public class UIManager : MonoBehaviour
             yield return new WaitForSeconds(typing_speed);
         }
         //SetTypingSpeed(-1, -1, (int)(DEFAULT_SPEED*0.02f));
-        Debug.Log("타이핑 종료");
+        content.text = str;
+        isTypingEnd = true;
+        //Debug.Log("타이핑 종료");
         Array.Clear(typing_speed_arr, 0,typing_speed_arr.Length);
     }
 
