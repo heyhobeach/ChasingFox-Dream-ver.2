@@ -15,11 +15,11 @@ public class Bullet : MonoBehaviour
     public GameObject effectObj;
 
     private int damage;
-    private float speed;
+    public float speed;
 
     private Vector2 destination;
 
-    public GameObject parentGo;
+    [HideInInspector] public GameObject parentGo;
     private Rigidbody2D rg;
     private float startTime;
 

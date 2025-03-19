@@ -136,11 +136,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
 
     }
 
-    public bool Skile1(Vector2 pos)
-    {
-        if(changedForm.GetType() == typeof(Werewolf)) return ((Werewolf)changedForm).Skile1(pos);
-        return false;
-    }
+    public bool Skile1(Vector2 pos) => changedForm.Skile1(pos);
 
     private delegate bool FormChangeDelegate();
     private FormChangeDelegate formChangeDelegate;

@@ -1,6 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Unity.Collections;
+using Unity.Jobs;
+
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -8,44 +13,14 @@ using UnityEngine;
 
 public partial class GameManager : MonoBehaviour
 {
-    [System.Serializable]
-    public class Node
-    {
-        public bool isWall;
-        public bool isRoad;
-        public bool isPoint;
-        public bool isplatform;
-        public Node ParentNode;
-
-        public int x, y, G, H;
-
-        public int F { get { return G + H; } }
-        public Node(bool _isWall, bool _isRoad, bool _isPoint, bool _isPlatform, int _x, int _y) { 
-            isWall = _isWall; 
-            isRoad = _isRoad; 
-            isPoint = _isPoint; 
-            isplatform = _isPlatform;
-            if (isplatform || isPoint)
-            {
-                isRoad = true;
-            }
-            x = _x; 
-            y = _y; 
-        }
-    }
-
     public bool showNodes;
     public bool showPath;
 
     public Vector2 correctionPos;
     public Vector2Int bottomLeft, topRight, startPos;
     // public bool allowDiagonal, dontCrossCorner;
-    Node StartNode, TargetNode, CurNode;
-    List<Node> OpenList, ClosedList;
-    private List<Node> FinalNodeList;
-    List<string> NodeDistanceList;
-    public Node[,] NodeArray;
-    private bool isLoad;
+    public PathFinding.Node[,] NodeArray;
+    public bool isLoad;
 
     public IEnumerator MapSearchStart()
     {
@@ -61,7 +36,7 @@ public partial class GameManager : MonoBehaviour
         // NodeArray�� ũ�� �����ְ�, isWall, x, y ����
         int sizeX = topRight.x - bottomLeft.x + 1;
         int sizeY = topRight.y - bottomLeft.y + 1;
-        NodeArray = new Node[sizeX, sizeY];
+        NodeArray = new PathFinding.Node[sizeX, sizeY];
 
         for (int i = 0; i < sizeX; i++)//��κ� �ѹ��� ������
         {
@@ -84,228 +59,90 @@ public partial class GameManager : MonoBehaviour
                     }
                 }
                 if(!isWall) isWall = !isRoad && !isplatform;
+                if (isplatform || isPoint) isRoad = true;
 
-                NodeArray[i, j] = new Node(isWall, isRoad, isPoint, isplatform, i + bottomLeft.x, j + bottomLeft.y);
+                NodeArray[i, j] = new PathFinding.Node {
+                    isWall = isWall, 
+                    isRoad = isRoad, 
+                    isPoint = isPoint, 
+                    isplatform = isplatform,
+                    x = i + bottomLeft.x,
+                    y = j + bottomLeft.y,
+                    ParentNode = new Vector2Int(int.MinValue, int.MinValue)
+                };
             }
         }
     }
-    public List<Node> PathFinding(Vector3 startPosV3, Vector3 targetPosV3)
+
+    public void PathFind(Vector3 startPos, Vector3 targetPos, ref JobHandle jobHandle, ref PathFinding pathFinding)
     {
         if(NodeArray == null || isLoad)
         {
             // Debug.Log("Node Array not set");
             isLoad = true;
             NodeArray = null;
-            return new List<Node>();
+            return;
         }
-        lock (this)
+        try
         {
-        Vector2Int startPos = new Vector2Int((int)startPosV3.x, (int)startPosV3.y);
-        Vector2Int targetPos = new Vector2Int((int)targetPosV3.x, (int)targetPosV3.y);
-        StartNode = NodeArray[startPos.x - bottomLeft.x, startPos.y - bottomLeft.y];//���� �� �κ� ������ �߱��� �۵����� ������ ����
-        TargetNode = NodeArray[targetPos.x - bottomLeft.x, targetPos.y - bottomLeft.y];
-        int tempNum = 0;
-        Node tempNode = NodeArray[TargetNode.x - bottomLeft.x, TargetNode.y - bottomLeft.y+tempNum];
-        while(!tempNode.isRoad)
-        {
-            tempNum--;
-            tempNode = NodeArray[TargetNode.x - bottomLeft.x, TargetNode.y - bottomLeft.y+tempNum];
-        }
-        // Debug.Log("Path Setting");
-        TargetNode = NodeArray[TargetNode.x - bottomLeft.x, TargetNode.y - bottomLeft.y + tempNum];
-
-        OpenList = new List<Node>() { StartNode };
-        ClosedList = new List<Node>();
-        FinalNodeList = new List<Node>();
-        NodeDistanceList = new List<string>();
-
-        while (OpenList.Count > 0)
-        {
-            // ��������Ʈ �� ���� F�� �۰� F�� ���ٸ� H�� ���� �� ������� �ϰ� ��������Ʈ���� ��������Ʈ�� �ű��
-            CurNode = OpenList[0];
-            for (int i = 1; i < OpenList.Count; i++)
+            var tmeps = new Vector2Int((int)(startPos.x - bottomLeft.x), (int)(startPos.y - bottomLeft.y));
+            var tmept = new Vector2Int((int)(targetPos.x - bottomLeft.x), (int)(targetPos.y - bottomLeft.y));
+            if (tmeps.x >= 0 && tmeps.x < NodeArray.GetLength(0) &&
+                tmeps.y >= 0 && tmeps.y < NodeArray.GetLength(1) &&
+                tmept.x >= 0 && tmept.x < NodeArray.GetLength(0) &&
+                tmept.y >= 0 && tmept.y < NodeArray.GetLength(1))
             {
-                if (OpenList[i].F <= CurNode.F)
-                {
-                    CurNode = OpenList[i];
-                }
-            }
-
-            // Debug.Log("Finding");
-
-            OpenList.Remove(CurNode);
-            ClosedList.Add(CurNode);
-
-            // ������
-            if (CurNode == TargetNode)//���� ����
-            {
-                Node TargetCurNode = TargetNode;
-                int _cnt = 0;
-                // Debug.Log("���κ�");
-                while (TargetCurNode != StartNode)//�̰� �������� ������ �׻� ���� �ݺ��� �׷��ٸ� startnode�� �������
-                {
-                    _cnt++;
-                    if (_cnt > 2000)//Ȥ�ó� ���� �ݺ��� ��� ���� 
-                    {
-                        Debug.LogError("Path Cant Find Erorr");
-                        return null;
-                    }
-
-                    if (TargetCurNode.isplatform||TargetCurNode.ParentNode.isplatform)
-                    {
-                        if (targetPos.y > startPos.y)//����
-                        {
-                            if ((
-                                NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x - 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].isplatform
-                                && NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x - 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].isPoint
-                                && !TargetCurNode.isPoint))
-                            {//��
-                                Node temp;
-                                temp = TargetCurNode.ParentNode;
-                                NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y].ParentNode = temp;
-                                TargetCurNode.ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y];
-                            }
-                            if ((
-                                NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].isplatform
-                                && NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y + 1].isPoint
-                                && !TargetCurNode.isPoint))
-                            {//��
-                                Node temp;
-                                temp = TargetCurNode.ParentNode;
-                                NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y].ParentNode = temp;
-                                TargetCurNode.ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y];
-                            }
-                            if (NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y - 1].isplatform
-                               && NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y - 1].isPoint
-                               && !TargetCurNode.ParentNode.isPoint)
-                            {
-                                Node temp;
-                                temp = TargetCurNode.ParentNode;
-                                NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y - 1].ParentNode = temp;
-                                TargetCurNode.ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y - 1];
-                            }
-                            if (NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y - 1].isplatform
-       && NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y - 1].isPoint
-       && !TargetCurNode.ParentNode.isPoint)
-                            {
-                                Node temp;
-                                temp = TargetCurNode.ParentNode;
-                                NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y - 1].ParentNode = temp;
-                                TargetCurNode.ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y - 1];
-                            }
-                        }
-                        else if (targetPos.y < startPos.y)//�Ʒ� 
-                        {
-                            if ((
-                                NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y + 1].isplatform
-                                && NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y + 1].isPoint
-                                && !TargetCurNode.ParentNode.isPoint))
-                            {
-                                int sub = TargetCurNode.ParentNode.x-NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y + 1].x ;
-                                TargetCurNode.ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y + 1];
-
-                                for(int i = 0; i < sub; i++)
-                                {
-                                    NodeArray[TargetCurNode.x - bottomLeft.x - 1 + i, TargetCurNode.y - bottomLeft.y + 1].ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x + i, TargetCurNode.y - bottomLeft.y + 1];
-                                }
-                            }
-                            if ((
-                                NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y + 1].isplatform
-                                && NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y + 1].isPoint
-                                && !TargetCurNode.ParentNode.isPoint))
-                            {
-                                int sub = NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y + 1].x - TargetCurNode.ParentNode.x;
-                                TargetCurNode.ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y + 1];
-                                
-                                for(int i = 0; i < sub; i++)
-                                {
-                                    NodeArray[TargetCurNode.x - bottomLeft.x + 1-i, TargetCurNode.y - bottomLeft.y + 1].ParentNode= NodeArray[TargetCurNode.x - bottomLeft.x -i, TargetCurNode.y - bottomLeft.y + 1];
-                                }
-                            }
-                            if (NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x - 1, TargetCurNode.ParentNode.y - bottomLeft.y - 1].isplatform//parent���� x �÷��� ����
-                               && NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x - 1, TargetCurNode.ParentNode.y - bottomLeft.y - 1].isPoint
-                               && !TargetCurNode.isPoint)
-                            {
-                                TargetCurNode.ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x - 1, TargetCurNode.y - bottomLeft.y];
-                            }
-                            if (NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y - 1].isplatform
-       && NodeArray[TargetCurNode.ParentNode.x - bottomLeft.x + 1, TargetCurNode.ParentNode.y - bottomLeft.y - 1].isPoint
-        && !TargetCurNode.isPoint)
-                            {
-                                TargetCurNode.ParentNode = NodeArray[TargetCurNode.x - bottomLeft.x + 1, TargetCurNode.y - bottomLeft.y];                                               
-                            }
-                        }
-                    }
-                    
-                    FinalNodeList.Add(TargetCurNode);
-                    TargetCurNode = TargetCurNode.ParentNode;//�θ� �����κ�
-                }
-
-                FinalNodeList.Add(StartNode);
-                FinalNodeList.Reverse();
-                return FinalNodeList;
-            }
-
-
-            // �֢آע�
-            // if (allowDiagonal)
-            // {
-            // }
-            OpenListAdd(CurNode.x + 1, CurNode.y + 1);
-            OpenListAdd(CurNode.x - 1, CurNode.y + 1);
-            OpenListAdd(CurNode.x - 1, CurNode.y - 1);
-            OpenListAdd(CurNode.x + 1, CurNode.y - 1);
-
-            // �� �� �� ��
-            OpenListAdd(CurNode.x - 1, CurNode.y);
-            OpenListAdd(CurNode.x, CurNode.y + 1);
-            OpenListAdd(CurNode.x + 1, CurNode.y);
-            OpenListAdd(CurNode.x, CurNode.y - 1);
-        }
-        // Debug.Log("���� �� ��ǥ ��� ��ġ" + (TargetNode.y));
-        if (OpenList.Count == 0)
-        {
-
-            //Debug.Log(CurNode.x-bottomLeft.x);
-            if (CurNode == TargetNode)
-            {
-                Debug.Log("üũ");
+                pathFinding = new() { 
+                    startPosV3 = startPos, 
+                    targetPosV3 = targetPos, 
+                    bottomLeft = bottomLeft,
+                    topRight = topRight,
+                    NodeArray = ToNativeArray(NodeArray, Allocator.TempJob),
+                    OpenList = new NativeList<PathFinding.Node>(Allocator.TempJob),
+                    ClosedList = new NativeList<PathFinding.Node>(Allocator.TempJob),
+                    FinalNodeList = new NativeList<PathFinding.Node>(Allocator.TempJob),
+                    Height = NodeArray.GetLength(1), 
+                    Width = NodeArray.GetLength(0) 
+                    };
+                jobHandle = pathFinding.Schedule();
             }
         }
-        Debug.LogError("Path lost Erorr");
-        return null;
+        catch(Exception e)
+        {
+            Debug.LogError(e);
+            pathFinding.OpenList.Dispose();
+            pathFinding.ClosedList.Dispose();
+            pathFinding.NodeArray.Dispose();
+            pathFinding.FinalNodeList.Dispose();
+            throw e;
         }
+
+        return;
     }
 
-    private void OpenListAdd(int checkX, int checkY)
+    public static NativeArray<PathFinding.Node> ToNativeArray(PathFinding.Node[,] nodeArray, Allocator allocator)
     {
-        // �����¿� ������ ����� �ʰ�, ���� �ƴϸ鼭, ��������Ʈ�� ���ٸ�
-        if (checkX >= bottomLeft.x && checkX < topRight.x + 1 && checkY >= bottomLeft.y && checkY < topRight.y + 1 && !NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y].isWall && !ClosedList.Contains(NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y]))
+        if (nodeArray == null)
+            throw new ArgumentNullException(nameof(nodeArray));
+
+        int width = nodeArray.GetLength(0);
+        int height = nodeArray.GetLength(1);
+        int length = width * height;
+        NativeArray<PathFinding.Node> nativeArray = new NativeArray<PathFinding.Node>(length, allocator);
+
+        // 행 우선 순서: x 값이 빠르게 변화하고, 이후 y 값이 증가
+        for (int y = 0; y < height; y++)
         {
-            // �밢�� ����, �� ���̷� ��� �ȵ�
-            // if (allowDiagonal) if (NodeArray[CurNode.x - bottomLeft.x, checkY - bottomLeft.y].isWall && NodeArray[checkX - bottomLeft.x, CurNode.y - bottomLeft.y].isWall) return;
-
-            // �ڳʸ� �������� ���� ������, �̵� �߿� �������� ��ֹ��� ������ �ȵ�
-            // if (dontCrossCorner) if (NodeArray[CurNode.x - bottomLeft.x, checkY - bottomLeft.y].isWall || NodeArray[checkX - bottomLeft.x, CurNode.y - bottomLeft.y].isWall) return;
-
-            if (NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y].isRoad)//checkx�� checky���� �˾ƾ���
+            for (int x = 0; x < width; x++)
             {
-                Node NeighborNode = NodeArray[checkX - bottomLeft.x, checkY - bottomLeft.y];
-                int MoveCost = CurNode.G + (CurNode.x - checkX == 0 || CurNode.y - checkY == 0 ? 10 : 14);
-                if(NeighborNode.isPoint) MoveCost = CurNode.G - 28;
-
-                // �̵������ �̿����G���� �۰ų� �Ǵ� ��������Ʈ�� �̿���尡 ���ٸ� G, H, ParentNode�� ���� �� ��������Ʈ�� �߰�
-                if (MoveCost < NeighborNode.G || !OpenList.Contains(NeighborNode))
-                {
-                    NeighborNode.G = MoveCost;
-                    NeighborNode.H = (Mathf.Abs(NeighborNode.x - TargetNode.x) + Mathf.Abs(NeighborNode.y - TargetNode.y)) * 10;
-                    NeighborNode.ParentNode = CurNode;
-
-                    OpenList.Add(NeighborNode);
-                }
+                int index = x + y * width;
+                nativeArray[index] = nodeArray[x, y];
             }
         }
+
+        return nativeArray;
     }
+
 #if UNITY_EDITOR
     void OnDrawGizmos()
     {
@@ -326,17 +163,17 @@ public partial class GameManager : MonoBehaviour
                 Handles.Label(new Vector3(node.x+correctionPos.x, node.y+correctionPos.y), "G : " + node.G +  "\nH : " + node.H +  "\nF : " + node.F);
             }
         }
-        if(showPath)
-        {
-            Gizmos.color = Color.white;
-            Node prv = null;
-            if(FinalNodeList == null) return;
-            foreach(var node in FinalNodeList)
-            {
-                if(prv != null) Gizmos.DrawLine(new Vector3(prv.x+correctionPos.x, prv.y+correctionPos.y), new Vector3(node.x+correctionPos.x, node.y+correctionPos.y));
-                prv = node;
-            }
-        }
+        // if(showPath)
+        // {
+        //     Gizmos.color = Color.white;
+        //     Node prv = null;
+        //     if(FinalNodeList == null) return;
+        //     foreach(var node in FinalNodeList)
+        //     {
+        //         if(prv != null) Gizmos.DrawLine(new Vector3(prv.x+correctionPos.x, prv.y+correctionPos.y), new Vector3(node.x+correctionPos.x, node.y+correctionPos.y));
+        //         prv = node;
+        //     }
+        // }
     }
 #endif
 }
