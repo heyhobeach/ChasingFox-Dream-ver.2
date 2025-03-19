@@ -18,6 +18,13 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public GameObject Vertical;
 
+    /// <summary>
+    /// 대화 끝나고 움질일 애니메이션
+    /// </summary>
+    public GameObject gobj;
+
+    IEnumerator textEndAnim;
+
     //public Transform targetTransform;
     /// <summary>
     /// 선택지 생성한 오브젝트 담는 배열
@@ -107,6 +114,7 @@ public class UIManager : MonoBehaviour
         imagesetter=this.transform.GetChild(0).GetComponent<SetCharImage>();
         TextBoxSizeChange();
         CharactorImageSizeChange();
+        textEndAnim = MoveAnim(gobj);
 
         //Debug.Log("intRect test"+intRect.sizeDelta + "" + intRect.position);
         // setTestPosition(targetTransform.position);
@@ -339,13 +347,19 @@ public class UIManager : MonoBehaviour
     public void SetContent(string _content)
     {
         //while (!UIController.Instance.is_dialogue_on)
+        StopMoveAnim(gobj);
+        //StopCoroutine(textEndAnim);
         StopCoroutine(co);
+        textEndAnim = MoveAnim(gobj);//위아래 움직임
+        //gobj.SetActive(true);
+
         // int br_count = 0;
         //float width=content.fontSize* GetContentLength(_content, ref br_count);
         //float hight = content.fontSize + (content.fontSize * br_count);
         //content.rectTransform.sizeDelta = new Vector2(width, hight);
         co = Typing(_content,isTyping);
         StartCoroutine(co);
+
     }
     // public async void SetContent(string[] _contentArr)//배열로 받을 예정 선택지 관련 내용 , 여기서 배열로 사용 예정
     public void SetContent(string[] _contentArr)//배열로 받을 예정 선택지 관련 내용 , 여기서 배열로 사용 예정
@@ -355,12 +369,12 @@ public class UIManager : MonoBehaviour
         //float width = content.fontSize * GetContentLength(_contentArr, ref br_count);//여기부분은 수정 해야하는데 아마 선택지에 br이 안들어갈거같아서 방치
         //float hight = content.fontSize + (content.fontSize * br_count);              //
         //content.rectTransform.sizeDelta = new Vector2(width, hight);                 //
-    
+        StopMoveAnim(gobj);
         CreatSelect(_contentArr);
-        Debug.Log("비동기 시작");
+        //Debug.Log("비동기 시작");
         //await ImageSliding();
         //await imagesetter.ImageAnim();
-        Debug.Log("비동기 끝");
+        //Debug.Log("비동기 끝");
         //co = TextSliding(_contentArr);//선택지 배열 움직이는 슬라이딩 애니메이션
         //StartCoroutine(co);
     }
@@ -468,6 +482,8 @@ public class UIManager : MonoBehaviour
         isTypingEnd = true;
         //Debug.Log("타이핑 종료");
         Array.Clear(typing_speed_arr, 0,typing_speed_arr.Length);
+        gobj.SetActive(true);
+        //StartCoroutine(textEndAnim);
     }
 
     /// <summary>
@@ -740,6 +756,50 @@ public class UIManager : MonoBehaviour
         }
         main_rect.position= new Vector3(transform.GetComponent<RectTransform>().rect.width * 0.3f / 4, yPox / 2, 0);
         Debug.Log("5초끝");
+
+    }
+
+    //[ContextMenu("코루틴 테스트")]
+    //public void startroutine()
+    //{
+    //    StartCoroutine(MoveAnim(gobj));
+    //}
+
+    //IEnumerator 
+
+    private void StopMoveAnim(GameObject gameObject )
+    {
+        gameObject.SetActive(false);
+        StopCoroutine(textEndAnim);
+    }
+    IEnumerator MoveAnim(GameObject gameObject)
+    {
+        gameObject.SetActive(true);
+        float start = gameObject.transform.localPosition.y;
+        float alpha = 0;
+        float time = 1f;
+        float range = 50;
+        float end = start+range;
+        while (true)
+        {
+
+            float t = alpha / time;
+            float y = Mathf.Lerp(start, end, t);
+            //  Debug.Log("lefp : "+ y);
+            gameObject.transform.localPosition = new Vector3(gameObject.transform.localPosition.x, y, gameObject.transform.localPosition.z);
+            Debug.Log("GameObject position = " + gameObject.transform.localPosition);
+            alpha += Time.deltaTime;
+            yield return null;
+            if (gameObject.transform.localPosition.y == end)
+            {
+                range *= -1;
+                Debug.Log("도착");
+                start = gameObject.transform.localPosition.y;
+                end = start + range;
+                alpha = 0;
+            }
+        }
+
 
     }
 

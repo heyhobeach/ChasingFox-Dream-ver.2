@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -6,7 +7,7 @@ using UnityEngine.UIElements;
 public class MysteryCanvas : MonoBehaviour,IPointerClickHandler,IBeginDragHandler,IEndDragHandler,IDragHandler
 {
 
-
+    public GameObject gobj;
 
     bool wordClicked=false;
     //click과 drag둘다 필요할까? 하다면 클릭으로 해야하지 않는가
@@ -49,16 +50,7 @@ public class MysteryCanvas : MonoBehaviour,IPointerClickHandler,IBeginDragHandle
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        //GameObject gobj = eventData.pointerCurrentRaycast.gameObject;
-        //Debug.Log("클릭"+gobj.name);
-        //if (gobj.name == "word")
-        //{
-        //    wordClicked = true;
-        //}
-        //else
-        //{
-        //    wordClicked = false;
-        //}
+
     }
 
 }
