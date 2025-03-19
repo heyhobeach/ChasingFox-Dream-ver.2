@@ -37,7 +37,9 @@ namespace BehaviourTree
 
         protected override NodeState OnUpdate()
         {
-            if(blackboard.target != null && (blackboard.target.transform.position-blackboard.thisUnit.transform.position).magnitude < blackboard.thisUnit.attackDistance * 0.7f)
+            if(blackboard.target != null 
+                && (blackboard.target.transform.position-blackboard.thisUnit.transform.position).magnitude < blackboard.thisUnit.attackDistance * 0.7f
+                && blackboard.thisUnit.AttackCheck(blackboard.target.position))
             {
                 blackboard.thisUnit.SetFlipX(Mathf.Sign((blackboard.thisUnit.transform.position-blackboard.target.transform.position).x) > 0);
                 return NodeState.Success;
