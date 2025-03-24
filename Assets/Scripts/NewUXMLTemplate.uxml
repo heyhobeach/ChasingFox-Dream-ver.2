@@ -1,4 +1,8 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/Scripts/NewUSSFile.uss?fileID=7433441132597879392&amp;guid=3c5ba5d19934de243b83383a82ad9b71&amp;type=3#NewUSSFile" />
-    <engine:Label text="이 문장에서 클릭 가능한 텍스트를 눌러보세요." class="clickable a" />
+        <engine:VisualElement>
+        <engine:TextElement  text="이 문장에서 " class="sentence" />
+        <engine:TextElement  name="clickableWord" class="clickable" text="클릭 가능한 텍스트" />
+        <engine:TextElement  text="를 눌러보세요." class="sentence" />
+    </engine:VisualElement>
 </engine:UXML>
