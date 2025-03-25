@@ -1,8 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using UnityEngine;
+using static InteractionEvent;
 
 public class DialogueParser : MonoBehaviour
 {
@@ -45,9 +48,24 @@ public class DialogueParser : MonoBehaviour
         }
 
         string[] data =csvData.text.Split(new char[] { '\n' });//공백분리 split('\n')
+        row= Regex.Split(data[0], SPLIT_RE);
+        Debug.Log("data[0]" + data[0]);
+        foreach (var i in row)
+        {
+            Debug.Log("내용" + i);
+        }
+
+        string[] category = { "string_kr", "Chapter", "C_name", "id", "command", "image_name", "dir" };
+        Debug.Log("row length" + row.Length);
+        foreach(string item in category) { 
+           
+           string find =  Array.Find(row, target => target == item);
+            Debug.Log(row[1] +"Find" + item+find);
+        }
+
 
         //Debug.Log("last index " + DatabaseManager.instance.lastIndex+"data length"+(data.Length-1));
-        for(int i=1+DatabaseManager.instance.lastIndex;i<data.Length-1;)//ID 1번 부터 위에는 다른거라서 필요없음
+        for (int i=1+DatabaseManager.instance.lastIndex;i<data.Length-1;)//ID 1번 부터 위에는 다른거라서 필요없음
         {
             // int command_num = 0;
             List<string> commandList = new List<string>();

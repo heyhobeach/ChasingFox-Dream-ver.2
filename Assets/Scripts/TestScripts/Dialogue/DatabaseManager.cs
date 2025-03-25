@@ -18,8 +18,8 @@ public class DatabaseManager : MonoBehaviour
 
     public int chapter = 0;//추후 0으로 수정 필요 이유 튜토리얼이 0부터 시작하기에
 
-    Dictionary<int, Dialogue> dialogueDic =new Dictionary<int, Dialogue>();
-    DialogueParser theParser;
+    public Dictionary<int, Dialogue> dialogueDic =new Dictionary<int, Dialogue>();
+    public DialogueParser theParser;
 
     public int endLine = 0, startLine = 0;//start = 0 end 대화 끝 시점 => start = end , end = 대화 끝 반복(짜야함) 딕셔너리 접근용 수
     public int lastIndex = 0;
@@ -88,6 +88,7 @@ public class DatabaseManager : MonoBehaviour
             dialogueDic.Add(i +1, dialogues[i]);
         }
     }
+
 
     public Dialogue[] GetDialogues(int startNum ,int endNum)
     {
