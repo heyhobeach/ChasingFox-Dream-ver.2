@@ -59,8 +59,8 @@ public class DialogueParser : MonoBehaviour
         Debug.Log("row length" + row.Length);
         foreach(string item in category) { 
            
-           string find =  Array.Find(row, target => target == item);
-            Debug.Log(row[1] +"Find" + item+find);
+           bool find =  Array.Exists(row, target => target == item);
+            Debug.Log(string.Format("find {0} : {1}", item,find?"exist":"no exist"));
         }
 
 
