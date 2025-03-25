@@ -47,18 +47,21 @@ public class UI_DynamicText : MonoBehaviour
         //DialogueParser parser = new DialogueParser();
         //parser.Parse("테스트파일");
         Dialogue[] tempdialogue = DatabaseManager.instance.theParser.Parse("테스트파일2");//일지 파일 명으로 변경
+        Debug.Log("tempdialogue length" + tempdialogue.Length);
         //Dictionary<int, Dialogue> dialogueDic = new Dictionary<int, Dialogue>();
         DatabaseManager.instance.dialogueDic.Clear();
+        Debug.Log("before dialogue dic lenght"+DatabaseManager.instance.dialogueDic.Count);    
         for (int i = 0; i < tempdialogue.Length; i++)
         {
             
             DatabaseManager.instance.dialogueDic.Add(i + 1, tempdialogue[i]);
         }
+        Debug.Log("after dialogue dic lenght" + DatabaseManager.instance.dialogueDic.Count);
         Dialogue[] dialogues = DatabaseManager.instance.GetDialogues(0, 5);
 
         foreach (var i in dialogues)
         {
-            Debug.Log("dialogues"+i.name);
+            Debug.Log("dialogues" + i.context[0]);
         }
     }
 
