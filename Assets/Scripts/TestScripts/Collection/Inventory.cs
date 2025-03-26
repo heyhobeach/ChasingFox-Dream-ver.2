@@ -34,6 +34,12 @@ public class Inventory : MonoBehaviour
     public Dictionary<int, News> newsDic;//static으로 해결은 가능한데
     InventoryScripable invendata;
 
+    /// <summary>
+    /// 테스트 종료후 삭제하세요, 데이터 미리 넣어서 테스트 하기 용도입니다 추후 인벤토리 저장 기능이 생기면 필요없습니다
+    /// </summary>
+    [SerializeField]
+    private Collection.CollectionScriptorble[] tempcollections;
+
     public int invenCount;
     public int newsCount;
 
@@ -42,6 +48,12 @@ public class Inventory : MonoBehaviour
         invendata = Resources.Load("Inventory") as InventoryScripable;
         newsDic = new Dictionary<int, News>();
         invenDic = new Dictionary<int, Info>();
+
+        
+        foreach(var collection in tempcollections)//테스트 이후 삭제하세요 미리 설정한 데이터를 삽입 하는 용입니다 추후 인벤토리 저장 기능이 생기면 필요없습니다
+        {
+            AddInventory(collection);
+        }
     }
 
     private Info SetInfoStruct(Collection.CollectionScriptorble collection)

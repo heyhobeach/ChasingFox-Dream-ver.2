@@ -10,6 +10,20 @@ public class UI_DynamicText : MonoBehaviour
 {
     private void OnEnable()
     {
+        InventoryScripable inventoryScripable = InventoryManager.Instance.GetInventoryAll();//인벤토리에서 데이터를 가져옴
+        if (inventoryScripable.inventory != null)
+        {
+            Debug.Log(inventoryScripable);
+            foreach (var item in inventoryScripable.inventory)
+            {
+                Debug.Log(item.Value.context);
+            }
+        }
+        else
+        {
+            Debug.LogError("inventoryScripable Null");
+        }
+
         // UIDocument에서 rootVisualElement 가져오기
         var root = GetComponent<UIDocument>().rootVisualElement;
 
@@ -66,7 +80,7 @@ public class UI_DynamicText : MonoBehaviour
 
     }
 
-    private void SetDiaryText(ref VisualElement textContainer)
+    private void SetDiaryText(ref VisualElement textContainer)//데이터를 가져와서 사용하는 부분
     {
         List<TextElement> textList = new List<TextElement>();
         Dialogue[] dialogues = StartEvent();
