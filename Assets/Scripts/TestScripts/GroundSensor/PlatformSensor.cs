@@ -42,6 +42,7 @@ public class PlatformSensor : MonoBehaviour
     }
 
     private void OnCollisionEnter2D(Collision2D collision) => CheckCollision(collision);
+    private void OnCollisionStay2D(Collision2D collision) => CheckCollision(collision);
     private void OnCollisionExit2D(Collision2D collision)
     {
         if(collision.gameObject.CompareTag("platform")) 
