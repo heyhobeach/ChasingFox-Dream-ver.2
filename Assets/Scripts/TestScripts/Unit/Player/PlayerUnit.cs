@@ -52,13 +52,6 @@ public abstract class PlayerUnit : UnitBase
         switch (CheckMapType(collision))
         {
             case MapType.Ground:
-                if(isJumping) 
-                {
-                    SetVerticalForce(0);
-                    SetVerticalVelocity(0);
-                    isJumping = false;
-                }
-                break;
             case MapType.Platform:
                 if(isJumping) 
                 {
@@ -109,7 +102,6 @@ public abstract class PlayerUnit : UnitBase
 
     protected virtual void FixedUpdate()
     {
-        isGrounded = mapSensor.isGrounded;
         AddGravity();
         AddFrictional();
         SetHorizontalForce(hzVel);
@@ -117,6 +109,7 @@ public abstract class PlayerUnit : UnitBase
         if(Mathf.Abs(hzForce) <= 0.01f * movementSpeed) hzForce = 0;
         if(vcForce < 0 && isGrounded) vcForce = 0;
         Movement();
+        isGrounded = mapSensor.isGrounded;
     }
 
     protected override void OnEnable()
@@ -147,6 +140,7 @@ public abstract class PlayerUnit : UnitBase
                 isJumping = true;
                 jumpingHight = 0;
                 SetVerticalForce(0);
+                AddVerticalForce(jumpImpulse);
                 SetVerticalVelocity(0);
                 AddVerticalVelocity(jumpImpulse);
                 return true;
@@ -255,7 +249,7 @@ public abstract class PlayerUnit : UnitBase
     {
         Debug.Assert(mapSensor.normal != Vector2.right, "Vector2.right(1, 0) 아님\nVector2.up으로 교체해주세요.");
 
-        if(isGrounded && !isJumping && Mathf.Abs(hzVel) > 0)
+        if(isGrounded && !isJumping && Mathf.Abs(hzForce) > 0)
         {
             int layerMask = 0;
             switch(mapSensor.groundType)
