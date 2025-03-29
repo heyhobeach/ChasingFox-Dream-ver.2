@@ -15,7 +15,7 @@ public class PlatformScript : MonoBehaviour
     private void Awake()
     {
         platformScr = GetComponent<PlatformEffector2D>();
-        waitForSeconds = new WaitForSeconds(0.2f);
+        waitForSeconds = new WaitForSeconds(0.02f);
     }
 
     private void OnTriggerExit2D(Collider2D collider)
@@ -31,9 +31,4 @@ public class PlatformScript : MonoBehaviour
 
     public void RemoveColliderMask(int layer) => platformScr.colliderMask &= ~layer;
     public void AddColliderMask(int layer) => platformScr.colliderMask |= layer;
-    public int GetUpDown(Vector2 otherPos)
-    {
-        var temp = otherPos - (Vector2)transform.position;
-        return (int) Mathf.Sign(temp.y);
-    }
 }

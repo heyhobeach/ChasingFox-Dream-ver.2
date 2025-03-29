@@ -83,6 +83,19 @@ public class Werewolf : PlayerUnit
         Time.fixedDeltaTime = 0.02f;
     }
 
+    // private void Awake()
+    // {
+    //     formChangeTest += () => UnrestrictedRangedAttack(ClickPos());
+
+    //     Vector3 ClickPos()
+    //     {
+    //         var screenPoint = Input.mousePosition;//마우스 위치 가져옴
+    //         screenPoint.z = Camera.main.transform.position.z;
+    //         Vector3 pos = Camera.main.ScreenToWorldPoint(screenPoint);
+    //         pos.z = 0;
+    //         return pos;
+    //     }
+    // }
     protected override void Start()
     {
         Init();
@@ -110,7 +123,7 @@ public class Werewolf : PlayerUnit
                 maskImage.material.SetFloat("_Alpha", Utils.EaseFromTo(0, brutalData.brutalTime, currentTime, EaseType.EaseOut) / brutalData.brutalTime);
             }
             else formChangeTest?.Invoke();
-            if(unitState == UnitState.Death) formChangeTest?.Invoke();
+            if(currentCount > 0) formChangeTest?.Invoke();
         }
     }
 
@@ -120,6 +133,10 @@ public class Werewolf : PlayerUnit
     {
         if(attackCoroutine != null || currentCount <= 0) return false;
         if(((Vector2)transform.position-(Vector2)clickPos).magnitude < ((Vector2)transform.position-shootingAnimationController.GetShootPosition()).magnitude) return false;
+        return UnrestrictedRangedAttack(clickPos);
+    }
+    private bool UnrestrictedRangedAttack(Vector3 clickPos)
+    {
         shootingAnimationController.AttackAni();
         shootingAnimationController.targetPosition = clickPos;
 
@@ -127,7 +144,7 @@ public class Werewolf : PlayerUnit
         currentCount--;
         return true;
     }
-    private IEnumerator AttackDelay(Vector3 clickPos)
+    public IEnumerator AttackDelay(Vector3 clickPos)
     {
         yield return null;
         base.Attack(clickPos);
@@ -138,7 +155,15 @@ public class Werewolf : PlayerUnit
         {
             GameObject _bullet = Instantiate(BulletAttack);//총알을 공격포지션에서 생성함
             GameObject gObj = this.gameObject;
-            _bullet.GetComponent<Bullet>().Set(shootingAnimationController.GetShootPosition(), clickPos, shootingAnimationController.GetShootRotation(), 1, 100, gObj, Vector2.zero);
+            _bullet.GetComponent<Bullet>().Set(
+                shootingAnimationController.GetShootPosition(), 
+                clickPos, 
+                shootingAnimationController.GetShootRotation(), 
+                1, 
+                100, 
+                gObj, 
+                Vector2.zero
+            );
         };
         yield return new WaitForSecondsRealtime(0.5f);
         attackCoroutine = null;
@@ -157,7 +182,7 @@ public class Werewolf : PlayerUnit
         base.FormChange();
         currentCount--;
         var addPos = ((Vector2)clickPos - (Vector2)transform.position).normalized;
-        rg.transform.position = (Vector3)clickPos;
+        rg.transform.position = hit.transform.position;
         // rg.transform.position = (Vector3)(((Vector2)clickPos + (addPos * 0.5f)) - Vector2.down *0.5f);
         base.Attack(clickPos);
         meleeAttack.transform.position = clickPos;

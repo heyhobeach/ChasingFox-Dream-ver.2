@@ -77,7 +77,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         changedForm = forms[playerData.formIdx];
         ((Werewolf)forms[1]).brutalData = playerData.brutalData;
         ((Werewolf)forms[1]).currentGauge = playerData.brutalGaugeRemaining;
-        ((Werewolf)forms[1]).formChangeTest = () => FormChange();
+        ((Werewolf)forms[1]).formChangeTest += () => FormChange();
         formChangeDelegate = HumanToWerewolf;
         ((Werewolf)forms[1]).currentCount = brutalData.isDoubleTime ? 2 : 1;
         foreach(PlayerUnit form in forms) 
@@ -161,6 +161,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
             changedForm.gameObject.SetActive(false);
             changedForm = forms[0];
             changedForm.gameObject.SetActive(true);
+            Attack(ClickPos());
             Dash();
             Reload(); 
             formChangeDelegate = HumanToWerewolf;
@@ -170,6 +171,15 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
             changedForm.FormChange();
         }
         return true;
+
+        Vector3 ClickPos()
+        {
+            var screenPoint = Input.mousePosition;//마우스 위치 가져옴
+            screenPoint.z = Camera.main.transform.position.z;
+            Vector3 pos = Camera.main.ScreenToWorldPoint(screenPoint);
+            pos.z = 0;
+            return pos;
+        }
     }
 
     public bool Reload() => changedForm.Reload(); 

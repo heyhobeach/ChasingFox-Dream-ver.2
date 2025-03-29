@@ -141,10 +141,19 @@ public class Human : PlayerUnit
             {
                 GameObject _bullet = Instantiate(bullet);//총알을 공격포지션에서 생성함
                 GameObject gObj = this.gameObject;
-                _bullet.GetComponent<Bullet>().Set(shootingAnimationController.GetShootPosition(), clickPos, shootingAnimationController.GetShootRotation(), bulletDamage, bulletSpeed, gObj, Vector2.zero, () => {
+                _bullet.GetComponent<Bullet>().Set(
+                    shootingAnimationController.GetShootPosition(), 
+                    clickPos, 
+                    shootingAnimationController.GetShootRotation(), 
+                    bulletDamage, 
+                    bulletSpeed, 
+                    gObj, 
+                    Vector2.zero, 
+                    () => {
                     var player = rg.GetComponent<Player>();
                     ((Werewolf)player.forms[1]).currentGauge += player.brutalData.getGage;
-                });
+                    }
+                );
                 residualAmmo--;
             }
             isAttack = false;
