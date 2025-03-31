@@ -339,7 +339,7 @@ public class InteractionEvent : MonoBehaviour
 
     public void SetSkip(bool skip)
     {
-        // Debug.Log("int setskip");
+        Debug.Log("int setskip");
         isSkip = skip;
     }
     public void SetSkip(Transform tf) { }
@@ -412,6 +412,7 @@ public class InteractionEvent : MonoBehaviour
     }
     public void SetNextContext()
     {
+        Debug.Log("next image");
         //Debug.Log("postcommand");
         CallCommand(ref postcommands);//이후 실행되어야하는 명령어들
         //EditorApplication.isPaused = true;

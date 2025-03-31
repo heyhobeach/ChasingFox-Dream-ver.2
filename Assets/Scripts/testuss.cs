@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,19 +20,11 @@ public class UI_DynamicText : MonoBehaviour
 
         foreach(var key in keys)//현재 수집 되어있는 key를 가져옴
         {
-            Debug.Log("keytype"+key.GetType());
-            Debug.Log("key =>" + key+InventoryManager.Instance.GetInfo_(key).context);//내용
+            //Debug.Log("keytype"+key.GetType());
+            //Debug.Log("key =>" + key+InventoryManager.Instance.GetInfo_(key).context);//내용
             info_keys.Add(key);
         }
-        if (inventoryScripable.inventory != null)
-        {
-            Debug.Log(inventoryScripable);
-            foreach (var item in inventoryScripable.inventory)
-            {
-                Debug.Log(item.Value.context);
-            }
-        }
-        else
+        if (inventoryScripable.inventory == null)
         {
             Debug.LogError("inventoryScripable Null");
         }
@@ -53,15 +46,21 @@ public class UI_DynamicText : MonoBehaviour
         //    Debug.Log(i);
         //}
         
-        var text1 = new TextElement { text = "이 문장에서 ", name = "sentence1" };
-        var clickableText = new TextElement { text = "변경 테스트", name = "clickableWord"};
-        var text2 = new TextElement { text = "를 눌러보세요.", name = "sentence2" };
+        var text1 = new TextElement { text = "클릭 이벤트 가능한 문장 1 ", name = "sentence1" };
+        var clickableText = new TextElement { text = "클릭 이벤트 가능한 문장 2", name = "clickableWord"};
+        var text2 = new TextElement { text = "클릭 이벤트 가능한 문장 3", name = "sentence2" };
 
         // 클릭 이벤트 추가
-        List<TextElement> textList = new List<TextElement>();
-
+        List<TextElement> textList = new List<TextElement>();//이벤트가 들어가야하는 내용들
+        textList.Add(text1); textList.Add(text2) ; textList.Add(clickableText);
         SetDiaryText(ref textContainer);
         //ui toolkit에서 제공하는 함수로 이벤트 등록에 사용됨
+        foreach(var text in textList)
+        {
+            text.RegisterCallback<PointerUpEvent>(even=>{ 
+                Debug.Log("hello"); 
+            });
+        }
         clickableText.RegisterCallback<PointerUpEvent>(evt =>
         {
             Debug.Log("클릭된 텍스트: 클릭 가능한 텍스트");
@@ -84,10 +83,15 @@ public class UI_DynamicText : MonoBehaviour
 
         });
 
+        foreach(var text in textList)
+        {
+            textContainer.Add(text);
+        }
+
 
         // 컨테이너에 추가
         //textContainer.Add(text1);
-        textContainer.Add(clickableText);
+        //textContainer.Add(clickableText);
         //textContainer.Add(text2);
 
     }
@@ -97,6 +101,7 @@ public class UI_DynamicText : MonoBehaviour
         List<TextElement> textList = new List<TextElement>();
         Dialogue[] dialogues = StartEvent();
         textContainer.Clear();
+        int num = 0;
         foreach (var dialogue in dialogues)
         {
             string[] parts = Regex.Split(dialogue.context[0], @"<br\s*/?>");//나눈 문장들 들어 있음
@@ -105,6 +110,7 @@ public class UI_DynamicText : MonoBehaviour
             {
                 Debug.Log($"분리 후: [{part}]");
                 textList.Add(new TextElement { text = part, name = "textelement" });
+                textList[num++].AddToClassList("sentence");//클래스 부여 하는 부분
             }
         }
         for (int i = 0; i < textList.Count; i++)
@@ -113,7 +119,7 @@ public class UI_DynamicText : MonoBehaviour
         }
     }
 
-    private Dialogue[] StartEvent()//클릭시 호출될 함수
+    private Dialogue[] StartEvent()//클릭시 호출될 함수, csv에서 가져오는방식
     {
         Debug.Log("추리 이벤트 실행됨!");
         Dialogue[] tempdialogue = DatabaseManager.instance.theParser.Parse("테스트파일2");//일지 파일 명으로 변경
