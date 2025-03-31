@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting;
@@ -23,6 +24,7 @@ public class InventoryManager : MonoBehaviour
         {
             instance = this;
         }
+        
     }
 
     /// <summary>
@@ -62,7 +64,10 @@ public class InventoryManager : MonoBehaviour
         return invendata;
     }
 
-
+    public Dictionary<int,Inventory.Info>.KeyCollection GetinventoryKeys()
+    {
+        return invendata.inventory.Keys;
+    }
     /// <summary>
     /// 스크립터블 오브젝트가 저장 되어있으므로 인벤데이터 사용하려 하면 invendata.inventory로 접근 현재 사용 안함
     /// </summary>
