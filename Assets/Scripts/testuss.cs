@@ -94,13 +94,20 @@ public class UI_DynamicText : MonoBehaviour
         //textContainer.Add(text1);
         //textContainer.Add(clickableText);
         //textContainer.Add(text2);
-
+        VisualElement visualElement = root.Q<VisualElement>("VisualElement");
         VisualElement sentence_container=root.Q<VisualElement>("sentence-container");
         var draggable_label= sentence_container.Query<Label>().Class("draggable").Build();
 
-        foreach(var dlable in draggable_label)
+        //해당 내용을 델리게이트로 구성해보는 방식으로
+        visualElement.RegisterCallback<PointerDownEvent>(evt => { Debug.Log("패널 클릭 누름 문구 확인"); });
+        visualElement.RegisterCallback<PointerMoveEvent>(evt => { Debug.Log("패널 드래그 확인 문구"); });
+        visualElement.RegisterCallback<PointerUpEvent>(evt => { Debug.Log("패널 클릭 놓은 확인 문구"); });
+
+        foreach (var dlable in draggable_label)
         {
-            dlable.RegisterCallback<PointerUpEvent>(evt => { Debug.Log("클릭 문구 확인"); });
+            dlable.RegisterCallback<PointerDownEvent>(evt => { Debug.Log("label 클릭 누름 문구 확인"); });
+            dlable.RegisterCallback<PointerMoveEvent>(evt => { Debug.Log("label 드래그 확인 문구"); });
+            dlable.RegisterCallback<PointerUpEvent>(evt => { Debug.Log("label 클릭 놓은 확인 문구"); });
             Debug.Log("드래그 라벨" + dlable.text);
         }
 
