@@ -184,6 +184,7 @@ public abstract class PlayerUnit : UnitBase
             case KeyState.KeyStay:
                 mapSensor.currentPlatform?.RemoveColliderMask(1<<gameObject.layer);
                 mapSensor.currentPlatform = null;
+                mapSensor.platformSensor.normal = Vector2.up;
                 return true;
             case KeyState.KeyUp:
                 return true;

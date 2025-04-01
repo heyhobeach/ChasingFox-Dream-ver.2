@@ -29,7 +29,14 @@ public class RangedEnemy : EnemyUnit
         GameObject _bullet = Instantiate(bullet);
         GameObject gObj = this.gameObject;
         shootingAnimationController.targetPosition = attackPos;
-        _bullet.GetComponent<Bullet>().Set(shootingAnimationController.GetShootPosition(), attackPos, shootingAnimationController.GetShootRotation(), 1, bulletSpeed, gObj);
+        _bullet.GetComponent<Bullet>().Set(
+            shootingAnimationController.GetShootPosition(), 
+            attackPos, 
+            shootingAnimationController.GetShootRotation(), 
+            1, 
+            bulletSpeed, 
+            gObj
+        );
         
 
         return base.Attack(attackPos);

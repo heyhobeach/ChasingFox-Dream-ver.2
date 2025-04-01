@@ -114,33 +114,6 @@ MonoBehaviour:
   - {fileID: 8165423392858955647}
   - {fileID: -8123740153036079787}
   - {fileID: -1691638311106959918}
---- !u!114 &-6813351491573769889
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18010df103739f34fa8a9e484853ec76, type: 3}
-  m_Name: Wait
-  m_EditorClassIdentifier: 
-  state: 0
-  guid: cbb03a2fd53a31447bfa3602785b30e5
-  positon: {x: -613, y: 709}
-  blackboard:
-    thisUnit: {fileID: 0}
-    target: {fileID: 0}
-    originPos: {fileID: 0}
-    playableDirector: {fileID: 0}
-    enemy_state:
-      stateCase: 0
-      recognition: 1
-      Increase_Sight: 0
-    FinalNodeList: []
-  description: 
-  waitTime: 0
 --- !u!114 &-6798369374170880989
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -194,7 +167,7 @@ MonoBehaviour:
       Increase_Sight: 0
     FinalNodeList: []
   description: Death
-  child: {fileID: -6813351491573769889}
+  child: {fileID: -2917116402200516749}
   stateCase: 10
 --- !u!114 &-5093957440746577806
 MonoBehaviour:
@@ -282,6 +255,39 @@ MonoBehaviour:
   children:
   - {fileID: -2728198117769598043}
   - {fileID: 4433449385017773004}
+--- !u!114 &-2917116402200516749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b04a02dbcabafa4cba798a6e6c2dec3, type: 3}
+  m_Name: SendMesage
+  m_EditorClassIdentifier: 
+  state: 0
+  guid: 3f1b36f56b3782e4795411706aadaf48
+  positon: {x: -688.0001, y: 733.00006}
+  blackboard:
+    thisUnit: {fileID: 0}
+    target: {fileID: 0}
+    originPos: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 0
+    FinalNodeList: []
+  description: 
+  mesages:
+  - targetNode: {fileID: 555910949820902959}
+    methodName: GetPathAsync
+    methodIdx: 1
+  - targetNode: {fileID: 1877198029125055445}
+    methodName: GetPathAsync
+    methodIdx: 1
 --- !u!114 &-2728198117769598043
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -403,7 +409,6 @@ MonoBehaviour:
   - {fileID: 1877198029125055445}
   - {fileID: -2728198117769598043}
   - {fileID: 4433449385017773004}
-  - {fileID: -6813351491573769889}
   - {fileID: 1257187732414498288}
   - {fileID: 7474582992549453383}
   - {fileID: -8788340718880782463}
@@ -413,6 +418,7 @@ MonoBehaviour:
   - {fileID: 8039134145924175825}
   - {fileID: -9169177893953747327}
   - {fileID: 8705630663612228575}
+  - {fileID: -2917116402200516749}
   blackboard:
     thisUnit: {fileID: 0}
     target: {fileID: 0}
@@ -423,8 +429,8 @@ MonoBehaviour:
       recognition: 1
       Increase_Sight: 0
     FinalNodeList: []
-  viewPos: {x: -410, y: -310}
-  viewScale: {x: 0.7561437, y: 0.7561437, z: 1}
+  viewPos: {x: 450, y: -86}
+  viewScale: {x: 0.49717674, y: 0.49717674, z: 1}
 --- !u!114 &531290968384818618
 MonoBehaviour:
   m_ObjectHideFlags: 0

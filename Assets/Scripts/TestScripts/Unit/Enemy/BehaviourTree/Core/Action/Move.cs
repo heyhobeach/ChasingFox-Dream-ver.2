@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Unity.Jobs;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace BehaviourTree
@@ -21,16 +22,12 @@ namespace BehaviourTree
 
         ~Move()
         {
-            pathFinding.OpenList.Dispose();
-            pathFinding.ClosedList.Dispose();
-            pathFinding.NodeArray.Dispose();
-            pathFinding.FinalNodeList.Dispose(); 
+            Dispose();
         }
 
         protected override void OnEnd()
         {
             blackboard.thisUnit.Move(blackboard.thisUnit.transform.position);
-            waitting = null;
         }
 
         protected override void OnStart() => blackboard.thisUnit.SetAni(false);
@@ -46,19 +43,18 @@ namespace BehaviourTree
             }
             if(waitting != null) waitting.MoveNext();
             if(!isRunning) startTime += Time.deltaTime;
-            if(!isRunning && blackboard.target != null && (startTime >= reloadTime || blackboard.FinalNodeList == null))
+            if(!isRunning && blackboard.target != null && (startTime >= reloadTime || blackboard.FinalNodeList == default))
             {
                 if(startTime >= reloadTime) startTime = 0;
                 GetPathAsync();
                 return NodeState.Running;
             }
-            if(blackboard.FinalNodeList == null) 
+            if(blackboard.FinalNodeList == default) 
             {
                 return NodeState.Failure;
             }
             if(blackboard.FinalNodeList.Count <= blackboard.nodeIdx) 
             {
-                // while(blackboard.FinalNodeList.Count <= blackboard.nodeIdx) blackboard.nodeIdx--;
                 blackboard.nodeIdx = blackboard.FinalNodeList.Count - 1;
                 return NodeState.Failure;
             }
@@ -72,7 +68,12 @@ namespace BehaviourTree
 
         private IEnumerator WaitHandle()
         {
-            while(jobHandle == default ? true : !jobHandle.IsCompleted) yield return null;
+            if(jobHandle == default) 
+            {
+                Dispose();
+                yield break;
+            }
+            while(!jobHandle.IsCompleted) yield return null;
             jobHandle.Complete();
             var output = pathFinding.FinalNodeList;
             try 
@@ -87,15 +88,7 @@ namespace BehaviourTree
                 }
             }
             catch(Exception e) { Debug.LogError(e); }
-            finally
-            {
-                pathFinding.OpenList.Dispose();
-                pathFinding.ClosedList.Dispose();
-                pathFinding.NodeArray.Dispose();
-                pathFinding.FinalNodeList.Dispose();
-                isRunning = false;
-                waitting = null;
-            }
+            finally { Dispose(); }
         }
 
         [MesageTarget] public void GetPathAsync()
@@ -123,12 +116,21 @@ namespace BehaviourTree
             { 
                 Debug.LogException(e);
                 
-                pathFinding.OpenList.Dispose();
-                pathFinding.ClosedList.Dispose();
-                pathFinding.NodeArray.Dispose();
-                pathFinding.FinalNodeList.Dispose();
-                isRunning = false;
+                Dispose();
             }
+        }
+
+        [MesageTarget] private void Dispose()
+        {
+            if(!jobHandle.IsCompleted) jobHandle.Complete();
+            isRunning = false;
+            waitting = null;
+            if(pathFinding.isLoad.IsCreated) GameManager.Instance.isLoad = pathFinding.isLoad[0];
+            if(pathFinding.OpenList.IsCreated) pathFinding.OpenList.Dispose();
+            if(pathFinding.ClosedList.IsCreated) pathFinding.ClosedList.Dispose();
+            if(pathFinding.NodeArray.IsCreated) pathFinding.NodeArray.Dispose();
+            if(pathFinding.FinalNodeList.IsCreated) pathFinding.FinalNodeList.Dispose();
+            if(pathFinding.isLoad.IsCreated) pathFinding.isLoad.Dispose();
         }
 
         // public async void Backstep()

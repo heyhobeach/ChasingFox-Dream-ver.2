@@ -40,6 +40,8 @@ public struct PathFinding : IJob
     [ReadOnly] public Vector3 startPosV3, targetPosV3;
     private bool isPointSearching;
 
+    public NativeArray<bool> isLoad;
+
     private int GetIndex(int x, int y) => y * Width + x;
 
     private void FindPath(Vector3 startPosV3, Vector3 targetPosV3)
@@ -53,7 +55,14 @@ public struct PathFinding : IJob
         while(!tempNode.isRoad)
         {
             tempNum--;
-            tempNode = NodeArray[GetIndex(TargetNode.x - bottomLeft.x, TargetNode.y - bottomLeft.y+tempNum)];
+            int idx = GetIndex(TargetNode.x - bottomLeft.x, TargetNode.y - bottomLeft.y+tempNum);
+            if(idx < 0)
+            {
+                Debug.LogError("setting error");
+                isLoad[0] = true;
+                return;
+            }
+            tempNode = NodeArray[idx];
         }
         TargetNode = NodeArray[GetIndex(TargetNode.x - bottomLeft.x, TargetNode.y - bottomLeft.y + tempNum)];
         if(StartNode.isplatform) isPointSearching = true;

@@ -33,6 +33,7 @@ public partial class GameManager : MonoBehaviour
     }
     public void MapSearch()
     {
+        Debug.Log("Mapsearch");
         // NodeArray�� ũ�� �����ְ�, isWall, x, y ����
         int sizeX = topRight.x - bottomLeft.x + 1;
         int sizeY = topRight.y - bottomLeft.y + 1;
@@ -76,45 +77,35 @@ public partial class GameManager : MonoBehaviour
 
     public void PathFind(Vector3 startPos, Vector3 targetPos, ref JobHandle jobHandle, ref PathFinding pathFinding)
     {
-        if(NodeArray == null || isLoad)
+        if(NodeArray == default || isLoad)
         {
             // Debug.Log("Node Array not set");
             isLoad = true;
-            NodeArray = null;
+            NodeArray = default;
             return;
         }
-        try
+
+        var tmeps = new Vector2Int((int)(startPos.x - bottomLeft.x), (int)(startPos.y - bottomLeft.y));
+        var tmept = new Vector2Int((int)(targetPos.x - bottomLeft.x), (int)(targetPos.y - bottomLeft.y));
+        if (tmeps.x >= 0 && tmeps.x < NodeArray.GetLength(0) &&
+            tmeps.y >= 0 && tmeps.y < NodeArray.GetLength(1) &&
+            tmept.x >= 0 && tmept.x < NodeArray.GetLength(0) &&
+            tmept.y >= 0 && tmept.y < NodeArray.GetLength(1))
         {
-            var tmeps = new Vector2Int((int)(startPos.x - bottomLeft.x), (int)(startPos.y - bottomLeft.y));
-            var tmept = new Vector2Int((int)(targetPos.x - bottomLeft.x), (int)(targetPos.y - bottomLeft.y));
-            if (tmeps.x >= 0 && tmeps.x < NodeArray.GetLength(0) &&
-                tmeps.y >= 0 && tmeps.y < NodeArray.GetLength(1) &&
-                tmept.x >= 0 && tmept.x < NodeArray.GetLength(0) &&
-                tmept.y >= 0 && tmept.y < NodeArray.GetLength(1))
-            {
-                pathFinding = new() { 
-                    startPosV3 = startPos, 
-                    targetPosV3 = targetPos, 
-                    bottomLeft = bottomLeft,
-                    topRight = topRight,
-                    NodeArray = ToNativeArray(NodeArray, Allocator.TempJob),
-                    OpenList = new NativeList<PathFinding.Node>(Allocator.TempJob),
-                    ClosedList = new NativeList<PathFinding.Node>(Allocator.TempJob),
-                    FinalNodeList = new NativeList<PathFinding.Node>(Allocator.TempJob),
-                    Height = NodeArray.GetLength(1), 
-                    Width = NodeArray.GetLength(0) 
-                    };
-                jobHandle = pathFinding.Schedule();
-            }
-        }
-        catch(Exception e)
-        {
-            Debug.LogError(e);
-            pathFinding.OpenList.Dispose();
-            pathFinding.ClosedList.Dispose();
-            pathFinding.NodeArray.Dispose();
-            pathFinding.FinalNodeList.Dispose();
-            throw e;
+            pathFinding = new() { 
+                startPosV3 = startPos, 
+                targetPosV3 = targetPos, 
+                bottomLeft = bottomLeft,
+                topRight = topRight,
+                NodeArray = ToNativeArray(NodeArray, Allocator.TempJob),
+                OpenList = new NativeList<PathFinding.Node>(Allocator.TempJob),
+                ClosedList = new NativeList<PathFinding.Node>(Allocator.TempJob),
+                FinalNodeList = new NativeList<PathFinding.Node>(Allocator.TempJob),
+                isLoad = new NativeArray<bool>(1, Allocator.TempJob),
+                Height = NodeArray.GetLength(1), 
+                Width = NodeArray.GetLength(0) 
+            };
+            jobHandle = pathFinding.Schedule();
         }
 
         return;

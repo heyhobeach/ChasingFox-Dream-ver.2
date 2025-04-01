@@ -150,8 +150,8 @@ public class Human : PlayerUnit
                     gObj, 
                     Vector2.zero, 
                     () => {
-                    var player = rg.GetComponent<Player>();
-                    ((Werewolf)player.forms[1]).currentGauge += player.brutalData.getGage;
+                        var player = rg.GetComponent<Player>();
+                        ((Werewolf)player.forms[1]).currentGauge += player.brutalData.getGage;
                     }
                 );
                 residualAmmo--;
@@ -207,8 +207,10 @@ public class Human : PlayerUnit
         yield return new WaitUntil(() => anim.GetCurrentAnimatorStateInfo(0).IsName("Dash"));
         while(anim.GetCurrentAnimatorStateInfo(0).IsName("Dash")) // 대쉬 지속 시간 동안
         {
-            SetHorizontalVelocity(tempVel * movementSpeed * 1.2f);
-            anim.SetFloat("hzForce", -0.5f);
+            float t = Utils.EaseFromTo(0, 1, anim.GetCurrentAnimatorStateInfo(0).normalizedTime);
+            float mul = Mathf.Lerp(1.5f, 0.5f, t);
+            SetHorizontalVelocity(tempVel * movementSpeed * mul);
+            anim.SetFloat("hzForce", -0.5f);  
             yield return null;
         }
         StopDash();
