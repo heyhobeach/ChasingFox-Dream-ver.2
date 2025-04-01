@@ -1,9 +1,23 @@
-<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:appui="Unity.UI.Builder" editor-extension-mode="False">
+
+
     <Style src="project://database/Assets/Scripts/NewUSSFile.uss?fileID=7433441132597879392&amp;guid=3c5ba5d19934de243b83383a82ad9b71&amp;type=3#NewUSSFile" />
-    <engine:VisualElement name="textContainer" style="background-color: rgb(255, 0, 0); width: 700px; height: auto; background-image: url(&quot;project://database/Assets/Level/Level_Test/Image/CutScene/0_chp/0-1_cutScene_Old.png?fileID=2800000&amp;guid=09947045f03f9ce4aa0015367a990559&amp;type=3#0-1_cutScene_Old&quot;);">
-        <engine:TextElement text="이 문장에서 " class="sentence" style="display: inline;" />
-        <engine:TextElement name="clickableWord" text="클릭 가능한 텍스트" class="clickable" style="display: inline;" />
-        <engine:TextElement text="를 눌러보세요." class="sentence" style="display: inline;" />
-    </engine:VisualElement>
-    <engine:VisualElement style="flex-grow: 1; width: 700px; left: 60%; right: 40%; top: auto; bottom: 7%; background-image: url(&quot;project://database/Assets/Sprites/shop/bg_bd_Shop_1.png?fileID=2800000&amp;guid=55a5154d02c8ad34585f3cbdb4c881ef&amp;type=3#bg_bd_Shop_1&quot;);" />
-</engine:UXML>
+    <ui:VisualElement name="textContainer" style="background-color: rgb(255, 0, 0); width: 700px; height: auto; background-image: url(&quot;project://database/Assets/Level/Level_Test/Image/CutScene/0_chp/0-1_cutScene_Old.png?fileID=2800000&amp;guid=09947045f03f9ce4aa0015367a990559&amp;type=3#0-1_cutScene_Old&quot;);">
+        <ui:TextElement text="이 문장에서 " class="sentence" style="display: inline;" />
+        <ui:TextElement name="clickableWord" text="클릭 가능한 텍스트" class="clickable" style="display: inline;" />
+        <ui:TextElement text="를 눌러보세요." class="sentence" style="display: inline;" />
+
+    </ui:VisualElement>
+    <ui:VisualElement name="sentence-container" style="flex-direction: row; align-items: center;">
+        <ui:Label text="대체 " name="text-part-1" />
+        <ui:Label text="어디로" name="draggable-word" class="draggable" style="cursor: grab;" />
+        <ui:Label text=" 간거지?" name="text-part-2" />
+    </ui:VisualElement>
+
+    <ui:VisualElement name="drop-area" style="width: 200px; height: 100px; background-color: grey; margin-top: 20px; justify-content: center; align-items: center;">
+        <ui:Label text="여기에 드롭" />
+    </ui:VisualElement>
+    <ui:VisualElement style="flex-grow: 1; width: 700px; left: 60%; right: 40%; top: auto; bottom: 7%; background-image: url(&quot;project://database/Assets/Sprites/shop/bg_bd_Shop_1.png?fileID=2800000&amp;guid=55a5154d02c8ad34585f3cbdb4c881ef&amp;type=3#bg_bd_Shop_1&quot;);" />
+</ui:UXML> <!-- 루트 요소 닫는 태그 --> 
+
+

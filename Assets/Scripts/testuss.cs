@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -94,6 +95,30 @@ public class UI_DynamicText : MonoBehaviour
         //textContainer.Add(clickableText);
         //textContainer.Add(text2);
 
+        VisualElement sentence_container=root.Q<VisualElement>("sentence-container");
+        var draggable_label= sentence_container.Query<Label>().Class("draggable").Build();
+
+        foreach(var dlable in draggable_label)
+        {
+            dlable.RegisterCallback<PointerUpEvent>(evt => { Debug.Log("클릭 문구 확인"); });
+            Debug.Log("드래그 라벨" + dlable.text);
+        }
+
+        foreach(var text in textContainer.hierarchy.Children())
+        {
+            //if(text is TextElement label)
+            //{
+            //    Debug.Log("text=>" + label.text);
+            //    string[]str=label.text.Split(" ");
+            //    foreach(var splitstr in str)
+            //    {
+            //        Debug.Log("split ->" + splitstr);
+            //    }
+            //}
+
+        }
+
+
     }
 
     private void SetDiaryText(ref VisualElement textContainer)//데이터를 가져와서 사용하는 부분
@@ -115,9 +140,14 @@ public class UI_DynamicText : MonoBehaviour
         }
         for (int i = 0; i < textList.Count; i++)
         {
+
+            //while (true) { }//입력 대기 부분
             textContainer.Add(textList[i]);
+            
         }
     }
+
+    //Awaitable 
 
     private Dialogue[] StartEvent()//클릭시 호출될 함수, csv에서 가져오는방식
     {
