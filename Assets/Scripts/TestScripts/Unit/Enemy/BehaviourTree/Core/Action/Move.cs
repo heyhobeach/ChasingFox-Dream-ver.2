@@ -68,7 +68,7 @@ namespace BehaviourTree
 
         private IEnumerator WaitHandle()
         {
-            if(jobHandle == default) 
+            if(jobHandle.Equals(default(JobHandle)))
             {
                 Dispose();
                 yield break;
