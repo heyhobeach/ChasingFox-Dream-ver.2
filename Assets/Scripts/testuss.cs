@@ -8,11 +8,20 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static UnityEditor.Recorder.OutputPath;
 
 public class UI_DynamicText : MonoBehaviour
 {
+    
+    VisualElement visualElement ;//메인 부분
+    VisualElement dragGhost = null;
 
     private List<int> info_keys=new List<int>();
+    bool is_drag = false;
+
+    bool is_sentence = false;
+
+    Vector2 startMousePosition;
     private void OnEnable()
     {
         InventoryScripable inventoryScripable = InventoryManager.Instance.GetInventoryAll();//인벤토리에서 데이터를 가져옴
@@ -35,6 +44,7 @@ public class UI_DynamicText : MonoBehaviour
 
         // textContainer 가져오기
         var textContainer = root.Q<VisualElement>("textContainer");
+        visualElement = root.Q<VisualElement>("VisualElement");
 
         // 기존 요소 제거 (초기화)
         textContainer.Clear();
@@ -94,35 +104,39 @@ public class UI_DynamicText : MonoBehaviour
         //textContainer.Add(text1);
         //textContainer.Add(clickableText);
         //textContainer.Add(text2);
-        VisualElement visualElement = root.Q<VisualElement>("VisualElement");
+
         VisualElement sentence_container=root.Q<VisualElement>("sentence-container");
         var draggable_label= sentence_container.Query<Label>().Class("draggable").Build();
 
-        //해당 내용을 델리게이트로 구성해보는 방식으로
-        visualElement.RegisterCallback<PointerDownEvent>(evt => { Debug.Log("패널 클릭 누름 문구 확인"); });
-        visualElement.RegisterCallback<PointerMoveEvent>(evt => { Debug.Log("패널 드래그 확인 문구"); });
-        visualElement.RegisterCallback<PointerUpEvent>(evt => { Debug.Log("패널 클릭 놓은 확인 문구"); });
+        var drop_area = visualElement.Q<VisualElement>("drop-area");
+
+        drop_area.RegisterCallback<PointerUpEvent>(evt =>
+        {
+            if (is_sentence)
+            {
+                var querylabel = dragGhost.Query<Label>().Build();
+                //querylabel.First().text//오브젝트 내용 적혀있음
+                Debug.Log("위치에 놓았습니다 내용 =>" + querylabel.First().text);
+            }
+        });
+
+        //패널에 함수 등록
+        visualElement.RegisterCallback<PointerDownEvent>(OnPointerDown);
+        visualElement.RegisterCallback<PointerMoveEvent>(OnPointerMove);
+        visualElement.RegisterCallback<PointerUpEvent>(evt => { 
+            is_drag = false;
+            is_sentence = false;
+            visualElement.Remove(dragGhost);
+            dragGhost = null;
+            //dragGhost = null;
+        });
 
         foreach (var dlable in draggable_label)
         {
-            dlable.RegisterCallback<PointerDownEvent>(evt => { Debug.Log("label 클릭 누름 문구 확인"); });
+            dlable.RegisterCallback<PointerDownEvent>(evt => { is_sentence = true; });
             dlable.RegisterCallback<PointerMoveEvent>(evt => { Debug.Log("label 드래그 확인 문구"); });
             dlable.RegisterCallback<PointerUpEvent>(evt => { Debug.Log("label 클릭 놓은 확인 문구"); });
             Debug.Log("드래그 라벨" + dlable.text);
-        }
-
-        foreach(var text in textContainer.hierarchy.Children())
-        {
-            //if(text is TextElement label)
-            //{
-            //    Debug.Log("text=>" + label.text);
-            //    string[]str=label.text.Split(" ");
-            //    foreach(var splitstr in str)
-            //    {
-            //        Debug.Log("split ->" + splitstr);
-            //    }
-            //}
-
         }
 
 
@@ -198,5 +212,55 @@ public class UI_DynamicText : MonoBehaviour
         return dialogues;
     }
 
+    private void OnPointerMove(PointerMoveEvent evt)
+    {
+        if (is_drag)
+        {
+            Debug.Log("드래그중");
+
+            Vector2 currentMousePosition = evt.position;
+            Vector2 mouseDelta = currentMousePosition - startMousePosition;
+            if (dragGhost != null)
+            {
+                Debug.Log("고스트 움직이는중");
+                // 고스트는 절대 위치를 사용하므로, 마우스 델타만큼 직접 이동
+                Vector2 newGhostPosition = visualElement.WorldToLocal(startMousePosition) + mouseDelta;
+
+                dragGhost.style.left = newGhostPosition.x;
+                dragGhost.style.top = newGhostPosition.y;
+
+                Debug.Log(string.Format("고스트 left {0} top {1}", dragGhost.style.left, dragGhost.style.top));
+            }
+        }
+    }
+
+    private void OnPointerDown(PointerDownEvent evt)
+    {
+        if (!is_sentence) return;
+        is_drag = true;
+        Debug.Log("클릭위치" + evt.position);
+        if (dragGhost == null)//고스트( 오브젝트 생성)
+        {
+            dragGhost = new Label("visualElement 고스트");
+            dragGhost.style.fontSize = visualElement.resolvedStyle.fontSize;
+            dragGhost.style.color = Color.red;
+            dragGhost.style.unityFont = visualElement.resolvedStyle.unityFont;
+            dragGhost.style.unityFontStyleAndWeight = visualElement.resolvedStyle.unityFontStyleAndWeight;
+            dragGhost.style.position = Position.Absolute; // 절대 위치 사용
+            dragGhost.style.opacity = 0.7f; // 반투명하게
+            dragGhost.pickingMode = PickingMode.Ignore; // 고스트는 이벤트 받지 않음
+
+            // 초기 위치 설정 
+
+
+            visualElement.Add(dragGhost); // 루트에 추가하여 다른 UI 위에 표시
+        }
+        Vector2 ghostStartPosition = evt.position; // 스크린/월드 좌표
+
+        ghostStartPosition = visualElement.WorldToLocal(ghostStartPosition); // 루트 요소 기준 로컬 좌표로 변환
+        dragGhost.style.left = ghostStartPosition.x;
+        dragGhost.style.top = ghostStartPosition.y;
+        startMousePosition = evt.position;
+    }
 
 }
