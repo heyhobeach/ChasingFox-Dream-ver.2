@@ -13,6 +13,7 @@ namespace Collection
         public string _name;
         [TextArea(3,8)]
         public string _context;
+        public string[] keywords;
     }
 
 }

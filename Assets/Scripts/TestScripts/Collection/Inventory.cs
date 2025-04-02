@@ -15,13 +15,16 @@ public class Inventory : MonoBehaviour
         public News news;
         //public string _name;
         public string context;
+
+        public string[] keywords;
         //public Sprite image;
-        public Info(News news,string context)
+        public Info(News news,string context, string[] keywords)
         {
             this.news = news;
             this.news.image = news.image;
             this.news.image_name = news.image_name;
             this.context = context;
+            this.keywords = keywords;
         }
     }
 
@@ -66,7 +69,7 @@ public class Inventory : MonoBehaviour
         };
 
 
-        Info info=new Info(news,collection._context);
+        Info info=new Info(news,collection._context,collection.keywords);
         Debug.Log(string.Format("{0},{1},{2}", info.news.image_name, info.context, "collection"));
         return info;
     }

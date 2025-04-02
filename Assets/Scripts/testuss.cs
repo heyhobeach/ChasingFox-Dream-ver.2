@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 using static UnityEditor.Recorder.OutputPath;
 
@@ -22,9 +23,11 @@ public class UI_DynamicText : MonoBehaviour
     bool is_sentence = false;
 
     Vector2 startMousePosition;
+    InventoryScripable inventoryScripable;
     private void OnEnable()
     {
-        InventoryScripable inventoryScripable = InventoryManager.Instance.GetInventoryAll();//인벤토리에서 데이터를 가져옴
+        inventoryScripable = InventoryManager.Instance.GetInventoryAll();//인벤토리에서 데이터를 가져옴
+
         Dictionary<int, Inventory.Info>.KeyCollection keys  = InventoryManager.Instance.GetinventoryKeys();//키를 가져오기 위한 변수
 
 
@@ -32,6 +35,7 @@ public class UI_DynamicText : MonoBehaviour
         {
             //Debug.Log("keytype"+key.GetType());
             //Debug.Log("key =>" + key+InventoryManager.Instance.GetInfo_(key).context);//내용
+
             info_keys.Add(key);
         }
         if (inventoryScripable.inventory == null)
@@ -201,7 +205,29 @@ public class UI_DynamicText : MonoBehaviour
         foreach (var i in info_keys)//현재 가지고 있는 키에서 문자를 받을수있음
         {
             //Debug.Log("key id=>"+i);
-            Debug.Log("getKey value" + trace_dic[i].context[0]);
+
+            string str = string.Format("getKey value{0}", trace_dic[i].context[0]);
+            string[]keys =InventoryManager.Instance.GetInfo_(i).keywords;
+
+
+            //Debug.Log("key size="+keys.Length);
+            if (keys.Length>0)//키가 있다면
+            {
+                //Debug.Log("keys =>" + keys[0]);
+                str += string.Format("키워드 {0}", InventoryManager.Instance.GetInfo_(i).keywords[0]);
+            }
+            else
+            {
+                Debug.Log("null");
+            }
+            Debug.Log(str);
+            //if (InventoryManager.Instance.GetInfo_(i).keywords != null)//여기 라인이 계속 에러, keywords 가 null인듯
+            //{
+            //    str += string.Format("{0}", InventoryManager.Instance.GetInfo_(i).keywords[0]);
+            //}
+
+
+            //inventoryScripable.inventory[i].context.
             //Dialogue dia = trace_dic[i];
             templist.Add(trace_dic[i]);
         }
