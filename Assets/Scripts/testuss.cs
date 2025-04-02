@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
@@ -152,15 +153,48 @@ public class UI_DynamicText : MonoBehaviour
         Dialogue[] dialogues = StartEvent();
         textContainer.Clear();
         int num = 0;
-        foreach (var dialogue in dialogues)
+        //foreach (var dialogue in dialogues)
+        for(int i=0;i<dialogues.Length;i++)
         {
-            string[] parts = Regex.Split(dialogue.context[0], @"<br\s*/?>");//나눈 문장들 들어 있음
+            string[] parts = Regex.Split(dialogues[i].context[0], @"<br\s*/?>");//나눈 문장들 들어 있음
             Debug.Log("parts count" + parts.Length);
+            string[] keys = InventoryManager.Instance.GetInfo_(info_keys[i]).keywords;
+
+
+            //Debug.Log("key size="+keys.Length);
+            if (keys.Length > 0)//키가 있다면
+            {
+                Debug.Log("keys =>" + keys[0]);
+                //str += string.Format("키워드 {0}", InventoryManager.Instance.GetInfo_(i).keywords[0]);
+            }
+            else
+            {
+                Debug.Log("null");
+            }
+
+
             foreach (string part in parts)
             {
-                Debug.Log($"분리 후: [{part}]");
-                textList.Add(new TextElement { text = part, name = "textelement" });
-                textList[num++].AddToClassList("sentence");//클래스 부여 하는 부분
+
+                bool check=(keys.Length>0?part.ContainsAny(keys[0]):false);
+                //int a = part.IndexOf(keys[0]);
+                Debug.Log($"분리 후: [{part}] check[{check}]");
+                var textElement = new TextElement { text = part, name = "textelement" };
+                textList.Add(textElement);
+                if (check)
+                {
+                    textElement.RegisterCallback<PointerDownEvent>(evt => { is_sentence = true; });
+                    textElement.RegisterCallback<PointerMoveEvent>(evt => { Debug.Log("label 드래그 확인 문구"); });
+                    textElement.RegisterCallback<PointerUpEvent>(evt => { Debug.Log("label 클릭 놓은 확인 문구"); });
+                    textList[num++].AddToClassList("draggable");
+
+                }
+                else
+                {
+                    textList[num++].AddToClassList("sentence");
+                }
+                //(check ? textList[num++].AddToClassList("sentence") : textList[num++].AddToClassList("sentence"));
+                //textList[num++].AddToClassList("sentence");//클래스 부여 하는 부분
             }
         }
         for (int i = 0; i < textList.Count; i++)
@@ -174,12 +208,12 @@ public class UI_DynamicText : MonoBehaviour
 
     //Awaitable 
 
-    private Dialogue[] StartEvent()//클릭시 호출될 함수, csv에서 가져오는방식
+    private Dialogue[] StartEvent()//현재 가지고있는 아이템의 dialogue를 가져옴
     {
         Debug.Log("추리 이벤트 실행됨!");
         Dialogue[] tempdialogue = DatabaseManager.instance.theParser.Parse("테스트파일2");//일지 파일 명으로 변경
         DatabaseManager.instance.dialogueDic.Clear();
-        Dictionary<int,Dialogue> trace_dic = new Dictionary<int, Dialogue>();
+        Dictionary<int,Dialogue> trace_dic = new Dictionary<int, Dialogue>();//매번 할 필요없을거같긷한데 나중에 수정해도 될듯
         foreach (var dialogue in tempdialogue)
         {
             Debug.Log("dialogue id" + dialogue.id +"dialogue text" + dialogue.context[0]);
@@ -206,21 +240,21 @@ public class UI_DynamicText : MonoBehaviour
         {
             //Debug.Log("key id=>"+i);
 
-            string str = string.Format("getKey value{0}", trace_dic[i].context[0]);
-            string[]keys =InventoryManager.Instance.GetInfo_(i).keywords;
-
-
-            //Debug.Log("key size="+keys.Length);
-            if (keys.Length>0)//키가 있다면
-            {
-                //Debug.Log("keys =>" + keys[0]);
-                str += string.Format("키워드 {0}", InventoryManager.Instance.GetInfo_(i).keywords[0]);
-            }
-            else
-            {
-                Debug.Log("null");
-            }
-            Debug.Log(str);
+            //string str = string.Format("getKey value{0}", trace_dic[i].context[0]);
+            //string[]keys =InventoryManager.Instance.GetInfo_(i).keywords;
+            //
+            //
+            ////Debug.Log("key size="+keys.Length);
+            //if (keys.Length>0)//키가 있다면
+            //{
+            //    //Debug.Log("keys =>" + keys[0]);
+            //    str += string.Format("키워드 {0}", InventoryManager.Instance.GetInfo_(i).keywords[0]);
+            //}
+            //else
+            //{
+            //    Debug.Log("null");
+            //}
+            //Debug.Log(str);
             //if (InventoryManager.Instance.GetInfo_(i).keywords != null)//여기 라인이 계속 에러, keywords 가 null인듯
             //{
             //    str += string.Format("{0}", InventoryManager.Instance.GetInfo_(i).keywords[0]);
