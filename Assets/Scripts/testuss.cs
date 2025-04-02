@@ -282,14 +282,14 @@ public class UI_DynamicText : MonoBehaviour
             Vector2 mouseDelta = currentMousePosition - startMousePosition;
             if (dragGhost != null)
             {
-                Debug.Log("고스트 움직이는중");
+                //Debug.Log("고스트 움직이는중");
                 // 고스트는 절대 위치를 사용하므로, 마우스 델타만큼 직접 이동
                 Vector2 newGhostPosition = visualElement.WorldToLocal(startMousePosition) + mouseDelta;
 
                 dragGhost.style.left = newGhostPosition.x;
                 dragGhost.style.top = newGhostPosition.y;
 
-                Debug.Log(string.Format("고스트 left {0} top {1}", dragGhost.style.left, dragGhost.style.top));
+                //Debug.Log(string.Format("고스트 left {0} top {1}", dragGhost.style.left, dragGhost.style.top));
             }
         }
     }
