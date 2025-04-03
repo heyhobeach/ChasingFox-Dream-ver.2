@@ -52,7 +52,7 @@ public class UI_DynamicText : MonoBehaviour
         visualElement = root.Q<VisualElement>("VisualElement");
 
         // 기존 요소 제거 (초기화)
-        textContainer.Clear();
+        //textContainer.Clear();
 
         // 새로운 텍스트 요소 추가
         //Dialogue[] dialogues=InteractionEvent.Instance.GetDialogue();
@@ -131,6 +131,7 @@ public class UI_DynamicText : MonoBehaviour
         visualElement.RegisterCallback<PointerUpEvent>(evt => { 
             is_drag = false;
             is_sentence = false;
+            if(dragGhost!=null)
             visualElement.Remove(dragGhost);
             dragGhost = null;
             //dragGhost = null;
@@ -145,13 +146,20 @@ public class UI_DynamicText : MonoBehaviour
         }
 
 
+
+        var clickable = textContainer.Query<TextElement>().Class("clickable").Build();
+        foreach(var i in clickable)
+        {
+            Debug.Log("clickable"+i.name);
+            i.RegisterCallback<PointerDownEvent>(LoadMestery);
+        }
     }
 
     private void SetDiaryText(ref VisualElement textContainer)//데이터를 가져와서 사용하는 부분
     {
         List<TextElement> textList = new List<TextElement>();
         Dialogue[] dialogues = StartEvent();
-        textContainer.Clear();
+        //textContainer.Clear();
         int num = 0;
         //foreach (var dialogue in dialogues)
         for(int i=0;i<dialogues.Length;i++)
@@ -321,6 +329,11 @@ public class UI_DynamicText : MonoBehaviour
         dragGhost.style.left = ghostStartPosition.x;
         dragGhost.style.top = ghostStartPosition.y;
         startMousePosition = evt.position;
+    }
+
+    private void LoadMestery(PointerDownEvent evt)
+    {
+        Debug.Log("Mestery Load");
     }
 
 }
