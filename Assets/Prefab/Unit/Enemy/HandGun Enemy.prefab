@@ -258,9 +258,10 @@ MonoBehaviour:
   jumpForce: 3
   jumpImpulse: 5
   jumpTime: 0.5
+  rg: {fileID: 0}
   anim: {fileID: 0}
   shootingAnimationController: {fileID: 0}
-  attackDistance: 11.15
+  attackDistance: 17
   attackRange: 1
   _maxHealth: 1
   bullet: {fileID: 6823980639826409481, guid: 6dc6995137fdc8446949adb8a36d1ef2, type: 3}
@@ -279,12 +280,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   behaviorTree: {fileID: 11400000, guid: ff65cfda570439b439ed960a62105428, type: 2}
   playableDirector: {fileID: 0}
+  blackboard:
+    thisUnit: {fileID: 0}
+    target: {fileID: 0}
+    originPos: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 0
+    FinalNodeList: []
   spriteRenderer: {fileID: 0}
   _viewOuterRange: 10.5
   _viewInnerRange: 0.35
   viewAngle: 95
   appendDistance: 2
   soundRange: 5
+  isStop: 0
   showRange: 1
 --- !u!114 &3146245723983879665
 MonoBehaviour:

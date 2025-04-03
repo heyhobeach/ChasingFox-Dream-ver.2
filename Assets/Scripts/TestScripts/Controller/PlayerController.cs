@@ -48,28 +48,36 @@ public class PlayerController : MonoBehaviour, IBaseController
 
         // System Control
         if(Input.GetButtonDown("Cancel")) GameManager.Instance.Pause();
-        if(Input.GetButtonDown("Reload") || Input.GetButton("Reload"))
-        {
-            resetTimer += Time.unscaledDeltaTime;
-            if(resetTimer > 2f) GameManager.Instance.RetryScene();
-        }
-        else resetTimer = 0;
+        // if(Input.GetButtonDown("Reload") || Input.GetButton("Reload"))
+        // {
+        //     resetTimer += Time.unscaledDeltaTime;
+        //     if(resetTimer > 2f) GameManager.Instance.RetryScene();
+        // }
+        // else resetTimer = 0;
 
         if(GameManager.Instance.isPaused) return;
 
         // Player Control
         if(SystemManager.GetButtonDown("formChange") && KeyControl(PlayerControllerMask.FormChange, ref isKeyDown)) unitController.FormChange();
+
         if(SystemManager.GetButtonDown("skill1") && KeyControl(PlayerControllerMask.Skill1, ref isKeyDown)) unitController.Skile1(ClickPos());
-        if(SystemManager.GetButtonDown("reload") && KeyControl(PlayerControllerMask.Reload, ref isKeyDown)) unitController.Reload();
+
+        if(SystemManager.GetButtonDown("reload") && KeyControl(PlayerControllerMask.Reload, ref isKeyDown)) unitController.Reload(KeyState.KeyDown);
+        else if(SystemManager.GetButton("reload") && KeyControl(PlayerControllerMask.Reload, ref isKeyDown)) unitController.Reload(KeyState.KeyStay);
+        else if(SystemManager.GetButtonUp("reload") && KeyControl(PlayerControllerMask.Reload, ref isKeyDown)) unitController.Reload(KeyState.KeyUp);
+
         if(SystemManager.GetButtonDown("attack") && KeyControl(PlayerControllerMask.Attack, ref isKeyDown)) unitController.Attack(ClickPos());
+
         if(SystemManager.GetButtonDown("dash") && KeyControl(PlayerControllerMask.Dash, ref isKeyDown)) unitController.Dash();
         
         if (SystemManager.GetButton("crouch") && KeyControl(PlayerControllerMask.Crouch, ref isKeyDown)) unitController.Crouch(KeyState.KeyDown);//GetKeyDown -> GetKey
         else if(SystemManager.GetButtonUp("crouch") && KeyControl(PlayerControllerMask.Crouch)) unitController.Crouch(KeyState.KeyUp);
+
         if(SystemManager.GetButtonDown("jump") && KeyControl(PlayerControllerMask.Jump, ref isKeyDown)) unitController.Jump(KeyState.KeyDown);
         else if(SystemManager.GetButton("jump") && KeyControl(PlayerControllerMask.Jump)) unitController.Jump(KeyState.KeyStay);
         else if(SystemManager.GetButtonUp("jump") && KeyControl(PlayerControllerMask.Jump)) unitController.Jump(KeyState.KeyUp);
         else unitController.Jump(KeyState.None);
+        
         if (SystemManager.GetAxis("Horizontal") != 0 && KeyControl(PlayerControllerMask.Move)) unitController.Move(Vector2.right * SystemManager.GetAxis("Horizontal"));
         else unitController.Move(Vector2.zero);
     }
@@ -93,7 +101,7 @@ public class PlayerController : MonoBehaviour, IBaseController
 
     public void Move(float dir) => unitController.Move(Vector2.right * dir);
     public void Attack(float angle) => unitController.Attack(new Vector3(Mathf.Sin(Mathf.Deg2Rad * angle) * 10000, Mathf.Cos(Mathf.Deg2Rad * angle) * 10000));
-    public void Reload() => unitController.Reload();
+    public void Reload(KeyState keyState) => unitController.Reload(keyState);
     public void Dash() => unitController.Dash();
 
     public Vector3 ClickPos()//클릭한 좌료를 보내주며 현재 공격 클릭시 캐릭터의 바라보는 방향도 변해야한다고 생각해서 필요했던 부분

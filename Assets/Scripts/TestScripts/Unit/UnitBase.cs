@@ -216,7 +216,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         return true;
     }
 
-    public virtual bool Reload()
+    public virtual bool Reload(KeyState reloadKey)
     {
         if(!longRangeUnit) return false;
         anim.SetTrigger("reload");

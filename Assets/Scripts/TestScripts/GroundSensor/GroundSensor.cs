@@ -1,8 +1,5 @@
-using System.Collections;
-using Com.LuisPedroFonseca.ProCamera2D;
 using UnityEngine;
 using UnityEngine.Assertions;
-using UnityEngine.Rendering;
 
 public class GroundSensor : MonoBehaviour
 {

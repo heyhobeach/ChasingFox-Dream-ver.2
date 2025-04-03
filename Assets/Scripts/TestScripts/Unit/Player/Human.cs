@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using Com.LuisPedroFonseca.ProCamera2D;
+using Damageables;
+using MyUtiles;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -10,6 +12,19 @@ using UnityEngine.Assertions;
 /// </summary>
 public class Human : PlayerUnit
 {
+    [Header("Test"), Space(10)]
+    public AttackType attackType = AttackType.Projectile;
+    public float aimRadius = 0.5f;
+    public enum AttackType { Projectile, Hitscan }
+
+    [Space(5)]
+    public ReloadType reloadType = ReloadType.Tap;
+    public float reloadHoldTime = 0.5f;
+    public int ammoToReload = 1;
+    public enum ReloadType { Tap, Hold }
+
+    
+    [Header("Human"), Space(10)]
     public GameObject bullet;
 
     AudioSource sound;
@@ -113,6 +128,13 @@ public class Human : PlayerUnit
     Vector3 clickPos;
     public override bool Attack(Vector3 clickPos)
     {
+        if(attackType == AttackType.Projectile) return AttackType1(clickPos);
+        else if(attackType == AttackType.Hitscan) return AttackType2(clickPos);
+        else return false;
+    }
+
+    private bool AttackType1(Vector3 clickPos)
+    {
         if (ControllerChecker() || unitState == UnitState.FormChange || unitState == UnitState.Dash || unitState == UnitState.Reload || shootingAnimationController.isAttackAni || residualAmmo <= 0) return false;
         if (((Vector2)transform.position-(Vector2)clickPos).magnitude < ((Vector2)transform.position-shootingAnimationController.GetShootPosition()).magnitude) return false;
         isAttack = true;
@@ -158,6 +180,40 @@ public class Human : PlayerUnit
             }
             isAttack = false;
         }
+    }
+    private bool AttackType2(Vector3 clickPos)
+    {
+        if(ControllerChecker() || unitState == UnitState.FormChange || unitState == UnitState.Dash || unitState == UnitState.Reload || shootingAnimationController.isAttackAni || residualAmmo <= 0) return false;
+        if(((Vector2)transform.position-(Vector2)clickPos).magnitude < ((Vector2)transform.position-shootingAnimationController.GetShootPosition()).magnitude) return false;
+        shootingAnimationController.AttackAni();
+        this.clickPos = clickPos;
+        sound?.PlayOneShot(soundClip, 0.3f);
+        SoundManager.Instance.CoStartBullet(userGunsoud, false);
+        ProCamera2DShake.Instance.Shake("GunShot ShakePreset");
+        residualAmmo--;
+        var vec = (Vector2)clickPos - shootingAnimationController.GetShootPosition();
+        var hit = Physics2D.Raycast(clickPos, vec.normalized, vec.magnitude, 1<<LayerMask.NameToLayer("Map") | 1<<LayerMask.NameToLayer("Wall"));
+        if(hit) 
+        {
+            GameObject obj = SoundManager.Instance.bullet.standbyBullet.Dequeue();
+            obj.transform.position = hit.point;
+            SoundManager.Instance.CoStartBullet(obj);
+            return false;
+        }
+        hit = Physics2D.CircleCast(clickPos, aimRadius, Vector2.up, 0, 1<<LayerMask.NameToLayer("Enemy"));
+        if(hit)
+        {
+            GameObject obj = SoundManager.Instance.bullet.standbyBullet.Dequeue();
+            obj.transform.position = clickPos;
+            SoundManager.Instance.CoStartBullet(obj);
+
+            var temp = hit.collider.gameObject.GetInterface<IDamageable>();
+            if(temp != null) temp.GetDamage(bulletDamage, transform, () => {
+                var player = rg.GetComponent<Player>();
+                ((Werewolf)player.forms[1]).currentGauge += player.brutalData.getGage;
+            });
+        }
+        return true;
     }
 
     public override bool Move(Vector2 dir)
@@ -226,10 +282,17 @@ public class Human : PlayerUnit
         }
     }
 
-    public override bool Reload()
+    public override bool Reload(KeyState reloadState)
     {
-        if(ControllerChecker() || reloadCoroutine != null || residualAmmo >= maxAmmo) return false;
-        base.Reload();
+        if(reloadType == ReloadType.Tap) return ReloadType1(reloadState);
+        else if(reloadType == ReloadType.Hold) return ReloadType2(reloadState);
+        else return false;
+    }
+
+    private bool ReloadType1(KeyState reloadState)
+    {
+        if(ControllerChecker() || reloadCoroutine != null || residualAmmo >= maxAmmo || reloadState != KeyState.KeyDown) return false;
+        base.Reload(reloadState);
         residualAmmo = 0;
         reloadCoroutine = StartCoroutine(Reloading());
         return true;
@@ -257,6 +320,43 @@ public class Human : PlayerUnit
         if(reloadCoroutine != null) StopCoroutine(reloadCoroutine);
         shootingAnimationController?.NomalAni();
         reloadCoroutine = null;
+    }
+    
+    private float reloadHoldingTime = 0f;
+    private bool ReloadType2(KeyState reloadState)
+    {
+        if(ControllerChecker() || reloadCoroutine != null || residualAmmo >= maxAmmo || unitState == UnitState.Dash) return false;
+        switch(reloadState)
+        {
+            case KeyState.KeyDown:
+                base.Reload(reloadState);
+                unitState = UnitState.Reload;
+                reloadHoldingTime += Time.deltaTime;
+                if(reloadHoldingTime >= reloadHoldTime)
+                {
+                    residualAmmo += ammoToReload;
+                    reloadHoldingTime = 0f;
+                    unitState = UnitState.Default;
+                }
+                break;
+            case KeyState.KeyStay:
+                unitState = UnitState.Reload;
+                reloadHoldingTime += Time.deltaTime;
+                if(reloadHoldingTime >= reloadHoldTime)
+                {
+                    residualAmmo += ammoToReload;
+                    reloadHoldingTime = 0f;
+                    unitState = UnitState.Default;
+                }
+                break;
+            case KeyState.KeyUp:
+                shootingAnimationController.armAnim.ResetTrigger("reload");
+                shootingAnimationController?.NomalAni();
+                unitState = UnitState.Default;
+                reloadHoldingTime = 0f;
+                break;
+        }
+        return true;
     }
 }
 

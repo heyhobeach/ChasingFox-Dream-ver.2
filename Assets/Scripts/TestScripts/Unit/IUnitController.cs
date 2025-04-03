@@ -82,7 +82,7 @@ public interface IUnitController
     /// 재장전 동작을 수행
     /// </summary>
     /// <returns>재장전 동작이 성공적으로 수행되었을 시 true를 반환</returns>
-    bool Reload();
+    bool Reload(KeyState reloadKey);
 
     bool Skile1(Vector2 pos);
 }

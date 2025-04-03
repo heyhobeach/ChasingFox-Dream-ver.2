@@ -161,9 +161,9 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
             changedForm.gameObject.SetActive(false);
             changedForm = forms[0];
             changedForm.gameObject.SetActive(true);
-            Attack(ClickPos());
+            // Attack(ClickPos());
             Dash();
-            Reload(); 
+            // Reload(); 
             formChangeDelegate = HumanToWerewolf;
         }
         else 
@@ -182,7 +182,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         }
     }
 
-    public bool Reload() => changedForm.Reload(); 
+    public bool Reload(KeyState reloadKey) => changedForm.Reload(reloadKey); 
 
     void Update()
     {

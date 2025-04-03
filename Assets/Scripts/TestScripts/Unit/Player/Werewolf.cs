@@ -214,7 +214,7 @@ public class Werewolf : PlayerUnit
     public override bool FormChange() => base.FormChange();
     public override bool Skile1(Vector2 pos) => RangedAttack(pos);
 
-    public override bool Reload() => false;
+    public override bool Reload(KeyState reloadKey) => false;
 
     public bool isFormChangeReady()
     {
