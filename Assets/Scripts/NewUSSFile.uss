@@ -5,43 +5,82 @@ VisualElement {
     color: green;
     text-decoration: underline;
     cursor: pointer;
-    display:inline;
+    display: inline;
 }
-.clickable:hover{
-    color:green;
-        display:inline;
+
+.clickable:hover {
+    color: green;
+    display: inline;
 }
-.sentence{
+
+.sentence {
     color: blue;
     text-decoration: underline;
     cursor: pointer;
-    display:inline;
-    font-size:40px;
+    display: inline;
+    font-size: 40px;
 }
 
 .draggable {
-    color:red;
-    /* 드래그 가능 요소에 대한 추가 스타일 (예: 밑줄) */
-    /* text-decoration: underline; */
+    color: red;
 }
 
 #sentence-container Label {
-    /* 모든 Label에 동일한 폰트 적용 */
     font-size: 50px;
     color: rgb(200, 200, 200);
-    /* -unity-font: url('path/to/your/font.ttf'); */
-
-    /* Label 사이 간격 제거 (필요시 조정) */
     margin-left: 0;
     margin-right: 0;
     padding-left: 0;
     padding-right: 0;
 }
 
-/* 특정 Label 간격 미세 조정 (필요하다면) */
-#sentence-container #draggable-word { /* 부모 ID와 함께 지정 (명시도: 100 + 100 = 200) */
-/* 또는 Label#draggable-word { ... }  (명시도: 1 + 100 = 101, 순서에 따라 동작) */
-/* 또는 #draggable-word.draggable { ... } (명시도: 100 + 10 = 110) */
-    color: red; /* 이제 이 규칙이 우선 적용됩니다 */
-    /* 다른 스타일 조정이 필요하면 추가 */
+#sentence-container #draggable-word {
+    color: red;
+}
+
+.default {
+    translate: 20% 0;
+    transition-timing-function: ease-in;
+    height: 100%;
+    background-image: resource('illustration/ally1_normal_1');
+    transition-duration: 1s;
+    scale: 1 1;
+    background-size: 100% 100%;
+    width: 100%;
+    left: 0;
+    right: 0;
+}
+
+.move-left {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0);
+    margin-top: 20px;
+    justify-content: center;
+    align-items: center;
+    left: 0;
+    background-image: resource('illustration/ally1_normal_1');
+    translate: 0 0;
+    right: 0;
+}
+
+.test1 {
+    flex-grow: 1;
+    translate: 100% 0;
+    background-image: resource('illustration/ally1_normal_1');
+    transition-timing-function: ease-in;
+    transition-duration: 1s;
+}
+
+.test2 {
+    translate: 20% 0;
+}
+
+.test2-2 {
+    translate: 20% 0;
+    transition-timing-function: ease-in;
+    width: auto;
+    height: 100%;
+    left: 0;
+    right: 0;
 }

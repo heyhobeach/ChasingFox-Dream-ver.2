@@ -18,6 +18,8 @@ public class UI_DynamicText : MonoBehaviour
     VisualElement visualElement ;//메인 부분
     VisualElement dragGhost = null;
 
+    VisualElement diary;
+
     private List<int> info_keys=new List<int>();
     bool is_drag = false;
 
@@ -25,6 +27,8 @@ public class UI_DynamicText : MonoBehaviour
 
     Vector2 startMousePosition;
     InventoryScripable inventoryScripable;
+
+
     private void OnEnable()
     {
         inventoryScripable = InventoryManager.Instance.GetInventoryAll();//인벤토리에서 데이터를 가져옴
@@ -44,12 +48,14 @@ public class UI_DynamicText : MonoBehaviour
             Debug.LogError("inventoryScripable Null");
         }
 
+
         // UIDocument에서 rootVisualElement 가져오기
         var root = GetComponent<UIDocument>().rootVisualElement;
 
         // textContainer 가져오기
         var textContainer = root.Q<VisualElement>("textContainer");
         visualElement = root.Q<VisualElement>("VisualElement");
+        visualElement.Add(diary);
 
         // 기존 요소 제거 (초기화)
         //textContainer.Clear();
@@ -61,7 +67,7 @@ public class UI_DynamicText : MonoBehaviour
         //{
         //    Debug.Log(i);
         //}
-        
+
         var text1 = new TextElement { text = "클릭 이벤트 가능한 문장 1 ", name = "sentence1" };
         var clickableText = new TextElement { text = "클릭 이벤트 가능한 문장 2", name = "clickableWord"};
         var text2 = new TextElement { text = "클릭 이벤트 가능한 문장 3", name = "sentence2" };
@@ -99,10 +105,10 @@ public class UI_DynamicText : MonoBehaviour
 
         });
 
-        foreach(var text in textList)
-        {
-            textContainer.Add(text);
-        }
+        //foreach(var text in textList)
+        //{
+        //    textContainer.Add(text);
+        //}
 
 
         // 컨테이너에 추가
@@ -111,7 +117,7 @@ public class UI_DynamicText : MonoBehaviour
         //textContainer.Add(text2);
 
         VisualElement sentence_container=root.Q<VisualElement>("sentence-container");
-        var draggable_label= sentence_container.Query<Label>().Class("draggable").Build();
+        //var draggable_label= sentence_container.Query<Label>().Class("draggable").Build();
 
         var drop_area = visualElement.Q<VisualElement>("drop-area");
 
@@ -137,13 +143,13 @@ public class UI_DynamicText : MonoBehaviour
             //dragGhost = null;
         });
 
-        foreach (var dlable in draggable_label)
-        {
-            dlable.RegisterCallback<PointerDownEvent>(evt => { is_sentence = true; });
-            dlable.RegisterCallback<PointerMoveEvent>(evt => { Debug.Log("label 드래그 확인 문구"); });
-            dlable.RegisterCallback<PointerUpEvent>(evt => { Debug.Log("label 클릭 놓은 확인 문구"); });
-            Debug.Log("드래그 라벨" + dlable.text);
-        }
+        //foreach (var dlable in draggable_label)
+        //{
+        //    dlable.RegisterCallback<PointerDownEvent>(evt => { is_sentence = true; });
+        //    dlable.RegisterCallback<PointerMoveEvent>(evt => { Debug.Log("label 드래그 확인 문구"); });
+        //    dlable.RegisterCallback<PointerUpEvent>(evt => { Debug.Log("label 클릭 놓은 확인 문구"); });
+        //    Debug.Log("드래그 라벨" + dlable.text);
+        //}
 
 
 
@@ -155,11 +161,12 @@ public class UI_DynamicText : MonoBehaviour
         }
     }
 
-    private void SetDiaryText(ref VisualElement textContainer)//데이터를 가져와서 사용하는 부분
+    private void SetDiaryText(ref VisualElement textContainer)//diary csv (현재는 테스트파일2) 데이터를 가져와서 사용하는 부분
     {
-        List<TextElement> textList = new List<TextElement>();
+        List<VisualElement> textList = new List<VisualElement>();
         Dialogue[] dialogues = StartEvent();
         //textContainer.Clear();
+        VisualElement visuallist = new VisualElement();
         int num = 0;
         //foreach (var dialogue in dialogues)
         for(int i=0;i<dialogues.Length;i++)
@@ -183,35 +190,65 @@ public class UI_DynamicText : MonoBehaviour
 
             foreach (string part in parts)
             {
-
-                bool check=(keys.Length>0?part.ContainsAny(keys[0]):false);
-                //int a = part.IndexOf(keys[0]);
-                Debug.Log($"분리 후: [{part}] check[{check}]");
-                var textElement = new TextElement { text = part, name = "textelement" };
-                textList.Add(textElement);
-                if (check)
+                string[]_part=part.Split(' ');
+                foreach(string p in _part)//여기 드래그 관련 내용들은 csv가 아닌 수집품의 내용 관련으로 갈것임 지금 해당내용은 테스트용이라고 생각하는것이 좋음 띄워 쓰기 관련은 인벤토리(수집품) 추리시 발생
                 {
-                    textElement.RegisterCallback<PointerDownEvent>(evt => { is_sentence = true; });
-                    textElement.RegisterCallback<PointerMoveEvent>(evt => { Debug.Log("label 드래그 확인 문구"); });
-                    textElement.RegisterCallback<PointerUpEvent>(evt => { Debug.Log("label 클릭 놓은 확인 문구"); });
-                    textList[num++].AddToClassList("draggable");
+                    bool check = (keys.Length > 0 ? part.ContainsAny(keys[0]) : false);
+                    //int a = part.IndexOf(keys[0]);
+                    Debug.Log($"분리 후: [{p}] check[{check}]"); //지금 분리도 안 되는거같은데
 
+                    var textelement = new TextElement { text = p, name = "textelement" };
+                    visuallist.Add(textelement);
+                    if (check)
+                    {
+                        //textelement.RegisterCallback<PointerDownEvent>(evt => { is_sentence = true; });
+                        //textelement.RegisterCallback<PointerMoveEvent>(evt => { Debug.Log("label 드래그 확인 문구"); });
+                        //textelement.RegisterCallback<PointerUpEvent>(evt => { Debug.Log("label 클릭 놓은 확인 문구"); });
+                        //textelement.AddToClassList("draggable");
+                        textelement.AddToClassList("clickable");
+                        textelement.RegisterCallback<PointerDownEvent>(LoadMestery);
+                    }
+                    else
+                    {
+                        textelement.AddToClassList("sentence");
+                    }
+                    //visuallist.AddToClassList("clickable");
                 }
-                else
-                {
-                    textList[num++].AddToClassList("sentence");
-                }
+               
+
                 //(check ? textList[num++].AddToClassList("sentence") : textList[num++].AddToClassList("sentence"));
                 //textList[num++].AddToClassList("sentence");//클래스 부여 하는 부분
             }
-        }
-        for (int i = 0; i < textList.Count; i++)
-        {
-
-            //while (true) { }//입력 대기 부분
-            textContainer.Add(textList[i]);
+            textList.Add(visuallist);
+            //textList[i].Add(visuallist);
+            //visuallist.Add(tex);
+            visuallist.style.flexDirection = FlexDirection.Row;
+            visualElement.Add(textList[i]);
+            var t = visuallist.Query<TextElement>().Build();
+            foreach(var k in t)
+            {
+                Debug.Log($"textlist [{i}] => {k.text}");
+            }
+            visuallist = new VisualElement();
             
+
         }
+        //for (int i = 0; i < textList.Count; i++)
+        //{
+        //
+        //    //while (true) { }//입력 대기 부분
+        //    textList[i].style.flexGrow = 3;
+        //    //아래는 출력용
+        //    var t = textList[i].Query<TextElement>().Build();
+        //    foreach(var k in t)
+        //    {
+        //        Debug.Log($"textlist [{i}] => {k.text}");
+        //    }
+        //
+        //    //textContainer.Add(textList[i]);
+        //    //textContainer.style.flexDirection = FlexDirection.Row;
+        //    //visualElement.Add(visuallist[i]);
+        //}
     }
 
     //Awaitable 
@@ -334,6 +371,9 @@ public class UI_DynamicText : MonoBehaviour
     private void LoadMestery(PointerDownEvent evt)
     {
         Debug.Log("Mestery Load");
+        var root = GetComponent<UIDocument>().rootVisualElement;
+        var tracer = root.Q<VisualElement>("TracerNote");
+        tracer.AddToClassList("test2-2");
     }
 
 }
