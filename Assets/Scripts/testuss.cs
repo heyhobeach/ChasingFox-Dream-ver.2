@@ -14,13 +14,13 @@ using static UnityEditor.Recorder.OutputPath;
 
 public class UI_DynamicText : MonoBehaviour
 {
-    
-    VisualElement visualElement ;//메인 부분
+
+    VisualElement visualElement;//메인 부분
     VisualElement dragGhost = null;
 
     VisualElement diary;
 
-    private List<int> info_keys=new List<int>();
+    private List<int> info_keys = new List<int>();
     bool is_drag = false;
 
     bool is_sentence = false;
@@ -33,10 +33,10 @@ public class UI_DynamicText : MonoBehaviour
     {
         inventoryScripable = InventoryManager.Instance.GetInventoryAll();//인벤토리에서 데이터를 가져옴
 
-        Dictionary<int, Inventory.Info>.KeyCollection keys  = InventoryManager.Instance.GetinventoryKeys();//키를 가져오기 위한 변수
+        Dictionary<int, Inventory.Info>.KeyCollection keys = InventoryManager.Instance.GetinventoryKeys();//키를 가져오기 위한 변수
 
 
-        foreach(var key in keys)//현재 수집 되어있는 key를 가져옴
+        foreach (var key in keys)//현재 수집 되어있는 key를 가져옴
         {
             //Debug.Log("keytype"+key.GetType());
             //Debug.Log("key =>" + key+InventoryManager.Instance.GetInfo_(key).context);//내용
@@ -69,18 +69,19 @@ public class UI_DynamicText : MonoBehaviour
         //}
 
         var text1 = new TextElement { text = "클릭 이벤트 가능한 문장 1 ", name = "sentence1" };
-        var clickableText = new TextElement { text = "클릭 이벤트 가능한 문장 2", name = "clickableWord"};
+        var clickableText = new TextElement { text = "클릭 이벤트 가능한 문장 2", name = "clickableWord" };
         var text2 = new TextElement { text = "클릭 이벤트 가능한 문장 3", name = "sentence2" };
 
         // 클릭 이벤트 추가
         List<TextElement> textList = new List<TextElement>();//이벤트가 들어가야하는 내용들
-        textList.Add(text1); textList.Add(text2) ; textList.Add(clickableText);
+        textList.Add(text1); textList.Add(text2); textList.Add(clickableText);
         SetDiaryText(ref textContainer);
         //ui toolkit에서 제공하는 함수로 이벤트 등록에 사용됨
-        foreach(var text in textList)
+        foreach (var text in textList)
         {
-            text.RegisterCallback<PointerUpEvent>(even=>{ 
-                Debug.Log("hello"); 
+            text.RegisterCallback<PointerUpEvent>(even =>
+            {
+                Debug.Log("hello");
             });
         }
         clickableText.RegisterCallback<PointerUpEvent>(evt =>
@@ -116,8 +117,8 @@ public class UI_DynamicText : MonoBehaviour
         //textContainer.Add(clickableText);
         //textContainer.Add(text2);
 
-        VisualElement sentence_container=root.Q<VisualElement>("sentence-container");
-        //var draggable_label= sentence_container.Query<Label>().Class("draggable").Build();
+        VisualElement sentence_container = root.Q<VisualElement>("sentence-container");
+        var draggable_label = sentence_container.Query<Label>().Class("draggable").Build();
 
         var drop_area = visualElement.Q<VisualElement>("drop-area");
 
@@ -134,29 +135,39 @@ public class UI_DynamicText : MonoBehaviour
         //패널에 함수 등록
         visualElement.RegisterCallback<PointerDownEvent>(OnPointerDown);
         visualElement.RegisterCallback<PointerMoveEvent>(OnPointerMove);
-        visualElement.RegisterCallback<PointerUpEvent>(evt => { 
+        visualElement.RegisterCallback<PointerUpEvent>(evt =>
+        {
             is_drag = false;
             is_sentence = false;
-            if(dragGhost!=null)
-            visualElement.Remove(dragGhost);
+            if (dragGhost != null)
+                visualElement.Remove(dragGhost);
             dragGhost = null;
             //dragGhost = null;
         });
 
-        //foreach (var dlable in draggable_label)
-        //{
-        //    dlable.RegisterCallback<PointerDownEvent>(evt => { is_sentence = true; });
-        //    dlable.RegisterCallback<PointerMoveEvent>(evt => { Debug.Log("label 드래그 확인 문구"); });
-        //    dlable.RegisterCallback<PointerUpEvent>(evt => { Debug.Log("label 클릭 놓은 확인 문구"); });
-        //    Debug.Log("드래그 라벨" + dlable.text);
-        //}
+        //var tracer = root.Q<VisualElement>("TracerNote");
+        //tracer.AddToClassList("test2-2");
+        var panel = root.Q<VisualElement>("TracerNotePanel");
+        panel.style.scale = new Vector2(0, 0);
+        //panel.style.bottom = 100;
+        //panel.RemoveFromHierarchy();
+        //panel.Clear();
+
+
+        foreach (var dlable in draggable_label)
+        {
+            dlable.RegisterCallback<PointerDownEvent>(evt => { is_sentence = true; });
+            dlable.RegisterCallback<PointerMoveEvent>(evt => { Debug.Log("label 드래그 확인 문구"); });
+            dlable.RegisterCallback<PointerUpEvent>(evt => { Debug.Log("label 클릭 놓은 확인 문구"); });
+            Debug.Log("드래그 라벨" + dlable.text);
+        }
 
 
 
         var clickable = textContainer.Query<TextElement>().Class("clickable").Build();
-        foreach(var i in clickable)
+        foreach (var i in clickable)
         {
-            Debug.Log("clickable"+i.name);
+            Debug.Log("clickable" + i.name);
             i.RegisterCallback<PointerDownEvent>(LoadMestery);
         }
     }
@@ -169,7 +180,7 @@ public class UI_DynamicText : MonoBehaviour
         VisualElement visuallist = new VisualElement();
         int num = 0;
         //foreach (var dialogue in dialogues)
-        for(int i=0;i<dialogues.Length;i++)
+        for (int i = 0; i < dialogues.Length; i++)
         {
             string[] parts = Regex.Split(dialogues[i].context[0], @"<br\s*/?>");//나눈 문장들 들어 있음
             Debug.Log("parts count" + parts.Length);
@@ -190,8 +201,8 @@ public class UI_DynamicText : MonoBehaviour
 
             foreach (string part in parts)
             {
-                string[]_part=part.Split(' ');
-                foreach(string p in _part)//여기 드래그 관련 내용들은 csv가 아닌 수집품의 내용 관련으로 갈것임 지금 해당내용은 테스트용이라고 생각하는것이 좋음 띄워 쓰기 관련은 인벤토리(수집품) 추리시 발생
+                string[] _part = part.Split(' ');
+                foreach (string p in _part)//여기 드래그 관련 내용들은 csv가 아닌 수집품의 내용 관련으로 갈것임 지금 해당내용은 테스트용이라고 생각하는것이 좋음 띄워 쓰기 관련은 인벤토리(수집품) 추리시 발생
                 {
                     bool check = (keys.Length > 0 ? part.ContainsAny(keys[0]) : false);
                     //int a = part.IndexOf(keys[0]);
@@ -214,7 +225,7 @@ public class UI_DynamicText : MonoBehaviour
                     }
                     //visuallist.AddToClassList("clickable");
                 }
-               
+
 
                 //(check ? textList[num++].AddToClassList("sentence") : textList[num++].AddToClassList("sentence"));
                 //textList[num++].AddToClassList("sentence");//클래스 부여 하는 부분
@@ -225,12 +236,12 @@ public class UI_DynamicText : MonoBehaviour
             visuallist.style.flexDirection = FlexDirection.Row;
             visualElement.Add(textList[i]);
             var t = visuallist.Query<TextElement>().Build();
-            foreach(var k in t)
+            foreach (var k in t)
             {
                 Debug.Log($"textlist [{i}] => {k.text}");
             }
             visuallist = new VisualElement();
-            
+
 
         }
         //for (int i = 0; i < textList.Count; i++)
@@ -258,10 +269,10 @@ public class UI_DynamicText : MonoBehaviour
         Debug.Log("추리 이벤트 실행됨!");
         Dialogue[] tempdialogue = DatabaseManager.instance.theParser.Parse("테스트파일2");//일지 파일 명으로 변경
         DatabaseManager.instance.dialogueDic.Clear();
-        Dictionary<int,Dialogue> trace_dic = new Dictionary<int, Dialogue>();//매번 할 필요없을거같긷한데 나중에 수정해도 될듯
+        Dictionary<int, Dialogue> trace_dic = new Dictionary<int, Dialogue>();//매번 할 필요없을거같긷한데 나중에 수정해도 될듯
         foreach (var dialogue in tempdialogue)
         {
-            Debug.Log("dialogue id" + dialogue.id +"dialogue text" + dialogue.context[0]);
+            Debug.Log("dialogue id" + dialogue.id + "dialogue text" + dialogue.context[0]);
             trace_dic.Add(int.Parse(dialogue.id), dialogue);
         }
         //for (int i = 0; i < tempdialogue.Length; i++)//문자열에서 아이템 찾는 부분이었음
@@ -280,7 +291,7 @@ public class UI_DynamicText : MonoBehaviour
         //
         //    DatabaseManager.instance.dialogueDic.Add(i + 1, tempdialogue[i]);
         //}
-        List<Dialogue> templist=new List<Dialogue>();
+        List<Dialogue> templist = new List<Dialogue>();
         foreach (var i in info_keys)//현재 가지고 있는 키에서 문자를 받을수있음
         {
             //Debug.Log("key id=>"+i);
@@ -372,8 +383,58 @@ public class UI_DynamicText : MonoBehaviour
     {
         Debug.Log("Mestery Load");
         var root = GetComponent<UIDocument>().rootVisualElement;
-        var tracer = root.Q<VisualElement>("TracerNote");
+        var panel = root.Q<VisualElement>("TracerNotePanel");
+        panel.style.scale = new Vector2(1, 1);
+        var tracer = root.Q<VisualElement>("TracerNote");//여기 하위에 오브젝트 배치
         tracer.AddToClassList("test2-2");
-    }
 
+        //테스트용 이제 이렇게 텍스트를 배치해야함
+        int i = 0;
+        VisualElement visuallist = new VisualElement();
+        foreach (var inven in inventoryScripable.inventory)
+        {
+            Debug.Log("inven =" + inven.Value.context);
+            string[] parts = Regex.Split(inven.Value.context, @"<br\s*/?>");
+            string[] keys = InventoryManager.Instance.GetInfo_(info_keys[i++]).keywords;
+
+
+            foreach (string part in parts)
+            {
+                string[] _part = part.Split(' ');
+                foreach (string p in _part)//여기 드래그 관련 내용들은 csv가 아닌 수집품의 내용 관련으로 갈것임 지금 해당내용은 테스트용이라고 생각하는것이 좋음 띄워 쓰기 관련은 인벤토리(수집품) 추리시 발생
+                {
+                    bool check = (keys.Length > 0 ? part.ContainsAny(keys[0]) : false);
+                    //int a = part.IndexOf(keys[0]);
+                    Debug.Log($"분리 후: [{p}] check[{check}]"); //지금 분리도 안 되는거같은데
+
+                    var textelement = new TextElement { text = p, name = "textelement" };
+                    visuallist.Add(textelement);
+                    if (check)
+                    {
+                        textelement.RegisterCallback<PointerDownEvent>(evt => { is_sentence = true; });
+                        textelement.RegisterCallback<PointerMoveEvent>(evt => { Debug.Log("label 드래그 확인 문구"); });
+                        textelement.RegisterCallback<PointerUpEvent>(evt => { Debug.Log("label 클릭 놓은 확인 문구"); });
+                        textelement.AddToClassList("draggable");
+                        //textelement.AddToClassList("clickable");
+                        //textelement.RegisterCallback<PointerDownEvent>(LoadMestery);
+                    }
+                    else
+                    {
+                        textelement.AddToClassList("sentence");
+                    }
+                    //visuallist.AddToClassList("clickable");
+                    //visuallist.Add(textelement);
+                }
+
+                //var sample = new TextElement { text = inven.Value.context, name = "sentence1" };
+                //sample.AddToClassList("sentence");
+                //sample.style.fontSize = 40;
+                tracer.Add(visuallist);
+                visualElement = new VisualElement();
+            }
+
+        }
+
+    }
 }
+
