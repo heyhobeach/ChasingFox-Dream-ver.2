@@ -100,6 +100,7 @@ public abstract class PlayerUnit : UnitBase
 
     protected virtual void FixedUpdate()
     {
+        isGrounded = mapSensor.isGrounded;
         AddGravity();
         AddFrictional();
         SetHorizontalForce(hzVel);
@@ -107,7 +108,6 @@ public abstract class PlayerUnit : UnitBase
         if(Mathf.Abs(hzForce) <= 0.01f * movementSpeed) hzForce = 0;
         if(vcForce < 0 && isGrounded) vcForce = 0;
         Movement();
-        isGrounded = mapSensor.isGrounded;
     }
 
     protected override void OnEnable()
@@ -248,7 +248,7 @@ public abstract class PlayerUnit : UnitBase
     {
         Debug.Assert(mapSensor.normal != Vector2.right, "Vector2.right(1, 0) 아님\nVector2.up으로 교체해주세요.");
 
-        if(isGrounded && !isJumping && Mathf.Abs(hzForce) > 0)
+        if(isGrounded && Mathf.Abs(hzForce) > 0)
         {
             int layerMask = 0;
             switch(mapSensor.groundType)
@@ -268,7 +268,7 @@ public abstract class PlayerUnit : UnitBase
             rg.position = rg.position + (dir * Time.fixedDeltaTime);
 
             var hit = Physics2D.CircleCast(rg.position + (Vector2.up * BoxSizeX), BoxSizeX, Vector2.down, 1f, layerMask);
-            if(hit) rg.MovePosition(rg.position + (Vector2.down * hit.distance));
+            if(hit && !isJumping) rg.MovePosition(rg.position + (Vector2.down * hit.distance));
             else
             {
                 dir = new Vector2(hzForce, vcForce);
