@@ -6,10 +6,13 @@ using UnityEngine.UI;
 using UnityEngine.Assertions;
 using MyUtiles;
 using System.Linq;
+using UnityEngine.U2D.Animation;
 
 /// <summary>
 /// 늑대인간 상태 클래스, PlayerUnit 클래스를 상속함
 /// </summary>
+[RequireComponent(typeof(SpriteLibrary))]
+[RequireComponent(typeof(SpriteResolver))]
 public class Werewolf : PlayerUnit
 {
     public GameObject meleeAttack;

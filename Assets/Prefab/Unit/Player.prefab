@@ -1063,7 +1063,6 @@ GameObject:
   - component: {fileID: 1580578807521142113}
   - component: {fileID: 2711403511700935257}
   - component: {fileID: 4210399258222090256}
-  - component: {fileID: 6120829590278257347}
   - component: {fileID: 152312924038341761}
   m_Layer: 7
   m_Name: Human
@@ -1114,6 +1113,11 @@ MonoBehaviour:
   shootingAnimationController: {fileID: 0}
   coverBox: {fileID: 2110725794684914726}
   mapSensor: {fileID: 6660789310723955401}
+  attackType: 0
+  aimRadius: 0.5
+  reloadType: 0
+  reloadHoldTime: 0.5
+  ammoToReload: 1
   bullet: {fileID: 8637794665908941891}
   soundClip: {fileID: 0}
   userGunsoud: {fileID: 5753163940796406449}
@@ -1190,15 +1194,15 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -186190017, guid: e98af9ba06f56534b869fac4b997dede, type: 3}
+  m_Sprite: {fileID: 674200056, guid: 79bd937855fadb149ac7e66d2cb3eed2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.5625, y: 1.65625}
+  m_Size: {x: 3.75, y: 3.75}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!95 &1580578807521142113
@@ -1253,51 +1257,6 @@ MonoBehaviour:
   m_labelHash: 6.616165e-19
   m_SpriteKey: 0
   m_SpriteHash: 554778324
---- !u!114 &6120829590278257347
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3844520560318708445}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Events:
-    m_Signals:
-    - {fileID: 11400000, guid: 3f523a917fe6e514881565825728fc73, type: 2}
-    - {fileID: 11400000, guid: c512dbee556fdae4d9ebc0ec63281b87, type: 2}
-    m_Events:
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 4210399258222090256}
-          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
-          m_MethodName: set_enabled
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 3844520560318708445}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: 
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: 
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!70 &152312924038341761
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -1570,7 +1529,6 @@ GameObject:
   - component: {fileID: 9215563406212718686}
   - component: {fileID: 3999041251242683300}
   - component: {fileID: 6619505883188910514}
-  - component: {fileID: 4048855046861773215}
   - component: {fileID: 3277836518743028262}
   m_Layer: 7
   m_Name: Focus
@@ -1771,51 +1729,6 @@ MonoBehaviour:
   m_labelHash: 6.616165e-19
   m_SpriteKey: 0
   m_SpriteHash: 554778324
---- !u!114 &4048855046861773215
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5261527683509198029}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Events:
-    m_Signals:
-    - {fileID: 11400000, guid: 3f523a917fe6e514881565825728fc73, type: 2}
-    - {fileID: 11400000, guid: c512dbee556fdae4d9ebc0ec63281b87, type: 2}
-    m_Events:
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 6619505883188910514}
-          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
-          m_MethodName: set_enabled
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 5261527683509198029}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: 
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: 
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!70 &3277836518743028262
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -2090,6 +2003,9 @@ MonoBehaviour:
     m_Signals:
     - {fileID: 11400000, guid: 67f211fa80a5fa74fa9c53d5ca8a9b9d, type: 2}
     - {fileID: 11400000, guid: e4227ce11cbe9b8428f8eb5c9acd7902, type: 2}
+    - {fileID: 11400000, guid: d675003643fc6bb4d8e594408a69b95d, type: 2}
+    - {fileID: 11400000, guid: 3f523a917fe6e514881565825728fc73, type: 2}
+    - {fileID: 11400000, guid: d6cb7dcd9ecf34a44b753084fbc02759, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -2134,6 +2050,48 @@ MonoBehaviour:
         - m_Target: {fileID: 6734788339055909496}
           m_TargetAssemblyTypeName: Player, Assembly-CSharp
           m_MethodName: FormPostitionReset
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 8058911590280256695}
+          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+          m_MethodName: set_enabled
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6734788339055909496}
+          m_TargetAssemblyTypeName: Player, Assembly-CSharp
+          m_MethodName: SetForTimeline
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6734788339055909496}
+          m_TargetAssemblyTypeName: Player, Assembly-CSharp
+          m_MethodName: SetoffForTimeline
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -2245,8 +2203,6 @@ GameObject:
   - component: {fileID: 187182472923990696}
   - component: {fileID: 7183464201992087756}
   - component: {fileID: 6557440448123029948}
-  - component: {fileID: 5826911918149382585}
-  - component: {fileID: 3763993121770383327}
   - component: {fileID: 5305295999471629703}
   m_Layer: 7
   m_Name: Berserker
@@ -2339,18 +2295,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gravity: -11.81
-  movementSpeed: 10
-  accelerate: 5
-  dashDuration: 1
-  jumpForce: 0.8
-  jumpImpulse: 8
-  jumpTime: 0.75
+  movementSpeed: 6.85
+  accelerate: 4.5
+  dashDuration: 0.75
+  jumpForce: 0.5
+  jumpImpulse: 5
+  jumpTime: 0.5
   rg: {fileID: 6077080884683563979}
   anim: {fileID: 6557440448123029948}
   shootingAnimationController: {fileID: 0}
   coverBox: {fileID: 2110725794684914726}
   mapSensor: {fileID: 0}
-  soundClip: {fileID: 0}
 --- !u!95 &6557440448123029948
 Animator:
   serializedVersion: 7
@@ -2373,36 +2328,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &5826911918149382585
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5874660318753125930}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c29cff538c195c249b69c6f2236de67b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Library: []
-  m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: a74ccd44ad4b632449b8631588b2d6a3, type: 3}
---- !u!114 &3763993121770383327
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5874660318753125930}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed8b1ae4e4e52b34ea557c1c11e076fc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_CategoryHash: 0
-  m_labelHash: 0
-  m_SpriteKey: 0
-  m_SpriteHash: 723564402
 --- !u!70 &5305295999471629703
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -3114,7 +3039,6 @@ MonoBehaviour:
   shootingAnimationController: {fileID: 0}
   coverBox: {fileID: 2110725794684914726}
   mapSensor: {fileID: 0}
-  soundClip: {fileID: 0}
 --- !u!212 &4930824761277319463
 SpriteRenderer:
   m_ObjectHideFlags: 0

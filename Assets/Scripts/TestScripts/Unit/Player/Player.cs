@@ -78,7 +78,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         ((Werewolf)forms[1]).brutalData = playerData.brutalData;
         ((Werewolf)forms[1]).currentGauge = playerData.brutalGaugeRemaining;
         ((Werewolf)forms[1]).formChangeTest += () => FormChange();
-        formChangeDelegate = HumanToWerewolf;
+        formChangeDelegate = ToWerewolf;
         ((Werewolf)forms[1]).currentCount = brutalData.isDoubleTime ? 2 : 1;
         foreach(PlayerUnit form in forms) 
         {
@@ -142,21 +142,21 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     private FormChangeDelegate formChangeDelegate;
 
     public bool FormChange() => formChangeDelegate.Invoke();
-    private bool HumanToWerewolf()
+    private bool ToWerewolf()
     {
-        if(changedForm.UnitState == UnitState.Default && changedForm.GetType() == typeof(Human) && ((Werewolf) forms[1]).isFormChangeReady())
+        if(changedForm.UnitState == UnitState.Default && changedForm.GetType() != typeof(Werewolf) && ((Werewolf) forms[1]).isFormChangeReady())
         {
             invalidation = true;
             changedForm.gameObject.SetActive(false);
             changedForm = forms[1];
             changedForm.gameObject.SetActive(true);
-            formChangeDelegate = WerewolfToHuman;
+            formChangeDelegate = ToHuman;
         }
         return true;
     }
-    private bool WerewolfToHuman()
+    private bool ToHuman()
     {
-        if(changedForm.GetType() == typeof(Werewolf)) 
+        if(changedForm.GetType() != typeof(Human)) 
         {
             changedForm.gameObject.SetActive(false);
             changedForm = forms[0];
@@ -164,7 +164,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
             // Attack(ClickPos());
             Dash();
             // Reload(); 
-            formChangeDelegate = HumanToWerewolf;
+            formChangeDelegate = ToWerewolf;
         }
         else 
         {
@@ -238,6 +238,23 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     {
         if(isFreeze) GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePosition;
         else GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
+    }
+
+    public void SetForTimeline()
+    {
+        invalidation = true;
+        changedForm.gameObject.SetActive(false);
+        changedForm = forms[2];
+        changedForm.gameObject.SetActive(true);
+        formChangeDelegate = () => false;
+    }
+    public void SetoffForTimeline()
+    {
+        invalidation = false;
+        changedForm.gameObject.SetActive(false);
+        changedForm = forms[0];
+        changedForm.gameObject.SetActive(true);
+        formChangeDelegate = ToWerewolf;
     }
 }
 

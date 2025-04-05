@@ -2,17 +2,20 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Damageables;
 using JetBrains.Annotations;
 using MyUtiles;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class Bullet : MonoBehaviour
 {
     public float lifeTime = 0.945f;
     public int life = 1;
 
-    public GameObject effectObj;
+    public GameObject unitHitEffect;
+    public GameObject wallHitEffect;
 
     private int damage;
     public float speed;
@@ -31,6 +34,8 @@ public class Bullet : MonoBehaviour
     // 이거 이번 프레임에만 활성화 되어있게 변경함
     public float soundTime = 0.3f;
 
+    private Vector3 shootPos;
+
     public void Set(Vector3 shootPos, Vector3 targetPos, Vector3 rotation, int damage, float speed, GameObject gobj, Vector3 addPos = new Vector3(), Action func = null)
     {
         // Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Bullet"), gobj.layer);
@@ -42,6 +47,7 @@ public class Bullet : MonoBehaviour
         this.speed = speed;
         damagedFeedBack = func;
         gameObject.SetActive(true);
+        this.shootPos = shootPos;
     }
 
     private void OnEnable() => startTime = 0;
@@ -65,7 +71,11 @@ public class Bullet : MonoBehaviour
     {
         if(parentGo.tag.Equals(collision.tag)) return;
         if(collision.CompareTag("Map") && parentGo.tag.Equals("Player")) BulletSound();
-        if(collision.CompareTag("ground") || collision.CompareTag("Wall") || collision.CompareTag("Map")) Destroy(gameObject);
+        if(collision.CompareTag("ground") || collision.CompareTag("Wall") || collision.CompareTag("Map")) 
+        {
+            WallFeedBack(collision);
+            Destroy(gameObject);
+        }
 
         if (collision.gameObject.tag == "Player" && !parentGo.CompareTag("Player"))//레이어 설정한 것 때문에 적군 총알만 플레이어 에게 충돌일어남
         {
@@ -128,11 +138,27 @@ public class Bullet : MonoBehaviour
 
     public void DamagedFeedBack(Collider2D collision)
     {
-        var effect = Instantiate(effectObj, transform.position, Quaternion.identity);
+        var dir = collision.transform.position - shootPos;
+        var pos = new Vector2(collision.transform.position.x + (Mathf.Sign(dir.x) * 2 * collision.bounds.size.x), transform.position.y);
+        var effect = Instantiate(unitHitEffect, pos, Quaternion.identity);
         var sprite = effect.GetComponent<SpriteRenderer>();
-        var dir = transform.position - collision.transform.position;
-        if (dir.x >= 0) sprite.flipX = true;
-        else sprite.flipX = false;
+        var sprite2 = effect.transform.GetChild(0).GetComponent<SpriteRenderer>();
+        var visualeffect = effect.transform.GetChild(1).GetComponent<VisualEffect>();
+        if (dir.x >= 0) 
+        {
+            sprite.flipX = true;
+            sprite2.flipX = true;
+            visualeffect.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 180));
+        }
+        else 
+        {
+            sprite.flipX = false;
+            sprite2.flipX = false;
+        }
+    }
+    public void WallFeedBack(Collider2D collision)
+    {
+        Instantiate(wallHitEffect, transform.position, Quaternion.identity);
     }
 }
 

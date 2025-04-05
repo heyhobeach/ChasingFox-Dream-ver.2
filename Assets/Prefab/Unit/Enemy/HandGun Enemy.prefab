@@ -228,7 +228,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 519552906, guid: 45715d21379804dd1b911782100ca62d, type: 3}
+  m_Sprite: {fileID: 835787121, guid: 188eda8de3f6947618af1bfa216521d4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
   m_FlipY: 0
@@ -261,7 +261,7 @@ MonoBehaviour:
   rg: {fileID: 0}
   anim: {fileID: 0}
   shootingAnimationController: {fileID: 0}
-  attackDistance: 17
+  attackDistance: 14
   attackRange: 1
   _maxHealth: 1
   bullet: {fileID: 6823980639826409481, guid: 6dc6995137fdc8446949adb8a36d1ef2, type: 3}
@@ -431,6 +431,7 @@ MonoBehaviour:
   m_Events:
     m_Signals:
     - {fileID: 11400000, guid: 3f523a917fe6e514881565825728fc73, type: 2}
+    - {fileID: 11400000, guid: d6cb7dcd9ecf34a44b753084fbc02759, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -445,6 +446,20 @@ MonoBehaviour:
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 7942558088165335990}
+          m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+          m_MethodName: set_enabled
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
           m_CallState: 2
 --- !u!1 &6880857341139205442
 GameObject:

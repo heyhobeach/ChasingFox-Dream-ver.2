@@ -1,12 +1,14 @@
 using System.Collections;
-using System.Collections.Generic;
 using Com.LuisPedroFonseca.ProCamera2D;
 using Damageables;
 using MyUtiles;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.U2D.Animation;
 
 [RequireComponent(typeof(ShootingAnimationController))]
+[RequireComponent(typeof(SpriteLibrary))]
+[RequireComponent(typeof(SpriteResolver))]
 /// <summary>
 /// 인간 상태 클래스, PlayerUnit 클래스를 상속함
 /// </summary>
