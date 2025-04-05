@@ -126,7 +126,7 @@ public class Werewolf : PlayerUnit
                 maskImage.material.SetFloat("_Alpha", Utils.EaseFromTo(0, brutalData.brutalTime, currentTime, EaseType.EaseOut) / brutalData.brutalTime);
             }
             else formChangeTest?.Invoke();
-            if(currentCount > 0) formChangeTest?.Invoke();
+            if(currentCount <= 0) formChangeTest?.Invoke();
         }
     }
 

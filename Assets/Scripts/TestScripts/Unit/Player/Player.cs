@@ -146,6 +146,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     {
         if(changedForm.UnitState == UnitState.Default && changedForm.GetType() != typeof(Werewolf) && ((Werewolf) forms[1]).isFormChangeReady())
         {
+            Debug.Log("AAA");
             invalidation = true;
             changedForm.gameObject.SetActive(false);
             changedForm = forms[1];
@@ -158,6 +159,8 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     {
         if(changedForm.GetType() != typeof(Human)) 
         {
+            Debug.Log("AAA");
+            invalidation = false;
             changedForm.gameObject.SetActive(false);
             changedForm = forms[0];
             changedForm.gameObject.SetActive(true);
@@ -165,10 +168,6 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
             Dash();
             // Reload(); 
             formChangeDelegate = ToWerewolf;
-        }
-        else 
-        {
-            changedForm.FormChange();
         }
         return true;
 
