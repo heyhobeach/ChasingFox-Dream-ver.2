@@ -345,7 +345,7 @@ public class UI_DynamicText : MonoBehaviour
                 dragGhost.style.left = newGhostPosition.x;
                 dragGhost.style.top = newGhostPosition.y;
 
-                //Debug.Log(string.Format("고스트 left {0} top {1}", dragGhost.style.left, dragGhost.style.top));
+                Debug.Log(string.Format("고스트 left {0} top {1}", dragGhost.style.left, dragGhost.style.top));
             }
         }
     }
@@ -430,7 +430,7 @@ public class UI_DynamicText : MonoBehaviour
                 //sample.AddToClassList("sentence");
                 //sample.style.fontSize = 40;
                 tracer.Add(visuallist);
-                visualElement = new VisualElement();
+                //visualElement = new VisualElement();
             }
 
         }
