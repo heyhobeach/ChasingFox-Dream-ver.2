@@ -20,6 +20,8 @@ public class UI_DynamicText : MonoBehaviour
 
     VisualElement diary;
 
+    VisualElement drop_area;
+
     private List<int> info_keys = new List<int>();
     bool is_drag = false;
 
@@ -54,6 +56,7 @@ public class UI_DynamicText : MonoBehaviour
 
         // textContainer 가져오기
         var textContainer = root.Q<VisualElement>("textContainer");
+        //textContainer.setpa
         visualElement = root.Q<VisualElement>("VisualElement");
         visualElement.Add(diary);
 
@@ -120,7 +123,7 @@ public class UI_DynamicText : MonoBehaviour
         //VisualElement sentence_container = root.Q<VisualElement>("sentence-container");
         //var draggable_label = sentence_container.Query<Label>().Class("draggable").Build();
 
-        var drop_area = visualElement.Q<VisualElement>("drop-area");
+        drop_area = visualElement.Q<VisualElement>("drop-area");
 
         drop_area.RegisterCallback<PointerUpEvent>(evt =>
         {
@@ -170,6 +173,10 @@ public class UI_DynamicText : MonoBehaviour
             Debug.Log("clickable" + i.name);
             i.RegisterCallback<PointerDownEvent>(LoadMestery);
         }
+
+
+
+
     }
 
     private void SetDiaryText(ref VisualElement textContainer)//diary csv (현재는 테스트파일2) 데이터를 가져와서 사용하는 부분
@@ -434,7 +441,9 @@ public class UI_DynamicText : MonoBehaviour
             }
 
         }
-
+        drop_area.RemoveFromHierarchy();
+        panel.Add(drop_area);
+        drop_area.style.color = Color.white;
     }
 }
 
