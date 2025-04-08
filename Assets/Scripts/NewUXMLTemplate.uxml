@@ -1,12 +1,12 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:appui="Unity.UI.Builder" editor-extension-mode="False">
     <Style src="project://database/Assets/Scripts/NewUSSFile.uss?fileID=7433441132597879392&amp;guid=3c5ba5d19934de243b83383a82ad9b71&amp;type=3#NewUSSFile" />
     <ui:VisualElement name="VisualElement" style="flex-grow: 1;">
-        <ui:VisualElement name="textContainer" style="background-color: rgb(255, 0, 0); width: auto; height: auto; background-image: url(&quot;project://database/Assets/Level/Level_Test/Image/CutScene/0_chp/0-1_cutScene_Old.png?fileID=2800000&amp;guid=09947045f03f9ce4aa0015367a990559&amp;type=3#0-1_cutScene_Old&quot;); flex-direction: column;">
+        <ui:VisualElement name="textContainer" style="background-color: rgb(255, 0, 0); width: auto; height: auto; background-image: url(&quot;project://database/Assets/Level/Level_Test/Image/CutScene/0_chp/0-1_cutScene_Old.png?fileID=2800000&amp;guid=09947045f03f9ce4aa0015367a990559&amp;type=3#0-1_cutScene_Old&quot;); flex-direction: column; align-self: center;">
             <ui:TextElement text="이 문장에서 " class="sentence" style="display: inline;" />
             <ui:TextElement name="clickableWord" text="클릭 가능한 텍스트" class="clickable" style="display: inline;" />
             <ui:TextElement text="를 눌러보세요." class="sentence" style="display: inline;" />
         </ui:VisualElement>
-        <ui:VisualElement name="sentence-container" style="flex-directioFn: row; align-items: center;">
+        <ui:VisualElement name="sentence-container" style="flex-directioFn: row; align-items: flex-start;">
             <ui:Label text="대체 " name="text-part-1" />
             <ui:Label text="어디로" name="draggable-word" class="draggable" style="cursor: grab;" />
             <ui:Label text=" 간거지?" name="text-part-2" />

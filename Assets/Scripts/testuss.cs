@@ -117,8 +117,8 @@ public class UI_DynamicText : MonoBehaviour
         //textContainer.Add(clickableText);
         //textContainer.Add(text2);
 
-        VisualElement sentence_container = root.Q<VisualElement>("sentence-container");
-        var draggable_label = sentence_container.Query<Label>().Class("draggable").Build();
+        //VisualElement sentence_container = root.Q<VisualElement>("sentence-container");
+        //var draggable_label = sentence_container.Query<Label>().Class("draggable").Build();
 
         var drop_area = visualElement.Q<VisualElement>("drop-area");
 
@@ -154,13 +154,13 @@ public class UI_DynamicText : MonoBehaviour
         //panel.Clear();
 
 
-        foreach (var dlable in draggable_label)
-        {
-            dlable.RegisterCallback<PointerDownEvent>(evt => { is_sentence = true; });
-            dlable.RegisterCallback<PointerMoveEvent>(evt => { Debug.Log("label 드래그 확인 문구"); });
-            dlable.RegisterCallback<PointerUpEvent>(evt => { Debug.Log("label 클릭 놓은 확인 문구"); });
-            Debug.Log("드래그 라벨" + dlable.text);
-        }
+        //foreach (var dlable in draggable_label)
+        //{
+        //    dlable.RegisterCallback<PointerDownEvent>(evt => { is_sentence = true; });
+        //    dlable.RegisterCallback<PointerMoveEvent>(evt => { Debug.Log("label 드래그 확인 문구"); });
+        //    dlable.RegisterCallback<PointerUpEvent>(evt => { Debug.Log("label 클릭 놓은 확인 문구"); });
+        //    Debug.Log("드래그 라벨" + dlable.text);
+        //}
 
 
 
