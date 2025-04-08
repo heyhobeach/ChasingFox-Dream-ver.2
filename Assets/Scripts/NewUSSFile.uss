@@ -39,19 +39,35 @@ VisualElement {
 }
 
 .test1 {
-    flex-grow: 0;
-    position: relative;
-    flex-shrink: 1;
-    background-image: resource('illustration/ally1_normal_1');
-    width: 30%;
-    height: 100%;
-    translate: 0 0;
-    right: -100%;
-    left: auto;
-    transition-timing-function: ease-in;
+    width: 100%;
+    background-image: resource('수집품');
+    translate: 100% 0;
     transition-duration: 1s;
+    transition-timing-function: ease-out-cubic;
 }
 
 .test2-2 {
-    right: -70%;
+    translate: 0 0;
+    transition-duration: 1s;
+    transition-timing-function: ease-out-cubic;
+}
+
+.test-center {
+    width: 100%;
+    left: auto;
+    align-items: flex-start;
+    align-self: center;
+    translate: 50% 0;
+    transition-timing-function: ease-out-cubic;
+    transition-duration: 1s;
+    background-image: resource('일기');
+    flex-grow: 1;
+    height: 100%;
+}
+
+.test-left {
+    flex-grow: 1;
+    translate: 0 0;
+    width: 100%;
+    transition-timing-function: ease-out-cubic;
 }

@@ -2,6 +2,7 @@ using NUnit.Framework;
 using NUnit.Framework.Internal;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
 using TMPro;
@@ -17,6 +18,7 @@ public class UI_DynamicText : MonoBehaviour
 
     VisualElement visualElement;//메인 부분
     VisualElement dragGhost = null;
+    VisualElement textContainer;
 
     VisualElement diary;
 
@@ -55,7 +57,7 @@ public class UI_DynamicText : MonoBehaviour
         var root = GetComponent<UIDocument>().rootVisualElement;
 
         // textContainer 가져오기
-        var textContainer = root.Q<VisualElement>("textContainer");
+        textContainer = root.Q<VisualElement>("textContainer");
         //textContainer.setpa
         visualElement = root.Q<VisualElement>("VisualElement");
         visualElement.Add(diary);
@@ -366,7 +368,7 @@ public class UI_DynamicText : MonoBehaviour
         {
             dragGhost = new Label("visualElement 고스트");
             dragGhost.style.fontSize = visualElement.resolvedStyle.fontSize;
-            dragGhost.style.color = Color.red;
+            dragGhost.style.color = UnityEngine.Color.red;
             dragGhost.style.unityFont = visualElement.resolvedStyle.unityFont;
             dragGhost.style.unityFontStyleAndWeight = visualElement.resolvedStyle.unityFontStyleAndWeight;
             dragGhost.style.position = Position.Absolute; // 절대 위치 사용
@@ -443,7 +445,10 @@ public class UI_DynamicText : MonoBehaviour
         }
         drop_area.RemoveFromHierarchy();
         panel.Add(drop_area);
-        drop_area.style.color = Color.white;
+        drop_area.style.color = UnityEngine.Color.white;
+        var element = panel.Q<VisualElement>("TracerNotePanel");
+        element.style.width = Length.Percent(100);
+        textContainer.AddToClassList("test-left");
     }
 }
 
