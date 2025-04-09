@@ -397,7 +397,7 @@ public class UI_DynamicText : MonoBehaviour
         var panel = root.Q<VisualElement>("TracerNotePanel");
         panel.style.scale = new Vector2(1, 1);
         var tracer = root.Q<VisualElement>("TracerNote");//여기 하위에 오브젝트 배치
-        tracer.AddToClassList("test2-2");
+
 
         //테스트용 이제 이렇게 텍스트를 배치해야함
         int i = 0;
@@ -453,15 +453,22 @@ public class UI_DynamicText : MonoBehaviour
         textContainer.style.flexGrow = 0;
         textContainer.RemoveFromHierarchy();
 
-        textContainer.AddToClassList("left-diary");
-        textContainerContent.RemoveFromHierarchy();
+   
+        //textContainerContent.RemoveFromHierarchy();
 
         textContainer.style.width=Length.Percent(100);
         textContainer.style.height=Length.Percent(100);
         //textContainer.style.flexGrow = 0;
-        panel.Add(textContainerContent);
+        //panel.Add(textContainerContent);
+        tracer.RemoveFromHierarchy();
         panel.Add(textContainer);
+        panel.Add(tracer);
         panel.Add(drop_area);
+
+
+
+        textContainer.AddToClassList("left-diary");
+        tracer.AddToClassList("test2-2");
     }
 }
 
