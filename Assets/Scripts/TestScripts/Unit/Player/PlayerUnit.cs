@@ -1,28 +1,48 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
 
-[RequireComponent(typeof(SpriteLibrary))]
-[RequireComponent(typeof(SpriteResolver))]
 /// <summary>
 /// 플레이어 유닛의 기본 동작을 정의, UnitBase를 상속한 추상 클래스
 /// </summary>
 public abstract class PlayerUnit : UnitBase
 {
     public GameObject coverBox;
-    private GameObject currentGorundObject;
 
-    private bool _isGrounded;
     protected bool isJumping;
 
-    protected float hzVel;
-    protected float vcVel;
-    protected Vector2 velocity { get => new Vector2(hzVel, vcVel); }
+    public class Velocity
+    {
+        public Vector2 value;
 
-    public GroundSensor groundSensor;
+        public Velocity() {}
+        public Velocity(Vector2 vector) => value = vector;
+
+        public static implicit operator Velocity(Vector2 vector) => new Velocity(vector);
+        public static implicit operator Vector2(Velocity vel) => vel.value;
+    }
+    private float _hzVel;
+    private float _vcVel;
+    protected float hzVel
+    {
+        get => _hzVel;
+        set
+        {
+            _hzVel = value;
+            velocity.value.x = _hzVel;
+        }
+    }
+    protected float vcVel
+    {
+        get => _vcVel;
+        set
+        {
+            _vcVel = value;
+            velocity.value.y = _vcVel;
+        }
+    }
+    public Velocity velocity = new();
+
+    public MapSensor mapSensor;
 
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)
@@ -30,19 +50,7 @@ public abstract class PlayerUnit : UnitBase
         switch (CheckMapType(collision))
         {
             case MapType.Ground:
-                if(isJumping) 
-                {
-                    SetVerticalForce(0);
-                    SetVerticalVelocity(0);
-                    isJumping = false;
-                }
-                break;
             case MapType.Platform:
-                if(!_isGrounded)
-                {
-                    _isGrounded = true;
-                    currentGorundObject = collision.gameObject;
-                }
                 if(isJumping) 
                 {
                     SetVerticalForce(0);
@@ -66,14 +74,6 @@ public abstract class PlayerUnit : UnitBase
     {
         switch (CheckMapType(collision))
         {
-            case MapType.Ground:
-            case MapType.Platform:
-                if(!_isGrounded)
-                {
-                    _isGrounded = true;
-                    currentGorundObject = collision.gameObject;
-                }
-                break;
             case MapType.Floor:
                 isJumping = false;
                 if(vcForce > 0) SetVerticalVelocity(0);
@@ -88,11 +88,7 @@ public abstract class PlayerUnit : UnitBase
 
     protected virtual void OnCollisionExit2D(Collision2D collision)
     {
-        if((collision.gameObject.CompareTag("platform") || collision.gameObject.CompareTag("Map")) && collision.gameObject == currentGorundObject) 
-        {
-            _isGrounded = false;
-            currentGorundObject = null;
-        }
+
     }
 
     protected override void Update()
@@ -104,7 +100,7 @@ public abstract class PlayerUnit : UnitBase
 
     protected virtual void FixedUpdate()
     {
-        isGrounded = groundSensor.isGrounded && _isGrounded;
+        isGrounded = mapSensor.isGrounded;
         AddGravity();
         AddFrictional();
         SetHorizontalForce(hzVel);
@@ -117,7 +113,7 @@ public abstract class PlayerUnit : UnitBase
     protected override void OnEnable()
     {
         base.OnEnable();
-        groundSensor.Set(rg, GetComponent<CapsuleCollider2D>());
+        mapSensor.Set(rg, GetComponent<CapsuleCollider2D>());
     }
     protected override void OnDisable()
     {
@@ -142,6 +138,7 @@ public abstract class PlayerUnit : UnitBase
                 isJumping = true;
                 jumpingHight = 0;
                 SetVerticalForce(0);
+                AddVerticalForce(jumpImpulse);
                 SetVerticalVelocity(0);
                 AddVerticalVelocity(jumpImpulse);
                 return true;
@@ -183,8 +180,9 @@ public abstract class PlayerUnit : UnitBase
         {
             case KeyState.KeyDown:
             case KeyState.KeyStay:
-                groundSensor.currentPlatform?.RemoveColliderMask(1<<gameObject.layer);
-                groundSensor.currentPlatform = null;
+                mapSensor.currentPlatform?.RemoveColliderMask(1<<gameObject.layer);
+                mapSensor.currentPlatform = null;
+                mapSensor.platformSensor.normal = Vector2.up;
                 return true;
             case KeyState.KeyUp:
                 return true;
@@ -248,11 +246,48 @@ public abstract class PlayerUnit : UnitBase
     /// </summary>
     private void Movement()
     {
-        Debug.Assert(groundSensor.normal != Vector2.right, "Vector2.right(1, 0) 아님\nVector2.up으로 교체해주세요.");
+        Debug.Assert(mapSensor.normal != Vector2.right, "Vector2.right(1, 0) 아님\nVector2.up으로 교체해주세요.");
 
-        Vector3 dir = Vector3.ProjectOnPlane(new Vector2(hzForce, 0), isGrounded ? groundSensor.normal : Vector2.up);
-        float mul = 1 / groundSensor.normal.y;
-        rg.MovePosition(rg.transform.position + (((dir * mul) + (Vector3.up * vcForce)) * Time.fixedDeltaTime));
+        if(isGrounded && Mathf.Abs(hzForce) > 0)
+        {
+            int layerMask = 0;
+            switch(mapSensor.groundType)
+            {
+                case MapType.Ground : 
+                    layerMask = 1 << LayerMask.NameToLayer("Map");
+                    break;
+                case MapType.Platform :
+                    layerMask = 1 << LayerMask.NameToLayer("OneWayPlatform");
+                    break;
+            }
+            Vector2 dir = Vector2.Perpendicular(-mapSensor.normal) * hzForce;
+            float mul = Mathf.Clamp(1 / mapSensor.normal.y, 1, 1.41f);
+            dir *= mul;
+            dir += Vector2.up * vcForce;
+
+            rg.position = rg.position + (dir * Time.fixedDeltaTime);
+
+            var hit = Physics2D.CircleCast(rg.position + (Vector2.up * BoxSizeX), BoxSizeX, Vector2.down, 1f, layerMask);
+            if(hit && !isJumping) rg.MovePosition(rg.position + (Vector2.down * hit.distance));
+            else
+            {
+                dir = new Vector2(hzForce, vcForce);
+
+                rg.MovePosition(rg.position + (dir * Time.fixedDeltaTime));                
+            }
+        }
+        else 
+        {
+            Vector2 dir = new Vector2(hzForce, vcForce);
+
+            rg.MovePosition(rg.position + (dir * Time.fixedDeltaTime));
+        }
+
+
+        // Debug.DrawRay(transform.position, Vector2.Perpendicular(-mapSensor.normal), Color.blue);
+        // Debug.DrawRay(transform.position, dir.normalized, Color.magenta);
+        // Debug.DrawRay(transform.position, dir.normalized, Color.yellow);
+
     }
 
     /// <summary>

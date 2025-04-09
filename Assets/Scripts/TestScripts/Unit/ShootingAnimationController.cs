@@ -103,5 +103,5 @@ public class ShootingAnimationController : MonoBehaviour
     }
     
     public Vector2 GetShootPosition() => (Vector2)shootPostion.transform.position;
-    public Vector3 GetShootRotation() => shootPostion.transform.rotation.eulerAngles;
+    public Vector3 GetShootRotation() => bodys[0].transform.rotation.eulerAngles;
 } 

@@ -6,10 +6,13 @@ using UnityEngine.UI;
 using UnityEngine.Assertions;
 using MyUtiles;
 using System.Linq;
+using UnityEngine.U2D.Animation;
 
 /// <summary>
 /// 늑대인간 상태 클래스, PlayerUnit 클래스를 상속함
 /// </summary>
+[RequireComponent(typeof(SpriteLibrary))]
+[RequireComponent(typeof(SpriteResolver))]
 public class Werewolf : PlayerUnit
 {
     public GameObject meleeAttack;
@@ -58,6 +61,7 @@ public class Werewolf : PlayerUnit
         playerArea.transform.position = transform.position + Vector3.up;
         playerArea.transform.localScale = brutalData.brutalArea - Vector2.one;
         currentTime = brutalData.brutalTime;
+        currentCount = brutalData.isDoubleTime ? 2 : 1;
         currentGauge -= brutalData.useGage;
 
         SelectObjects();
@@ -68,13 +72,33 @@ public class Werewolf : PlayerUnit
     protected override void OnDisable()
     {
         base.OnDisable();
-        if(attackCoroutine != null) StopCoroutine(attackCoroutine);
-        if(unscaledTimeCoroutine != null) StopCoroutine(unscaledTimeCoroutine);
+        if(attackCoroutine != null) 
+        {
+            StopCoroutine(attackCoroutine);
+            attackCoroutine = null;
+        }
+        if(unscaledTimeCoroutine != null) 
+        {
+            StopCoroutine(unscaledTimeCoroutine);
+            unscaledTimeCoroutine = null;
+        }
         Time.timeScale = 1f;
         Time.fixedDeltaTime = 0.02f;
-        currentCount = brutalData.isDoubleTime ? 2 : 1;
     }
 
+    // private void Awake()
+    // {
+    //     formChangeTest += () => UnrestrictedRangedAttack(ClickPos());
+
+    //     Vector3 ClickPos()
+    //     {
+    //         var screenPoint = Input.mousePosition;//마우스 위치 가져옴
+    //         screenPoint.z = Camera.main.transform.position.z;
+    //         Vector3 pos = Camera.main.ScreenToWorldPoint(screenPoint);
+    //         pos.z = 0;
+    //         return pos;
+    //     }
+    // }
     protected override void Start()
     {
         Init();
@@ -87,11 +111,6 @@ public class Werewolf : PlayerUnit
         base.FixedUpdate();
         SelectObjects();
     }
-
-    // private void LateUpdate()
-    // {
-    //     SelectObjects();
-    // }
 
     private IEnumerator UnscaledTime()
     {
@@ -107,7 +126,7 @@ public class Werewolf : PlayerUnit
                 maskImage.material.SetFloat("_Alpha", Utils.EaseFromTo(0, brutalData.brutalTime, currentTime, EaseType.EaseOut) / brutalData.brutalTime);
             }
             else formChangeTest?.Invoke();
-            if(unitState == UnitState.Death) formChangeTest?.Invoke();
+            if(currentCount <= 0) formChangeTest?.Invoke();
         }
     }
 
@@ -115,22 +134,20 @@ public class Werewolf : PlayerUnit
 
     private bool RangedAttack(Vector3 clickPos)
     {
-        if(attackCoroutine != null) return false;
-        if (((Vector2)transform.position-(Vector2)clickPos).magnitude < ((Vector2)transform.position-shootingAnimationController.GetShootPosition()).magnitude) return false;
+        if(attackCoroutine != null || currentCount <= 0) return false;
+        if(((Vector2)transform.position-(Vector2)clickPos).magnitude < ((Vector2)transform.position-shootingAnimationController.GetShootPosition()).magnitude) return false;
+        return UnrestrictedRangedAttack(clickPos);
+    }
+    private bool UnrestrictedRangedAttack(Vector3 clickPos)
+    {
         shootingAnimationController.AttackAni();
-        
-        var screenPoint = Input.mousePosition;
-        screenPoint.z = Camera.main.transform.position.z;
-        screenPoint = Camera.main.ScreenToWorldPoint(screenPoint);
-        screenPoint.z = 0;
-
-        shootingAnimationController.targetPosition = screenPoint;
+        shootingAnimationController.targetPosition = clickPos;
 
         attackCoroutine = StartCoroutine(AttackDelay(clickPos));
         currentCount--;
         return true;
     }
-    private IEnumerator AttackDelay(Vector3 clickPos)
+    public IEnumerator AttackDelay(Vector3 clickPos)
     {
         yield return null;
         base.Attack(clickPos);
@@ -141,7 +158,15 @@ public class Werewolf : PlayerUnit
         {
             GameObject _bullet = Instantiate(BulletAttack);//총알을 공격포지션에서 생성함
             GameObject gObj = this.gameObject;
-            _bullet.GetComponent<Bullet>().Set(shootingAnimationController.GetShootPosition(), clickPos, shootingAnimationController.GetShootRotation(), 1, 100, gObj, Vector2.zero);
+            _bullet.GetComponent<Bullet>().Set(
+                shootingAnimationController.GetShootPosition(), 
+                clickPos, 
+                shootingAnimationController.GetShootRotation(), 
+                1, 
+                100, 
+                gObj, 
+                Vector2.zero
+            );
         };
         yield return new WaitForSecondsRealtime(0.5f);
         attackCoroutine = null;
@@ -150,7 +175,7 @@ public class Werewolf : PlayerUnit
 
     private bool MeleeAttack(Vector3 clickPos)
     {
-        if(attackCoroutine != null) return false;
+        if(attackCoroutine != null || currentCount <= 0) return false;
         if(brutalData.brutalArea.x * 0.5f < Vector2.Distance(transform.position, clickPos)) return false;
         if(Physics2D.Linecast(transform.position, clickPos, 1<<LayerMask.NameToLayer("Map") | 1<<LayerMask.NameToLayer("Wall"))) return false;
         var hit = Physics2D.OverlapPoint(clickPos, 1<<LayerMask.NameToLayer("Enemy") | 1<<LayerMask.NameToLayer("GimmickObject"));
@@ -160,7 +185,7 @@ public class Werewolf : PlayerUnit
         base.FormChange();
         currentCount--;
         var addPos = ((Vector2)clickPos - (Vector2)transform.position).normalized;
-        rg.transform.position = (Vector3)clickPos;
+        rg.transform.position = hit.transform.position;
         // rg.transform.position = (Vector3)(((Vector2)clickPos + (addPos * 0.5f)) - Vector2.down *0.5f);
         base.Attack(clickPos);
         meleeAttack.transform.position = clickPos;
@@ -192,7 +217,7 @@ public class Werewolf : PlayerUnit
     public override bool FormChange() => base.FormChange();
     public override bool Skile1(Vector2 pos) => RangedAttack(pos);
 
-    public override bool Reload() => false;
+    public override bool Reload(KeyState reloadKey) => false;
 
     public bool isFormChangeReady()
     {

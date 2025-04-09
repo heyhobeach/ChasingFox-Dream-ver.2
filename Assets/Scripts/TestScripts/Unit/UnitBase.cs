@@ -106,6 +106,16 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     protected SpriteRenderer spriteRenderer;
 
     [HideInInspector] public Animator anim;
+
+    public void SetAni(bool b)
+    {
+        if(shootingAnimationController == null) return;
+        switch(b)
+        {
+            case true: shootingAnimationController.AttackAni(); break;
+            case false: shootingAnimationController.NomalAni(); break;
+        }
+    }
     public void SetAni(RuntimeAnimatorController runtimeAnimatorController) => anim.runtimeAnimatorController = runtimeAnimatorController;
 
     private bool longRangeUnit;
@@ -216,7 +226,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         return true;
     }
 
-    public virtual bool Reload()
+    public virtual bool Reload(KeyState reloadKey)
     {
         if(!longRangeUnit) return false;
         anim.SetTrigger("reload");

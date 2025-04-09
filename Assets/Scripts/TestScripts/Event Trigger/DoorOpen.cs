@@ -17,6 +17,7 @@ public class DoorOpen : MonoBehaviour, IBaseController
     private PlayableDirector timeline;
     private TrackAsset leftBehaviour;
     private TrackAsset rightBehaviour;
+    private AnimationTrack animationTrack;
 
     private bool opened;
 
@@ -31,12 +32,14 @@ public class DoorOpen : MonoBehaviour, IBaseController
         var timelineAsset = timeline.playableAsset as TimelineAsset;
         leftBehaviour = timelineAsset.GetOutputTrack(1);
         rightBehaviour = timelineAsset.GetOutputTrack(2);
+        animationTrack = timelineAsset.GetOutputTrack(3) as AnimationTrack;
 
         timeline.stopped += (x) => {
             if(target.CompareTag("Player")) ((IBaseController)this).RemoveController();
             else enemy.isStop = false;
             timeline.SetGenericBinding(leftBehaviour, null);
             timeline.SetGenericBinding(rightBehaviour, null);
+            timeline.SetGenericBinding(animationTrack, null);
             cols[1].enabled = false;
         };
     }
@@ -61,6 +64,8 @@ public class DoorOpen : MonoBehaviour, IBaseController
         if(opened || !(collider.CompareTag("Player") || collider.CompareTag("Enemy"))) return;
         if(collider.GetComponent<UnitBase>().UnitState != UnitState.Default) return;
         target = collider.GetComponent<UnitBase>();
+        target.SetAni(false);
+        timeline.SetGenericBinding(animationTrack, target.transform.GetComponent<Animator>());
         if(target.CompareTag("Player")) 
         {
             ((IBaseController)this).AddController();

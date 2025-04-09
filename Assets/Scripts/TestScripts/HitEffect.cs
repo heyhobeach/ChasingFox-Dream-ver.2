@@ -1,15 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class HitEffect : MonoBehaviour
 {
-    private Animator animator;
-    void Start() => animator = GetComponent<Animator>();
+    public float destroyTime;
 
-    void Update()
+    private async void Start()
     {
-        if(animator != null && animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.95f) Destroy(gameObject);
+        await DelayDestroy();
     }
 
+    private async Awaitable DelayDestroy()
+    {
+        await Awaitable.WaitForSecondsAsync(destroyTime);
+        Destroy(gameObject);
+    }
 }

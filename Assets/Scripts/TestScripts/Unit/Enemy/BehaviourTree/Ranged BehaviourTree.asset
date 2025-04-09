@@ -21,9 +21,9 @@ MonoBehaviour:
     originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
+      Increase_Sight: 2
     FinalNodeList: []
   description: 
   children:
@@ -50,9 +50,9 @@ MonoBehaviour:
     originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
+      Increase_Sight: 2
     FinalNodeList: []
   description: 
   waitTime: 2
@@ -77,13 +77,42 @@ MonoBehaviour:
     originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
+      Increase_Sight: 2
     FinalNodeList: []
   description: Alert
   child: {fileID: 531290968384818618}
   stateCase: 1
+--- !u!114 &-7893700009592921804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c93350cbe30c46f4a9d6fe6f9fe7ee03, type: 3}
+  m_Name: DistanceCheck
+  m_EditorClassIdentifier: 
+  state: 0
+  guid: 8fbd4d1ed9fc82f40a314aa7fbb97b61
+  positon: {x: 1060.1501, y: 739.0001}
+  blackboard:
+    thisUnit: {fileID: 0}
+    target: {fileID: 0}
+    originPos: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 0
+    FinalNodeList: []
+  description: 
+  child: {fileID: 1877198029125055445}
+  distanceType: 1
+  distance: 2
 --- !u!114 &-7161608127579499380
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -105,42 +134,15 @@ MonoBehaviour:
     originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
+      Increase_Sight: 2
     FinalNodeList: []
   description: 
   children:
   - {fileID: 8165423392858955647}
   - {fileID: -8123740153036079787}
   - {fileID: -1691638311106959918}
---- !u!114 &-6813351491573769889
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18010df103739f34fa8a9e484853ec76, type: 3}
-  m_Name: Wait
-  m_EditorClassIdentifier: 
-  state: 0
-  guid: cbb03a2fd53a31447bfa3602785b30e5
-  positon: {x: -613, y: 709}
-  blackboard:
-    thisUnit: {fileID: 0}
-    target: {fileID: 0}
-    originPos: {fileID: 0}
-    playableDirector: {fileID: 0}
-    enemy_state:
-      stateCase: 0
-      recognition: 1
-      Increase_Sight: 0
-    FinalNodeList: []
-  description: 
-  waitTime: 0
 --- !u!114 &-6798369374170880989
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -162,9 +164,9 @@ MonoBehaviour:
     originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
+      Increase_Sight: 2
     FinalNodeList: []
   description: 
   child: {fileID: 7754139705782111083}
@@ -189,12 +191,12 @@ MonoBehaviour:
     originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
+      Increase_Sight: 2
     FinalNodeList: []
   description: Death
-  child: {fileID: -6813351491573769889}
+  child: {fileID: -2917116402200516749}
   stateCase: 10
 --- !u!114 &-5093957440746577806
 MonoBehaviour:
@@ -217,14 +219,41 @@ MonoBehaviour:
     originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
+      Increase_Sight: 2
     FinalNodeList: []
   description: 
   children:
   - {fileID: -5203994678265369763}
   - {fileID: -2439860200776135322}
+--- !u!114 &-4879689712329191463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c34b2a6cfa77d224b993cabcc523c18b, type: 3}
+  m_Name: MoveBack
+  m_EditorClassIdentifier: 
+  state: 0
+  guid: c27eb5795648b7447be6e3d689783ec0
+  positon: {x: 877.00006, y: 879.0001}
+  blackboard:
+    thisUnit: {fileID: 0}
+    target: {fileID: 0}
+    originPos: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 0
+    FinalNodeList: []
+  description: 
+  reloadTime: 3
 --- !u!114 &-4417137505816075133
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -246,9 +275,9 @@ MonoBehaviour:
     originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
+      Increase_Sight: 2
     FinalNodeList: []
   description: "\uC778\uC9C0 \uBD88\uAC00"
   debugLogType: 1
@@ -274,14 +303,47 @@ MonoBehaviour:
     originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
+      Increase_Sight: 2
     FinalNodeList: []
   description: 
   children:
   - {fileID: -2728198117769598043}
   - {fileID: 4433449385017773004}
+--- !u!114 &-2917116402200516749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b04a02dbcabafa4cba798a6e6c2dec3, type: 3}
+  m_Name: SendMesage
+  m_EditorClassIdentifier: 
+  state: 0
+  guid: 3f1b36f56b3782e4795411706aadaf48
+  positon: {x: -688.0001, y: 733.00006}
+  blackboard:
+    thisUnit: {fileID: 0}
+    target: {fileID: 0}
+    originPos: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 2
+      recognition: 1
+      Increase_Sight: 2
+    FinalNodeList: []
+  description: 
+  mesages:
+  - targetNode: {fileID: 555910949820902959}
+    methodName: GetPathAsync
+    methodIdx: 1
+  - targetNode: {fileID: 1877198029125055445}
+    methodName: GetPathAsync
+    methodIdx: 1
 --- !u!114 &-2728198117769598043
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -303,9 +365,9 @@ MonoBehaviour:
     originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
+      Increase_Sight: 2
     FinalNodeList: []
   description: 
   mesages:
@@ -333,9 +395,9 @@ MonoBehaviour:
     originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
+      Increase_Sight: 2
     FinalNodeList: []
   description: Default
   child: {fileID: 5577737174887897221}
@@ -361,9 +423,9 @@ MonoBehaviour:
     originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
+      Increase_Sight: 2
     FinalNodeList: []
   description: Chase
   child: {fileID: -3604086991514170634}
@@ -403,7 +465,6 @@ MonoBehaviour:
   - {fileID: 1877198029125055445}
   - {fileID: -2728198117769598043}
   - {fileID: 4433449385017773004}
-  - {fileID: -6813351491573769889}
   - {fileID: 1257187732414498288}
   - {fileID: 7474582992549453383}
   - {fileID: -8788340718880782463}
@@ -413,6 +474,10 @@ MonoBehaviour:
   - {fileID: 8039134145924175825}
   - {fileID: -9169177893953747327}
   - {fileID: 8705630663612228575}
+  - {fileID: -2917116402200516749}
+  - {fileID: -7893700009592921804}
+  - {fileID: 7764109465947238610}
+  - {fileID: -4879689712329191463}
   blackboard:
     thisUnit: {fileID: 0}
     target: {fileID: 0}
@@ -423,8 +488,8 @@ MonoBehaviour:
       recognition: 1
       Increase_Sight: 0
     FinalNodeList: []
-  viewPos: {x: -410, y: -310}
-  viewScale: {x: 0.7561437, y: 0.7561437, z: 1}
+  viewPos: {x: -500, y: -434}
+  viewScale: {x: 0.8695652, y: 0.8695652, z: 1}
 --- !u!114 &531290968384818618
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -446,9 +511,9 @@ MonoBehaviour:
     originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
+      Increase_Sight: 2
     FinalNodeList: []
   description: 
   children:
@@ -475,9 +540,9 @@ MonoBehaviour:
     originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
+      Increase_Sight: 2
     FinalNodeList: []
   description: 
   reloadTime: 1
@@ -502,9 +567,9 @@ MonoBehaviour:
     originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
+      Increase_Sight: 2
     FinalNodeList: []
   description: 
   waitTime: 0
@@ -522,16 +587,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   state: 0
   guid: 30819079b6d50d040bdb0fb32cc96d65
-  positon: {x: 781.7862, y: 771.99994}
+  positon: {x: 1060.1501, y: 879.0001}
   blackboard:
     thisUnit: {fileID: 0}
     target: {fileID: 0}
     originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
+      Increase_Sight: 2
     FinalNodeList: []
   description: 
   reloadTime: 1
@@ -556,9 +621,9 @@ MonoBehaviour:
     originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
+      Increase_Sight: 2
     FinalNodeList: []
   description: 
 --- !u!114 &4253570027041858493
@@ -582,9 +647,9 @@ MonoBehaviour:
     originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
+      Increase_Sight: 2
     FinalNodeList: []
   description: 
   aimingTime: 0.075
@@ -610,14 +675,15 @@ MonoBehaviour:
     originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
+      Increase_Sight: 2
     FinalNodeList: []
   description: 
   children:
   - {fileID: -9169177893953747327}
-  - {fileID: 1877198029125055445}
+  - {fileID: 7764109465947238610}
+  - {fileID: -7893700009592921804}
 --- !u!114 &5388380866008593317
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -639,9 +705,9 @@ MonoBehaviour:
     originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
+      Increase_Sight: 2
     FinalNodeList: []
   description: 
   children:
@@ -669,9 +735,9 @@ MonoBehaviour:
     originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
+      Increase_Sight: 2
     FinalNodeList: []
   description: 
   children:
@@ -698,9 +764,9 @@ MonoBehaviour:
     originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
+      Increase_Sight: 2
     FinalNodeList: []
   description: 
   mesages:
@@ -728,9 +794,9 @@ MonoBehaviour:
     originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
+      Increase_Sight: 2
     FinalNodeList: []
   description: 
   child: {fileID: 5388380866008593317}
@@ -756,14 +822,43 @@ MonoBehaviour:
     originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
+      Increase_Sight: 2
     FinalNodeList: []
   description: 
   children:
   - {fileID: -7161608127579499380}
   - {fileID: -4417137505816075133}
+--- !u!114 &7764109465947238610
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c93350cbe30c46f4a9d6fe6f9fe7ee03, type: 3}
+  m_Name: DistanceCheck
+  m_EditorClassIdentifier: 
+  state: 0
+  guid: a8e88df7c5c95564d9f1326e135a8485
+  positon: {x: 877.0001, y: 739.0001}
+  blackboard:
+    thisUnit: {fileID: 0}
+    target: {fileID: 0}
+    originPos: {fileID: 0}
+    playableDirector: {fileID: 0}
+    enemy_state:
+      stateCase: 0
+      recognition: 1
+      Increase_Sight: 0
+    FinalNodeList: []
+  description: 
+  child: {fileID: -4879689712329191463}
+  distanceType: 0
+  distance: 0.5
 --- !u!114 &7958891265172359115
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -785,9 +880,9 @@ MonoBehaviour:
     originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
+      Increase_Sight: 2
     FinalNodeList: []
   description: 
   mesages:
@@ -815,9 +910,9 @@ MonoBehaviour:
     originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
+      Increase_Sight: 2
     FinalNodeList: []
   description: 
   children:
@@ -844,9 +939,9 @@ MonoBehaviour:
     originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
+      Increase_Sight: 2
     FinalNodeList: []
   description: 
 --- !u!114 &8165423392858955647
@@ -870,9 +965,9 @@ MonoBehaviour:
     originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
+      Increase_Sight: 2
     FinalNodeList: []
   description: Default
   child: {fileID: -5093957440746577806}
@@ -898,9 +993,9 @@ MonoBehaviour:
     originPos: {fileID: 0}
     playableDirector: {fileID: 0}
     enemy_state:
-      stateCase: 0
+      stateCase: 2
       recognition: 1
-      Increase_Sight: 0
+      Increase_Sight: 2
     FinalNodeList: []
   description: 
   waitTime: 0.5

@@ -77,8 +77,8 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         changedForm = forms[playerData.formIdx];
         ((Werewolf)forms[1]).brutalData = playerData.brutalData;
         ((Werewolf)forms[1]).currentGauge = playerData.brutalGaugeRemaining;
-        ((Werewolf)forms[1]).formChangeTest = () => FormChange();
-        formChangeDelegate = HumanToWerewolf;
+        ((Werewolf)forms[1]).formChangeTest += () => FormChange();
+        formChangeDelegate = ToWerewolf;
         ((Werewolf)forms[1]).currentCount = brutalData.isDoubleTime ? 2 : 1;
         foreach(PlayerUnit form in forms) 
         {
@@ -136,47 +136,52 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
 
     }
 
-    public bool Skile1(Vector2 pos)
-    {
-        if(changedForm.GetType() == typeof(Werewolf)) return ((Werewolf)changedForm).Skile1(pos);
-        return false;
-    }
+    public bool Skile1(Vector2 pos) => changedForm.Skile1(pos);
 
     private delegate bool FormChangeDelegate();
     private FormChangeDelegate formChangeDelegate;
 
     public bool FormChange() => formChangeDelegate.Invoke();
-    private bool HumanToWerewolf()
+    private bool ToWerewolf()
     {
-        if(changedForm.UnitState == UnitState.Default && changedForm.GetType() == typeof(Human) && ((Werewolf) forms[1]).isFormChangeReady())
+        if(changedForm.UnitState == UnitState.Default && changedForm.GetType() != typeof(Werewolf) && ((Werewolf) forms[1]).isFormChangeReady())
         {
+            Debug.Log("AAA");
             invalidation = true;
             changedForm.gameObject.SetActive(false);
             changedForm = forms[1];
             changedForm.gameObject.SetActive(true);
-            formChangeDelegate = WerewolfToHuman;
+            formChangeDelegate = ToHuman;
         }
         return true;
     }
-    private bool WerewolfToHuman()
+    private bool ToHuman()
     {
-        if(changedForm.GetType() == typeof(Werewolf)) 
+        if(changedForm.GetType() != typeof(Human)) 
         {
+            Debug.Log("AAA");
+            invalidation = false;
             changedForm.gameObject.SetActive(false);
             changedForm = forms[0];
             changedForm.gameObject.SetActive(true);
+            // Attack(ClickPos());
             Dash();
-            Reload(); 
-            formChangeDelegate = HumanToWerewolf;
-        }
-        else 
-        {
-            changedForm.FormChange();
+            // Reload(); 
+            formChangeDelegate = ToWerewolf;
         }
         return true;
+
+        Vector3 ClickPos()
+        {
+            var screenPoint = Input.mousePosition;//마우스 위치 가져옴
+            screenPoint.z = Camera.main.transform.position.z;
+            Vector3 pos = Camera.main.ScreenToWorldPoint(screenPoint);
+            pos.z = 0;
+            return pos;
+        }
     }
 
-    public bool Reload() => changedForm.Reload(); 
+    public bool Reload(KeyState reloadKey) => changedForm.Reload(reloadKey); 
 
     void Update()
     {
@@ -232,6 +237,23 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     {
         if(isFreeze) GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePosition;
         else GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
+    }
+
+    public void SetForTimeline()
+    {
+        invalidation = true;
+        changedForm.gameObject.SetActive(false);
+        changedForm = forms[2];
+        changedForm.gameObject.SetActive(true);
+        formChangeDelegate = () => false;
+    }
+    public void SetoffForTimeline()
+    {
+        invalidation = false;
+        changedForm.gameObject.SetActive(false);
+        changedForm = forms[0];
+        changedForm.gameObject.SetActive(true);
+        formChangeDelegate = ToWerewolf;
     }
 }
 

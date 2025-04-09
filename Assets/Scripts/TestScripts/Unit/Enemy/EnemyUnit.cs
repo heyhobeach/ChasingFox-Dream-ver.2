@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Com.LuisPedroFonseca.ProCamera2D;
 using Damageables;
 using UnityEngine;
 
@@ -7,7 +8,7 @@ using UnityEngine;
 public class EnemyUnit : UnitBase, IDamageable, ISelectObject
 {
     public float attackDistance = 1;
-    [Range(0, 1)] public float attackRange = 1;
+    [MinMaxSlider(0, 1)] public Vector2 attackRange = new Vector2(0, 1);
     
     public bool isAttacking 
     {
@@ -61,16 +62,6 @@ public class EnemyUnit : UnitBase, IDamageable, ISelectObject
     public override bool Jump(KeyState jumpKey) => false;
 
     public virtual bool AttackCheck(Vector3 attackPos) => true;
-
-    public void SetAni(bool b)
-    {
-        if(shootingAnimationController == null) return;
-        switch(b)
-        {
-            case true: shootingAnimationController.AttackAni(); break;
-            case false: shootingAnimationController.NomalAni(); break;
-        }
-    }
 
     void IDamageable.Death()
     {
