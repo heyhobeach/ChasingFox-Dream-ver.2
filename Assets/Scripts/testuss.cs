@@ -448,6 +448,7 @@ public class UI_DynamicText : MonoBehaviour
         drop_area.style.color = UnityEngine.Color.white;
         var element = panel.Q<VisualElement>("TracerNotePanel");
         element.style.width = Length.Percent(100);
+        textContainer.style.flexGrow = 0;
         textContainer.RemoveFromHierarchy();
         panel.Add(textContainer);
         textContainer.AddToClassList("left-diary");
