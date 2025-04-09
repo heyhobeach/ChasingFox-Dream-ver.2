@@ -143,12 +143,14 @@ public class Bullet : MonoBehaviour
         var effect = Instantiate(unitHitEffect, pos, Quaternion.identity);
         var sprite = effect.GetComponent<SpriteRenderer>();
         var sprite2 = effect.transform.GetChild(0).GetComponent<SpriteRenderer>();
-        var visualeffect = effect.transform.GetChild(1).GetComponent<VisualEffect>();
+        var visualeffect1 = effect.transform.GetChild(1).GetComponent<VisualEffect>();
+        var visualeffect2 = effect.transform.GetChild(2).GetComponent<VisualEffect>();
         if (dir.x >= 0) 
         {
             sprite.flipX = true;
             sprite2.flipX = true;
-            visualeffect.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 180));
+            visualeffect1.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 180));
+            visualeffect2.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 180));
         }
         else 
         {

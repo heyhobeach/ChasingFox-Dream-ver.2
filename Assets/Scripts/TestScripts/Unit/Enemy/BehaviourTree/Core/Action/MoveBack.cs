@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace BehaviourTree
 {
-    public class Move : ActionNode
+    public class MoveBack : ActionNode
     {
         public float reloadTime = 1;
         float startTime = 0;
@@ -19,6 +19,8 @@ namespace BehaviourTree
         private IEnumerator waitting;
         private PathFinding pathFinding;
         private JobHandle jobHandle;
+        private List<Vector2Int> backList;
+        private NodeComparer nodeComparer;
 
         private void OnDestroy() => Dispose();
 
@@ -36,7 +38,7 @@ namespace BehaviourTree
             if(!isRunning && blackboard.target != null && (startTime >= reloadTime || blackboard.FinalNodeList == default))
             {
                 if(startTime >= reloadTime) startTime = 0;
-                GetPathAsync();
+                GetBackPathAsync();
                 return NodeState.Success;
             }
             if(blackboard.FinalNodeList == default) 
@@ -81,7 +83,7 @@ namespace BehaviourTree
             finally { Dispose(); }
         }
 
-        [MesageTarget] public void GetPathAsync()
+        [MesageTarget] public void GetBackPathAsync()
         {
             if(isRunning) return;
             isRunning = true;
@@ -97,7 +99,8 @@ namespace BehaviourTree
                     startPos = new Vector2(blackboard.FinalNodeList[blackboard.nodeIdx].x, blackboard.FinalNodeList[blackboard.nodeIdx].y);
                 }
                 else startPos = blackboard.thisUnit.transform.position;
-                var targetPos = blackboard.target.position;
+
+                var targetPos = GetBackPos(startPos);
                 GameManager.Instance.PathFind(startPos, targetPos, ref jobHandle, ref pathFinding);
                 waitting = WaitHandle();
                 waitting.MoveNext();
@@ -108,6 +111,47 @@ namespace BehaviourTree
                 
                 Dispose();
             }
+        }
+        private Vector2 GetBackPos(Vector2 startPos)
+        {
+            backList = new();
+            nodeComparer = new();
+            nodeComparer.startPos = new Vector2Int((int)startPos.x, (int)startPos.y);
+            nodeComparer.targetPos = new Vector2Int((int)blackboard.target.position.x, (int)blackboard.target.position.y);
+            backList.Add(nodeComparer.startPos);
+            int min = (int)(blackboard.thisUnit.attackDistance * blackboard.thisUnit.attackRange.x);
+            int max = (int)(blackboard.thisUnit.attackDistance * (1-blackboard.thisUnit.attackRange.x*0.25f));
+
+            for(int x=(int)startPos.x-max; x<(int)startPos.x-min; x++)
+            {
+                if(NodeCheck(x, (int)startPos.y)) backList.Add(new Vector2Int(x, (int)startPos.y));
+            }
+            for(int x=(int)startPos.x+min; x<(int)startPos.x+max; x++)
+            {
+                if(NodeCheck(x, (int)startPos.y)) backList.Add(new Vector2Int(x, (int)startPos.y));
+            }
+            for(int y=(int)startPos.y-max; y<(int)startPos.y+max; y++)
+            {
+                if(NodeCheck((int)startPos.x-max, y)) backList.Add(new Vector2Int((int)startPos.x-max, y));
+            }
+            for(int y=(int)startPos.y-max; y<(int)startPos.y+max; y++)
+            {
+                if(NodeCheck((int)startPos.x+max, y)) backList.Add(new Vector2Int((int)startPos.x+max, y));
+            }
+
+            var arr = backList.ToArray();
+            Array.Sort(arr, nodeComparer);
+
+            return arr[0];
+        }
+        private bool NodeCheck(int x, int y)
+        {
+            try
+            {
+                if(GameManager.Instance.NodeArray[x - GameManager.Instance.bottomLeft.x, y - GameManager.Instance.bottomLeft.y].isRoad) return true;
+                else return false;
+            }
+            catch { return false; }
         }
 
         [MesageTarget] private void Dispose()
@@ -121,6 +165,29 @@ namespace BehaviourTree
             if(pathFinding.NodeArray.IsCreated) pathFinding.NodeArray.Dispose();
             if(pathFinding.FinalNodeList.IsCreated) pathFinding.FinalNodeList.Dispose();
             if(pathFinding.isLoad.IsCreated) pathFinding.isLoad.Dispose();
+        }
+
+        private class NodeComparer : IComparer<Vector2Int>
+        {
+            public Vector2Int startPos;
+            public Vector2Int targetPos;
+
+            public int Compare(Vector2Int item1, Vector2Int item2)
+            {
+                if(Mathf.Sign(targetPos.x-item1.x) != Mathf.Sign(targetPos.x-item2.x))
+                {
+                    if(Mathf.Sign(targetPos.x-item1.x) != Mathf.Sign(targetPos.x-startPos.x)) return -1;
+                    else return 1;
+                }
+
+                var pos1 = new Vector2Int(Mathf.Abs(item1.x-startPos.x), Mathf.Abs(item1.y-startPos.y));
+                var pos2 = new Vector2Int(Mathf.Abs(item2.x-startPos.x), Mathf.Abs(item2.y-startPos.y));
+
+                if(pos1.y - pos2.y != 0) return (int)Mathf.Sign(pos1.y - pos2.y);
+                if(pos1.x - pos2.x != 0) return (int)-Mathf.Sign(pos1.x - pos2.x);
+
+                return 0;
+            }
         }
     }
 }

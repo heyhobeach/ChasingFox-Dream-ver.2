@@ -64,6 +64,7 @@ public class DoorOpen : MonoBehaviour, IBaseController
         if(opened || !(collider.CompareTag("Player") || collider.CompareTag("Enemy"))) return;
         if(collider.GetComponent<UnitBase>().UnitState != UnitState.Default) return;
         target = collider.GetComponent<UnitBase>();
+        target.SetAni(false);
         timeline.SetGenericBinding(animationTrack, target.transform.GetComponent<Animator>());
         if(target.CompareTag("Player")) 
         {

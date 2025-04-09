@@ -106,6 +106,16 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     protected SpriteRenderer spriteRenderer;
 
     [HideInInspector] public Animator anim;
+
+    public void SetAni(bool b)
+    {
+        if(shootingAnimationController == null) return;
+        switch(b)
+        {
+            case true: shootingAnimationController.AttackAni(); break;
+            case false: shootingAnimationController.NomalAni(); break;
+        }
+    }
     public void SetAni(RuntimeAnimatorController runtimeAnimatorController) => anim.runtimeAnimatorController = runtimeAnimatorController;
 
     private bool longRangeUnit;

@@ -24,7 +24,9 @@ namespace BehaviourTree
             if(!targetRigidbody) targetRigidbody = blackboard.target.GetComponent<PlayerUnit>()?.rg;
             if(targetRigidbody) aimPos = targetRigidbody.worldCenterOfMass;
             else aimPos = blackboard.target.position;
+            blackboard.thisUnit.SetFlipX(Mathf.Sign((blackboard.thisUnit.transform.position-blackboard.target.transform.position).x) > 0);
             canAttack = blackboard.thisUnit.AttackCheck(aimPos);
+            blackboard.thisUnit.Move(blackboard.thisUnit.transform.position);
             blackboard.thisUnit.SetAni(true);
         }
 
