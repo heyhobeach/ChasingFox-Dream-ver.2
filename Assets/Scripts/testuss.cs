@@ -446,14 +446,22 @@ public class UI_DynamicText : MonoBehaviour
 
         }
         drop_area.RemoveFromHierarchy();
-        panel.Add(drop_area);
+
         drop_area.style.color = UnityEngine.Color.white;
         var element = panel.Q<VisualElement>("TracerNotePanel");
         element.style.width = Length.Percent(100);
         textContainer.style.flexGrow = 0;
         textContainer.RemoveFromHierarchy();
-        panel.Add(textContainer);
+
         textContainer.AddToClassList("left-diary");
+        textContainerContent.RemoveFromHierarchy();
+
+        textContainer.style.width=Length.Percent(100);
+        textContainer.style.height=Length.Percent(100);
+        //textContainer.style.flexGrow = 0;
+        panel.Add(textContainerContent);
+        panel.Add(textContainer);
+        panel.Add(drop_area);
     }
 }
 
