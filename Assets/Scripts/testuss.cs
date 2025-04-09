@@ -175,9 +175,8 @@ public class UI_DynamicText : MonoBehaviour
             Debug.Log("clickable" + i.name);
             i.RegisterCallback<PointerDownEvent>(LoadMestery);
         }
-
-
-
+        textContainer.style.width = Length.Percent(50);
+        textContainer.style.alignSelf = Align.Center;
 
     }
 
