@@ -19,6 +19,7 @@ public class UI_DynamicText : MonoBehaviour
     VisualElement visualElement;//메인 부분
     VisualElement dragGhost = null;
     VisualElement textContainer;
+    VisualElement textContainerContent;
 
     VisualElement diary;
 
@@ -60,6 +61,7 @@ public class UI_DynamicText : MonoBehaviour
         textContainer = root.Q<VisualElement>("textContainer");
         //textContainer.setpa
         visualElement = root.Q<VisualElement>("VisualElement");
+        textContainerContent = root.Q<VisualElement>("textContainerContent");
         visualElement.Add(diary);
 
         // 기존 요소 제거 (초기화)
@@ -242,7 +244,8 @@ public class UI_DynamicText : MonoBehaviour
             //textList[i].Add(visuallist);
             //visuallist.Add(tex);
             visuallist.style.flexDirection = FlexDirection.Row;
-            visualElement.Add(textList[i]);
+            //visualElement.Add(textList[i]);
+            textContainerContent.Add(textList[i]);
             var t = visuallist.Query<TextElement>().Build();
             foreach (var k in t)
             {
