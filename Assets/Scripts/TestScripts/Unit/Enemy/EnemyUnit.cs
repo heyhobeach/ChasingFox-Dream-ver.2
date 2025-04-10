@@ -7,8 +7,6 @@ using UnityEngine;
 [RequireComponent(typeof(EnemyController))]
 public class EnemyUnit : UnitBase, IDamageable, ISelectObject
 {
-    public float attackDistance = 1;
-    [MinMaxSlider(0, 1)] public Vector2 attackRange = new Vector2(0, 1);
     
     public bool isAttacking 
     {
