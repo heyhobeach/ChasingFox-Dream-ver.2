@@ -1,14 +1,13 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:appui="Unity.UI.Builder" editor-extension-mode="False">
     <Style src="project://database/Assets/Scripts/NewUSSFile.uss?fileID=7433441132597879392&amp;guid=3c5ba5d19934de243b83383a82ad9b71&amp;type=3#NewUSSFile" />
-    <ui:VisualElement name="VisualElement" style="height: 100%; width: 100%; align-self: auto; align-content: flex-start; justify-content: flex-start; visibility: visible; display: flex; align-items: flex-start; top: 0; left: 0;">
-        <ui:VisualElement name="textContainer" class="center-diary" style="flex-grow: 1; translate: 0 0; display: flex;">
-            <ui:VisualElement name="textContainerContent" style="flex-grow: 1; width: 60%; height: 70%; align-self: center; position: absolute; top: 15%; translate: 6% 0;" />
+    <ui:VisualElement name="VisualElement" style="height: 100%; width: 100%; align-self: auto; align-content: flex-start; justify-content: flex-start; visibility: visible; display: flex; align-items: flex-start; top: 0; left: 0; flex-direction: row;">
+        <ui:VisualElement name="textContainer" class="diary-center">
+            <ui:VisualElement name="textContainerContent" style="flex-grow: 1; width: 60%; height: 70%; align-self: center; position: absolute; top: 15%; translate: 6% 0; text-overflow: ellipsis; flex-direction: row;" />
         </ui:VisualElement>
-        <ui:VisualElement name="drop-area">
+        <ui:VisualElement name="drop-area" style="display: flex;">
             <ui:Label text="여기에 드롭" />
         </ui:VisualElement>
-        <ui:VisualElement name="TracerNotePanel" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; scale: 1 1; left: auto; flex-shrink: 0; flex-direction: row;">
-            <ui:VisualElement name="TracerNote" class="test1" />
-        </ui:VisualElement>
+        <ui:VisualElement name="TracerNotePanel" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; scale: 1 1; left: auto; flex-shrink: 0; flex-direction: row; display: none;" />
+        <ui:VisualElement name="TracerNote" class="test1" style="height: 100%;" />
     </ui:VisualElement>
 </ui:UXML>

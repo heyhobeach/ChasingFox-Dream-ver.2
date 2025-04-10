@@ -176,9 +176,10 @@ public class UI_DynamicText : MonoBehaviour
         {
             Debug.Log("clickable" + i.name);
             i.RegisterCallback<PointerDownEvent>(LoadMestery);
+            //i.RegisterCallback<PointerDownEvent>(LoadTest);
         }
-        textContainer.style.width = Length.Percent(50);
-        textContainer.style.alignSelf = Align.Center;
+        //textContainer.style.width = Length.Percent(50);
+        //textContainer.style.alignSelf = Align.Center;
 
     }
 
@@ -220,6 +221,7 @@ public class UI_DynamicText : MonoBehaviour
 
                     var textelement = new TextElement { text = p, name = "textelement" };
                     visuallist.Add(textelement);
+                    textelement.style.width = Length.Percent(100);
                     if (check)
                     {
                         //textelement.RegisterCallback<PointerDownEvent>(evt => { is_sentence = true; });
@@ -228,6 +230,7 @@ public class UI_DynamicText : MonoBehaviour
                         //textelement.AddToClassList("draggable");
                         textelement.AddToClassList("clickable");
                         textelement.RegisterCallback<PointerDownEvent>(LoadMestery);
+                        //textelement.RegisterCallback<PointerDownEvent>(LoadTest);
                     }
                     else
                     {
@@ -243,9 +246,12 @@ public class UI_DynamicText : MonoBehaviour
             textList.Add(visuallist);
             //textList[i].Add(visuallist);
             //visuallist.Add(tex);
-            visuallist.style.flexDirection = FlexDirection.Row;
+            visuallist.style.flexDirection = FlexDirection.Column;
+            visuallist.style.width = Length.Percent(100);
             //visualElement.Add(textList[i]);
             textContainerContent.Add(textList[i]);
+            textList[i].style.flexDirection = FlexDirection.Column;
+            textContainerContent.style.flexDirection = FlexDirection.Column;
             var t = visuallist.Query<TextElement>().Build();
             foreach (var k in t)
             {
@@ -390,6 +396,16 @@ public class UI_DynamicText : MonoBehaviour
         startMousePosition = evt.position;
     }
 
+
+    private void LoadTest(PointerDownEvent evt)
+    {
+        var root = GetComponent<UIDocument>().rootVisualElement;
+        var panel = root.Q<VisualElement>("TracerNotePanel");
+        panel.style.scale = new Vector2(1, 1);
+        var tracer = root.Q<VisualElement>("TracerNote");//여기 하위에 오브젝트 배치
+
+        tracer.AddToClassList("test2-2");
+    }
     private void LoadMestery(PointerDownEvent evt)
     {
         Debug.Log("Mestery Load");
@@ -407,8 +423,8 @@ public class UI_DynamicText : MonoBehaviour
             Debug.Log("inven =" + inven.Value.context);
             string[] parts = Regex.Split(inven.Value.context, @"<br\s*/?>");
             string[] keys = InventoryManager.Instance.GetInfo_(info_keys[i++]).keywords;
-
-
+        
+        
             foreach (string part in parts)
             {
                 string[] _part = part.Split(' ');
@@ -417,7 +433,7 @@ public class UI_DynamicText : MonoBehaviour
                     bool check = (keys.Length > 0 ? part.ContainsAny(keys[0]) : false);
                     //int a = part.IndexOf(keys[0]);
                     Debug.Log($"분리 후: [{p}] check[{check}]"); //지금 분리도 안 되는거같은데
-
+        
                     var textelement = new TextElement { text = p, name = "textelement" };
                     visuallist.Add(textelement);
                     if (check)
@@ -436,40 +452,40 @@ public class UI_DynamicText : MonoBehaviour
                     //visuallist.AddToClassList("clickable");
                     //visuallist.Add(textelement);
                 }
-
+        
                 //var sample = new TextElement { text = inven.Value.context, name = "sentence1" };
                 //sample.AddToClassList("sentence");
                 //sample.style.fontSize = 40;
                 tracer.Add(visuallist);
                 //visualElement = new VisualElement();
             }
-
+        
         }
-        drop_area.RemoveFromHierarchy();
-
+        //drop_area.RemoveFromHierarchy();
+        
         drop_area.style.color = UnityEngine.Color.white;
         //var element = panel.Q<VisualElement>("TracerNotePanel");
         //element.style.width = Length.Percent(100);
         textContainer.style.flexGrow = 0;
-        textContainer.RemoveFromHierarchy();
+        //textContainer.RemoveFromHierarchy();
 
    
         //textContainerContent.RemoveFromHierarchy();
 
-        textContainer.style.width=Length.Percent(100);
-        textContainer.style.height=Length.Percent(100);
-        textContainer.style.flexGrow = 0;
+        //textContainer.style.width=Length.Percent(100);
+        //textContainer.style.height=Length.Percent(100);
+        //textContainer.style.flexGrow = 0;
         //panel.Add(textContainerContent);
         //tracer.RemoveFromHierarchy();
 
-        panel.Add(textContainer);
-        panel.Add(tracer);
+        //panel.Add(textContainer);
+        //panel.Add(tracer);
         //panel.Add(drop_area);
 
 
 
-        textContainer.AddToClassList("left-diary");
-        tracer.AddToClassList("test1");
+        textContainer.AddToClassList("diary-left");
+        //tracer.AddToClassList("test1");
         tracer.AddToClassList("test2-2");
     }
 }

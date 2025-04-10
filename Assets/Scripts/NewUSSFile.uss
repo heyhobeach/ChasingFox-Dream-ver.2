@@ -52,14 +52,17 @@ VisualElement {
     transition-timing-function: ease-out-cubic;
 }
 
-.center-diary {
-    background-image: resource('일기');
-    width: 100%;
+.diary-center {
+    flex-grow: 1;
     translate: 50% 0;
+    display: flex;
+    height: 100%;
+    width: 100%;
+    background-image: resource('일기');
     transition-timing-function: ease-out-cubic;
     transition-duration: 1s;
 }
 
-.left-diary {
+.diary-left {
     translate: 0 0;
 }
