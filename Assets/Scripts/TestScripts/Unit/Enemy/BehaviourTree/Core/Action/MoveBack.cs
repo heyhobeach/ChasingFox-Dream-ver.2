@@ -119,9 +119,9 @@ namespace BehaviourTree
             nodeComparer.startPos = new Vector2Int((int)startPos.x, (int)startPos.y);
             nodeComparer.targetPos = new Vector2Int((int)blackboard.target.position.x, (int)blackboard.target.position.y);
             backList.Add(nodeComparer.startPos);
-            int min = (int)(blackboard.thisUnit.attackDistance * blackboard.thisUnit.attackRange.x);
-            int max = (int)(blackboard.thisUnit.attackDistance * (1-blackboard.thisUnit.attackRange.x*0.25f));
 
+            int min = 1;
+            int max = 5;
             for(int x=(int)startPos.x-max; x<(int)startPos.x-min; x++)
             {
                 if(NodeCheck(x, (int)startPos.y)) backList.Add(new Vector2Int(x, (int)startPos.y));
@@ -130,6 +130,8 @@ namespace BehaviourTree
             {
                 if(NodeCheck(x, (int)startPos.y)) backList.Add(new Vector2Int(x, (int)startPos.y));
             }
+
+            max = 10;
             for(int y=(int)startPos.y-max; y<(int)startPos.y+max; y++)
             {
                 if(NodeCheck((int)startPos.x-max, y)) backList.Add(new Vector2Int((int)startPos.x-max, y));
