@@ -210,18 +210,19 @@ public class UI_DynamicText : MonoBehaviour
             }
 
 
-            foreach (string part in parts)
+            foreach (string part in parts)//br기준
             {
                 string[] _part = part.Split(' ');
-                foreach (string p in _part)//여기 드래그 관련 내용들은 csv가 아닌 수집품의 내용 관련으로 갈것임 지금 해당내용은 테스트용이라고 생각하는것이 좋음 띄워 쓰기 관련은 인벤토리(수집품) 추리시 발생
+                var textelement = new TextElement { text = part, name = "textelement" };
+                visuallist.Add(textelement);
+                textelement.style.width = Length.Percent(100);
+                foreach (string p in _part)//여기 드래그 관련 내용들은 csv가 아닌 수집품의 내용 관련으로 갈것임 지금 해당내용은 테스트용이라고 생각하는것이 좋음 띄워 쓰기 관련은 인벤토리(수집품) 추리시 발생, 스페이스 기준
                 {
                     bool check = (keys.Length > 0 ? part.ContainsAny(keys[0]) : false);
                     //int a = part.IndexOf(keys[0]);
                     Debug.Log($"분리 후: [{p}] check[{check}]"); //지금 분리도 안 되는거같은데
 
-                    var textelement = new TextElement { text = p, name = "textelement" };
-                    visuallist.Add(textelement);
-                    textelement.style.width = Length.Percent(100);
+
                     if (check)
                     {
                         //textelement.RegisterCallback<PointerDownEvent>(evt => { is_sentence = true; });
