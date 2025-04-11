@@ -111,7 +111,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
 
     public bool Move(Vector2 dir)
     {
-        if(dir.x != 0)fixedDir = dir.x;
+        if(dir.x != 0) fixedDir = dir.x;
         return changedForm.Move(dir);
     }
 
@@ -146,12 +146,12 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     {
         if(changedForm.UnitState == UnitState.Default && changedForm.GetType() != typeof(Werewolf) && ((Werewolf) forms[1]).isFormChangeReady())
         {
-            Debug.Log("AAA");
             invalidation = true;
             changedForm.gameObject.SetActive(false);
             changedForm = forms[1];
             changedForm.gameObject.SetActive(true);
             formChangeDelegate = ToHuman;
+            changedForm.spriteRenderer.flipX = fixedDir > 0 ? false : true;
         }
         return true;
     }
@@ -159,7 +159,6 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     {
         if(changedForm.GetType() != typeof(Human)) 
         {
-            Debug.Log("AAA");
             invalidation = false;
             changedForm.gameObject.SetActive(false);
             changedForm = forms[0];

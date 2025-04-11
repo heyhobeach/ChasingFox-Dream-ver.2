@@ -29,10 +29,10 @@ public class MeleeEnemy : EnemyUnit
     public override bool Attack(Vector3 attackPos)
     {
         Vector2 subvec = attackPos - (transform.position+Vector3.up);
-        float deg = Mathf.Atan2(subvec.y, subvec.x) ;//mathf.de
+        // float deg = Mathf.Atan2(subvec.y, subvec.x) ;//mathf.de
         //deg*=Mathf.Deg2Rad;//라디안으로 바꿔주기는 하는데 이렇게 하면 좀 문제생김
         //Debug.Log(deg);
-        MeleeAttack.transform.localPosition = new Vector3(Mathf.Cos(deg), Mathf.Sin(deg)*2,transform.localPosition.z);
+        MeleeAttack.transform.position = attackPos;
         if(subvec.x < 0) effectRenderer.flipX = true;
         else effectRenderer.flipX = false;
         // MeleeAttack.transform.localEulerAngles = new Vector3(0, 0, Quaternion.FromToRotation(Vector2.up, transform.position - MeleeAttack.transform.position).eulerAngles.z - 90);

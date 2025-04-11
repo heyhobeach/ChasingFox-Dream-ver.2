@@ -139,7 +139,7 @@ public class Bullet : MonoBehaviour
     public void DamagedFeedBack(Collider2D collision)
     {
         var dir = collision.transform.position - shootPos;
-        var pos = new Vector2(collision.transform.position.x + (Mathf.Sign(dir.x) * 2 * collision.bounds.size.x), transform.position.y);
+        var pos = new Vector2(collision.transform.position.x + (Mathf.Sign(dir.x) * collision.bounds.size.x), collision.transform.position.y + 1);
         var effect = Instantiate(unitHitEffect, pos, Quaternion.identity);
         var sprite = effect.GetComponent<SpriteRenderer>();
         var sprite2 = effect.transform.GetChild(0).GetComponent<SpriteRenderer>();
