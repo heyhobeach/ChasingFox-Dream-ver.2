@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RangedEnemy : EnemyUnit, IDoorInteractable
+public class GrenadierEnemy : EnemyUnit, IDoorInteractable
 {
+    // TODO : RangedEnemy 코드 복붙함, 맞게 수정해야함
     public GameObject bullet;//�Ѿ� ����
     public float bulletSpeed;
 

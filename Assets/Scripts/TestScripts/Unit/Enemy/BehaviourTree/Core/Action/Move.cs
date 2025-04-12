@@ -24,7 +24,7 @@ namespace BehaviourTree
 
         protected override void OnEnd()
         {
-            // blackboard.thisUnit.Move(blackboard.thisUnit.transform.position);
+            if(state == NodeState.Failure) blackboard.thisUnit.SetAni(false);
         }
 
         protected override void OnStart() => blackboard.thisUnit.SetAni(false);
@@ -45,13 +45,13 @@ namespace BehaviourTree
             }
             if(blackboard.FinalNodeList.Count <= blackboard.nodeIdx) 
             {
-                blackboard.nodeIdx = 0;
+                blackboard.nodeIdx = blackboard.FinalNodeList.Count - 1;
                 return NodeState.Failure;
             }
             var tempDir = new Vector3(blackboard.FinalNodeList[blackboard.nodeIdx].x+GameManager.Instance.correctionPos.x, blackboard.FinalNodeList[blackboard.nodeIdx].y);
             moveDir = tempDir - blackboard.thisUnit.transform.position;
             moveDir = moveDir.normalized;
-            blackboard.thisUnit.Move(tempDir);
+            if(!blackboard.thisUnit.Move(tempDir)) return NodeState.Failure;
             if((blackboard.thisUnit.transform.position - tempDir).magnitude < 0.1f) blackboard.nodeIdx++;
             return NodeState.Success;
         }

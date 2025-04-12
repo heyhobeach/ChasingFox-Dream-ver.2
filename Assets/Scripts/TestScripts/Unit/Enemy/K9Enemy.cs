@@ -2,12 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MeleeEnemy : EnemyUnit, IDoorInteractable
+public class K9Enemy : EnemyUnit
 {
     public GameObject MeleeAttack;//�Ѿ� ����
     private SpriteRenderer effectRenderer;
-    private bool _canInteract { get => unitState == UnitState.Default; }
-    public bool canInteract { get => _canInteract; }
 
     protected override void Start()
     {

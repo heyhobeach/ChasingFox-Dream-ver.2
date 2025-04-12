@@ -14,13 +14,14 @@ public class DistanceCheck : DecoratorNode
     protected override NodeState OnUpdate()
     {
         var targetDistance = ((Vector2)blackboard.target.position - (Vector2)blackboard.thisUnit.transform.position).magnitude;
+        var hit = blackboard.thisUnit.AttackCheck(blackboard.target.transform.position);
         switch(distanceType)
         {
             case DistanceType.Less:
-            if(distance > targetDistance) return child.Update();
+            if(distance > targetDistance && hit) return child.Update();
             break;
             case DistanceType.Greater:
-            if(distance < targetDistance) return child.Update();
+            if(distance < targetDistance || !hit) return child.Update();
             break;
         }
         return NodeState.Failure;

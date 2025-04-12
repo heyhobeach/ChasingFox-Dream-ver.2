@@ -107,11 +107,11 @@ public class EnemyController : MonoBehaviour
             return;
         }
         int layerMask = 1 << LayerMask.NameToLayer("Player");//enemy와 gunsound 객체 총알이 만약 바닥에 박히면 gunsound객체를 생성했다가 일정시간 이후 지우는식
-        var hits = Physics2D.OverlapCircleAll(transform.position+Vector3.up, distance, layerMask);//죽은 적군 찾는 변수
+        var hits = Physics2D.OverlapCircleAll(transform.position+Vector3.up, distance, layerMask);
         Collider2D hit = null;
         foreach(var h in hits)
         {
-            if(h.CompareTag("Player")) 
+            if(h.CompareTag("Player") && blackboard.thisUnit.AttackCheck(h.bounds.center)) 
             {
                 hit = h;
                 break;
@@ -126,6 +126,7 @@ public class EnemyController : MonoBehaviour
         }
         else if(blackboard.enemy_state.stateCase != Blackboard.Enemy_State.StateCase.Chase && blackboard.target != hit.transform && ViewCheck(hit))
         {
+            if(blackboard.thisUnit.UnitState == UnitState.Pause) blackboard.thisUnit.UnitState = UnitState.Default;
             blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Chase;
             blackboard.target = hit.transform;
             blackboard.enemy_state.Increase_Sight++;
