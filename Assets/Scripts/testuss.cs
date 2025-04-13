@@ -21,7 +21,9 @@ public class UI_DynamicText : MonoBehaviour
     VisualElement textContainer;//일기
     VisualElement textContainerContent;//일기의 내용을 담고 있음
 
-    VisualElement button_parent;
+    VisualElement button_parent;//버튼들을 담고있는 객체
+    Button left_button;
+    Button right_button;
 
     VisualElement diary;
 
@@ -65,7 +67,14 @@ public class UI_DynamicText : MonoBehaviour
         visualElement = root.Q<VisualElement>("VisualElement");
         textContainerContent = root.Q<VisualElement>("textContainerContent");
         visualElement.Add(diary);
+
         button_parent = root.Q<VisualElement>("button_parent");
+        left_button = root.Q<Button>("left_button");
+        right_button = root.Q<Button>("right_button");
+        left_button.clickable.clicked += LeftButtonEvent;
+        right_button.clickable.clicked += RightButtonEvent;
+        button_parent.visible = false;
+
         //button_parent.invi
 
         // 기존 요소 제거 (초기화)
@@ -186,6 +195,11 @@ public class UI_DynamicText : MonoBehaviour
         //textContainer.style.width = Length.Percent(50);
         //textContainer.style.alignSelf = Align.Center;
 
+    }
+
+    private void Clickable_clicked()
+    {
+        throw new NotImplementedException();
     }
 
     private void SetDiaryText(ref VisualElement textContainer)//diary csv (현재는 테스트파일2) 데이터를 가져와서 사용하는 부분
@@ -412,9 +426,10 @@ public class UI_DynamicText : MonoBehaviour
 
         tracer.AddToClassList("test2-2");
     }
-    private void LoadMestery(PointerDownEvent evt)
+    private void LoadMestery(PointerDownEvent evt)//데이터를 미리 정해놔야할듯?
     {
         Debug.Log("Mestery Load");
+        button_parent.visible = true;
         var root = GetComponent<UIDocument>().rootVisualElement;
         var panel = root.Q<VisualElement>("TracerNotePanel");//사용안함
         panel.style.scale = new Vector2(1, 1);
@@ -425,7 +440,7 @@ public class UI_DynamicText : MonoBehaviour
         //테스트용 이제 이렇게 텍스트를 배치해야함
         int i = 0;
         VisualElement visuallist = new VisualElement();
-        foreach (var inven in inventoryScripable.inventory)
+        foreach (var inven in inventoryScripable.inventory)//여기서 인벤토리 전부 돌아서 확인함
         {
             Debug.Log("inven =" + inven.Value.context);
             string[] parts = Regex.Split(inven.Value.context, @"<br\s*/?>");
@@ -435,14 +450,16 @@ public class UI_DynamicText : MonoBehaviour
             foreach (string part in parts)
             {
                 string[] _part = part.Split(' ');
-                var textelement = new TextElement { text = part, name = "textelement" };
-                visuallist.Add(textelement);
+                //var textelement = new TextElement { text = part, name = "textelement" };
+                //visuallist.Add(textelement);
                 foreach (string p in _part)//여기 드래그 관련 내용들은 csv가 아닌 수집품의 내용 관련으로 갈것임 지금 해당내용은 테스트용이라고 생각하는것이 좋음 띄워 쓰기 관련은 인벤토리(수집품) 추리시 발생
                 {
-                    bool check = (keys.Length > 0 ? part.ContainsAny(keys[0]) : false);
+                    bool check = (keys.Length > 0 ? p.ContainsAny(keys[0]) : false);
                     //int a = part.IndexOf(keys[0]);
                     Debug.Log($"분리 후: [{p}] check[{check}]"); //지금 분리도 안 되는거같은데
-        
+                    var textelement = new TextElement { text = p, name = "textelement" };
+                    visuallist.Add(textelement);
+                    visuallist.style.flexDirection = FlexDirection.Row;
 
                     if (check)
                     {
@@ -467,6 +484,8 @@ public class UI_DynamicText : MonoBehaviour
                 content.Add(visuallist);
                 //visualElement = new VisualElement();
             }
+
+            //break;//테스트용 바로 삭제 필요
         
         }
         tracer.Add(content);
@@ -496,6 +515,16 @@ public class UI_DynamicText : MonoBehaviour
         textContainer.AddToClassList("diary-left");
         //tracer.AddToClassList("test1");
         tracer.AddToClassList("test2-2");
+    }
+
+    public void LeftButtonEvent()
+    {
+        Debug.Log("왼쪽 버튼 눌림");
+    }
+
+    public void RightButtonEvent()
+    {
+        Debug.Log("오른쪽 버튼 눌림");
     }
 }
 
