@@ -18,8 +18,10 @@ public class UI_DynamicText : MonoBehaviour
 
     VisualElement visualElement;//메인 부분
     VisualElement dragGhost = null;
-    VisualElement textContainer;
-    VisualElement textContainerContent;
+    VisualElement textContainer;//일기
+    VisualElement textContainerContent;//일기의 내용을 담고 있음
+
+    VisualElement button_parent;
 
     VisualElement diary;
 
@@ -63,6 +65,8 @@ public class UI_DynamicText : MonoBehaviour
         visualElement = root.Q<VisualElement>("VisualElement");
         textContainerContent = root.Q<VisualElement>("textContainerContent");
         visualElement.Add(diary);
+        button_parent = root.Q<VisualElement>("button_parent");
+        //button_parent.invi
 
         // 기존 요소 제거 (초기화)
         //textContainer.Clear();
@@ -156,6 +160,7 @@ public class UI_DynamicText : MonoBehaviour
         //tracer.AddToClassList("test2-2");
         var panel = root.Q<VisualElement>("TracerNotePanel");
         panel.style.scale = new Vector2(0, 0);
+ 
         //panel.style.bottom = 100;
         //panel.RemoveFromHierarchy();
         //panel.Clear();
@@ -411,9 +416,10 @@ public class UI_DynamicText : MonoBehaviour
     {
         Debug.Log("Mestery Load");
         var root = GetComponent<UIDocument>().rootVisualElement;
-        var panel = root.Q<VisualElement>("TracerNotePanel");
+        var panel = root.Q<VisualElement>("TracerNotePanel");//사용안함
         panel.style.scale = new Vector2(1, 1);
         var tracer = root.Q<VisualElement>("TracerNote");//여기 하위에 오브젝트 배치
+        var content = root.Q<VisualElement>("TracerContent");
 
 
         //테스트용 이제 이렇게 텍스트를 배치해야함
@@ -429,14 +435,15 @@ public class UI_DynamicText : MonoBehaviour
             foreach (string part in parts)
             {
                 string[] _part = part.Split(' ');
+                var textelement = new TextElement { text = part, name = "textelement" };
+                visuallist.Add(textelement);
                 foreach (string p in _part)//여기 드래그 관련 내용들은 csv가 아닌 수집품의 내용 관련으로 갈것임 지금 해당내용은 테스트용이라고 생각하는것이 좋음 띄워 쓰기 관련은 인벤토리(수집품) 추리시 발생
                 {
                     bool check = (keys.Length > 0 ? part.ContainsAny(keys[0]) : false);
                     //int a = part.IndexOf(keys[0]);
                     Debug.Log($"분리 후: [{p}] check[{check}]"); //지금 분리도 안 되는거같은데
         
-                    var textelement = new TextElement { text = p, name = "textelement" };
-                    visuallist.Add(textelement);
+
                     if (check)
                     {
                         textelement.RegisterCallback<PointerDownEvent>(evt => { is_sentence = true; });
@@ -453,15 +460,16 @@ public class UI_DynamicText : MonoBehaviour
                     //visuallist.AddToClassList("clickable");
                     //visuallist.Add(textelement);
                 }
-        
+
                 //var sample = new TextElement { text = inven.Value.context, name = "sentence1" };
                 //sample.AddToClassList("sentence");
                 //sample.style.fontSize = 40;
-                tracer.Add(visuallist);
+                content.Add(visuallist);
                 //visualElement = new VisualElement();
             }
         
         }
+        tracer.Add(content);
         //drop_area.RemoveFromHierarchy();
         
         drop_area.style.color = UnityEngine.Color.white;
