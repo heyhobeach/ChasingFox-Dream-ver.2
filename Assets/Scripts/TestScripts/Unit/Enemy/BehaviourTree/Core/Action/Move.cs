@@ -16,7 +16,6 @@ namespace BehaviourTree
         float startTime = 0;
         private bool isRunning;
         private Vector2 moveDir;
-        private IEnumerator waitting;
         private PathFinding pathFinding;
         private JobHandle jobHandle;
 
@@ -31,13 +30,12 @@ namespace BehaviourTree
 
         protected override NodeState OnUpdate()
         {
-            if(waitting != null) waitting.MoveNext();
             if(!isRunning) startTime += Time.deltaTime;
             if(!isRunning && blackboard.target != null && (startTime >= reloadTime || blackboard.FinalNodeList == default))
             {
                 if(startTime >= reloadTime) startTime = 0;
                 GetPathAsync();
-                return NodeState.Success;
+                return NodeState.Running;
             }
             if(blackboard.FinalNodeList == default) 
             {
@@ -46,24 +44,24 @@ namespace BehaviourTree
             if(blackboard.FinalNodeList.Count <= blackboard.nodeIdx) 
             {
                 blackboard.nodeIdx = blackboard.FinalNodeList.Count - 1;
-                return NodeState.Failure;
+                return NodeState.Success;
             }
             var tempDir = new Vector3(blackboard.FinalNodeList[blackboard.nodeIdx].x+GameManager.Instance.correctionPos.x, blackboard.FinalNodeList[blackboard.nodeIdx].y);
             moveDir = tempDir - blackboard.thisUnit.transform.position;
             moveDir = moveDir.normalized;
             if(!blackboard.thisUnit.Move(tempDir)) return NodeState.Failure;
             if((blackboard.thisUnit.transform.position - tempDir).magnitude < 0.1f) blackboard.nodeIdx++;
-            return NodeState.Success;
+            return NodeState.Running;
         }
 
-        private IEnumerator WaitHandle()
+        private async Awaitable WaitHandle()
         {
             if(jobHandle.Equals(default(JobHandle)))
             {
                 Dispose();
-                yield break;
+                return;
             }
-            while(!jobHandle.IsCompleted) yield return null;
+            while(!jobHandle.IsCompleted) await Awaitable.NextFrameAsync();
             jobHandle.Complete();
             var output = pathFinding.FinalNodeList;
             try 
@@ -81,7 +79,7 @@ namespace BehaviourTree
             finally { Dispose(); }
         }
 
-        [MesageTarget] public void GetPathAsync()
+        [MesageTarget] public async void GetPathAsync()
         {
             if(isRunning) return;
             isRunning = true;
@@ -89,18 +87,10 @@ namespace BehaviourTree
             pathFinding = default;
             try
             {
-                Vector2 startPos = Vector2.zero;
-                if(blackboard.FinalNodeList != null && blackboard.FinalNodeList.Count > 0)
-                {
-                    if(blackboard.FinalNodeList.Count-1 < blackboard.nodeIdx) blackboard.nodeIdx = blackboard.FinalNodeList.Count-1;
-                    if(blackboard.nodeIdx < 0) blackboard.nodeIdx = 0;
-                    startPos = new Vector2(blackboard.FinalNodeList[blackboard.nodeIdx].x, blackboard.FinalNodeList[blackboard.nodeIdx].y);
-                }
-                else startPos = blackboard.thisUnit.transform.position;
+                Vector2 startPos = blackboard.thisUnit.transform.position;
                 var targetPos = blackboard.target.position;
                 GameManager.Instance.PathFind(startPos, targetPos, ref jobHandle, ref pathFinding);
-                waitting = WaitHandle();
-                waitting.MoveNext();
+                await WaitHandle();
             }
             catch (Exception e) 
             { 
@@ -114,7 +104,6 @@ namespace BehaviourTree
         {
             if(!jobHandle.IsCompleted) jobHandle.Complete();
             isRunning = false;
-            waitting = null;
             if(pathFinding.isLoad.IsCreated) GameManager.Instance.isLoad = pathFinding.isLoad[0];
             if(pathFinding.OpenList.IsCreated) pathFinding.OpenList.Dispose();
             if(pathFinding.ClosedList.IsCreated) pathFinding.ClosedList.Dispose();

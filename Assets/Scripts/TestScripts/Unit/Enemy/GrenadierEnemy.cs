@@ -19,11 +19,10 @@ public class GrenadierEnemy : EnemyUnit, IDoorInteractable
 
     public override bool AttackCheck(Vector3 attackPos)
     {
-        var pos = attackPos-(transform.position+Vector3.up);
-        bool isForword = Mathf.Sign(pos.normalized.x)>0&&!spriteRenderer.flipX ? true : Mathf.Sign(pos.normalized.x)<0&&spriteRenderer.flipX ? true : false;
-        bool isInner = pos.magnitude < boxSizeX*2;
-        var hit = Physics2D.CircleCast(transform.position+Vector3.up, 0.25f, pos, pos.magnitude, 1<<LayerMask.NameToLayer("Map")|1<<LayerMask.NameToLayer("Wall"));
-        if(hit || !isForword || isInner) return false;
+        var pos = attackPos-transform.position;
+        // bool isForword = Mathf.Sign(pos.normalized.x)>0&&!spriteRenderer.flipX ? true : Mathf.Sign(pos.normalized.x)<0&&spriteRenderer.flipX ? true : false;
+        var hit = Physics2D.Raycast(transform.position+Vector3.up, pos.normalized, pos.magnitude, 1<<LayerMask.NameToLayer("Map")|1<<LayerMask.NameToLayer("Wall"));
+        if(hit) return false;
         else return true;
     }
 

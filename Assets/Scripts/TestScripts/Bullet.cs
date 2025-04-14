@@ -74,7 +74,7 @@ public class Bullet : MonoBehaviour
         {
             Vector2 closestPoint = collision.ClosestPoint(transform.position);
             float distance = ((Vector2)transform.position - closestPoint).magnitude;
-            transform.position = -destination * distance;
+            transform.position = transform.position + (Vector3)(-destination * distance);
             WallFeedBack(collision);
             Destroy(gameObject);
         }

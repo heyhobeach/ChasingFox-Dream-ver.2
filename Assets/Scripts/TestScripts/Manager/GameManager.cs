@@ -184,8 +184,8 @@ public partial class GameManager : MonoBehaviour
             maps[currentRoomIndex].edgeCollider2D = edge;
         }
 
-        bottomLeft = new Vector2Int(Mathf.RoundToInt(rect.x - (rect.width * 0.5f) - 2), Mathf.RoundToInt(rect.y - (rect.height * 0.5f) - 2));
-        topRight = new Vector2Int(Mathf.RoundToInt(rect.x + (rect.width * 0.5f) + 2), Mathf.RoundToInt(rect.y + (rect.height * 0.5f) + 2));
+        bottomLeft = new Vector2Int(Mathf.RoundToInt(rect.x - (rect.width * 0.5f)), Mathf.RoundToInt(rect.y - (rect.height * 0.5f) + 1));
+        topRight = new Vector2Int(Mathf.RoundToInt(rect.x + (rect.width * 0.5f) - 1), Mathf.RoundToInt(rect.y + (rect.height * 0.5f)));
 
         return maps[currentRoomIndex].edgeCollider2D;
     }

@@ -20,9 +20,9 @@ public class MeleeEnemy : EnemyUnit, IDoorInteractable
 
     public override bool AttackCheck(Vector3 attackPos)
     {
-        var pos = attackPos-(transform.position+Vector3.up);
+        var pos = attackPos-transform.position;
         bool isForword = Mathf.Sign(pos.normalized.x)>0&&!spriteRenderer.flipX ? true : Mathf.Sign(pos.normalized.x)<0&&spriteRenderer.flipX ? true : false;
-        var hit = Physics2D.Raycast(transform.position+Vector3.up, pos, pos.magnitude, 1<<LayerMask.NameToLayer("Map")|1<<LayerMask.NameToLayer("Wall"));
+        var hit = Physics2D.Raycast(transform.position+Vector3.up, pos.normalized, pos.magnitude, 1<<LayerMask.NameToLayer("Map")|1<<LayerMask.NameToLayer("Wall"));
         if(hit || !isForword) return false;
         else return true;
     }
@@ -30,8 +30,8 @@ public class MeleeEnemy : EnemyUnit, IDoorInteractable
     public override bool Attack(Vector3 attackPos)
     {
         if(ControllerChecker()) return false;
-        Vector2 subvec = attackPos - (transform.position+Vector3.up);
-        MeleeAttack.transform.position = attackPos;
+        Vector2 subvec = (attackPos - (transform.position+Vector3.up)).normalized;
+        MeleeAttack.transform.position = transform.position + (Vector3)subvec;
         if(subvec.x < 0) effectRenderer.flipX = true;
         else effectRenderer.flipX = false;
 
