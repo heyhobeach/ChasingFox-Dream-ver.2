@@ -438,29 +438,45 @@ public class UI_DynamicText : MonoBehaviour
 
 
         //테스트용 이제 이렇게 텍스트를 배치해야함
-        int i = 0;
+        //int i = 0;
         VisualElement visuallist = new VisualElement();
-        foreach (var inven in inventoryScripable.inventory)//여기서 인벤토리 전부 돌아서 확인함
+        //int count = 0;
+        //foreach (var inven in inventoryScripable.inventory)//여기서 인벤토리 전부 돌아서 확인함
+        for(int i =0;i<inventoryScripable.inventory.Count;i++)
         {
-            Debug.Log("inven =" + inven.Value.context);
-            string[] parts = Regex.Split(inven.Value.context, @"<br\s*/?>");
-            string[] keys = InventoryManager.Instance.GetInfo_(info_keys[i++]).keywords;
-        
-        
+            //count++;
+            if (i != 3)
+            {
+                continue;
+            }
+
+            //if (i > 4) break;
+            Debug.Log("inven =" + InventoryManager.Instance.GetInfo_(info_keys[i]).context);
+            string[] keys = InventoryManager.Instance.GetInfo_(info_keys[i]).keywords;
+            //string[] parts = Regex.Split(inven.Value.context, @"<br\s*/?>");
+            string[] parts = Regex.Split(InventoryManager.Instance.GetInfo_(info_keys[i]).context, @"<br\s*/?>");
+            //string[] parts = Regex.Split(InventoryManager.Instance.GetInfo_(info_keys[i]).context, "\n");//이건 분리 되는듯
+            //string[] parts = Regex.Split(InventoryManager.Instance.GetInfo_(info_keys[i]).context,"");//이건 분리 되는듯
+            //i++;
             foreach (string part in parts)
             {
                 string[] _part = part.Split(' ');
                 //var textelement = new TextElement { text = part, name = "textelement" };
                 //visuallist.Add(textelement);
+
                 foreach (string p in _part)//여기 드래그 관련 내용들은 csv가 아닌 수집품의 내용 관련으로 갈것임 지금 해당내용은 테스트용이라고 생각하는것이 좋음 띄워 쓰기 관련은 인벤토리(수집품) 추리시 발생
                 {
                     bool check = (keys.Length > 0 ? p.ContainsAny(keys[0]) : false);
-                    //int a = part.IndexOf(keys[0]);
-                    Debug.Log($"분리 후: [{p}] check[{check}]"); //지금 분리도 안 되는거같은데
-                    var textelement = new TextElement { text = p, name = "textelement" };
-                    visuallist.Add(textelement);
-                    visuallist.style.flexDirection = FlexDirection.Row;
 
+                    //int a = part.IndexOf(keys[0]);
+                    string p_str = p + " " ;
+                    Debug.Log($"분리 후: [{p_str}] check[{check}]"); //지금 분리도 안 되는거같은데
+                    var textelement = new TextElement { text = p_str, name = "textelement" };
+                    textelement.style.whiteSpace = WhiteSpace.PreWrap;
+                    content.Add(textelement);
+                    content.style.flexDirection = FlexDirection.Row;
+                    content.style.flexWrap = Wrap.Wrap;
+                    //textContainer.style.whiteSpace = WhiteSpace.PreWrap;
                     if (check)
                     {
                         textelement.RegisterCallback<PointerDownEvent>(evt => { is_sentence = true; });
@@ -481,11 +497,10 @@ public class UI_DynamicText : MonoBehaviour
                 //var sample = new TextElement { text = inven.Value.context, name = "sentence1" };
                 //sample.AddToClassList("sentence");
                 //sample.style.fontSize = 40;
-                content.Add(visuallist);
+                //content.Add(visuallist);
                 //visualElement = new VisualElement();
             }
 
-            //break;//테스트용 바로 삭제 필요
         
         }
         tracer.Add(content);
