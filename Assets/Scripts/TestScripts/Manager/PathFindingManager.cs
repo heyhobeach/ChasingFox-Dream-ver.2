@@ -33,7 +33,6 @@ public partial class GameManager : MonoBehaviour
     }
     public void MapSearch()
     {
-        Debug.Log("Mapsearch");
         // NodeArray�� ũ�� �����ְ�, isWall, x, y ����
         int sizeX = topRight.x - bottomLeft.x + 1;
         int sizeY = topRight.y - bottomLeft.y + 1;

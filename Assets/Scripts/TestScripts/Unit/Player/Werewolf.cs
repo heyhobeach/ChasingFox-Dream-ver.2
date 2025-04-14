@@ -184,7 +184,7 @@ public class Werewolf : PlayerUnit
 
         base.FormChange();
         currentCount--;
-        var addPos = ((Vector2)clickPos - (Vector2)transform.position).normalized;
+        // var addPos = ((Vector2)clickPos - (Vector2)transform.position).normalized;
         rg.transform.position = hit.transform.position;
         // rg.transform.position = (Vector3)(((Vector2)clickPos + (addPos * 0.5f)) - Vector2.down *0.5f);
         base.Attack(clickPos);

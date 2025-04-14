@@ -12,7 +12,7 @@ using UnityEngine.U2D.Animation;
 /// <summary>
 /// 인간 상태 클래스, PlayerUnit 클래스를 상속함
 /// </summary>
-public class Human : PlayerUnit
+public class Human : PlayerUnit, IDoorInteractable
 {
     [Header("Test"), Space(10)]
     public AttackType attackType = AttackType.Projectile;
@@ -71,6 +71,8 @@ public class Human : PlayerUnit
     public int bulletTimeCount;
 
     public GaugeBar<Human>.GaugeUpdateDel reloadGauge;
+    private bool _canInteract { get => unitState == UnitState.Default; }
+    public bool canInteract { get => _canInteract; }
 
     /// <summary>
     /// 대쉬 코루틴을 저장하는 변수, 대쉬 중 여부 겸용

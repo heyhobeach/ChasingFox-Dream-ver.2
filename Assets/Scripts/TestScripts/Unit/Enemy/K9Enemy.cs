@@ -2,12 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MeleeEnemy : EnemyUnit, IDoorInteractable
+public class K9Enemy : EnemyUnit
 {
     public GameObject MeleeAttack;//�Ѿ� ����
     private SpriteRenderer effectRenderer;
-    private bool _canInteract { get => unitState == UnitState.Default; }
-    public bool canInteract { get => _canInteract; }
 
     protected override void Start()
     {
@@ -30,8 +28,8 @@ public class MeleeEnemy : EnemyUnit, IDoorInteractable
     public override bool Attack(Vector3 attackPos)
     {
         if(ControllerChecker()) return false;
-        Vector2 subvec = (attackPos - (transform.position+Vector3.up)).normalized;
-        MeleeAttack.transform.position = transform.position + (Vector3)subvec;
+        Vector2 subvec = attackPos - (transform.position+Vector3.up);
+        MeleeAttack.transform.position = attackPos;
         if(subvec.x < 0) effectRenderer.flipX = true;
         else effectRenderer.flipX = false;
 

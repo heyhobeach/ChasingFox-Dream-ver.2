@@ -33,7 +33,11 @@ namespace BehaviourTree
         protected override NodeState OnUpdate()
         {
             if(isAttacking && !blackboard.thisUnit.isAttacking) return NodeState.Success;
-            if(!canAttack) return NodeState.Failure;
+            if(!canAttack) 
+            {
+                blackboard.thisUnit.SetAni(false);
+                return NodeState.Failure;
+            }
             if(time < aimingTime)
             {
                 time += Time.deltaTime;

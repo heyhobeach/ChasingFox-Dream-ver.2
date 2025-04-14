@@ -32,7 +32,7 @@ public class Bullet : MonoBehaviour
     /// 벽과 충돌시 총알이 남아있는 시간
     /// </summary>
     // 이거 이번 프레임에만 활성화 되어있게 변경함
-    public float soundTime = 0.3f;
+    // public float soundTime = 0.3f;
 
     private Vector3 shootPos;
 
@@ -70,18 +70,21 @@ public class Bullet : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(parentGo.tag.Equals(collision.tag)) return;
-        if(collision.CompareTag("Map") && parentGo.tag.Equals("Player")) BulletSound();
-        if(collision.CompareTag("ground") || collision.CompareTag("Wall") || collision.CompareTag("Map")) 
+        if(collision.CompareTag("Wall") || collision.CompareTag("Map")) 
         {
+            Vector2 closestPoint = collision.ClosestPoint(transform.position);
+            float distance = ((Vector2)transform.position - closestPoint).magnitude;
+            transform.position = transform.position + (Vector3)(-destination * distance);
             WallFeedBack(collision);
             Destroy(gameObject);
         }
 
-        if (collision.gameObject.tag == "Player" && !parentGo.CompareTag("Player"))//레이어 설정한 것 때문에 적군 총알만 플레이어 에게 충돌일어남
+        if (collision.CompareTag("Player"))//레이어 설정한 것 때문에 적군 총알만 플레이어 에게 충돌일어남
         {
             PlayerDamage(collision);
+            BulletSound();
         }
-        if(life > 0 && collision.gameObject.tag == "Enemy" && !parentGo.CompareTag("Enemy"))//플레이어 총알이 적군에게 충돌시
+        if(life > 0 && collision.CompareTag("Enemy"))//플레이어 총알이 적군에게 충돌시
         {
             EnemyDamage(collision);
         }
@@ -139,7 +142,7 @@ public class Bullet : MonoBehaviour
     public void DamagedFeedBack(Collider2D collision)
     {
         var dir = collision.transform.position - shootPos;
-        var pos = new Vector2(collision.transform.position.x + (Mathf.Sign(dir.x) * 2 * collision.bounds.size.x), transform.position.y);
+        var pos = new Vector2(collision.transform.position.x + (Mathf.Sign(dir.x) * collision.bounds.size.x), collision.transform.position.y + 1);
         var effect = Instantiate(unitHitEffect, pos, Quaternion.identity);
         var sprite = effect.GetComponent<SpriteRenderer>();
         var sprite2 = effect.transform.GetChild(0).GetComponent<SpriteRenderer>();

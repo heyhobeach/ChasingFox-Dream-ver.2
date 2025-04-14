@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6100942952604637323}
   - component: {fileID: 8410077387728650911}
   - component: {fileID: 6813856908178083291}
-  - component: {fileID: 7498653863253748793}
+  - component: {fileID: 4696127843664879535}
   - component: {fileID: 3159062111280120142}
   - component: {fileID: 6506840840629724753}
   - component: {fileID: 110970789321456406}
@@ -19,7 +19,7 @@ GameObject:
   - component: {fileID: 8991262820685835216}
   - component: {fileID: 4125535029778709249}
   m_Layer: 10
-  m_Name: Melee Enemy
+  m_Name: K9 Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -118,7 +118,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &7498653863253748793
+--- !u!114 &4696127843664879535
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,7 +127,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3474812394016731101}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62ffbc93cd9e4a349a37cc05bda415a9, type: 3}
+  m_Script: {fileID: 11500000, guid: 3fb121bd56c3ff748956462738b8ad7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   gravity: -11.15
@@ -138,9 +138,10 @@ MonoBehaviour:
   jumpImpulse: 5
   jumpTime: 0.5
   rg: {fileID: 0}
+  spriteRenderer: {fileID: 0}
   anim: {fileID: 0}
   shootingAnimationController: {fileID: 0}
-  _maxHealth: 2
+  _maxHealth: 0
   MeleeAttack: {fileID: 6511532306335934452}
 --- !u!114 &3159062111280120142
 MonoBehaviour:

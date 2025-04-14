@@ -46,9 +46,9 @@ public class MaleeAttack : MonoBehaviour
         if(isDamaged)
         {
             var dir = transform.position - collision.transform.position;
-            var effect = Instantiate(effectObj, collision.transform.position + (Vector3.left * Mathf.Sign(dir.x) * collision.bounds.extents.x * 0.5f), Quaternion.identity);
+            var effect = Instantiate(effectObj, collision.transform.position + (Vector3.left * Mathf.Sign(dir.x) * collision.bounds.extents.x * 0.5f) + Vector3.up, Quaternion.identity);
             var sprite = effect.GetComponent<SpriteRenderer>();
-            if(dir.x >= 0) sprite.flipX = true;
+            if(dir.x < 0) sprite.flipX = true;
             else sprite.flipX = false;
         }
     }

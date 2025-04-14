@@ -50,6 +50,12 @@ public class EnemyUnit : UnitBase, IDamageable, ISelectObject
 
     public override bool Move(Vector2 dir)
     {
+        if(ControllerChecker()) 
+        {
+            hzForce = 0;
+            base.Move(Vector2.zero);
+            return false;
+        }
         hzForce = (dir-(Vector2)transform.position).normalized.x;
         transform.position = Vector2.MoveTowards(transform.position, dir, Time.deltaTime * movementSpeed);
         return base.Move(Vector2.right * Mathf.Sign(hzForce));

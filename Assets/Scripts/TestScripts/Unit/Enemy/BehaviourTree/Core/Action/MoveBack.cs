@@ -16,7 +16,6 @@ namespace BehaviourTree
         float startTime = 0;
         private bool isRunning;
         private Vector2 moveDir;
-        private IEnumerator waitting;
         private PathFinding pathFinding;
         private JobHandle jobHandle;
         private List<Vector2Int> backList;
@@ -24,22 +23,18 @@ namespace BehaviourTree
 
         private void OnDestroy() => Dispose();
 
-        protected override void OnEnd()
-        {
-            // blackboard.thisUnit.Move(blackboard.thisUnit.transform.position);
-        }
+        protected override void OnEnd() { }
 
         protected override void OnStart() => blackboard.thisUnit.SetAni(false);
 
         protected override NodeState OnUpdate()
         {
-            if(waitting != null) waitting.MoveNext();
             if(!isRunning) startTime += Time.deltaTime;
             if(!isRunning && blackboard.target != null && (startTime >= reloadTime || blackboard.FinalNodeList == default))
             {
                 if(startTime >= reloadTime) startTime = 0;
                 GetBackPathAsync();
-                return NodeState.Success;
+                return NodeState.Running;
             }
             if(blackboard.FinalNodeList == default) 
             {
@@ -47,25 +42,25 @@ namespace BehaviourTree
             }
             if(blackboard.FinalNodeList.Count <= blackboard.nodeIdx) 
             {
-                blackboard.nodeIdx = 0;
-                return NodeState.Failure;
+                blackboard.nodeIdx = blackboard.FinalNodeList.Count - 1;
+                return NodeState.Success;
             }
             var tempDir = new Vector3(blackboard.FinalNodeList[blackboard.nodeIdx].x+GameManager.Instance.correctionPos.x, blackboard.FinalNodeList[blackboard.nodeIdx].y);
             moveDir = tempDir - blackboard.thisUnit.transform.position;
             moveDir = moveDir.normalized;
-            blackboard.thisUnit.Move(tempDir);
+            if(!blackboard.thisUnit.Move(tempDir)) return NodeState.Failure;
             if((blackboard.thisUnit.transform.position - tempDir).magnitude < 0.1f) blackboard.nodeIdx++;
-            return NodeState.Success;
+            return NodeState.Running;
         }
 
-        private IEnumerator WaitHandle()
+        private async Awaitable WaitHandle()
         {
             if(jobHandle.Equals(default(JobHandle)))
             {
                 Dispose();
-                yield break;
+                return;
             }
-            while(!jobHandle.IsCompleted) yield return null;
+            while(!jobHandle.IsCompleted) await Awaitable.NextFrameAsync();
             jobHandle.Complete();
             var output = pathFinding.FinalNodeList;
             try 
@@ -83,7 +78,7 @@ namespace BehaviourTree
             finally { Dispose(); }
         }
 
-        [MesageTarget] public void GetBackPathAsync()
+        [MesageTarget] public async void GetBackPathAsync()
         {
             if(isRunning) return;
             isRunning = true;
@@ -91,19 +86,11 @@ namespace BehaviourTree
             pathFinding = default;
             try
             {
-                Vector2 startPos = Vector2.zero;
-                if(blackboard.FinalNodeList != null && blackboard.FinalNodeList.Count > 0)
-                {
-                    if(blackboard.FinalNodeList.Count-1 < blackboard.nodeIdx) blackboard.nodeIdx = blackboard.FinalNodeList.Count-1;
-                    if(blackboard.nodeIdx < 0) blackboard.nodeIdx = 0;
-                    startPos = new Vector2(blackboard.FinalNodeList[blackboard.nodeIdx].x, blackboard.FinalNodeList[blackboard.nodeIdx].y);
-                }
-                else startPos = blackboard.thisUnit.transform.position;
+                Vector2 startPos = blackboard.thisUnit.transform.position;
 
                 var targetPos = GetBackPos(startPos);
                 GameManager.Instance.PathFind(startPos, targetPos, ref jobHandle, ref pathFinding);
-                waitting = WaitHandle();
-                waitting.MoveNext();
+                await WaitHandle();
             }
             catch (Exception e) 
             { 
@@ -115,36 +102,33 @@ namespace BehaviourTree
         private Vector2 GetBackPos(Vector2 startPos)
         {
             backList = new();
-            nodeComparer = new();
-            nodeComparer.startPos = new Vector2Int((int)startPos.x, (int)startPos.y);
-            nodeComparer.targetPos = new Vector2Int((int)blackboard.target.position.x, (int)blackboard.target.position.y);
-            backList.Add(nodeComparer.startPos);
+            Vector2Int start = new Vector2Int((int)startPos.x, (int)startPos.y);
+            nodeComparer = new(start, (int)Mathf.Sign(blackboard.target.position.x - start.x));
+            backList.Add(start);
 
-            int min = 1;
             int max = 5;
-            for(int x=(int)startPos.x-max; x<(int)startPos.x-min; x++)
+            for(int x=(int)startPos.x-max; x<(int)startPos.x+max; x++)
             {
-                if(NodeCheck(x, (int)startPos.y)) backList.Add(new Vector2Int(x, (int)startPos.y));
-            }
-            for(int x=(int)startPos.x+min; x<(int)startPos.x+max; x++)
-            {
-                if(NodeCheck(x, (int)startPos.y)) backList.Add(new Vector2Int(x, (int)startPos.y));
+                int abs = max - (int)Mathf.Abs(startPos.x - x);
+                if(NodeCheck(x, start.y) && abs < 2) backList.Add(new Vector2Int(x, start.y));
             }
 
-            max = 10;
             for(int y=(int)startPos.y-max; y<(int)startPos.y+max; y++)
             {
-                if(NodeCheck((int)startPos.x-max, y)) backList.Add(new Vector2Int((int)startPos.x-max, y));
+                int add = max - (int)Mathf.Abs(startPos.y - y);
+                if(NodeCheck(start.x-add, y)) backList.Add(new Vector2Int(start.x-add, y));
             }
             for(int y=(int)startPos.y-max; y<(int)startPos.y+max; y++)
             {
-                if(NodeCheck((int)startPos.x+max, y)) backList.Add(new Vector2Int((int)startPos.x+max, y));
+                int add = max - (int)Mathf.Abs(startPos.y - y);
+                if(NodeCheck(start.x+add, y)) backList.Add(new Vector2Int(start.x+add, y));
             }
 
             var arr = backList.ToArray();
             Array.Sort(arr, nodeComparer);
 
-            return arr[0];
+            if((arr[0]-start).magnitude < 2) return arr[arr.Length-1];
+            else return arr[0];
         }
         private bool NodeCheck(int x, int y)
         {
@@ -160,7 +144,6 @@ namespace BehaviourTree
         {
             if(!jobHandle.IsCompleted) jobHandle.Complete();
             isRunning = false;
-            waitting = null;
             if(pathFinding.isLoad.IsCreated) GameManager.Instance.isLoad = pathFinding.isLoad[0];
             if(pathFinding.OpenList.IsCreated) pathFinding.OpenList.Dispose();
             if(pathFinding.ClosedList.IsCreated) pathFinding.ClosedList.Dispose();
@@ -171,22 +154,28 @@ namespace BehaviourTree
 
         private class NodeComparer : IComparer<Vector2Int>
         {
-            public Vector2Int startPos;
-            public Vector2Int targetPos;
+            private Vector2Int startPos;
+            private int sign;
+
+            public NodeComparer(Vector2Int startPos, int sign)
+            {
+                this.startPos = startPos;
+                this.sign = sign;
+            }
 
             public int Compare(Vector2Int item1, Vector2Int item2)
             {
-                if(Mathf.Sign(targetPos.x-item1.x) != Mathf.Sign(targetPos.x-item2.x))
+                if(Mathf.Sign(startPos.x-item1.x) != Mathf.Sign(startPos.x-item2.x))
                 {
-                    if(Mathf.Sign(targetPos.x-item1.x) != Mathf.Sign(targetPos.x-startPos.x)) return -1;
+                    if(sign == Mathf.Sign(startPos.x-item1.x)) return -1;
                     else return 1;
                 }
 
                 var pos1 = new Vector2Int(Mathf.Abs(item1.x-startPos.x), Mathf.Abs(item1.y-startPos.y));
                 var pos2 = new Vector2Int(Mathf.Abs(item2.x-startPos.x), Mathf.Abs(item2.y-startPos.y));
 
-                if(pos1.y - pos2.y != 0) return (int)Mathf.Sign(pos1.y - pos2.y);
                 if(pos1.x - pos2.x != 0) return (int)-Mathf.Sign(pos1.x - pos2.x);
+                if(pos1.y - pos2.y != 0) return (int)Mathf.Sign(pos1.y - pos2.y);
 
                 return 0;
             }
