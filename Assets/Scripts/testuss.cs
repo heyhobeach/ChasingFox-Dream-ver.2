@@ -437,6 +437,9 @@ public class UI_DynamicText : MonoBehaviour
         var tracer = root.Q<VisualElement>("TracerNote");//여기 하위에 오브젝트 배치
         var content = root.Q<VisualElement>("TracerContent");
 
+        content.style.flexDirection = FlexDirection.Column;
+        content.style.flexWrap = Wrap.NoWrap;
+
 
         //테스트용 이제 이렇게 텍스트를 배치해야함
         //int i = 0;
@@ -469,22 +472,27 @@ public class UI_DynamicText : MonoBehaviour
             //i++;
             foreach (string part in parts)
             {
-                if (Regex.IsMatch(part, "\n"))
-                {
-                    // 개행 태그라면, 줄바꿈을 위한 요소 추가
-                    Debug.Log("줄바꿈 감지");
-                    VisualElement lineBreakElement = new VisualElement();
-                    lineBreakElement.name = "line-break-spacer"; // 디버깅용 이름
-                                                                 // flex-basis: 100% -> 이 요소가 한 줄 전체 너비를 차지하게 함
+                VisualElement lineContainer=new VisualElement();
+                //if (Regex.IsMatch(part, "\n"))
+                //{
+                //    // 개행 태그라면, 줄바꿈을 위한 요소 추가
+                //    Debug.Log("줄바꿈 감지");
+                //    VisualElement lineBreakElement = new VisualElement();
+                //    lineBreakElement.name = "line-break-spacer"; // 디버깅용 이름
+                //                                                 // flex-basis: 100% -> 이 요소가 한 줄 전체 너비를 차지하게 함
+                //
+                //    // 높이는 0으로 설정하여 시각적으로 공간을 차지하지 않음
+                //
+                //    content.Add(lineBreakElement);
+                //    lineBreakElement.style.flexGrow = 1;
+                //    //  lineBreakElement.style.flexShrink = 0;
+                //    //Debug.Log("position"+lineBreakElement.style.position);
+                //    //lineBreakElement.style.height = 0;
+                //}
 
-                    // 높이는 0으로 설정하여 시각적으로 공간을 차지하지 않음
+                lineContainer.style.flexDirection = FlexDirection.Row;
+                lineContainer.style.flexWrap = Wrap.Wrap;
 
-                    content.Add(lineBreakElement);
-                    lineBreakElement.style.flexGrow = 1;
-                    //lineBreakElement.style.flexShrink = 0;
-                    //Debug.Log("position"+lineBreakElement.style.position);
-                    //lineBreakElement.style.height = 0;
-                }
                 string[] _part = part.Split(' ');
                 //var textelement = new TextElement { text = part, name = "textelement" };
                 //visuallist.Add(textelement);
@@ -498,9 +506,9 @@ public class UI_DynamicText : MonoBehaviour
                     Debug.Log($"분리 후: [{p_str}] check[{check}]"); //지금 분리도 안 되는거같은데
                     var textelement = new TextElement { text = p_str, name = "textelement" };
                     textelement.style.whiteSpace = WhiteSpace.PreWrap;
-                    content.Add(textelement);
-                    content.style.flexDirection = FlexDirection.Row;
-                    content.style.flexWrap = Wrap.Wrap;
+                    lineContainer.Add(textelement);
+                    //lineContainer.style.flexDirection = FlexDirection.Row;
+                    //lineContainer.style.flexWrap = Wrap.Wrap;
                     //textContainer.style.whiteSpace = WhiteSpace.PreWrap;
                     if (check)
                     {
@@ -518,6 +526,8 @@ public class UI_DynamicText : MonoBehaviour
                     //visuallist.AddToClassList("clickable");
                     //visuallist.Add(textelement);
                 }
+
+                content.Add(lineContainer);
 
                 //var sample = new TextElement { text = inven.Value.context, name = "sentence1" };
                 //sample.AddToClassList("sentence");
