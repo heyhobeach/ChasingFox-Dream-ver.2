@@ -11,6 +11,7 @@ using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
+using static Inventory;
 using static UnityEditor.Recorder.OutputPath;
 
 public class UI_DynamicText : MonoBehaviour
@@ -452,14 +453,38 @@ public class UI_DynamicText : MonoBehaviour
 
             //if (i > 4) break;
             Debug.Log("inven =" + InventoryManager.Instance.GetInfo_(info_keys[i]).context);
-            string[] keys = InventoryManager.Instance.GetInfo_(info_keys[i]).keywords;
+            string textContent = InventoryManager.Instance.GetInfo_(info_keys[i]).context ?? "";
+            string[] keys = InventoryManager.Instance.GetInfo_(info_keys[i]).keywords ?? new string[0];
+
+            // ★★★ 핵심 수정: Regex.Split에 캡처 그룹 (\n) 사용 ★★★
+            // 이렇게 하면 '\n' 문자 자체도 parts 배열에 포함됩니다.
+            // (Windows 환경 고려 시: @"(\r?\n)" 사용 가능)
+            string[] parts = Regex.Split(textContent, @"(\n)");
+            //string[] keys = InventoryManager.Instance.GetInfo_(info_keys[i]).keywords;
             //string[] parts = Regex.Split(inven.Value.context, @"<br\s*/?>");
-            string[] parts = Regex.Split(InventoryManager.Instance.GetInfo_(info_keys[i]).context, @"<br\s*/?>");
+            //string[] parts = Regex.Split(InventoryManager.Instance.GetInfo_(info_keys[i]).context, @"<br\s*/?>");
             //string[] parts = Regex.Split(InventoryManager.Instance.GetInfo_(info_keys[i]).context, "\n");//이건 분리 되는듯
+
             //string[] parts = Regex.Split(InventoryManager.Instance.GetInfo_(info_keys[i]).context,"");//이건 분리 되는듯
             //i++;
             foreach (string part in parts)
             {
+                if (Regex.IsMatch(part, "\n"))
+                {
+                    // 개행 태그라면, 줄바꿈을 위한 요소 추가
+                    Debug.Log("줄바꿈 감지");
+                    VisualElement lineBreakElement = new VisualElement();
+                    lineBreakElement.name = "line-break-spacer"; // 디버깅용 이름
+                                                                 // flex-basis: 100% -> 이 요소가 한 줄 전체 너비를 차지하게 함
+
+                    // 높이는 0으로 설정하여 시각적으로 공간을 차지하지 않음
+
+                    content.Add(lineBreakElement);
+                    lineBreakElement.style.flexGrow = 1;
+                    //lineBreakElement.style.flexShrink = 0;
+                    //Debug.Log("position"+lineBreakElement.style.position);
+                    //lineBreakElement.style.height = 0;
+                }
                 string[] _part = part.Split(' ');
                 //var textelement = new TextElement { text = part, name = "textelement" };
                 //visuallist.Add(textelement);
