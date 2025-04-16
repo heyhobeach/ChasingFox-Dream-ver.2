@@ -439,6 +439,8 @@ public class UI_DynamicText : MonoBehaviour
 
         content.style.flexDirection = FlexDirection.Column;
         content.style.flexWrap = Wrap.NoWrap;
+        content.style.flexGrow = 1;
+        content.style.flexShrink = 0;
 
 
         //테스트용 이제 이렇게 텍스트를 배치해야함
@@ -492,7 +494,8 @@ public class UI_DynamicText : MonoBehaviour
 
                 lineContainer.style.flexDirection = FlexDirection.Row;
                 lineContainer.style.flexWrap = Wrap.Wrap;
-
+                float estimatedLineHeightInPixels = 50f;
+                lineContainer.style.minHeight = new StyleLength(new Length(estimatedLineHeightInPixels, LengthUnit.Pixel));
                 string[] _part = part.Split(' ');
                 //var textelement = new TextElement { text = part, name = "textelement" };
                 //visuallist.Add(textelement);
@@ -538,13 +541,13 @@ public class UI_DynamicText : MonoBehaviour
 
         
         }
-        tracer.Add(content);
+        //tracer.Add(content);
         //drop_area.RemoveFromHierarchy();
         
         drop_area.style.color = UnityEngine.Color.white;
         //var element = panel.Q<VisualElement>("TracerNotePanel");
         //element.style.width = Length.Percent(100);
-        textContainer.style.flexGrow = 0;
+        //textContainer.style.flexGrow = 0;//0416
         //textContainer.RemoveFromHierarchy();
 
    
@@ -552,7 +555,7 @@ public class UI_DynamicText : MonoBehaviour
 
         //textContainer.style.width=Length.Percent(100);
         //textContainer.style.height=Length.Percent(100);
-        //textContainer.style.flexGrow = 0;
+        textContainer.style.flexGrow = 0;
         //panel.Add(textContainerContent);
         //tracer.RemoveFromHierarchy();
 
