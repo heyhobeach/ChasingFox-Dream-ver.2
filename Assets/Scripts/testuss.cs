@@ -38,6 +38,7 @@ public class UI_DynamicText : MonoBehaviour
     Vector2 startMousePosition;
     InventoryScripable inventoryScripable;
 
+    int num = 0;
 
     private void OnEnable()
     {
@@ -76,19 +77,6 @@ public class UI_DynamicText : MonoBehaviour
         right_button.clickable.clicked += RightButtonEvent;
         button_parent.visible = false;
 
-        //button_parent.invi
-
-        // 기존 요소 제거 (초기화)
-        //textContainer.Clear();
-
-        // 새로운 텍스트 요소 추가
-        //Dialogue[] dialogues=InteractionEvent.Instance.GetDialogue();
-        //
-        //foreach(var i in dialogues)
-        //{
-        //    Debug.Log(i);
-        //}
-
         var text1 = new TextElement { text = "클릭 이벤트 가능한 문장 1 ", name = "sentence1" };
         var clickableText = new TextElement { text = "클릭 이벤트 가능한 문장 2", name = "clickableWord" };
         var text2 = new TextElement { text = "클릭 이벤트 가능한 문장 3", name = "sentence2" };
@@ -108,38 +96,11 @@ public class UI_DynamicText : MonoBehaviour
         clickableText.RegisterCallback<PointerUpEvent>(evt =>
         {
             Debug.Log("클릭된 텍스트: 클릭 가능한 텍스트");
-            //textList.Clear();//초기화 
-            //Dialogue[] dialogues=StartEvent();
-            //foreach (var dialogue in dialogues)
-            //{
-            //    string[] parts = Regex.Split(dialogue.context[0], @"<br\s*/?>");
-            //    foreach(string part in parts)
-            //    {
-            //        Debug.Log($"분리 후: [{part}]");
-            //        textList.Add(new TextElement { text = part, name = "textelement" });
-            //    }
-            //}
-            //for (int i = 0; i < textList.Count; i++)
-            //{
-            //    textContainer.Add(textList[i]);
-            //}
 
 
         });
 
-        //foreach(var text in textList)
-        //{
-        //    textContainer.Add(text);
-        //}
 
-
-        // 컨테이너에 추가
-        //textContainer.Add(text1);
-        //textContainer.Add(clickableText);
-        //textContainer.Add(text2);
-
-        //VisualElement sentence_container = root.Q<VisualElement>("sentence-container");
-        //var draggable_label = sentence_container.Query<Label>().Class("draggable").Build();
 
         drop_area = visualElement.Q<VisualElement>("drop-area");
 
@@ -166,23 +127,9 @@ public class UI_DynamicText : MonoBehaviour
             //dragGhost = null;
         });
 
-        //var tracer = root.Q<VisualElement>("TracerNote");
-        //tracer.AddToClassList("test2-2");
         var panel = root.Q<VisualElement>("TracerNotePanel");
         panel.style.scale = new Vector2(0, 0);
- 
-        //panel.style.bottom = 100;
-        //panel.RemoveFromHierarchy();
-        //panel.Clear();
 
-
-        //foreach (var dlable in draggable_label)
-        //{
-        //    dlable.RegisterCallback<PointerDownEvent>(evt => { is_sentence = true; });
-        //    dlable.RegisterCallback<PointerMoveEvent>(evt => { Debug.Log("label 드래그 확인 문구"); });
-        //    dlable.RegisterCallback<PointerUpEvent>(evt => { Debug.Log("label 클릭 놓은 확인 문구"); });
-        //    Debug.Log("드래그 라벨" + dlable.text);
-        //}
 
 
 
@@ -191,10 +138,8 @@ public class UI_DynamicText : MonoBehaviour
         {
             Debug.Log("clickable" + i.name);
             i.RegisterCallback<PointerDownEvent>(LoadMestery);
-            //i.RegisterCallback<PointerDownEvent>(LoadTest);
+
         }
-        //textContainer.style.width = Length.Percent(50);
-        //textContainer.style.alignSelf = Align.Center;
 
     }
 
@@ -207,10 +152,10 @@ public class UI_DynamicText : MonoBehaviour
     {
         List<VisualElement> textList = new List<VisualElement>();
         Dialogue[] dialogues = StartEvent();
-        //textContainer.Clear();
+
         VisualElement visuallist = new VisualElement();
         int num = 0;
-        //foreach (var dialogue in dialogues)
+
         for (int i = 0; i < dialogues.Length; i++)
         {
             string[] parts = Regex.Split(dialogues[i].context[0], @"<br\s*/?>");//나눈 문장들 들어 있음
@@ -245,28 +190,22 @@ public class UI_DynamicText : MonoBehaviour
 
                     if (check)
                     {
-                        //textelement.RegisterCallback<PointerDownEvent>(evt => { is_sentence = true; });
-                        //textelement.RegisterCallback<PointerMoveEvent>(evt => { Debug.Log("label 드래그 확인 문구"); });
-                        //textelement.RegisterCallback<PointerUpEvent>(evt => { Debug.Log("label 클릭 놓은 확인 문구"); });
-                        //textelement.AddToClassList("draggable");
+
                         textelement.AddToClassList("clickable");
                         textelement.RegisterCallback<PointerDownEvent>(LoadMestery);
-                        //textelement.RegisterCallback<PointerDownEvent>(LoadTest);
+
                     }
                     else
                     {
                         textelement.AddToClassList("sentence");
                     }
-                    //visuallist.AddToClassList("clickable");
+
                 }
 
 
-                //(check ? textList[num++].AddToClassList("sentence") : textList[num++].AddToClassList("sentence"));
-                //textList[num++].AddToClassList("sentence");//클래스 부여 하는 부분
             }
             textList.Add(visuallist);
-            //textList[i].Add(visuallist);
-            //visuallist.Add(tex);
+
             visuallist.style.flexDirection = FlexDirection.Column;
             visuallist.style.width = Length.Percent(100);
             //visualElement.Add(textList[i]);
@@ -282,25 +221,9 @@ public class UI_DynamicText : MonoBehaviour
 
 
         }
-        //for (int i = 0; i < textList.Count; i++)
-        //{
-        //
-        //    //while (true) { }//입력 대기 부분
-        //    textList[i].style.flexGrow = 3;
-        //    //아래는 출력용
-        //    var t = textList[i].Query<TextElement>().Build();
-        //    foreach(var k in t)
-        //    {
-        //        Debug.Log($"textlist [{i}] => {k.text}");
-        //    }
-        //
-        //    //textContainer.Add(textList[i]);
-        //    //textContainer.style.flexDirection = FlexDirection.Row;
-        //    //visualElement.Add(visuallist[i]);
-        //}
+
     }
 
-    //Awaitable 
 
     private Dialogue[] StartEvent()//현재 가지고있는 아이템의 dialogue를 가져옴
     {
@@ -313,56 +236,15 @@ public class UI_DynamicText : MonoBehaviour
             Debug.Log("dialogue id" + dialogue.id + "dialogue text" + dialogue.context[0]);
             trace_dic.Add(int.Parse(dialogue.id), dialogue);
         }
-        //for (int i = 0; i < tempdialogue.Length; i++)//문자열에서 아이템 찾는 부분이었음
-        //{
-        //    if (tempdialogue[i].context[0].Contains("item"))//수집품 요구하는 문장
-        //    {
-        //        MatchCollection matches=Regex.Matches(tempdialogue[i].context[0], "<item(.*?)>");  
-        //        foreach(Match match in matches)
-        //        {
-        //            string str = match.Groups[1].Value; //매칭 된 숫자들 나옴
-        //            //Debug.Log(str);//숫자는 가져옴
-        //        }
-        //        //Debug.Log(i + "번째에 아이템이 있음"+"위치는 "+ tempdialogue[i].context[0].IndexOf("item"));//item위치 찾기 위함
-        //    }
-        //    Debug.Log(string.Format("id =>{0}",i+1));
-        //
-        //    DatabaseManager.instance.dialogueDic.Add(i + 1, tempdialogue[i]);
-        //}
+
         List<Dialogue> templist = new List<Dialogue>();
         foreach (var i in info_keys)//현재 가지고 있는 키에서 문자를 받을수있음
         {
-            //Debug.Log("key id=>"+i);
 
-            //string str = string.Format("getKey value{0}", trace_dic[i].context[0]);
-            //string[]keys =InventoryManager.Instance.GetInfo_(i).keywords;
-            //
-            //
-            ////Debug.Log("key size="+keys.Length);
-            //if (keys.Length>0)//키가 있다면
-            //{
-            //    //Debug.Log("keys =>" + keys[0]);
-            //    str += string.Format("키워드 {0}", InventoryManager.Instance.GetInfo_(i).keywords[0]);
-            //}
-            //else
-            //{
-            //    Debug.Log("null");
-            //}
-            //Debug.Log(str);
-            //if (InventoryManager.Instance.GetInfo_(i).keywords != null)//여기 라인이 계속 에러, keywords 가 null인듯
-            //{
-            //    str += string.Format("{0}", InventoryManager.Instance.GetInfo_(i).keywords[0]);
-            //}
-
-
-            //inventoryScripable.inventory[i].context.
-            //Dialogue dia = trace_dic[i];
             templist.Add(trace_dic[i]);
         }
 
-        //Dialogue[] dialogues = DatabaseManager.instance.GetDialogues(0, 5);
         Dialogue[] dialogues = templist.ToArray();
-        //Dialogue[] dialogues=new Dialogue[100]
         return dialogues;
     }
 
@@ -429,141 +311,70 @@ public class UI_DynamicText : MonoBehaviour
     }
     private void LoadMestery(PointerDownEvent evt)//데이터를 미리 정해놔야할듯?
     {
+        textContainer.Clear();
+        MesterySystem();
+    }
+
+    private void MesterySystem()
+    {
         Debug.Log("Mestery Load");
+        Debug.Log("inventory count" + inventoryScripable.inventory.Count);
         button_parent.visible = true;
         var root = GetComponent<UIDocument>().rootVisualElement;
         var panel = root.Q<VisualElement>("TracerNotePanel");//사용안함
         panel.style.scale = new Vector2(1, 1);
         var tracer = root.Q<VisualElement>("TracerNote");//여기 하위에 오브젝트 배치
         var content = root.Q<VisualElement>("TracerContent");
+        content.Clear();
 
         content.style.flexDirection = FlexDirection.Column;
         content.style.flexWrap = Wrap.NoWrap;
         content.style.flexGrow = 1;
         content.style.flexShrink = 0;
 
-
-        //테스트용 이제 이렇게 텍스트를 배치해야함
-        //int i = 0;
         VisualElement visuallist = new VisualElement();
-        //int count = 0;
-        //foreach (var inven in inventoryScripable.inventory)//여기서 인벤토리 전부 돌아서 확인함
-        for(int i =0;i<inventoryScripable.inventory.Count;i++)
+        Debug.Log("inven =" + InventoryManager.Instance.GetInfo_(info_keys[num]).context);
+        string textContent = InventoryManager.Instance.GetInfo_(info_keys[num]).context ?? "";
+        string[] keys = InventoryManager.Instance.GetInfo_(info_keys[num]).keywords ?? new string[0];
+        string[] parts = Regex.Split(textContent, @"(\n)");
+        foreach (string part in parts)
         {
-            //count++;
-            if (i != 3)
+            VisualElement lineContainer = new VisualElement();
+
+            lineContainer.style.flexDirection = FlexDirection.Row;
+            lineContainer.style.flexWrap = Wrap.Wrap;
+            float estimatedLineHeightInPixels = 50f;
+            lineContainer.style.minHeight = new StyleLength(new Length(estimatedLineHeightInPixels, LengthUnit.Pixel));
+            string[] _part = part.Split(' ');
+
+            foreach (string p in _part)//여기 드래그 관련 내용들은 csv가 아닌 수집품의 내용 관련으로 갈것임 지금 해당내용은 테스트용이라고 생각하는것이 좋음 띄워 쓰기 관련은 인벤토리(수집품) 추리시 발생
             {
-                continue;
-            }
-
-            //if (i > 4) break;
-            Debug.Log("inven =" + InventoryManager.Instance.GetInfo_(info_keys[i]).context);
-            string textContent = InventoryManager.Instance.GetInfo_(info_keys[i]).context ?? "";
-            string[] keys = InventoryManager.Instance.GetInfo_(info_keys[i]).keywords ?? new string[0];
-
-            // ★★★ 핵심 수정: Regex.Split에 캡처 그룹 (\n) 사용 ★★★
-            // 이렇게 하면 '\n' 문자 자체도 parts 배열에 포함됩니다.
-            // (Windows 환경 고려 시: @"(\r?\n)" 사용 가능)
-            string[] parts = Regex.Split(textContent, @"(\n)");
-            //string[] keys = InventoryManager.Instance.GetInfo_(info_keys[i]).keywords;
-            //string[] parts = Regex.Split(inven.Value.context, @"<br\s*/?>");
-            //string[] parts = Regex.Split(InventoryManager.Instance.GetInfo_(info_keys[i]).context, @"<br\s*/?>");
-            //string[] parts = Regex.Split(InventoryManager.Instance.GetInfo_(info_keys[i]).context, "\n");//이건 분리 되는듯
-
-            //string[] parts = Regex.Split(InventoryManager.Instance.GetInfo_(info_keys[i]).context,"");//이건 분리 되는듯
-            //i++;
-            foreach (string part in parts)
-            {
-                VisualElement lineContainer=new VisualElement();
-                //if (Regex.IsMatch(part, "\n"))
-                //{
-                //    // 개행 태그라면, 줄바꿈을 위한 요소 추가
-                //    Debug.Log("줄바꿈 감지");
-                //    VisualElement lineBreakElement = new VisualElement();
-                //    lineBreakElement.name = "line-break-spacer"; // 디버깅용 이름
-                //                                                 // flex-basis: 100% -> 이 요소가 한 줄 전체 너비를 차지하게 함
-                //
-                //    // 높이는 0으로 설정하여 시각적으로 공간을 차지하지 않음
-                //
-                //    content.Add(lineBreakElement);
-                //    lineBreakElement.style.flexGrow = 1;
-                //    //  lineBreakElement.style.flexShrink = 0;
-                //    //Debug.Log("position"+lineBreakElement.style.position);
-                //    //lineBreakElement.style.height = 0;
-                //}
-
-                lineContainer.style.flexDirection = FlexDirection.Row;
-                lineContainer.style.flexWrap = Wrap.Wrap;
-                float estimatedLineHeightInPixels = 50f;
-                lineContainer.style.minHeight = new StyleLength(new Length(estimatedLineHeightInPixels, LengthUnit.Pixel));
-                string[] _part = part.Split(' ');
-                //var textelement = new TextElement { text = part, name = "textelement" };
-                //visuallist.Add(textelement);
-
-                foreach (string p in _part)//여기 드래그 관련 내용들은 csv가 아닌 수집품의 내용 관련으로 갈것임 지금 해당내용은 테스트용이라고 생각하는것이 좋음 띄워 쓰기 관련은 인벤토리(수집품) 추리시 발생
+                bool check = (keys.Length > 0 ? p.ContainsAny(keys[0]) : false);
+                string p_str = p + " ";
+                Debug.Log($"분리 후: [{p_str}] check[{check}]"); //지금 분리도 안 되는거같은데
+                var textelement = new TextElement { text = p_str, name = "textelement" };
+                textelement.style.whiteSpace = WhiteSpace.PreWrap;
+                lineContainer.Add(textelement);
+                if (check)
                 {
-                    bool check = (keys.Length > 0 ? p.ContainsAny(keys[0]) : false);
-
-                    //int a = part.IndexOf(keys[0]);
-                    string p_str = p + " " ;
-                    Debug.Log($"분리 후: [{p_str}] check[{check}]"); //지금 분리도 안 되는거같은데
-                    var textelement = new TextElement { text = p_str, name = "textelement" };
-                    textelement.style.whiteSpace = WhiteSpace.PreWrap;
-                    lineContainer.Add(textelement);
-                    //lineContainer.style.flexDirection = FlexDirection.Row;
-                    //lineContainer.style.flexWrap = Wrap.Wrap;
-                    //textContainer.style.whiteSpace = WhiteSpace.PreWrap;
-                    if (check)
-                    {
-                        textelement.RegisterCallback<PointerDownEvent>(evt => { is_sentence = true; });
-                        textelement.RegisterCallback<PointerMoveEvent>(evt => { Debug.Log("label 드래그 확인 문구"); });
-                        textelement.RegisterCallback<PointerUpEvent>(evt => { Debug.Log("label 클릭 놓은 확인 문구"); });
-                        textelement.AddToClassList("draggable");
-                        //textelement.AddToClassList("clickable");
-                        //textelement.RegisterCallback<PointerDownEvent>(LoadMestery);
-                    }
-                    else
-                    {
-                        textelement.AddToClassList("sentence");
-                    }
-                    //visuallist.AddToClassList("clickable");
-                    //visuallist.Add(textelement);
+                    textelement.RegisterCallback<PointerDownEvent>(evt => { is_sentence = true; });
+                    textelement.RegisterCallback<PointerMoveEvent>(evt => { Debug.Log("label 드래그 확인 문구"); });
+                    textelement.RegisterCallback<PointerUpEvent>(evt => { Debug.Log("label 클릭 놓은 확인 문구"); });
+                    textelement.AddToClassList("draggable");
                 }
-
-                content.Add(lineContainer);
-
-                //var sample = new TextElement { text = inven.Value.context, name = "sentence1" };
-                //sample.AddToClassList("sentence");
-                //sample.style.fontSize = 40;
-                //content.Add(visuallist);
-                //visualElement = new VisualElement();
+                else
+                {
+                    textelement.AddToClassList("sentence");
+                }
             }
 
-        
+            content.Add(lineContainer);
         }
-        //tracer.Add(content);
-        //drop_area.RemoveFromHierarchy();
-        
+
+
         drop_area.style.color = UnityEngine.Color.white;
-        //var element = panel.Q<VisualElement>("TracerNotePanel");
-        //element.style.width = Length.Percent(100);
-        //textContainer.style.flexGrow = 0;//0416
-        //textContainer.RemoveFromHierarchy();
 
-   
-        //textContainerContent.RemoveFromHierarchy();
-
-        //textContainer.style.width=Length.Percent(100);
-        //textContainer.style.height=Length.Percent(100);
         textContainer.style.flexGrow = 0;
-        //panel.Add(textContainerContent);
-        //tracer.RemoveFromHierarchy();
-
-        //panel.Add(textContainer);
-        //panel.Add(tracer);
-        //panel.Add(drop_area);
-
-
 
         textContainer.AddToClassList("diary-left");
         //tracer.AddToClassList("test1");
@@ -572,11 +383,23 @@ public class UI_DynamicText : MonoBehaviour
 
     public void LeftButtonEvent()
     {
+        num--;
+        if (num < 0)
+        {
+            num = 0;
+        }
+        MesterySystem();
         Debug.Log("왼쪽 버튼 눌림");
     }
 
     public void RightButtonEvent()
     {
+        num++;
+        if (inventoryScripable.inventory.Count <= num)
+        {
+            num = inventoryScripable.inventory.Count - 1;
+        }
+        MesterySystem();
         Debug.Log("오른쪽 버튼 눌림");
     }
 }
