@@ -43,7 +43,7 @@ public class UI_DynamicText : MonoBehaviour
     private void OnEnable()
     {
 
-        Dialogue[] dialyDialogue=StartEvent("테스트파일2");
+        Dialogue[] dialyDialogue=StartEvent("다이어리 내용");
         foreach(var i in dialyDialogue)
         {
             Debug.Log("dialyDialogue"+i.context[0]);
