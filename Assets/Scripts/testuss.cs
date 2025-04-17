@@ -42,6 +42,12 @@ public class UI_DynamicText : MonoBehaviour
 
     private void OnEnable()
     {
+
+        Dialogue[] dialyDialogue=StartEvent("테스트파일2");
+        foreach(var i in dialyDialogue)
+        {
+            Debug.Log("dialyDialogue"+i.context[0]);
+        }
         inventoryScripable = InventoryManager.Instance.GetInventoryAll();//인벤토리에서 데이터를 가져옴
 
         Dictionary<int, Inventory.Info>.KeyCollection keys = InventoryManager.Instance.GetinventoryKeys();//키를 가져오기 위한 변수
@@ -151,7 +157,7 @@ public class UI_DynamicText : MonoBehaviour
     private void SetDiaryText(ref VisualElement textContainer)//diary csv (현재는 테스트파일2) 데이터를 가져와서 사용하는 부분
     {
         List<VisualElement> textList = new List<VisualElement>();
-        Dialogue[] dialogues = StartEvent();
+        Dialogue[] dialogues = StartEvent("테스트파일2");
 
         VisualElement visuallist = new VisualElement();
         int num = 0;
@@ -225,10 +231,11 @@ public class UI_DynamicText : MonoBehaviour
     }
 
 
-    private Dialogue[] StartEvent()//현재 가지고있는 아이템의 dialogue를 가져옴
+    private Dialogue[] StartEvent(string title_str)//현재 가지고있는 아이템의 dialogue를 가져옴
     {
         Debug.Log("추리 이벤트 실행됨!");
-        Dialogue[] tempdialogue = DatabaseManager.instance.theParser.Parse("테스트파일2");//일지 파일 명으로 변경
+        Dialogue[] tempdialogue = DatabaseManager.instance.theParser.Parse(title_str);//일지 파일 명으로 변경
+        Debug.Log(tempdialogue.Length);
         DatabaseManager.instance.dialogueDic.Clear();
         Dictionary<int, Dialogue> trace_dic = new Dictionary<int, Dialogue>();//매번 할 필요없을거같긷한데 나중에 수정해도 될듯
         foreach (var dialogue in tempdialogue)
@@ -312,13 +319,16 @@ public class UI_DynamicText : MonoBehaviour
     private void LoadMestery(PointerDownEvent evt)//데이터를 미리 정해놔야할듯?
     {
         textContainer.Clear();
+        DiaryContentSet();
         MesterySystem();
+    }
+    private void DiaryContentSet()
+    {
+
     }
 
     private void MesterySystem()
     {
-        Debug.Log("Mestery Load");
-        Debug.Log("inventory count" + inventoryScripable.inventory.Count);
         button_parent.visible = true;
         var root = GetComponent<UIDocument>().rootVisualElement;
         var panel = root.Q<VisualElement>("TracerNotePanel");//사용안함
