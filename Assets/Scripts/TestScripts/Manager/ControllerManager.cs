@@ -3,45 +3,37 @@ using UnityEngine;
 
 public class ControllerManager : MonoBehaviour
 {
-    private static ControllerManager instance;
-    public static ControllerManager Instance { get => instance; }
-
     private Stack<IBaseController> controllers = new();
     public static void PushController(IBaseController @base)
     {
-        if(instance.controllers.Contains(@base)) return;
-        if(instance.controllers.Count > 0) instance.controllers.Peek().onDown?.Invoke();
-        instance.controllers.Push(@base);
+        if(ServiceLocator.Get<ControllerManager>().controllers.Contains(@base)) return;
+        if(ServiceLocator.Get<ControllerManager>().controllers.Count > 0) ServiceLocator.Get<ControllerManager>().controllers.Peek().onDown?.Invoke();
+        ServiceLocator.Get<ControllerManager>().controllers.Push(@base);
     }
     public static void PopController(IBaseController @base)
     {
-        if(instance.controllers.Count > 0 && instance.controllers.Peek() != @base)
+        if(ServiceLocator.Get<ControllerManager>().controllers.Count > 0 && ServiceLocator.Get<ControllerManager>().controllers.Peek() != @base)
         {
             Stack<IBaseController> temp = new();
-            while(instance.controllers.Count > 0 && !temp.Equals(instance.controllers.Peek())) temp.Push(instance.controllers.Pop());
-            while(temp.Count > 0) instance.controllers.Push(temp.Pop());
+            while(ServiceLocator.Get<ControllerManager>().controllers.Count > 0 && !temp.Equals(ServiceLocator.Get<ControllerManager>().controllers.Peek())) temp.Push(ServiceLocator.Get<ControllerManager>().controllers.Pop());
+            while(temp.Count > 0) ServiceLocator.Get<ControllerManager>().controllers.Push(temp.Pop());
         }
-        if(instance.controllers.Count > 0) 
+        if(ServiceLocator.Get<ControllerManager>().controllers.Count > 0) 
         {
-            instance.controllers.Pop();
+            ServiceLocator.Get<ControllerManager>().controllers.Pop();
         }
-        if(instance.controllers.Count > 0) instance.controllers.Peek().onUp?.Invoke();
+        if(ServiceLocator.Get<ControllerManager>().controllers.Count > 0) ServiceLocator.Get<ControllerManager>().controllers.Peek().onUp?.Invoke();
     }
-    public static IBaseController GetTopController() => instance.controllers.Peek();
+    public static IBaseController GetTopController() => ServiceLocator.Get<ControllerManager>().controllers.Peek();
 
     private void OnDestroy()
     {
-        instance = null;
+        ServiceLocator.Unregister(this);
     }
 
     private void Awake()
     {
-        if (instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        instance = this;
+        ServiceLocator.Register(this);
 
         if(controllers == null) controllers = new();
     }

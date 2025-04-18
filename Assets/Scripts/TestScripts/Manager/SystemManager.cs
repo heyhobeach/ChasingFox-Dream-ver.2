@@ -72,6 +72,7 @@ public class SystemManager : MonoBehaviour
             dash = KeyCode.Space,
             formChange = KeyCode.E,
             skill1 = KeyCode.Mouse1,
+            skill2 = KeyCode.LeftShift,
             retry = KeyCode.R
         };
         defaultSaveData = new SaveData{

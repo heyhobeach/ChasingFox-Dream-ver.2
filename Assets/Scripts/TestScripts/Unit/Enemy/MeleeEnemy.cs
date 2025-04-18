@@ -6,7 +6,7 @@ public class MeleeEnemy : EnemyUnit, IDoorInteractable
 {
     public GameObject MeleeAttack;//�Ѿ� ����
     private SpriteRenderer effectRenderer;
-    private bool _canInteract { get => unitState == UnitState.Default; }
+    private bool _canInteract { get => UnitState == UnitState.Default; }
     public bool canInteract { get => _canInteract; }
 
     protected override void Start()

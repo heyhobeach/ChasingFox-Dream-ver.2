@@ -98,6 +98,6 @@ public class DoorOpen : MonoBehaviour, IBaseController
 
     public void Controller()
     {
-        if(Input.GetButtonDown("Cancel")) GameManager.Instance.Pause();
+        if(Input.GetButtonDown("Cancel")) ServiceLocator.Get<GameManager>().Pause();
     }
 }

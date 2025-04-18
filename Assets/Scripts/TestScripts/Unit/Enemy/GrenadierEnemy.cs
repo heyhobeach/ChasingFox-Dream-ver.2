@@ -8,7 +8,7 @@ public class GrenadierEnemy : EnemyUnit, IDoorInteractable
     public GameObject bullet;//�Ѿ� ����
     public float bulletSpeed;
 
-    private bool _canInteract { get => unitState == UnitState.Default; }
+    private bool _canInteract { get => UnitState == UnitState.Default; }
     public bool canInteract { get => _canInteract; }
 
     protected override void Start()

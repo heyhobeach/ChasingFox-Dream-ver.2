@@ -28,6 +28,7 @@ public class PageManger : MonoBehaviour
             return instance;
         }
     }
+    private AsyncOperation nextAo;
 
     private void Awake()
     {
@@ -39,15 +40,19 @@ public class PageManger : MonoBehaviour
         instance = this;
         DontDestroyOnLoad(Instance);
     }
-    public void LoadScene(string sceneName)
+
+    public void LoadScene(string sceneName, bool active = true)
     {
-        var loadAo = SceneManager.LoadSceneAsync("Loading", LoadSceneMode.Additive);
         var currentScene = SceneManager.GetActiveScene();
-        loadAo.completed += (ao) => { 
-            var unloadAo = SceneManager.UnloadSceneAsync(currentScene);
-            unloadAo.completed += (uao) => SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
+        nextAo = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+        nextAo.completed += (ao) => 
+        {
+            var prevAo = SceneManager.UnloadSceneAsync(currentScene);
+            prevAo.completed += (ao) => ServiceLocator.Get<GameManager>().Init();
         };
+        nextAo.allowSceneActivation = active;
     }
+    public void SceneActive() => nextAo.allowSceneActivation = true;
 
     public void Quit()
     {

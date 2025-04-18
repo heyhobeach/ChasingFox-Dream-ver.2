@@ -11,9 +11,6 @@ public delegate void GunsoundDel(Transform transform, Vector2 pos, Vector2 size)
 [RequireComponent(typeof(ControllerManager))]
 public partial class GameManager : MonoBehaviour
 {
-    private static GameManager instance;
-    public static GameManager Instance { get => instance; }
-
     public SoundManager soundManager;
     private PopupManager popupManager;
     private ControllerManager controllerManager;
@@ -39,17 +36,19 @@ public partial class GameManager : MonoBehaviour
     private const int karma = 100;
     [SerializeField][Range(0, 100)] private int karmaRatio = 65;
 
-    public static int Humanity { get => instance.karmaRatio; set { instance.karmaRatio = value; instance.ClampRatio(); } }
-    public static int Brutality { get => karma - instance.karmaRatio; set { instance.karmaRatio = -value; instance.ClampRatio(); } }
+    public static int Humanity { get => ServiceLocator.Get<GameManager>().karmaRatio; set { ServiceLocator.Get<GameManager>().karmaRatio = value; ServiceLocator.Get<GameManager>().ClampRatio(); } }
+    public static int Brutality { get => karma - ServiceLocator.Get<GameManager>().karmaRatio; set { ServiceLocator.Get<GameManager>().karmaRatio = -value; ServiceLocator.Get<GameManager>().ClampRatio(); } }
     private int ClampRatio() => Mathf.Clamp(karmaRatio, 0, 100);
 
-    public static int GetHumanData() => instance.humanDatas.counts[Humanity / 10];
-    public static BrutalData GetBrutalData() => instance.brutalDatas.brutalDatas[Brutality / 10];
+    public static int GetHumanData() => ServiceLocator.Get<GameManager>().humanDatas.counts[Humanity / 10];
+    public static BrutalData GetBrutalData() => ServiceLocator.Get<GameManager>().brutalDatas.brutalDatas[Brutality / 10];
 
     public Player player;
 
     public List<Map> maps = new List<Map>();
     public List<EventTrigger> eventTriggers = new List<EventTrigger>();
+
+    private Coroutine mapsearchCoroutine;
 
     public int targetFrame = 60;
     private float deltaTime = 0f;
@@ -61,10 +60,11 @@ public partial class GameManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        instance = null;
+        ServiceLocator.Unregister(this);
         if (isPaused) Pause();
         BehaviourNode.clone.Clear();
         StopAllCoroutines();
+        mapsearchCoroutine = null;
         CameraManager.Instance?.proCamera2DRooms.OnStartedTransition.RemoveListener(MoveNextRoom);
     }
 
@@ -72,28 +72,28 @@ public partial class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        ServiceLocator.Register<GameManager>(this);
+
         Application.targetFrameRate = targetFrame;
-        if (instance != null)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        instance = this;
-        player = FindFirstObjectByType<Player>();
-        interactionEvent = FindFirstObjectByType<InteractionEvent>();
-        popupManager = PopupManager.Instance;
-        controllerManager = ControllerManager.Instance;
     }
 
-    private void Start()
+    private void Start() => Init();
+    public void Init()
     {
-        StartCoroutine(MapSearchStart());
+        popupManager = PopupManager.Instance;
+        controllerManager = ServiceLocator.Get<ControllerManager>();
+
+        if(mapsearchCoroutine == null) mapsearchCoroutine = StartCoroutine(MapSearchStart());
+        player = FindFirstObjectByType<Player>();
+        interactionEvent = FindFirstObjectByType<InteractionEvent>();
         var saveData = SystemManager.Instance.saveData;
         if(saveData != null && saveData.chapter != SceneManager.GetActiveScene().name) DataReset();
         var playerScript = player.GetComponent<Player>();
+        var playerControllerScript = player.GetComponent<PlayerController>();
         playerScript.Init(saveData.playerData);
+        playerControllerScript.Init(saveData.playerData);
         karmaRatio = saveData.karma;
-        PlayerData.lastRoomIdx = saveData.chapterIdx;
+        // PlayerData.lastRoomIdx = saveData.chapterIdx;
         for (int i = 0; i < maps.Count; i++) CreateWallRoom(i).enabled = false;
 
         if(saveData.mapDatas == null || saveData.mapDatas.Length == 0)
@@ -190,13 +190,13 @@ public partial class GameManager : MonoBehaviour
         return maps[currentRoomIndex].edgeCollider2D;
     }
 
-    public void LoadScene(string name)
+    public void LoadScene(string name, bool active = true)
     {
         UIController.Instance?.DialogueCanvasSetFalse();
         SaveData();
-        PageManger.Instance.LoadScene(name);
+        PageManger.Instance.LoadScene(name, active);
     }
-    public void RetryScene() => LoadScene(SceneManager.GetActiveScene().name);
+    public void RetryScene() => LoadScene(SceneManager.GetActiveScene().name, false);
 
     public void Pause()
     {
@@ -225,7 +225,7 @@ public partial class GameManager : MonoBehaviour
         SystemManager.Instance.saveData.mapDatas = mapDatas;
         SystemManager.Instance.saveData.eventTriggerDatas = eventTriggerDatas;
         SystemManager.Instance.saveData.karma = karmaRatio;
-        SystemManager.Instance.saveData.chapterIdx = PlayerData.lastRoomIdx;
+        // SystemManager.Instance.saveData.chapterIdx = PlayerData.lastRoomIdx;
         SystemManager.Instance.SaveData(SystemManager.Instance.saveIndex);
     }
 
@@ -237,7 +237,7 @@ public partial class GameManager : MonoBehaviour
         SystemManager.Instance.saveData.karma = karmaRatio;
         SystemManager.Instance.saveData.playerData = null;
         PlayerData.lastRoomIdx = 0;
-        SystemManager.Instance.saveData.chapterIdx = 0;
+        // SystemManager.Instance.saveData.chapterIdx = 0;
         SystemManager.Instance.UpdateDataForEventTrigger(null, 0);
     }
     public void InventoryEnable()

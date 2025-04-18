@@ -69,12 +69,12 @@ public class Map : MonoBehaviour
         if(enemyCount > 0) edgeCollider2D.enabled = true;
         mapData.used = true;
         mapData.position = pos;
-        SystemManager.Instance.saveData.playerData = GameManager.Instance.player.GetComponent<Player>().DataSet();
-        SystemManager.Instance.saveData.playerData.pcm = GameManager.Instance.player.GetComponent<PlayerController>().DataSet();
+        SystemManager.Instance.saveData.playerData = ServiceLocator.Get<GameManager>().player.GetComponent<Player>().DataSet();
+        SystemManager.Instance.saveData.playerData.pcm = ServiceLocator.Get<GameManager>().player.GetComponent<PlayerController>().DataSet();
     }
     public void OnEnd()
     {
-        if(GameManager.Instance.player.GetComponent<Player>().UnitState == UnitState.Death) return;
+        if(ServiceLocator.Get<GameManager>().player.GetComponent<Player>().UnitState == UnitState.Death) return;
         edgeCollider2D.enabled = false;
         mapData.cleared = true;
         foreach (EnemyUnit unit in enemyUnits) unit.gameObject.SetActive(false);

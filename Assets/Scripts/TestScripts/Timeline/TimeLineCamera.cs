@@ -5,7 +5,7 @@ public class TimeLineCamera : MonoBehaviour
 {
     void Start()
     {
-        var triggers = GameManager.Instance.eventTriggers;
+        var triggers = ServiceLocator.Get<GameManager>().eventTriggers;
         foreach(var trigg in triggers) 
         {
             PlayableDirector temp = null;

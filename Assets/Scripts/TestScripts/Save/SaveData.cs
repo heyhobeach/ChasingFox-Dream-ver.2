@@ -10,7 +10,7 @@ public class SaveData
     public DateTime createdTime;
     
     public string chapter;
-    public int chapterIdx;
+    // public int chapterIdx;
 
     public MapData.JsonData[] mapDatas;
     public EventTriggerData.JsonData[] eventTriggerDatas;
@@ -27,7 +27,7 @@ public class SaveData
     {
         createdTime = date;
         chapter = saveData.chapter;
-        chapterIdx = saveData.chapterIdx;
+        // chapterIdx = saveData.chapterIdx;
         mapDatas = saveData.mapDatas;
         eventTriggerDatas = saveData.eventTriggerDatas;
         eventTriggerInstanceID = saveData.eventTriggerInstanceID;

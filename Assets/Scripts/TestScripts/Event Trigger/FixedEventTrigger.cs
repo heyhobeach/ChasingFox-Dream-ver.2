@@ -26,9 +26,9 @@ public class FixedEventTrigger : EventTrigger, IBaseController
     /// </summary>
     public new void Controller()
     {
-        if(Input.GetButtonDown("Cancel")) GameManager.Instance.Pause();
+        if(Input.GetButtonDown("Cancel")) ServiceLocator.Get<GameManager>().Pause();
         
-        if(eventLock || GameManager.Instance.isPaused) return;
+        if(eventLock || ServiceLocator.Get<GameManager>().isPaused) return;
         if(eventIdx >= eventLists.Length)
         {
             SystemManager.Instance.UpdateDataForEventTrigger(null, 0);

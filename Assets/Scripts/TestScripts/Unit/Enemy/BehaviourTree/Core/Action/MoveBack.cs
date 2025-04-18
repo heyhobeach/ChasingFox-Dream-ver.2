@@ -45,7 +45,7 @@ namespace BehaviourTree
                 blackboard.nodeIdx = blackboard.FinalNodeList.Count - 1;
                 return NodeState.Success;
             }
-            var tempDir = new Vector3(blackboard.FinalNodeList[blackboard.nodeIdx].x+GameManager.Instance.correctionPos.x, blackboard.FinalNodeList[blackboard.nodeIdx].y);
+            var tempDir = new Vector3(blackboard.FinalNodeList[blackboard.nodeIdx].x+ServiceLocator.Get<GameManager>().correctionPos.x, blackboard.FinalNodeList[blackboard.nodeIdx].y);
             moveDir = tempDir - blackboard.thisUnit.transform.position;
             moveDir = moveDir.normalized;
             if(!blackboard.thisUnit.Move(tempDir)) return NodeState.Failure;
@@ -89,7 +89,7 @@ namespace BehaviourTree
                 Vector2 startPos = blackboard.thisUnit.transform.position;
 
                 var targetPos = GetBackPos(startPos);
-                GameManager.Instance.PathFind(startPos, targetPos, ref jobHandle, ref pathFinding);
+                ServiceLocator.Get<GameManager>().PathFind(startPos, targetPos, ref jobHandle, ref pathFinding);
                 await WaitHandle();
             }
             catch (Exception e) 
@@ -134,7 +134,7 @@ namespace BehaviourTree
         {
             try
             {
-                if(GameManager.Instance.NodeArray[x - GameManager.Instance.bottomLeft.x, y - GameManager.Instance.bottomLeft.y].isRoad) return true;
+                if(ServiceLocator.Get<GameManager>().NodeArray[x - ServiceLocator.Get<GameManager>().bottomLeft.x, y - ServiceLocator.Get<GameManager>().bottomLeft.y].isRoad) return true;
                 else return false;
             }
             catch { return false; }
@@ -144,7 +144,7 @@ namespace BehaviourTree
         {
             if(!jobHandle.IsCompleted) jobHandle.Complete();
             isRunning = false;
-            if(pathFinding.isLoad.IsCreated) GameManager.Instance.isLoad = pathFinding.isLoad[0];
+            if(pathFinding.isLoad.IsCreated) ServiceLocator.Get<GameManager>().isLoad = pathFinding.isLoad[0];
             if(pathFinding.OpenList.IsCreated) pathFinding.OpenList.Dispose();
             if(pathFinding.ClosedList.IsCreated) pathFinding.ClosedList.Dispose();
             if(pathFinding.NodeArray.IsCreated) pathFinding.NodeArray.Dispose();

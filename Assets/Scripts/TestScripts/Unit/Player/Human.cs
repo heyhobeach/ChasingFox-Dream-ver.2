@@ -25,6 +25,11 @@ public class Human : PlayerUnit, IDoorInteractable
     public int ammoToReload = 1;
     public enum ReloadType { Tap, Hold }
 
+    public JumpType jumpType;
+    private bool canJump;
+    private Vector2 contactPos;
+    public enum JumpType { Jump, Parkour }
+
     
     [Header("Human"), Space(10)]
     public GameObject bullet;
@@ -71,7 +76,7 @@ public class Human : PlayerUnit, IDoorInteractable
     public int bulletTimeCount;
 
     public GaugeBar<Human>.GaugeUpdateDel reloadGauge;
-    private bool _canInteract { get => unitState == UnitState.Default; }
+    private bool _canInteract { get => UnitState == UnitState.Default; }
     public bool canInteract { get => _canInteract; }
 
     /// <summary>
@@ -83,16 +88,76 @@ public class Human : PlayerUnit, IDoorInteractable
 
     private Vector2 fixedDir = Vector2.zero;
 
+    protected override void OnCollisionEnter2D(Collision2D collision)
+    {
+        base.OnCollisionEnter2D(collision);
+        foreach(var map in mapTypesEnter)
+        {
+            switch(map)
+            {
+                case MapType.Wall:
+                    canJump = true;
+                    contactPos = collision.GetContact(0).point;
+                break;
+                case MapType.Platform:
+                    mapSensor.platformSensor.gameObject.SetActive(true);
+                break;
+            }
+        }
+    }
+
+    protected override void OnCollisionStay2D(Collision2D collision)
+    {
+        base.OnCollisionStay2D(collision);
+        foreach(var map in mapTypesEnter)
+        {
+            switch(map)
+            {
+                case MapType.Wall:
+                    canJump = true;
+                    contactPos = collision.GetContact(0).point;
+                break;
+                case MapType.Platform:
+                    mapSensor.platformSensor.gameObject.SetActive(true);
+                break;
+            }
+        }
+    }
+
+    protected override void OnCollisionExit2D(Collision2D collision)
+    {
+        base.OnCollisionExit2D(collision);
+        foreach(var map in mapTypesExit)
+        {
+            if(jumpType == JumpType.Parkour)
+            {
+                switch(map)
+                {
+                    case MapType.Wall:
+                        canJump = false;
+                        var dir = contactPos-rg.position;
+                        SetVerticalForce(dir.y * 10);
+                        SetVerticalVelocity(dir.y * 10);
+                        if(-fixedDir.normalized.x != dir.normalized.x)
+                        {
+                            SetHorizontalForce(dir.x * 10);
+                            SetHorizontalVelocity(dir.x * 10);
+                            if(isJumping) isJumping = false;
+                        }
+                    break;
+                    case MapType.Platform:
+                        mapSensor.platformSensor.gameObject.SetActive(true);
+                    break;
+                }
+            }
+        }
+    }
+
     protected override void OnEnable()
     {
         base.OnEnable();
         attackCoroutine = StartCoroutine(AttackDelay());
         isAttack = false;
-        var pi = CameraManager.Instance.proCamera2DPointerInfluence;
-        pi.MaxHorizontalInfluence = 5.15f;
-        pi.MaxVerticalInfluence = 0.35f;
-        pi.InfluenceSmoothness = 0.275f;
-        CameraManager.Instance.ChangeSize = 5.15f;
     }
     protected override void OnDisable()
     {
@@ -109,6 +174,12 @@ public class Human : PlayerUnit, IDoorInteractable
         base.Init();
         sound=GetComponent<AudioSource>(); 
         //sound.PlayOneShot(soundClip, 0.3f);
+        cameraState = new() {
+            maxHorizontalInfluence = 5.15f,
+            maxVerticalInfluence = 0.35f,
+            influenceSmoothness = 0.275f,
+            changeSize = 5.15f
+        };
         bulletTimeCount = GameManager.GetHumanData();
         residualAmmo = maxAmmo;
         if(!anim.runtimeAnimatorController) anim.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("PlayerAnim/Human/Human Lib Ani");
@@ -116,7 +187,7 @@ public class Human : PlayerUnit, IDoorInteractable
 
     protected override void Update()
     {
-        if(GameManager.Instance.isPaused || ControllerChecker()) return;
+        if(ServiceLocator.Get<GameManager>().isPaused || ControllerChecker()) return;
 
         base.Update();
         
@@ -139,7 +210,7 @@ public class Human : PlayerUnit, IDoorInteractable
 
     private bool AttackType1(Vector3 clickPos)
     {
-        if (ControllerChecker() || unitState == UnitState.FormChange || unitState == UnitState.Dash || unitState == UnitState.Reload || shootingAnimationController.isAttackAni || residualAmmo <= 0) return false;
+        if (ControllerChecker() || UnitState == UnitState.FormChange || UnitState == UnitState.Dash || UnitState == UnitState.Reload || shootingAnimationController.isAttackAni || residualAmmo <= 0) return false;
         if (((Vector2)transform.position-(Vector2)clickPos).magnitude < ((Vector2)transform.position-shootingAnimationController.GetShootPosition()).magnitude) return false;
         isAttack = true;
         this.clickPos = clickPos;
@@ -187,7 +258,7 @@ public class Human : PlayerUnit, IDoorInteractable
     }
     private bool AttackType2(Vector3 clickPos)
     {
-        if(ControllerChecker() || unitState == UnitState.FormChange || unitState == UnitState.Dash || unitState == UnitState.Reload || shootingAnimationController.isAttackAni || residualAmmo <= 0) return false;
+        if(ControllerChecker() || UnitState == UnitState.FormChange || UnitState == UnitState.Dash || UnitState == UnitState.Reload || shootingAnimationController.isAttackAni || residualAmmo <= 0) return false;
         if(((Vector2)transform.position-(Vector2)clickPos).magnitude < ((Vector2)transform.position-shootingAnimationController.GetShootPosition()).magnitude) return false;
         shootingAnimationController.AttackAni();
         this.clickPos = clickPos;
@@ -222,23 +293,39 @@ public class Human : PlayerUnit, IDoorInteractable
 
     public override bool Move(Vector2 dir)
     {
-        if(ControllerChecker() || unitState == UnitState.Dash) return false; // 조작이 불가능한 상태일 경우 동작을 수행하지 않음
-        fixedDir = dir; // 대쉬 방향을 저장
-        //Anim
+        if(ControllerChecker() || UnitState == UnitState.Dash) return false; // 조작이 불가능한 상태일 경우 동작을 수행하지 않음
+        fixedDir = dir;
         return base.Move(dir);
     }
 
-    public override bool Jump(KeyState jumpKey) => base.Jump(jumpKey);
+    public override bool Jump(KeyState jumpKey)
+    {
+        if(jumpType == JumpType.Jump) return base.Jump(jumpKey);
+        else if(jumpType == JumpType.Parkour)
+        {
+            switch(jumpKey)
+            {
+                case KeyState.KeyDown:
+                    mapSensor.platformSensor.gameObject.SetActive(false);
+                break;
+                case KeyState.KeyUp:
+                    mapSensor.platformSensor.gameObject.SetActive(true);
+                break;
+            }
+            if(canJump) return base.Jump(jumpKey);
+        }
+        return false;
+    }
 
     public override bool Crouch(KeyState crouchKey)
     {
-        if(ControllerChecker() || unitState == UnitState.Dash) return false;
+        if(ControllerChecker() || UnitState == UnitState.Dash) return false;
         return base.Crouch(crouchKey);
     }
 
     public override bool Dash()
     {
-        if(unitState != UnitState.Default || dashCoroutine != null) return false; // 조작이 불가능한 상태일 경우 동작을 수행하지 않음
+        if(UnitState != UnitState.Default || dashCoroutine != null) return false; // 조작이 불가능한 상태일 경우 동작을 수행하지 않음
         base.Dash();
         dashCoroutine = StartCoroutine(DashAffterInput());
         return true;
@@ -252,7 +339,7 @@ public class Human : PlayerUnit, IDoorInteractable
         if(dashCoroutine != null) StopCoroutine(dashCoroutine);
         // invalidation = false;
         dashCoroutine = null;
-        unitState = UnitState.Default;
+        UnitState = UnitState.Default;
         //여기 false
     }
 
@@ -261,7 +348,7 @@ public class Human : PlayerUnit, IDoorInteractable
     /// </summary>
     private IEnumerator DashAffterInput()
     {
-        unitState = UnitState.Dash;
+        UnitState = UnitState.Dash;
         ResetForce();
         var tempVel = fixedDir.x == 0 ? spriteRenderer.flipX ? -1 : 1 : Mathf.Sign(fixedDir.x);
         yield return new WaitUntil(() => anim.GetCurrentAnimatorStateInfo(0).IsName("Dash"));
@@ -278,7 +365,7 @@ public class Human : PlayerUnit, IDoorInteractable
 
     public override bool FormChange()
     {
-        if(unitState != UnitState.Default) return false;
+        if(UnitState != UnitState.Default) return false;
         else
         {
             ReloadCancel();
@@ -304,13 +391,13 @@ public class Human : PlayerUnit, IDoorInteractable
 
     private IEnumerator Reloading()
     {
-        if(unitState != UnitState.Dash) unitState = UnitState.Reload;
+        if(UnitState != UnitState.Dash) UnitState = UnitState.Reload;
         yield return new WaitUntil(() => shootingAnimationController.isReloadAni);
         float animTime = shootingAnimationController.armAnim.GetCurrentAnimatorStateInfo(0).length;
         float t = 0;
         while(animTime >= t)
         {
-            if(unitState == UnitState.Dash) shootingAnimationController.NomalAni();
+            if(UnitState == UnitState.Dash) shootingAnimationController.NomalAni();
             t += Time.deltaTime;
             yield return null;
         }
@@ -319,8 +406,8 @@ public class Human : PlayerUnit, IDoorInteractable
     }
     private void ReloadCancel()
     {
-        if(isGrounded) unitState = UnitState.Default;
-        else unitState = UnitState.Air;
+        if(isGrounded) UnitState = UnitState.Default;
+        else UnitState = UnitState.Air;
         if(reloadCoroutine != null) StopCoroutine(reloadCoroutine);
         shootingAnimationController?.NomalAni();
         reloadCoroutine = null;
@@ -329,38 +416,57 @@ public class Human : PlayerUnit, IDoorInteractable
     private float reloadHoldingTime = 0f;
     private bool ReloadType2(KeyState reloadState)
     {
-        if(ControllerChecker() || reloadCoroutine != null || residualAmmo >= maxAmmo || unitState == UnitState.Dash) return false;
+        if(ControllerChecker() || reloadCoroutine != null || residualAmmo >= maxAmmo || UnitState == UnitState.Dash) return false;
         switch(reloadState)
         {
             case KeyState.KeyDown:
                 base.Reload(reloadState);
-                unitState = UnitState.Reload;
+                UnitState = UnitState.Reload;
                 reloadHoldingTime += Time.deltaTime;
                 if(reloadHoldingTime >= reloadHoldTime)
                 {
                     residualAmmo += ammoToReload;
                     reloadHoldingTime = 0f;
-                    unitState = UnitState.Default;
+                    UnitState = UnitState.Default;
                 }
                 break;
             case KeyState.KeyStay:
-                unitState = UnitState.Reload;
+                UnitState = UnitState.Reload;
                 reloadHoldingTime += Time.deltaTime;
                 if(reloadHoldingTime >= reloadHoldTime)
                 {
                     residualAmmo += ammoToReload;
                     reloadHoldingTime = 0f;
-                    unitState = UnitState.Default;
+                    UnitState = UnitState.Default;
                 }
                 break;
             case KeyState.KeyUp:
                 shootingAnimationController.armAnim.ResetTrigger("reload");
                 shootingAnimationController?.NomalAni();
-                unitState = UnitState.Default;
+                UnitState = UnitState.Default;
                 reloadHoldingTime = 0f;
                 break;
         }
         return true;
+    }
+
+    public override bool Skill2(KeyState skileKey)
+    {
+        switch(skileKey)
+        {
+            case KeyState.KeyDown:
+                CameraManager.Instance.SetState(new(){
+                    maxHorizontalInfluence = 15f,
+                    maxVerticalInfluence = 15f,
+                    influenceSmoothness = 0.5f,
+                    changeSize = 9f
+                });
+            break;
+            case KeyState.KeyUp:
+                CameraManager.Instance.SetState(cameraState);
+            break;
+        }
+        return base.Skill2(skileKey);
     }
 }
 

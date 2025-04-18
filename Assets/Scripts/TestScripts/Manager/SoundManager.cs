@@ -86,7 +86,7 @@ public class SoundManager:MonoBehaviour
         
         yield return new WaitForFixedUpdate();
         obj.SetActive(true);
-        GameManager.Instance.OnGunsound(obj.transform, obj.transform.position, obj.GetComponent<CircleCollider2D>().bounds.extents);
+        ServiceLocator.Get<GameManager>().OnGunsound(obj.transform, obj.transform.position, obj.GetComponent<CircleCollider2D>().bounds.extents);
         if (isQueue && obj.gameObject.layer == LayerMask.NameToLayer("GunSound"))
         {
             Debug.Log("총 소리 레이어");

@@ -48,23 +48,23 @@ public class EnemyController : MonoBehaviour
         blackboard = behaviorTree.blackboard;
         blackboard.FinalNodeList = null;
 
-        GameManager.Instance.AddEnemyDeath(EnemyCheck);
-        GameManager.Instance.AddGunsound(SoundCheck);
+        ServiceLocator.Get<GameManager>().AddEnemyDeath(EnemyCheck);
+        ServiceLocator.Get<GameManager>().AddGunsound(SoundCheck);
 
         blackboard.thisUnit.onDeath += () => {
-            GameManager.Instance.DelEnemyDeath(EnemyCheck);
-            GameManager.Instance.DelGunsound(SoundCheck);
-            GameManager.Instance.OnEnemyDeath(blackboard.thisUnit);
+            ServiceLocator.Get<GameManager>().DelEnemyDeath(EnemyCheck);
+            ServiceLocator.Get<GameManager>().DelGunsound(SoundCheck);
+            ServiceLocator.Get<GameManager>().OnEnemyDeath(blackboard.thisUnit);
         };
     }
     void Update()
     {
-        if(!isStop) behaviorTree.Update();
+        if(!isStop || ServiceLocator.Get<GameManager>() != null) behaviorTree.Update();
     }
 
     void FixedUpdate()
     {
-        if(!isStop) CircleRay();
+        if(!isStop || ServiceLocator.Get<GameManager>() != null) CircleRay();
     }
 
     private bool ViewCheck(Collider2D hit)
@@ -100,9 +100,10 @@ public class EnemyController : MonoBehaviour
 
     private void CircleRay()//유저 탐색할 레이 관련 함수
     {
-        if(blackboard.thisUnit.UnitState == UnitState.Death || GameManager.Instance.player.GetComponent<Player>().ChagedForm.UnitState == UnitState.Death)
+        if(blackboard.thisUnit.UnitState == UnitState.Death)
         {
             blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Default;
+            blackboard.target = null;
             isStop = true;
             return;
         }
@@ -123,6 +124,7 @@ public class EnemyController : MonoBehaviour
         {
             blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Default;
             blackboard.target = null;
+            isStop = true;
         }
         else if(blackboard.enemy_state.stateCase != Blackboard.Enemy_State.StateCase.Chase && blackboard.target != hit.transform && ViewCheck(hit))
         {
@@ -139,7 +141,7 @@ public class EnemyController : MonoBehaviour
         if(ViewCheck(enemy.transform.position+Vector3.up))
         {
             blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Chase;
-            blackboard.target = GameManager.Instance.player.transform;
+            blackboard.target = ServiceLocator.Get<GameManager>().player.transform;
             blackboard.enemy_state.Increase_Sight++;
         }
 

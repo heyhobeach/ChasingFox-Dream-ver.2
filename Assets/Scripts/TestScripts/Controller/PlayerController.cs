@@ -9,12 +9,13 @@ public class PlayerController : MonoBehaviour, IBaseController
         None = 0,
         FormChange = 1<<1,
         Skill1 = 1<<2,
-        Reload = 1<<3,
-        Attack = 1<<4,
-        Dash = 1<<5,
-        Crouch = 1<<6,
-        Jump = 1<<7,
-        Move = 1<<8
+        Skill2 = 1<<3,
+        Reload = 1<<4,
+        Attack = 1<<5,
+        Dash = 1<<6,
+        Crouch = 1<<7,
+        Jump = 1<<8,
+        Move = 1<<9
     }
 
     private IUnitController unitController;
@@ -29,7 +30,7 @@ public class PlayerController : MonoBehaviour, IBaseController
     private Action _onUp;
     public Action onUp { get => _onUp; set => throw new NotImplementedException(); }
 
-    void Awake() => ((IBaseController)this).AddController();
+    // void Awake() => ((IBaseController)this).AddController();
     void Start()
     {
         unitController = GetComponent<IUnitController>();
@@ -39,28 +40,36 @@ public class PlayerController : MonoBehaviour, IBaseController
     void OnEnable() => resetTimer = 0;
     void OnDestroy() => ((IBaseController)this).RemoveController();
 
-    public void Init(PlayerData playerData) => pcm = playerData.pcm;
+    public void Init(PlayerData playerData)
+    {
+        ((IBaseController)this).AddController();
+        pcm = playerData.pcm;
+
+    }
     public PlayerControllerMask DataSet() => pcm;
 
     public void Controller()
     {
+        if(ServiceLocator.Get<GameManager>() == null) return;
         bool isKeyDown = false;
 
         // System Control
-        if(Input.GetButtonDown("Cancel")) GameManager.Instance.Pause();
+        if(Input.GetButtonDown("Cancel")) ServiceLocator.Get<GameManager>().Pause();
         // if(Input.GetButtonDown("Reload") || Input.GetButton("Reload"))
         // {
         //     resetTimer += Time.unscaledDeltaTime;
-        //     if(resetTimer > 2f) GameManager.Instance.RetryScene();
+        //     if(resetTimer > 2f) ServiceLocator.Get<GameManager>().RetryScene();
         // }
         // else resetTimer = 0;
 
-        if(GameManager.Instance.isPaused) return;
+        if(ServiceLocator.Get<GameManager>().isPaused) return;
 
         // Player Control
         if(SystemManager.GetButtonDown("formChange") && KeyControl(PlayerControllerMask.FormChange, ref isKeyDown)) unitController.FormChange();
 
-        if(SystemManager.GetButtonDown("skill1") && KeyControl(PlayerControllerMask.Skill1, ref isKeyDown)) unitController.Skile1(ClickPos());
+        if(SystemManager.GetButtonDown("skill1") && KeyControl(PlayerControllerMask.Skill1, ref isKeyDown)) unitController.Skill1(ClickPos());
+        if(SystemManager.GetButtonDown("skill2")) unitController.Skill2(KeyState.KeyDown);
+        if(SystemManager.GetButtonUp("skill2")) unitController.Skill2(KeyState.KeyUp);
 
         if(SystemManager.GetButtonDown("reload") && KeyControl(PlayerControllerMask.Reload, ref isKeyDown)) unitController.Reload(KeyState.KeyDown);
         else if(SystemManager.GetButton("reload") && KeyControl(PlayerControllerMask.Reload, ref isKeyDown)) unitController.Reload(KeyState.KeyStay);

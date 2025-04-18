@@ -52,12 +52,12 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     /// <summary>
     /// 유닛상태 열거형
     /// </summary>
-    protected UnitState unitState;
+    private UnitState unitState;
 
     /// <summary>
     /// 유닛의 현재 상태를 가져옴
     /// </summary>
-    public UnitState UnitState { get => unitState; set => unitState = value; }
+    public UnitState UnitState { get => unitState; set => SetUnitState(value); }
 
     protected float boxOffsetX;
     /// <summary>
@@ -220,11 +220,13 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         return true;
     }
 
-    public virtual bool Skile1(Vector2 pos)
+    public virtual bool Skill1(Vector2 pos)
     {
         anim.SetTrigger("skill1");
         return true;
     }
+
+    public virtual bool Skill2(KeyState skileKey) => true;
 
     public virtual bool Reload(KeyState reloadKey)
     {
@@ -268,6 +270,25 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
             case UnitState.Pause:
             return true;
             default: return false;
+        }
+    }
+
+    private void SetUnitState(UnitState unitState)
+    {
+        switch(unitState)
+        {
+            case UnitState.Death:
+                this.unitState = unitState;
+            break;
+            case UnitState.KnockBack:
+            case UnitState.Stiffen:
+            case UnitState.Stiffen_er:
+            case UnitState.Pause:
+                if(this.unitState != UnitState.Death) this.unitState = unitState;
+            break;
+            default:
+                if(!ControllerChecker()) this.unitState = unitState;
+            break;
         }
     }
 

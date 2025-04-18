@@ -9,11 +9,27 @@ public class CameraManager : MonoBehaviour
     private static CameraManager instance;
     public static CameraManager Instance { get => instance; }
 
+    public struct State
+    {
+        public float maxHorizontalInfluence;
+        public float maxVerticalInfluence;
+        public float influenceSmoothness;
+        public float changeSize;
+    }
+
     public ProCamera2DShake proCamera2DShake;
     public ProCamera2DPointerInfluence proCamera2DPointerInfluence;
     public ProCamera2DRooms proCamera2DRooms;
 
     public float ChangeSize { set => ProCamera2D.Instance.UpdateScreenSize(value, 0.5f); }
+
+    public void SetState(State state)
+    {
+        proCamera2DPointerInfluence.MaxHorizontalInfluence = state.maxHorizontalInfluence;
+        proCamera2DPointerInfluence.MaxVerticalInfluence = state.maxVerticalInfluence;
+        proCamera2DPointerInfluence.InfluenceSmoothness = state.influenceSmoothness;
+        ChangeSize = state.changeSize;
+    }
 
     public void AddTarget(Transform transform) => ProCamera2D.Instance.AddCameraTarget(transform, 1, 1, 1);
     public void RemoveTarget(Transform transform) => ProCamera2D.Instance.RemoveCameraTarget(transform, 1);

@@ -131,12 +131,13 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     }
     IEnumerator PopupDelay()
     {
+        ServiceLocator.Get<GameManager>().RetryScene();
         yield return new WaitForSeconds(3f);
         PopupManager.Instance.DeathPop();
-
     }
 
-    public bool Skile1(Vector2 pos) => changedForm.Skile1(pos);
+    public bool Skill1(Vector2 pos) => changedForm.Skill1(pos);
+    public bool Skill2(KeyState skileKey) => changedForm.Skill2(skileKey);
 
     private delegate bool FormChangeDelegate();
     private FormChangeDelegate formChangeDelegate;

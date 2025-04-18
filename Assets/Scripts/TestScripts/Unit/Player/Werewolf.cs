@@ -50,11 +50,6 @@ public class Werewolf : PlayerUnit
     protected override void OnEnable()
     {
         base.OnEnable();
-        var pi = CameraManager.Instance.proCamera2DPointerInfluence;
-        pi.MaxHorizontalInfluence = 5.15f;
-        pi.MaxVerticalInfluence = 0.3f;
-        pi.InfluenceSmoothness = 0.2f;
-        CameraManager.Instance.ChangeSize = 5.45f;
 
         Time.timeScale = 0.3f;
         Time.fixedDeltaTime = 0.02f * Time.timeScale;
@@ -102,8 +97,14 @@ public class Werewolf : PlayerUnit
     protected override void Start()
     {
         Init();
+        cameraState = new() {
+            maxHorizontalInfluence = 5.15f,
+            maxVerticalInfluence = 0.3f,
+            influenceSmoothness = 0.2f,
+            changeSize = 5.45f
+        };
         meleeAttack.GetComponent<MaleeAttack>().Set(3, gameObject);
-        unitState = UnitState.FormChange;
+        UnitState = UnitState.FormChange;
     }
 
     protected override void FixedUpdate()
@@ -117,7 +118,7 @@ public class Werewolf : PlayerUnit
         while(true)
         {
             yield return new WaitForSecondsRealtime(0.02f);
-            if(GameManager.Instance.isPaused || attackCoroutine != null) continue;
+            if(ServiceLocator.Get<GameManager>().isPaused || attackCoroutine != null) continue;
             Time.timeScale = 0.3f;
             Time.fixedDeltaTime = 0.02f * Time.timeScale;
             if(currentTime >= 0) 
@@ -215,7 +216,7 @@ public class Werewolf : PlayerUnit
 
     public override bool Dash() => false;
     public override bool FormChange() => base.FormChange();
-    public override bool Skile1(Vector2 pos) => RangedAttack(pos);
+    public override bool Skill1(Vector2 pos) => RangedAttack(pos);
 
     public override bool Reload(KeyState reloadKey) => false;
 

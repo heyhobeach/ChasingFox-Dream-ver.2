@@ -28,7 +28,7 @@ public class EnemyUnit : UnitBase, IDamageable, ISelectObject
     protected override void Start()
     {
         base.Start();
-        unitState = UnitState.Default;
+        UnitState = UnitState.Default;
         health = _maxHealth;
         
         rg = GetComponent<Rigidbody2D>();

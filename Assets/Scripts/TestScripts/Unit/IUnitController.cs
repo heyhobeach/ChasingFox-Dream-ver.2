@@ -84,5 +84,6 @@ public interface IUnitController
     /// <returns>재장전 동작이 성공적으로 수행되었을 시 true를 반환</returns>
     bool Reload(KeyState reloadKey);
 
-    bool Skile1(Vector2 pos);
+    bool Skill1(Vector2 pos);
+    bool Skill2(KeyState skileKey);
 }

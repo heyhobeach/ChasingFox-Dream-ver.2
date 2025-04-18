@@ -144,7 +144,7 @@ public class SituationControll : MonoBehaviour
 
     public void PopInventory()
     {
-        GameManager.Instance.InventoryEnable();
+        ServiceLocator.Get<GameManager>().InventoryEnable();
     }
 
 
@@ -215,11 +215,11 @@ public class SituationControll : MonoBehaviour
         if (scenearr[current].stage_branch.Count > 0)
         {
             //branch 관련 로드
-            //GameManager.Instance.LoadScene(scenearr[current].stage_branch["brutal"]);
+            //ServiceLocator.Get<GameManager>().LoadScene(scenearr[current].stage_branch["brutal"]);
         }
         else
         {
-            GameManager.Instance.LoadScene(scenearr[current].next);
+            ServiceLocator.Get<GameManager>().LoadScene(scenearr[current].next);
         }
     }
 
