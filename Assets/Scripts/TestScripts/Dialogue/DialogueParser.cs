@@ -60,9 +60,9 @@ public class DialogueParser : MonoBehaviour
         int index = 0;
         foreach (string item in category)
         {
-            bool exists = Array.Exists(row, target => target == item);
+            bool exists = Array.Exists(row, target => target == item);//category에 item있는지 확인
            
-            int temp = exists ? Array.IndexOf(row,item) : -1;
+            int temp = exists ? Array.IndexOf(row,item) : -1;//있다면 해당 인
             switch (item)
             {
                 case "id":

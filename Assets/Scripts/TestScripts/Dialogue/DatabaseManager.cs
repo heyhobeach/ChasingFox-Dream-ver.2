@@ -97,7 +97,7 @@ public class DatabaseManager : MonoBehaviour
 
         for(int i = 0; i <= endNum - startNum; i++)//1과 3 사이 내용을 가져 오려고 그러는것// <= 에서 < 로 수정 해 봄 2025-02-15 //되는것 같은데 sc
         {
-            
+
             if (startNum + i < 1)
             {
                 //Debug.Log("넘김");
@@ -108,6 +108,8 @@ public class DatabaseManager : MonoBehaviour
             {
                 //Debug.Log("else문");
             }//Debug.Log("리스트 삽입");
+            Debug.Log(string.Format("targer ={0}", startNum + i));
+            
             dialoguesList.Add(dialogueDic[startNum + i]);//지금 여기 문제
         }
         Debug.Log("GetDialogues 호출");

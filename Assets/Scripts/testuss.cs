@@ -43,11 +43,7 @@ public class UI_DynamicText : MonoBehaviour
     private void OnEnable()
     {
 
-        Dialogue[] dialyDialogue=StartEvent("다이어리 내용");
-        foreach(var i in dialyDialogue)
-        {
-            Debug.Log("dialyDialogue"+i.context[0]);
-        }
+
         inventoryScripable = InventoryManager.Instance.GetInventoryAll();//인벤토리에서 데이터를 가져옴
 
         Dictionary<int, Inventory.Info>.KeyCollection keys = InventoryManager.Instance.GetinventoryKeys();//키를 가져오기 위한 변수
@@ -90,7 +86,7 @@ public class UI_DynamicText : MonoBehaviour
         // 클릭 이벤트 추가
         List<TextElement> textList = new List<TextElement>();//이벤트가 들어가야하는 내용들
         textList.Add(text1); textList.Add(text2); textList.Add(clickableText);
-        SetDiaryText(ref textContainer);
+        SetDiaryText(ref textContainer,StartEvent("테스트파일2"));
         //ui toolkit에서 제공하는 함수로 이벤트 등록에 사용됨
         foreach (var text in textList)
         {
@@ -154,78 +150,88 @@ public class UI_DynamicText : MonoBehaviour
         throw new NotImplementedException();
     }
 
-    private void SetDiaryText(ref VisualElement textContainer)//diary csv (현재는 테스트파일2) 데이터를 가져와서 사용하는 부분
+    private void SetDiaryText(ref VisualElement textContainer, Dialogue[] dialogues)//diary csv (현재는 테스트파일2) 데이터를 가져와서 사용하는 부분
     {
         List<VisualElement> textList = new List<VisualElement>();
-        Dialogue[] dialogues = StartEvent("테스트파일2");
+        //Dialogue[] dialogues = StartEvent(fileName);
+
+
 
         VisualElement visuallist = new VisualElement();
         int num = 0;
 
         for (int i = 0; i < dialogues.Length; i++)
         {
-            string[] parts = Regex.Split(dialogues[i].context[0], @"<br\s*/?>");//나눈 문장들 들어 있음
-            Debug.Log("parts count" + parts.Length);
-            string[] keys = InventoryManager.Instance.GetInfo_(info_keys[i]).keywords;
-
-
-            //Debug.Log("key size="+keys.Length);
-            if (keys.Length > 0)//키가 있다면
+            for(int rowIndex = 0; rowIndex < dialogues[i].context.Length; rowIndex++)
             {
-                Debug.Log("keys =>" + keys[0]);
-                //str += string.Format("키워드 {0}", InventoryManager.Instance.GetInfo_(i).keywords[0]);
-            }
-            else
-            {
-                Debug.Log("null");
-            }
 
-
-            foreach (string part in parts)//br기준
-            {
-                string[] _part = part.Split(' ');
-                var textelement = new TextElement { text = part, name = "textelement" };
-                visuallist.Add(textelement);
-                textelement.style.width = Length.Percent(100);
-                foreach (string p in _part)//여기 드래그 관련 내용들은 csv가 아닌 수집품의 내용 관련으로 갈것임 지금 해당내용은 테스트용이라고 생각하는것이 좋음 띄워 쓰기 관련은 인벤토리(수집품) 추리시 발생, 스페이스 기준
+                Debug.Log(string.Format("lengh is {0} : dialyDialogue {1}", dialogues[i].context.Length, dialogues[i].context[rowIndex]));
+                if (dialogues[i].name != null)
                 {
-                    bool check = (keys.Length > 0 ? part.ContainsAny(keys[0]) : false);
-                    //int a = part.IndexOf(keys[0]);
-                    Debug.Log($"분리 후: [{p}] check[{check}]"); //지금 분리도 안 되는거같은데
+                    Debug.Log("이름 부분 작동중 " + dialogues[i].name);
+                }
+                string[] parts = Regex.Split(dialogues[i].context[rowIndex], @"<br\s*/?>");//나눈 문장들 들어 있음
+                Debug.Log("parts count" + parts.Length);
+                string[] keys = InventoryManager.Instance.GetInfo_(info_keys[i]).keywords;
 
 
-                    if (check)
-                    {
-
-                        textelement.AddToClassList("clickable");
-                        textelement.RegisterCallback<PointerDownEvent>(LoadMestery);
-
-                    }
-                    else
-                    {
-                        textelement.AddToClassList("sentence");
-                    }
-
+                //Debug.Log("key size="+keys.Length);
+                if (keys.Length > 0)//키가 있다면
+                {
+                    Debug.Log("keys =>" + keys[0]);
+                    //str += string.Format("키워드 {0}", InventoryManager.Instance.GetInfo_(i).keywords[0]);
+                }
+                else
+                {
+                    Debug.Log("null");
                 }
 
 
+                foreach (string part in parts)//br기준
+                {
+                    string[] _part = part.Split(' ');
+                    var textelement = new TextElement { text = part, name = "textelement" };
+                    visuallist.Add(textelement);
+                    textelement.style.width = Length.Percent(100);
+                    foreach (string p in _part)//여기 드래그 관련 내용들은 csv가 아닌 수집품의 내용 관련으로 갈것임 지금 해당내용은 테스트용이라고 생각하는것이 좋음 띄워 쓰기 관련은 인벤토리(수집품) 추리시 발생, 스페이스 기준
+                    {
+                        bool check = (keys.Length > 0 ? part.ContainsAny(keys[0]) : false);
+                        //int a = part.IndexOf(keys[0]);
+                        Debug.Log($"분리 후: [{p}] check[{check}]"); //지금 분리도 안 되는거같은데
+
+
+                        if (check)
+                        {
+
+                            textelement.AddToClassList("clickable");
+                            textelement.RegisterCallback<PointerDownEvent>(LoadMestery);
+
+                        }
+                        else
+                        {
+                            textelement.AddToClassList("sentence");
+                        }
+
+                    }
+
+
+                }
+                textList.Add(visuallist);
+
+                visuallist.style.flexDirection = FlexDirection.Column;
+                visuallist.style.width = Length.Percent(100);
+                //visualElement.Add(textList[i]);
+                textContainerContent.Add(textList[i]);
+                textList[i].style.flexDirection = FlexDirection.Column;
+                textContainerContent.style.flexDirection = FlexDirection.Column;
+                var t = visuallist.Query<TextElement>().Build();
+                foreach (var k in t)
+                {
+                    Debug.Log($"textlist [{i}] => {k.text}");
+                }
+                visuallist = new VisualElement();
             }
-            textList.Add(visuallist);
-
-            visuallist.style.flexDirection = FlexDirection.Column;
-            visuallist.style.width = Length.Percent(100);
-            //visualElement.Add(textList[i]);
-            textContainerContent.Add(textList[i]);
-            textList[i].style.flexDirection = FlexDirection.Column;
-            textContainerContent.style.flexDirection = FlexDirection.Column;
-            var t = visuallist.Query<TextElement>().Build();
-            foreach (var k in t)
-            {
-                Debug.Log($"textlist [{i}] => {k.text}");
-            }
-            visuallist = new VisualElement();
-
-
+            
         }
 
     }
@@ -238,20 +244,40 @@ public class UI_DynamicText : MonoBehaviour
         Debug.Log(tempdialogue.Length);
         DatabaseManager.instance.dialogueDic.Clear();
         Dictionary<int, Dialogue> trace_dic = new Dictionary<int, Dialogue>();//매번 할 필요없을거같긷한데 나중에 수정해도 될듯
+        List<int> csv_id_list = new List<int>();
         foreach (var dialogue in tempdialogue)
         {
             Debug.Log("dialogue id" + dialogue.id + "dialogue text" + dialogue.context[0]);
             trace_dic.Add(int.Parse(dialogue.id), dialogue);
+            csv_id_list.Add(int.Parse(dialogue.id));
         }
+
+
+
 
         List<Dialogue> templist = new List<Dialogue>();
         foreach (var i in info_keys)//현재 가지고 있는 키에서 문자를 받을수있음
         {
-
-            templist.Add(trace_dic[i]);
+            bool check=csv_id_list.Contains(i);
+            if (!check)
+            {
+                Debug.Log("스크립트에 키 값이 없음 continue");
+                continue;
+            }
+            templist.Add(trace_dic[i]);//아마 키가 달라서? 
         }
+        //Dialogue[] dialogues = trace_values.ToArray();
 
+        //for (int i = 0; i < info_keys.Count; i++)
+        //{
+        //    //if (templist[info_keys[i]] == null)
+        //    //{
+        //    //    continue;
+        //    //}
+        //    templist.Add(trace_dic[info_keys[i]]);
+        //}
         Dialogue[] dialogues = templist.ToArray();
+
         return dialogues;
     }
 
@@ -318,12 +344,16 @@ public class UI_DynamicText : MonoBehaviour
     }
     private void LoadMestery(PointerDownEvent evt)//데이터를 미리 정해놔야할듯?
     {
-        textContainer.Clear();
+        textContainerContent.Clear();
         DiaryContentSet();
         MesterySystem();
     }
     private void DiaryContentSet()
     {
+
+        //Dialogue[] dialyDialogue = StartEvent("다이어리 내용");
+        SetDiaryText(ref textContainer, StartEvent("다이어리 내용"));
+
 
     }
 
