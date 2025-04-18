@@ -34,14 +34,10 @@ public class PopupManager : MonoBehaviour
         }
         instance = this;
         DontDestroyOnLoad(instance);
-    }
-
-
-    void Start()
-    {
         if(deathPopup == null) deathPopup = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Death Popup"), transform);
         if(pausePopup == null) pausePopup = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Pause Popup"), transform);
     }
+
     public void DeathPop()
     {
         var temp = deathPopup.GetComponent<TempDeathPopup>();

@@ -34,8 +34,6 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     public int health { get => _health; set => _health = value; }
     public bool invalidation { get; set; }
 
-    public static GameObject pObject;
-
 
     /// <summary>
     /// 폼 체인지 딜레이 시간
@@ -86,7 +84,6 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
             form.Init();
         }
         changedForm.gameObject.SetActive(true);
-        pObject = this.gameObject;
     }
     public PlayerData DataSet()
     {
@@ -171,21 +168,20 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         }
         return true;
 
-        Vector3 ClickPos()
-        {
-            var screenPoint = Input.mousePosition;//마우스 위치 가져옴
-            screenPoint.z = Camera.main.transform.position.z;
-            Vector3 pos = Camera.main.ScreenToWorldPoint(screenPoint);
-            pos.z = 0;
-            return pos;
-        }
+        // Vector3 ClickPos()
+        // {
+        //     var screenPoint = Input.mousePosition;//마우스 위치 가져옴
+        //     screenPoint.z = Camera.main.transform.position.z;
+        //     Vector3 pos = Camera.main.ScreenToWorldPoint(screenPoint);
+        //     pos.z = 0;
+        //     return pos;
+        // }
     }
 
     public bool Reload(KeyState reloadKey) => changedForm.Reload(reloadKey); 
 
     void Update()
     {
-        pObject = this.gameObject;
         if(changedForm.GetType() != typeof(Werewolf))
         {
             if (changedForm.UnitState == UnitState.Dash) invalidation = true;

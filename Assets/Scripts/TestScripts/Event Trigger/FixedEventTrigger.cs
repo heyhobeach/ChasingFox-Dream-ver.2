@@ -28,7 +28,7 @@ public class FixedEventTrigger : EventTrigger, IBaseController
     {
         if(Input.GetButtonDown("Cancel")) ServiceLocator.Get<GameManager>().Pause();
         
-        if(eventLock || ServiceLocator.Get<GameManager>().isPaused) return;
+        if(ServiceLocator.Get<GameManager>().isPaused) return;
         if(eventIdx >= eventLists.Length)
         {
             SystemManager.Instance.UpdateDataForEventTrigger(null, 0);
@@ -40,7 +40,7 @@ public class FixedEventTrigger : EventTrigger, IBaseController
             return;
         }
 
-        if(eventIdx < eventLists.Length && 
+        while(eventIdx < eventLists.Length && !eventLock &&
             (eventLists[eventIdx].enterPrerequisites == null || eventLists[eventIdx].enterPrerequisites.isSatisfied) &&
             (eventLists[eventIdx].keyCode == KeyCode.None || Input.GetKeyDown(eventLists[eventIdx].keyCode)))
         {

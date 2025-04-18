@@ -47,7 +47,6 @@ public class EventTrigger : MonoBehaviour
     /// </summary>
     public void Controller()
     {
-        if(eventLock) return;
         if(eventIdx >= eventLists.Length)
         {
             if(limit) used = true;
@@ -56,7 +55,7 @@ public class EventTrigger : MonoBehaviour
             action = null;
             return;
         }
-        if(eventIdx < eventLists.Length && 
+        while(eventIdx < eventLists.Length && !eventLock &&
             (eventLists[eventIdx].enterPrerequisites == null || eventLists[eventIdx].enterPrerequisites.isSatisfied) &&
             (eventLists[eventIdx].keyCode == KeyCode.None || Input.GetKeyDown(eventLists[eventIdx].keyCode)))
         {
@@ -117,7 +116,7 @@ public class EventTrigger : MonoBehaviour
         GetComponent<BoxCollider2D>().isTrigger = true;
     }
 
-    void Awake()
+    void Start()
     {
         Init();
     }
