@@ -14,7 +14,7 @@ public class DialogueParser : MonoBehaviour
     string SPLIT_RE = @",(?=(?:[^""]*""[^""]*"")*(?![^""]*""))";//정규식 from chat gpt
                                                                 // string SPLIT_COMMAND_PASER = @"[""!,]";//명령어 분리 정규식
                                                                 // string SPLIT_NUM = @"([^1-9]{1,})";//공백 분리 정규식
-    int id, Chapter, C_name, string_kr, command, image_name, dir;
+    int id, Chapter, C_name, string_kr, command, image_name, dir, problem;
     string[] row;
     //string[] command;
     string[] testarr;
@@ -56,7 +56,7 @@ public class DialogueParser : MonoBehaviour
             Debug.Log("내용" + i);
         }
 
-        string[] category = { "string_kr", "Chapter", "C_name", "id", "command", "image_name", "dir" };
+        string[] category = { "string_kr", "Chapter", "C_name", "id", "command", "image_name", "dir" , "problem" };
         int index = 0;
         foreach (string item in category)
         {
@@ -86,6 +86,10 @@ public class DialogueParser : MonoBehaviour
                 case "dir":
                     dir = temp;
                     break;
+                case "problem":
+                    problem= temp;
+                    break;
+
             }
             //bool a=exists?true:false;
             //Debug.Log($"{row[1]} - Find {item}: {(exists ? "Exists" : "Not Found")}");
@@ -113,6 +117,7 @@ public class DialogueParser : MonoBehaviour
             dialogue.id = this.id != -1 ? row[this.id] : null;
             dialogue.image_name = this.image_name != -1 ? row[this.image_name] : null;
             dialogue.dir = this.dir != -1 ? row[this.dir] : null;
+            //dialogue.problem=this.problem!=-1? row[this.problem] : null;
             //command = Regex.Split(row[4], SPLIT_COMMAND_PASER);
             //command = spaceremove(command);
 
@@ -123,11 +128,28 @@ public class DialogueParser : MonoBehaviour
             //Debug.Log(data[i]);
 
             List<string> contextList = new List<string>();
+            List<string> problemList = new List<string>();
+            
             do//동일 id에서 대화 창 변경 한 경우 표시
             {
                 //Debug.Log("ID Check" + row[this.id] + "Context Text" + row[this.string_kr]);
                 if (this.command != -1)
                     commandList.Add(row[this.command]);
+                try
+                {
+                    if (this.problem != -1)
+                    {
+                        Debug.Log("problem not null and problem number is " + this.problem);
+                        Debug.Log("problem add" + row[this.problem]);
+                        problemList.Add(row[this.problem]);
+                    }
+
+                }catch(Exception e)
+                {
+                    Debug.LogError("대입 문제"+e.Message);
+                }
+
+                    //problemList.Add(row[this.problem]);
                 //testarr.Add(row[5]);//메모 넣는부분
                 //dialogue.command[command_num++] = command;
                 row[this.string_kr] = splitsign(row[this.string_kr]);//id가 null이면 content를 ""을 리턴
@@ -156,6 +178,7 @@ public class DialogueParser : MonoBehaviour
                 //Debug.Log("대사 " + coms);
             }
             dialogue.context = contextList.ToArray();
+            dialogue.problem = problemList.ToArray();
 
             dialoguesList.Add(dialogue); //대화 내용 리스트에 삽입
             if (isEnd)

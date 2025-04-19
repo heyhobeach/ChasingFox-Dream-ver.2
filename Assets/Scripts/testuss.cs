@@ -158,39 +158,37 @@ public class UI_DynamicText : MonoBehaviour
 
 
         VisualElement visuallist = new VisualElement();
-        int num = 0;
+        //int num = 0;//사용안되고 있다고 나옴 아마 위에 새로 선언한 num변수 때문인듯?
 
         for (int i = 0; i < dialogues.Length; i++)
         {
+
             for(int rowIndex = 0; rowIndex < dialogues[i].context.Length; rowIndex++)
             {
-
-                Debug.Log(string.Format("lengh is {0} : dialyDialogue {1}", dialogues[i].context.Length, dialogues[i].context[rowIndex]));
-                if (dialogues[i].name != null)
+                string contentContext = "";
+                contentContext=dialogues[i].context[rowIndex];
+                if (dialogues[i].problem.Length>0)//해당 부분없으면 다른 csv파일상에서 접근시 문제 생김
                 {
-                    Debug.Log("이름 부분 작동중 " + dialogues[i].name);
+                    if (dialogues[i].problem[rowIndex].Length<=1)//문제 빈칸일때
+                    {
+                        Debug.Log("문제 부분 작동중 이지만 빈칸임"+ dialogues[i].problem[rowIndex][0]);
+                    }
+                    else//문제에 내용있을때
+                    {
+                        Debug.Log("문제 부분 작동 " + dialogues[i].problem[rowIndex]);
+                        contentContext = dialogues[i].problem[rowIndex];
+                    }
+
                 }
-                string[] parts = Regex.Split(dialogues[i].context[rowIndex], @"<br\s*/?>");//나눈 문장들 들어 있음
-                Debug.Log("parts count" + parts.Length);
+                //string[] parts = Regex.Split(dialogues[i].context[rowIndex], @"<br\s*/?>");//나눈 문장들 들어 있음
+                string[] parts = Regex.Split(contentContext, @"<br\s*/?>");//나눈 문장들 들어 있음
                 string[] keys = InventoryManager.Instance.GetInfo_(info_keys[i]).keywords;
-
-
-                //Debug.Log("key size="+keys.Length);
-                if (keys.Length > 0)//키가 있다면
-                {
-                    Debug.Log("keys =>" + keys[0]);
-                    //str += string.Format("키워드 {0}", InventoryManager.Instance.GetInfo_(i).keywords[0]);
-                }
-                else
-                {
-                    Debug.Log("null");
-                }
-
-
                 foreach (string part in parts)//br기준
                 {
+                    Debug.Log("part is "+part);
                     string[] _part = part.Split(' ');
                     var textelement = new TextElement { text = part, name = "textelement" };
+                    Debug.Log("text = "+ textelement.text);
                     visuallist.Add(textelement);
                     textelement.style.width = Length.Percent(100);
                     foreach (string p in _part)//여기 드래그 관련 내용들은 csv가 아닌 수집품의 내용 관련으로 갈것임 지금 해당내용은 테스트용이라고 생각하는것이 좋음 띄워 쓰기 관련은 인벤토리(수집품) 추리시 발생, 스페이스 기준
@@ -198,8 +196,6 @@ public class UI_DynamicText : MonoBehaviour
                         bool check = (keys.Length > 0 ? part.ContainsAny(keys[0]) : false);
                         //int a = part.IndexOf(keys[0]);
                         Debug.Log($"분리 후: [{p}] check[{check}]"); //지금 분리도 안 되는거같은데
-
-
                         if (check)
                         {
 
@@ -216,24 +212,24 @@ public class UI_DynamicText : MonoBehaviour
 
 
                 }
+
+                //Debug.Log(visuallist.childCount);    
                 textList.Add(visuallist);
+
 
                 visuallist.style.flexDirection = FlexDirection.Column;
                 visuallist.style.width = Length.Percent(100);
-                //visualElement.Add(textList[i]);
-                textContainerContent.Add(textList[i]);
                 textList[i].style.flexDirection = FlexDirection.Column;
                 textContainerContent.style.flexDirection = FlexDirection.Column;
                 var t = visuallist.Query<TextElement>().Build();
-                foreach (var k in t)
-                {
-                    Debug.Log($"textlist [{i}] => {k.text}");
-                }
                 visuallist = new VisualElement();
             }
-            
         }
-
+        //Debug.Log("textlist count is " + textList.Count);//textelement개수 확인용
+        for(int number = 0; number < textList.Count; number++)
+        {
+            textContainerContent.Add(textList[number]);
+        }
     }
 
 
@@ -252,9 +248,6 @@ public class UI_DynamicText : MonoBehaviour
             csv_id_list.Add(int.Parse(dialogue.id));
         }
 
-
-
-
         List<Dialogue> templist = new List<Dialogue>();
         foreach (var i in info_keys)//현재 가지고 있는 키에서 문자를 받을수있음
         {
@@ -266,16 +259,6 @@ public class UI_DynamicText : MonoBehaviour
             }
             templist.Add(trace_dic[i]);//아마 키가 달라서? 
         }
-        //Dialogue[] dialogues = trace_values.ToArray();
-
-        //for (int i = 0; i < info_keys.Count; i++)
-        //{
-        //    //if (templist[info_keys[i]] == null)
-        //    //{
-        //    //    continue;
-        //    //}
-        //    templist.Add(trace_dic[info_keys[i]]);
-        //}
         Dialogue[] dialogues = templist.ToArray();
 
         return dialogues;

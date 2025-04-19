@@ -475,7 +475,7 @@ public class UIManager : MonoBehaviour
             }
             content.text += str[i];
             //content.text++str[i]+tag;
-            yield return new WaitForSeconds(2);
+            yield return new WaitForSeconds(typing_speed);
         }
         //SetTypingSpeed(-1, -1, (int)(DEFAULT_SPEED*0.02f));
         content.text = str;
