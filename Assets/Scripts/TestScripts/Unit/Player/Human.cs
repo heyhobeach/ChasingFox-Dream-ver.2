@@ -96,11 +96,17 @@ public class Human : PlayerUnit, IDoorInteractable
             switch(map)
             {
                 case MapType.Wall:
-                    canJump = true;
-                    contactPos = collision.GetContact(0).point;
+                    if(jumpType == JumpType.Parkour)
+                    {                        
+                        canJump = true;
+                        contactPos = collision.GetContact(0).point;
+                    }
                 break;
+                case MapType.Floor:
+                case MapType.Ground:
                 case MapType.Platform:
                     mapSensor.platformSensor.gameObject.SetActive(true);
+                    canJump = false;
                 break;
             }
         }
@@ -114,19 +120,30 @@ public class Human : PlayerUnit, IDoorInteractable
             switch(map)
             {
                 case MapType.Wall:
-                    canJump = true;
-                    contactPos = collision.GetContact(0).point;
+                    if(jumpType == JumpType.Parkour)
+                    {                        
+                        canJump = true;
+                        contactPos = collision.GetContact(0).point;
+                    }
                 break;
+                case MapType.Floor:
                 case MapType.Platform:
                     mapSensor.platformSensor.gameObject.SetActive(true);
+                    canJump = false;
                 break;
             }
         }
+        Exit();
     }
 
     protected override void OnCollisionExit2D(Collision2D collision)
     {
         base.OnCollisionExit2D(collision);
+        Exit();
+    }
+
+    private void Exit()
+    {
         foreach(var map in mapTypesExit)
         {
             if(jumpType == JumpType.Parkour)
@@ -134,15 +151,21 @@ public class Human : PlayerUnit, IDoorInteractable
                 switch(map)
                 {
                     case MapType.Wall:
-                        canJump = false;
-                        var dir = contactPos-rg.position;
-                        SetVerticalForce(dir.y * 10);
-                        SetVerticalVelocity(dir.y * 10);
-                        if(-fixedDir.normalized.x != dir.normalized.x)
+                        if(jumpType == JumpType.Parkour)
                         {
-                            SetHorizontalForce(dir.x * 10);
-                            SetHorizontalVelocity(dir.x * 10);
+                            canJump = false;
+                            var dir = contactPos-rg.position;
                             if(isJumping) isJumping = false;
+                            if(vcForce > 0)
+                            {
+                                SetVerticalForce(dir.y * 10);
+                                SetVerticalVelocity(dir.y * 10);
+                                if(-fixedDir.normalized.x != dir.normalized.x)
+                                {
+                                    SetHorizontalForce(dir.x * 10);
+                                    SetHorizontalVelocity(dir.x * 10);
+                                }
+                            }
                         }
                     break;
                     case MapType.Platform:
@@ -306,7 +329,12 @@ public class Human : PlayerUnit, IDoorInteractable
             switch(jumpKey)
             {
                 case KeyState.KeyDown:
-                    mapSensor.platformSensor.gameObject.SetActive(false);
+                    if(mapSensor.groundType == MapType.Ground) mapSensor.platformSensor.gameObject.SetActive(false);
+                    if(canJump)
+                    {
+                        var x = (contactPos-rg.position).x;
+                        spriteRenderer.flipX = x < 0;
+                    }
                 break;
                 case KeyState.KeyUp:
                     mapSensor.platformSensor.gameObject.SetActive(true);

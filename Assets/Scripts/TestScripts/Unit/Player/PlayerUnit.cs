@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
 
@@ -83,6 +84,11 @@ public abstract class PlayerUnit : UnitBase
     {
         var maps = mapTypesEnter;
         mapTypesEnter = CheckMapTypes(collision);
+        mapTypesExit.Clear();
+        foreach(var prevMap in maps)
+        {
+            if(!mapTypesEnter.Contains(prevMap)) mapTypesExit.Add(prevMap);
+        }
         foreach(var map in mapTypesEnter)
         {
             switch (map)
@@ -98,14 +104,13 @@ public abstract class PlayerUnit : UnitBase
                     break;
             }
         }
-        mapTypesExit.Clear();
-        foreach(var prevMap in maps)
-        {
-            if(!mapTypesEnter.Equals(prevMap)) mapTypesExit.Add(prevMap);
-        }
     }
 
-    protected virtual void OnCollisionExit2D(Collision2D collision) {}
+    protected virtual void OnCollisionExit2D(Collision2D collision) 
+    {
+        mapTypesExit.Clear();
+        foreach(var prevMap in mapTypesEnter) mapTypesExit.Add(prevMap);
+    }
 
     protected override void Update()
     {
@@ -319,7 +324,7 @@ public abstract class PlayerUnit : UnitBase
     protected MapType[] CheckMapTypes(Collision2D collision)
     {
         MapType[] temp = new MapType[collision.contactCount];
-        for(int i=0; i<temp.Length; i++) temp[i] = CheckMapType(collision);
+        for(int i=0; i<temp.Length; i++) temp[i] = CheckMapType(collision, i);
 
         return temp;
     }
