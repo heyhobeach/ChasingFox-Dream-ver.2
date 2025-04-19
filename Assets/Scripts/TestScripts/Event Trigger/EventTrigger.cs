@@ -45,7 +45,7 @@ public class EventTrigger : MonoBehaviour
     /// <summary>
     /// 이벤트 작동부
     /// </summary>
-    public void Controller()
+    public virtual void Controller()
     {
         if(eventIdx >= eventLists.Length)
         {
@@ -94,7 +94,12 @@ public class EventTrigger : MonoBehaviour
         action = null;
     }
 
-    public void Init(EventTriggerData.JsonData data) => eventTriggerData.Init(data);
+    public void Init(EventTriggerData.JsonData data)
+    {
+        eventTriggerData.Init(data);
+        GetComponent<BoxCollider2D>().enabled = true;
+        gameObject.SetActive(eventTriggerData.isEneable);
+    }
 
     private void Init()
     {
@@ -114,9 +119,10 @@ public class EventTrigger : MonoBehaviour
         }
 
         GetComponent<BoxCollider2D>().isTrigger = true;
+        GetComponent<BoxCollider2D>().enabled = false;
     }
 
-    void Start()
+    void Awake()
     {
         Init();
     }

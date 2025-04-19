@@ -59,12 +59,12 @@ public partial class ControllerScript : MonoBehaviour
                 t += Time.deltaTime;
                 if (t < 2)
                 {
-                    UIController.Instance.ImageSetFalse();
+                    ServiceLocator.Get<UIController>().ImageSetFalse();
                     ControllerScript.instance.currentTime = 0;//?
                 }
                 else
                 {
-                    UIController.Instance.ImageSetTrue();
+                    ServiceLocator.Get<UIController>().ImageSetTrue();
                 }
                 Debug.Log("재장전");
             }

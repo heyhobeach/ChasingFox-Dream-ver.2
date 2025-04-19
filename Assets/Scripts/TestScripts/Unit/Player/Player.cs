@@ -50,15 +50,6 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     /// </summary>
     // [SerializeField] private float bulletTime;
 
-    private void OnEnable()
-    {
-        // if(changing != null)
-        // {
-        //     StopCoroutine(changing);
-        //     changing = null;
-        // }
-    }
-
     public void Init(PlayerData playerData = null)
     {
         fixedDir = 1;

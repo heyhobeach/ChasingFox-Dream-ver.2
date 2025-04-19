@@ -24,7 +24,7 @@ public class FixedEventTrigger : EventTrigger, IBaseController
     /// <summary>
     /// 이벤트 작동부
     /// </summary>
-    public new void Controller()
+    public override void Controller()
     {
         if(Input.GetButtonDown("Cancel")) ServiceLocator.Get<GameManager>().Pause();
         

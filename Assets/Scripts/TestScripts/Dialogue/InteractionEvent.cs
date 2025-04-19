@@ -878,7 +878,7 @@ public class InteractionEvent : MonoBehaviour
 
     public IEnumerator CallSetcontentStay(string str)
     {
-        while (!UIController.Instance.is_dialogue_on)
+        while (!ServiceLocator.Get<UIController>().is_dialogue_on)
         {
             yield return null;
         }

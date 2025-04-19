@@ -89,10 +89,13 @@ public class UIManager : MonoBehaviour
     //public InteractionEvent interactionEvent;
     private RectTransform name_rect;
     // Start is called before the first frame update
+
+
     void Start()
     {
         //testDel = ActTest;
         co = Typing("",isTyping);
+        brutalScroe = GameManager.Brutality;//지금 테스트 해 보니 브루탈 100기준 설정되어있는듯
         contentArr = new TMP_Text[1];
         size= content.rectTransform.rect.size.y;
         name_rect= namemesh.transform.GetComponent<RectTransform>();
@@ -111,8 +114,6 @@ public class UIManager : MonoBehaviour
 
         //brutalData = GameManager.GetBrutalData();//여기 주석 풀면 max게이지 기준
         //brutalScroe = brutalData.Brutality;
-        brutalScroe = GameManager.Brutality;//지금 테스트 해 보니 브루탈 100기준 설정되어있는듯
-        Debug.Log("brutal 수치 " + brutalScroe);
         //co_closeAinm = ClosingAnim();
     }
 

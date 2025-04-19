@@ -4,6 +4,12 @@ using BehaviourTree;
 using Com.LuisPedroFonseca.ProCamera2D;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
+
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public delegate void EnemyDeathDel(EnemyUnit enemyUnit);
 public delegate void GunsoundDel(Transform transform, Vector2 pos, Vector2 size);
@@ -11,12 +17,20 @@ public delegate void GunsoundDel(Transform transform, Vector2 pos, Vector2 size)
 [RequireComponent(typeof(ControllerManager))]
 public partial class GameManager : MonoBehaviour
 {
-    public SoundManager soundManager;
-    private PopupManager popupManager;
-    private ControllerManager controllerManager;
+
+#if UNITY_EDITOR
+    private void OnPlayModeStateChanged(PlayModeStateChange playModeStateChange)
+    {
+        if(playModeStateChange == PlayModeStateChange.EnteredPlayMode) 
+        {
+            Init();
+            PageManger.Instance.aoComplatedAction -= Init;
+        }
+    }
+#endif
+
     public InteractionEvent interactionEvent;
 
-    public InventoryManager inventoryManager;
     public GameObject inventoryCanvas;
 
     private event EnemyDeathDel onEnemyDeath;
@@ -60,12 +74,15 @@ public partial class GameManager : MonoBehaviour
 
     private void OnDestroy()
     {
+#if UNITY_EDITOR
+        EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+#endif
         ServiceLocator.Unregister(this);
-        if (isPaused) Pause();
         BehaviourNode.clone.Clear();
         StopAllCoroutines();
         mapsearchCoroutine = null;
         CameraManager.Instance?.proCamera2DRooms.OnStartedTransition.RemoveListener(MoveNextRoom);
+        if (isPaused) Pause();
     }
 
     private void OnApplicationQuit() => SaveData();
@@ -73,29 +90,33 @@ public partial class GameManager : MonoBehaviour
     private void Awake()
     {
         ServiceLocator.Register<GameManager>(this);
+        PageManger.Instance.aoComplatedAction += Init;
+
+#if UNITY_EDITOR
+        EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+#endif
 
         Application.targetFrameRate = targetFrame;
     }
 
-    private void Start() => Init();
-    public void Init()
+    private void Init()
     {
-        popupManager = PopupManager.Instance;
-        controllerManager = ServiceLocator.Get<ControllerManager>();
+        var saveData = SystemManager.Instance.saveData;
 
         if(mapsearchCoroutine == null) mapsearchCoroutine = StartCoroutine(MapSearchStart());
+        if(saveData != null && saveData.chapter != SceneManager.GetActiveScene().name) DataReset();
+
         player = FindFirstObjectByType<Player>();
         interactionEvent = FindFirstObjectByType<InteractionEvent>();
-        var saveData = SystemManager.Instance.saveData;
-        if(saveData != null && saveData.chapter != SceneManager.GetActiveScene().name) DataReset();
+
         var playerScript = player.GetComponent<Player>();
         var playerControllerScript = player.GetComponent<PlayerController>();
         playerScript.Init(saveData.playerData);
         playerControllerScript.Init(saveData.playerData);
         karmaRatio = saveData.karma;
-        // PlayerData.lastRoomIdx = saveData.chapterIdx;
-        for (int i = 0; i < maps.Count; i++) CreateWallRoom(i).enabled = false;
+        PlayerData.lastRoomIdx = saveData.chapterIdx;
 
+        for (int i = 0; i < maps.Count; i++) CreateWallRoom(i).enabled = false;
         if(saveData.mapDatas == null || saveData.mapDatas.Length == 0)
         {
             var mapDatas = new MapData.JsonData[maps.Count];
@@ -116,12 +137,10 @@ public partial class GameManager : MonoBehaviour
         for (int i = 0; i < eventTriggers.Count; i++) 
         {
             eventTriggers[i].Init(saveData.eventTriggerDatas[i]);
-            eventTriggers[i].gameObject.SetActive(saveData.eventTriggerDatas[i].isEneable);
         }
 
         SystemManager.Instance.saveData = saveData;
 
-        if(saveData.mapDatas.Length > 0 && saveData.mapDatas[PlayerData.lastRoomIdx].used) player.transform.position = saveData.mapDatas[PlayerData.lastRoomIdx].position;
         if (!string.IsNullOrEmpty(saveData.eventTriggerInstanceID))
         {
             var trigger = eventTriggers.Find(x => x.eventTriggerData.guid.Equals(saveData.eventTriggerInstanceID));
@@ -131,9 +150,11 @@ public partial class GameManager : MonoBehaviour
                 player.transform.position = trigger.targetPosition;
             }
         }
-        ProCamera2D.Instance.MoveCameraInstantlyToPosition(player.transform.position);
 
-        CameraManager.Instance?.proCamera2DRooms.OnStartedTransition.AddListener(MoveNextRoom);
+        ProCamera2D.Instance.CameraTargets.Add(new CameraTarget(){ TargetTransform = player.transform });
+        ProCamera2D.Instance.MoveCameraInstantlyToPosition(player.transform.position);
+        CameraManager.Instance.proCamera2DRooms.OnStartedTransition.AddListener(MoveNextRoom);
+        MoveNextRoom(PlayerData.lastRoomIdx, -1);
     }
 
     private void Update()
@@ -169,8 +190,8 @@ public partial class GameManager : MonoBehaviour
         {
             go = new GameObject() {
                 name = "wall",
-                // layer = LayerMask.NameToLayer("Map"),
-                // tag = "Map"
+                layer = LayerMask.NameToLayer("Wall"),
+                tag = "Wall"
             };
             var edge = go.AddComponent<EdgeCollider2D>();
             edge.SetPoints(new List<Vector2>{
@@ -192,7 +213,7 @@ public partial class GameManager : MonoBehaviour
 
     public void LoadScene(string name, bool active = true)
     {
-        UIController.Instance?.DialogueCanvasSetFalse();
+        ServiceLocator.Get<UIController>().DialogueCanvasSetFalse();
         SaveData();
         PageManger.Instance.LoadScene(name, active);
     }
@@ -201,7 +222,7 @@ public partial class GameManager : MonoBehaviour
     public void Pause()
     {
         Pause(!isPaused);
-        // InventoryDisable();
+        InventoryDisable();
     }
     public void Pause(bool isPause)
     {
@@ -225,7 +246,7 @@ public partial class GameManager : MonoBehaviour
         SystemManager.Instance.saveData.mapDatas = mapDatas;
         SystemManager.Instance.saveData.eventTriggerDatas = eventTriggerDatas;
         SystemManager.Instance.saveData.karma = karmaRatio;
-        // SystemManager.Instance.saveData.chapterIdx = PlayerData.lastRoomIdx;
+        SystemManager.Instance.saveData.chapterIdx = PlayerData.lastRoomIdx;
         SystemManager.Instance.SaveData(SystemManager.Instance.saveIndex);
     }
 
@@ -237,7 +258,7 @@ public partial class GameManager : MonoBehaviour
         SystemManager.Instance.saveData.karma = karmaRatio;
         SystemManager.Instance.saveData.playerData = null;
         PlayerData.lastRoomIdx = 0;
-        // SystemManager.Instance.saveData.chapterIdx = 0;
+        SystemManager.Instance.saveData.chapterIdx = 0;
         SystemManager.Instance.UpdateDataForEventTrigger(null, 0);
     }
     public void InventoryEnable()

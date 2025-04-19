@@ -29,6 +29,7 @@ public class PageManger : MonoBehaviour
         }
     }
     private AsyncOperation nextAo;
+    public Action aoComplatedAction;
 
     private void Awake()
     {
@@ -48,7 +49,10 @@ public class PageManger : MonoBehaviour
         nextAo.completed += (ao) => 
         {
             var prevAo = SceneManager.UnloadSceneAsync(currentScene);
-            prevAo.completed += (ao) => ServiceLocator.Get<GameManager>().Init();
+            prevAo.completed += (ao) => {
+                aoComplatedAction?.Invoke();
+                aoComplatedAction = null;
+            };
         };
         nextAo.allowSceneActivation = active;
     }

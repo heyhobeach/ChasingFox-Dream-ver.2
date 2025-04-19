@@ -6,25 +6,36 @@ public class ControllerManager : MonoBehaviour
     private Stack<IBaseController> controllers = new();
     public static void PushController(IBaseController @base)
     {
-        if(ServiceLocator.Get<ControllerManager>().controllers.Contains(@base)) return;
-        if(ServiceLocator.Get<ControllerManager>().controllers.Count > 0) ServiceLocator.Get<ControllerManager>().controllers.Peek().onDown?.Invoke();
+        var controllers = ServiceLocator.Get<ControllerManager>().controllers;
+        if(controllers == null)
+        {
+            Debug.LogError("controllers not set");
+            return;
+        }
+        if(controllers.Contains(@base)) return;
+        if(controllers.Count > 0) controllers.Peek().onDown?.Invoke();
         ServiceLocator.Get<ControllerManager>().controllers.Push(@base);
     }
     public static void PopController(IBaseController @base)
     {
-        if(ServiceLocator.Get<ControllerManager>().controllers.Count > 0 && ServiceLocator.Get<ControllerManager>().controllers.Peek() != @base)
+        var controllers = ServiceLocator.Get<ControllerManager>().controllers;
+        if(controllers == null)
+        {
+            Debug.LogError("controllers not set");
+            return;
+        }
+        if(controllers.Count > 0 && controllers.Peek() != @base)
         {
             Stack<IBaseController> temp = new();
-            while(ServiceLocator.Get<ControllerManager>().controllers.Count > 0 && !temp.Equals(ServiceLocator.Get<ControllerManager>().controllers.Peek())) temp.Push(ServiceLocator.Get<ControllerManager>().controllers.Pop());
-            while(temp.Count > 0) ServiceLocator.Get<ControllerManager>().controllers.Push(temp.Pop());
+            while(controllers.Count > 0 && !temp.Equals(controllers.Peek())) temp.Push(ServiceLocator.Get<ControllerManager>().controllers.Pop());
+            while(temp.Count > 0) controllers.Push(temp.Pop());
         }
-        if(ServiceLocator.Get<ControllerManager>().controllers.Count > 0) 
+        if(controllers.Count > 0) 
         {
-            ServiceLocator.Get<ControllerManager>().controllers.Pop();
+            controllers.Pop();
         }
-        if(ServiceLocator.Get<ControllerManager>().controllers.Count > 0) ServiceLocator.Get<ControllerManager>().controllers.Peek().onUp?.Invoke();
+        if(controllers.Count > 0)controllers.Peek().onUp?.Invoke();
     }
-    public static IBaseController GetTopController() => ServiceLocator.Get<ControllerManager>().controllers.Peek();
 
     private void OnDestroy()
     {
@@ -35,6 +46,9 @@ public class ControllerManager : MonoBehaviour
     {
         ServiceLocator.Register(this);
 
+    }
+    private void Start()
+    {
         if(controllers == null) controllers = new();
     }
 
