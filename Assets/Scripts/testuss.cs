@@ -159,7 +159,7 @@ public class UI_DynamicText : MonoBehaviour
 
         VisualElement visuallist = new VisualElement();
         //int num = 0;//사용안되고 있다고 나옴 아마 위에 새로 선언한 num변수 때문인듯?
-
+        bool isProblemCSV = false;
         for (int i = 0; i < dialogues.Length; i++)
         {
 
@@ -167,11 +167,13 @@ public class UI_DynamicText : MonoBehaviour
             {
                 string contentContext = "";
                 contentContext=dialogues[i].context[rowIndex];
-                if (dialogues[i].problem.Length>0)//해당 부분없으면 다른 csv파일상에서 접근시 문제 생김
+                //string[] parts = Regex.Split(dialogues[i].context[rowIndex], @"<br\s*/?>");//나눈 문장들 들어 있음
+                if (dialogues[i].problem.Length > 0)//해당 부분없으면 다른 csv파일상에서 접근시 문제 생김
                 {
-                    if (dialogues[i].problem[rowIndex].Length<=1)//문제 빈칸일때
+                    isProblemCSV = true;
+                    if (dialogues[i].problem[rowIndex].Length <= 1)//문제 빈칸일때
                     {
-                        Debug.Log("문제 부분 작동중 이지만 빈칸임"+ dialogues[i].problem[rowIndex][0]);
+                        Debug.Log("문제 부분 작동중 이지만 빈칸임" + dialogues[i].problem[rowIndex][0]);
                     }
                     else//문제에 내용있을때
                     {
@@ -180,37 +182,89 @@ public class UI_DynamicText : MonoBehaviour
                     }
 
                 }
-                //string[] parts = Regex.Split(dialogues[i].context[rowIndex], @"<br\s*/?>");//나눈 문장들 들어 있음
+                else
+                {
+                    isProblemCSV = false;
+                }
+                //Regex.Replace()
                 string[] parts = Regex.Split(contentContext, @"<br\s*/?>");//나눈 문장들 들어 있음
                 string[] keys = InventoryManager.Instance.GetInfo_(info_keys[i]).keywords;
-                foreach (string part in parts)//br기준
+                List<List<string>> tags = new List<List<string>>();//___으로 변환 되어있는 내용에서 해당 번째가 person인지 destination인지 확인용
+                int iter = 0;
+                foreach (string part in parts)//br기준,사실상 없는거나 마찬가지
                 {
                     Debug.Log("part is "+part);
-                    string[] _part = part.Split(' ');
+                    string[] _part;
+
+
+                    if (isProblemCSV)
+                    {
+                        _part = Regex.Split(part, "!([a-zA-Z]+)");
+                        MatchCollection matches = Regex.Matches(part, "!([a-zA-Z]+)");//순서는 여기가 맞음, !XXXX패턴있는거 순서 찾는중
+                        tags.Add(new List<string>());   
+                        foreach (var match in matches)
+                        {
+                            Debug.Log(iter + "번째" + "매치된것은" + match.ToString());
+                            tags[0].Add(match.ToString());
+         
+                        }
+                        iter++;
+                    }
+                    else
+                    {
+                        _part = part.Split(' ');
+                    }
+                    VisualElement problemElement = new VisualElement();
                     var textelement = new TextElement { text = part, name = "textelement" };
-                    Debug.Log("text = "+ textelement.text);
-                    visuallist.Add(textelement);
-                    textelement.style.width = Length.Percent(100);
+
                     foreach (string p in _part)//여기 드래그 관련 내용들은 csv가 아닌 수집품의 내용 관련으로 갈것임 지금 해당내용은 테스트용이라고 생각하는것이 좋음 띄워 쓰기 관련은 인벤토리(수집품) 추리시 발생, 스페이스 기준
                     {
                         bool check = (keys.Length > 0 ? part.ContainsAny(keys[0]) : false);
                         //int a = part.IndexOf(keys[0]);
                         Debug.Log($"분리 후: [{p}] check[{check}]"); //지금 분리도 안 되는거같은데
-                        if (check)
+                        if (!isProblemCSV)
                         {
+                          if (check)
+                          {
+                              textelement.AddToClassList("clickable");
+                              textelement.RegisterCallback<PointerDownEvent>(LoadMestery);
 
-                            textelement.AddToClassList("clickable");
-                            textelement.RegisterCallback<PointerDownEvent>(LoadMestery);
-
+                          }
+                          else
+                          {
+                              textelement.AddToClassList("sentence");
+                          }
+                            visuallist.Add(textelement);
                         }
                         else
                         {
-                            textelement.AddToClassList("sentence");
+                            string temp = Regex.Replace(part, "!([a-zA-Z]+)","_____");
+ 
+                            problemElement.Add(textelement);
+                            problemElement.style.flexDirection = FlexDirection.Row;
+                            visuallist.Add(problemElement);
+                            textelement.text = temp;    
                         }
+
 
                     }
 
+                    Debug.Log("text = " + textelement.text);
 
+                    textelement.style.width = Length.Percent(100);
+                }
+
+                int first = 0;
+                foreach(var tag in tags)
+                {
+                    int second = 0;
+
+                    foreach (var text in tag)
+                    {
+                        Debug.Log(string.Format("{0} {1}tag 내용 = {2}",first,second,text) );
+                        second++;
+                    }
+                    first++;
                 }
 
                 //Debug.Log(visuallist.childCount);    
@@ -228,6 +282,10 @@ public class UI_DynamicText : MonoBehaviour
         //Debug.Log("textlist count is " + textList.Count);//textelement개수 확인용
         for(int number = 0; number < textList.Count; number++)
         {
+            //if (number == 0)
+            //{
+            //    textList[number].Q<TextElement>().text = "가장 처음입니다 테스트용입니다";//이런식으로 변경
+            //}
             textContainerContent.Add(textList[number]);
         }
     }
