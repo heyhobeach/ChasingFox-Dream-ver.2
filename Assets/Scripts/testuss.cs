@@ -105,14 +105,14 @@ public class UI_DynamicText : MonoBehaviour
 
 
         drop_area = visualElement.Q<VisualElement>("drop-area");
-
+        
         drop_area.RegisterCallback<PointerUpEvent>(evt =>
         {
             if (is_sentence)
             {
                 var querylabel = dragGhost.Query<Label>().Build();
                 //querylabel.First().text//오브젝트 내용 적혀있음
-                Debug.Log("위치에 놓았습니다 내용 =>" + querylabel.First().text);
+                Debug.Log("테스트 위치에 놓았습니다 내용 =>" + querylabel.First().text);
             }
         });
 
@@ -186,6 +186,7 @@ public class UI_DynamicText : MonoBehaviour
                 {
                     isProblemCSV = false;
                 }
+
                 //Regex.Replace()
                 string[] parts = Regex.Split(contentContext, @"<br\s*/?>");//나눈 문장들 들어 있음
                 string[] keys = InventoryManager.Instance.GetInfo_(info_keys[i]).keywords;
@@ -197,10 +198,10 @@ public class UI_DynamicText : MonoBehaviour
                     string[] _part;
 
 
-                    if (isProblemCSV)
+                    if (isProblemCSV)//여기 부분은 추리가 있는 csv부분
                     {
-                        _part = Regex.Split(part, "!([a-zA-Z]+)");
-                        MatchCollection matches = Regex.Matches(part, "!([a-zA-Z]+)");//순서는 여기가 맞음, !XXXX패턴있는거 순서 찾는중
+                        _part = Regex.Split(part, "(!([a-zA-Z]+))");
+                        MatchCollection matches = Regex.Matches(part, "(!([a-zA-Z]+))");//순서는 여기가 맞음, !XXXX패턴있는거 순서 찾는중
                         tags.Add(new List<string>());   
                         foreach (var match in matches)
                         {
@@ -224,26 +225,53 @@ public class UI_DynamicText : MonoBehaviour
                         Debug.Log($"분리 후: [{p}] check[{check}]"); //지금 분리도 안 되는거같은데
                         if (!isProblemCSV)
                         {
-                          if (check)
-                          {
-                              textelement.AddToClassList("clickable");
-                              textelement.RegisterCallback<PointerDownEvent>(LoadMestery);
+                            if (check)
+                            {
+                                textelement.AddToClassList("clickable");
+                                textelement.RegisterCallback<PointerDownEvent>(LoadMestery);
 
-                          }
-                          else
-                          {
-                              textelement.AddToClassList("sentence");
-                          }
+                            }
+                            else
+                            {
+                                textelement.AddToClassList("sentence");
+                            }
                             visuallist.Add(textelement);
                         }
                         else
                         {
-                            string temp = Regex.Replace(part, "!([a-zA-Z]+)","_____");
- 
-                            problemElement.Add(textelement);
+                            string temp = Regex.Replace(part, "(!([a-zA-Z]+))", "_____");
+                            //string[] tempArray = Regex.Split(temp, "_____");
+                            if(Regex.IsMatch(p, "(!([a-zA-Z]+))"))
+                            {
+                                string replaceString = Regex.Replace(p, "(!([a-zA-Z]+))", "_____");
+                                Debug.Log(string.Format("before = {0} after {1}", p,replaceString));
+                                TextElement underbarElement = new TextElement { text = replaceString, name = "underbarTextElement"};
+                                underbarElement.AddToClassList("dropArea");
+                                underbarElement.RegisterCallback<PointerUpEvent>(evt =>
+                                {
+                                    if (is_sentence)
+                                    {
+                                        var querylabel = dragGhost.Query<TextElement>().Build();
+                                        //querylabel.First().text//오브젝트 내용 적혀있음
+                                        Debug.Log("문제 위치에 놓았습니다 내용 =>" + querylabel.First().text);
+                                    }
+                                });
+                                //textelement = underbarElement;
+                                problemElement.Add(underbarElement);
+                            }
+                            else
+                            {
+                                TextElement tElement = new TextElement { text = p, name = "TextElement" };
+                                //textelement.text = p;
+                                problemElement.Add(tElement);
+                            }
+
+                   
+
+
                             problemElement.style.flexDirection = FlexDirection.Row;
                             visuallist.Add(problemElement);
-                            textelement.text = temp;    
+                            //textelement.text = temp;    
                         }
 
 
@@ -326,7 +354,7 @@ public class UI_DynamicText : MonoBehaviour
     {
         if (is_drag)
         {
-            Debug.Log("드래그중");
+            //Debug.Log("드래그중");
 
             Vector2 currentMousePosition = evt.position;
             Vector2 mouseDelta = currentMousePosition - startMousePosition;
@@ -339,7 +367,7 @@ public class UI_DynamicText : MonoBehaviour
                 dragGhost.style.left = newGhostPosition.x;
                 dragGhost.style.top = newGhostPosition.y;
 
-                Debug.Log(string.Format("고스트 left {0} top {1}", dragGhost.style.left, dragGhost.style.top));
+                //Debug.Log(string.Format("고스트 left {0} top {1}", dragGhost.style.left, dragGhost.style.top));
             }
         }
     }
@@ -373,16 +401,6 @@ public class UI_DynamicText : MonoBehaviour
         startMousePosition = evt.position;
     }
 
-
-    private void LoadTest(PointerDownEvent evt)
-    {
-        var root = GetComponent<UIDocument>().rootVisualElement;
-        var panel = root.Q<VisualElement>("TracerNotePanel");
-        panel.style.scale = new Vector2(1, 1);
-        var tracer = root.Q<VisualElement>("TracerNote");//여기 하위에 오브젝트 배치
-
-        tracer.AddToClassList("test2-2");
-    }
     private void LoadMestery(PointerDownEvent evt)//데이터를 미리 정해놔야할듯?
     {
         textContainerContent.Clear();
@@ -396,7 +414,7 @@ public class UI_DynamicText : MonoBehaviour
         SetDiaryText(ref textContainer, StartEvent("다이어리 내용"));
 
 
-    }
+    } 
 
     private void MesterySystem()
     {
@@ -439,8 +457,10 @@ public class UI_DynamicText : MonoBehaviour
                 if (check)
                 {
                     textelement.RegisterCallback<PointerDownEvent>(evt => { is_sentence = true; });
-                    textelement.RegisterCallback<PointerMoveEvent>(evt => { Debug.Log("label 드래그 확인 문구"); });
-                    textelement.RegisterCallback<PointerUpEvent>(evt => { Debug.Log("label 클릭 놓은 확인 문구"); });
+                    textelement.RegisterCallback<PointerMoveEvent>(evt => { //Debug.Log("label 드래그 확인 문구");
+                                                                            });
+                    textelement.RegisterCallback<PointerUpEvent>(evt => { //Debug.Log("label 클릭 놓은 확인 문구"); 
+                    });
                     textelement.AddToClassList("draggable");
                 }
                 else
