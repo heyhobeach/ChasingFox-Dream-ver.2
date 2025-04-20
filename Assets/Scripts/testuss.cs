@@ -158,6 +158,7 @@ public class UI_DynamicText : MonoBehaviour
 
 
         VisualElement visuallist = new VisualElement();
+        visuallist.style.flexWrap = Wrap.Wrap;
         //int num = 0;//사용안되고 있다고 나옴 아마 위에 새로 선언한 num변수 때문인듯?
         bool isProblemCSV = false;
         for (int i = 0; i < dialogues.Length; i++)
@@ -200,7 +201,10 @@ public class UI_DynamicText : MonoBehaviour
 
                     if (isProblemCSV)//여기 부분은 추리가 있는 csv부분
                     {
-                        _part = Regex.Split(part, "(!([a-zA-Z]+))");
+                        float estimatedLineHeightInPixels = 50f;
+                        visuallist.style.minHeight = new StyleLength(new Length(estimatedLineHeightInPixels, LengthUnit.Pixel));
+                        Debug.Log("part = " + part);
+                        _part = Regex.Split(part, "(!(?:[a-zA-Z]+))");
                         MatchCollection matches = Regex.Matches(part, "(!([a-zA-Z]+))");//순서는 여기가 맞음, !XXXX패턴있는거 순서 찾는중
                         tags.Add(new List<string>());   
                         foreach (var match in matches)
@@ -239,13 +243,16 @@ public class UI_DynamicText : MonoBehaviour
                         }
                         else
                         {
-                            string temp = Regex.Replace(part, "(!([a-zA-Z]+))", "_____");
+                            Debug.Log("p =" + p);
+                            //string temp = Regex.Replace(p, "(!([a-zA-Z]+))", "_____");
+                            //Debug.Log("temp = " + temp);
                             //string[] tempArray = Regex.Split(temp, "_____");
                             if(Regex.IsMatch(p, "(!([a-zA-Z]+))"))
                             {
-                                string replaceString = Regex.Replace(p, "(!([a-zA-Z]+))", "_____");
+                                string replaceString = Regex.Replace(p, "(!([a-zA-Z]+))", "____");
                                 Debug.Log(string.Format("before = {0} after {1}", p,replaceString));
                                 TextElement underbarElement = new TextElement { text = replaceString, name = "underbarTextElement"};
+                                //underbarElement.style.whiteSpace = WhiteSpace.PreWrap;
                                 underbarElement.AddToClassList("dropArea");
                                 underbarElement.RegisterCallback<PointerUpEvent>(evt =>
                                 {
@@ -257,19 +264,34 @@ public class UI_DynamicText : MonoBehaviour
                                     }
                                 });
                                 //textelement = underbarElement;
+                                underbarElement.style.whiteSpace = WhiteSpace.PreWrap;
                                 problemElement.Add(underbarElement);
                             }
                             else
                             {
-                                TextElement tElement = new TextElement { text = p, name = "TextElement" };
-                                //textelement.text = p;
-                                problemElement.Add(tElement);
+                                //띄워쓰기 기준으로 분리 해야함 안 그러면 너무 길어짐
+                                string[] pSplits = p.Split(" ");
+                                foreach(string s in pSplits)
+                                {
+                                    TextElement tElement = new TextElement { text = s, name = "TextElement" };
+                                    tElement.style.whiteSpace = WhiteSpace.PreWrap;
+                                    tElement.AddToClassList("sentence");
+                                    //textelement.text = p;
+                                    //tElement.style.whiteSpace = WhiteSpace.PreWrap;
+                                    problemElement.Add(tElement);
+                                }
+                                //TextElement tElement = new TextElement { text = p, name = "TextElement" };
+                                //tElement.AddToClassList("sentence");
+                                ////textelement.text = p;
+                                ////tElement.style.whiteSpace = WhiteSpace.PreWrap;
+                                //problemElement.Add(tElement);
                             }
 
                    
 
 
                             problemElement.style.flexDirection = FlexDirection.Row;
+                            problemElement.style.flexWrap = Wrap.Wrap;
                             visuallist.Add(problemElement);
                             //textelement.text = temp;    
                         }
@@ -277,9 +299,9 @@ public class UI_DynamicText : MonoBehaviour
 
                     }
 
-                    Debug.Log("text = " + textelement.text);
-
-                    textelement.style.width = Length.Percent(100);
+                    //Debug.Log("text = " + textelement.text);
+                    //
+                    //textelement.style.width = Length.Percent(100);
                 }
 
                 int first = 0;
@@ -426,8 +448,8 @@ public class UI_DynamicText : MonoBehaviour
         var content = root.Q<VisualElement>("TracerContent");
         content.Clear();
 
-        content.style.flexDirection = FlexDirection.Column;
-        content.style.flexWrap = Wrap.NoWrap;
+        //content.style.flexDirection = FlexDirection.Column;
+        //content.style.flexWrap = Wrap.NoWrap;
         content.style.flexGrow = 1;
         content.style.flexShrink = 0;
 
@@ -441,9 +463,9 @@ public class UI_DynamicText : MonoBehaviour
             VisualElement lineContainer = new VisualElement();
 
             lineContainer.style.flexDirection = FlexDirection.Row;
-            lineContainer.style.flexWrap = Wrap.Wrap;
-            float estimatedLineHeightInPixels = 50f;
-            lineContainer.style.minHeight = new StyleLength(new Length(estimatedLineHeightInPixels, LengthUnit.Pixel));
+            lineContainer.style.flexWrap = Wrap.Wrap;//이게 들어가야 줄 이상한거 없어짐
+            //float estimatedLineHeightInPixels = 50f;
+            //lineContainer.style.minHeight = new StyleLength(new Length(estimatedLineHeightInPixels, LengthUnit.Pixel));
             string[] _part = part.Split(' ');
 
             foreach (string p in _part)//여기 드래그 관련 내용들은 csv가 아닌 수집품의 내용 관련으로 갈것임 지금 해당내용은 테스트용이라고 생각하는것이 좋음 띄워 쓰기 관련은 인벤토리(수집품) 추리시 발생
