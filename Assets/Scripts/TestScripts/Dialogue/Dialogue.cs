@@ -16,6 +16,7 @@ public class Dialogue
     public string image_name;
     public string dir;
     public string[] problem;
+    public string[] correct_answer;
 }
 [System.Serializable]
 public class DialogueEvent

@@ -168,18 +168,20 @@ public class UI_DynamicText : MonoBehaviour
             {
                 string contentContext = "";
                 contentContext=dialogues[i].context[rowIndex];
+                string answerText = "";
                 //string[] parts = Regex.Split(dialogues[i].context[rowIndex], @"<br\s*/?>");//나눈 문장들 들어 있음
                 if (dialogues[i].problem.Length > 0)//해당 부분없으면 다른 csv파일상에서 접근시 문제 생김
                 {
                     isProblemCSV = true;
                     if (dialogues[i].problem[rowIndex].Length <= 1)//문제 빈칸일때
                     {
-                        Debug.Log("문제 부분 작동중 이지만 빈칸임" + dialogues[i].problem[rowIndex][0]);
+                        //Debug.Log("문제 부분 작동중 이지만 빈칸임" + dialogues[i].problem[rowIndex][0]);
                     }
                     else//문제에 내용있을때
                     {
-                        Debug.Log("문제 부분 작동 " + dialogues[i].problem[rowIndex]);
+                        Debug.Log("문제 부분 작동 " + dialogues[i].problem[rowIndex]+"정답은 "+ dialogues[i].correct_answer[rowIndex]);
                         contentContext = dialogues[i].problem[rowIndex];
+                        answerText = dialogues[i].correct_answer[rowIndex];
                     }
 
                 }
@@ -399,6 +401,7 @@ public class UI_DynamicText : MonoBehaviour
         if (!is_sentence) return;
         is_drag = true;
         Debug.Log("클릭위치" + evt.position);
+        //evt.
         if (dragGhost == null)//고스트( 오브젝트 생성)
         {
             dragGhost = new Label("visualElement 고스트");
