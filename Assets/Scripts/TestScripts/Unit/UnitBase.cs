@@ -273,7 +273,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         }
     }
 
-    private void SetUnitState(UnitState unitState)
+    public void SetUnitState(UnitState unitState)
     {
         switch(unitState)
         {
