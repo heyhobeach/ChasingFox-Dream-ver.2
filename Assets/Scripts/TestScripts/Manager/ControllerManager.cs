@@ -1,9 +1,10 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
 public class ControllerManager : MonoBehaviour
 {
-    private Stack<IBaseController> controllers = new();
+    private Stack<IBaseController> controllers;
     public static void PushController(IBaseController @base)
     {
         var controllers = ServiceLocator.Get<ControllerManager>().controllers;
@@ -14,7 +15,7 @@ public class ControllerManager : MonoBehaviour
         }
         if(controllers.Contains(@base)) return;
         if(controllers.Count > 0) controllers.Peek().onDown?.Invoke();
-        ServiceLocator.Get<ControllerManager>().controllers.Push(@base);
+        controllers.Push(@base);
     }
     public static void PopController(IBaseController @base)
     {
@@ -27,7 +28,7 @@ public class ControllerManager : MonoBehaviour
         if(controllers.Count > 0 && controllers.Peek() != @base)
         {
             Stack<IBaseController> temp = new();
-            while(controllers.Count > 0 && !temp.Equals(controllers.Peek())) temp.Push(ServiceLocator.Get<ControllerManager>().controllers.Pop());
+            while(controllers.Count > 0 && !temp.Equals(controllers.Peek())) temp.Push(controllers.Pop());
             while(temp.Count > 0) controllers.Push(temp.Pop());
         }
         if(controllers.Count > 0) 
@@ -37,23 +38,15 @@ public class ControllerManager : MonoBehaviour
         if(controllers.Count > 0)controllers.Peek().onUp?.Invoke();
     }
 
-    private void OnDestroy()
-    {
-        ServiceLocator.Unregister(this);
-    }
+    private void OnDestroy() => ServiceLocator.Unregister(this);
 
-    private void Awake()
-    {
-        ServiceLocator.Register(this);
+    private void Awake() => ServiceLocator.Register(this);
 
-    }
-    private void Start()
-    {
-        if(controllers == null) controllers = new();
-    }
+    private void Start() => controllers = new();
 
     private void Update()
     {
-        if(controllers.Count > 0) controllers.Peek().Controller();
+        IBaseController controller = null;
+        if(controllers.TryPeek(out controller)) controller.Controller();
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Com.LuisPedroFonseca.ProCamera2D;
 using Damageables;
@@ -99,7 +100,9 @@ public class Human : PlayerUnit, IDoorInteractable
                     if(jumpType == JumpType.Parkour)
                     {                        
                         canJump = true;
-                        contactPos = collision.GetContact(0).point;
+                        var contacts = collision.contacts;
+                        Array.Sort(contacts, (x, y) => (int)(x.point.y - y.point.y));
+                        contactPos = contacts[0].point;
                     }
                 break;
                 case MapType.Floor:
@@ -123,7 +126,9 @@ public class Human : PlayerUnit, IDoorInteractable
                     if(jumpType == JumpType.Parkour)
                     {                        
                         canJump = true;
-                        contactPos = collision.GetContact(0).point;
+                        var contacts = collision.contacts;
+                        Array.Sort(contacts, (x, y) => (int)(x.point.y - y.point.y));
+                        contactPos = contacts[0].point;
                     }
                 break;
                 case MapType.Floor:
@@ -156,15 +161,17 @@ public class Human : PlayerUnit, IDoorInteractable
                             canJump = false;
                             var dir = contactPos-rg.position;
                             if(isJumping) isJumping = false;
-                            if(vcForce > 0)
+                            if(vcForce > 0 && (Sign(-fixedDir.normalized.x) != Sign(dir.normalized.x)))
                             {
                                 SetVerticalForce(dir.y * 10);
                                 SetVerticalVelocity(dir.y * 10);
-                                if(-fixedDir.normalized.x != dir.normalized.x)
-                                {
-                                    SetHorizontalForce(dir.x * 10);
-                                    SetHorizontalVelocity(dir.x * 10);
-                                }
+                                SetHorizontalForce(dir.x * 10);
+                                SetHorizontalVelocity(dir.x * 10);
+                            }
+                            else
+                            {
+                                SetVerticalForce(0);
+                                SetVerticalVelocity(0);
                             }
                         }
                     break;
@@ -173,6 +180,10 @@ public class Human : PlayerUnit, IDoorInteractable
                     break;
                 }
             }
+        }
+        float Sign(float f)
+        {
+            return (f > 0f) ? 1f : (f < 0f) ? (-1f) : 0;
         }
     }
 

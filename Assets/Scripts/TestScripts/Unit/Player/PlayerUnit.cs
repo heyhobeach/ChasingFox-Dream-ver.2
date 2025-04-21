@@ -73,8 +73,11 @@ public abstract class PlayerUnit : UnitBase
                     AddVerticalVelocity(gravity * Time.fixedDeltaTime);
                     break;
                 case MapType.Wall:
-                    SetHorizontalForce(0);
-                    SetHorizontalVelocity(0);
+                    if(Mathf.Sign(hzForce) == Mathf.Sign((collision.GetContact(0).point - rg.position).x))
+                    {
+                        SetHorizontalForce(0);
+                        SetHorizontalVelocity(0);
+                    }
                     break;
             }
         }
@@ -95,12 +98,15 @@ public abstract class PlayerUnit : UnitBase
             {
                 case MapType.Floor:
                     isJumping = false;
-                    if(vcForce > 0) SetVerticalVelocity(0);
+                    if(vcVel > 0) SetVerticalVelocity(0);
                     AddVerticalVelocity(gravity * Time.fixedDeltaTime);
                     break;
                 case MapType.Wall:
-                    SetHorizontalForce(0);
-                    SetHorizontalVelocity(0);
+                    if(Mathf.Sign(hzForce) == Mathf.Sign((collision.GetContact(0).point - rg.position).x))
+                    {
+                        SetHorizontalForce(0);
+                        SetHorizontalVelocity(0);
+                    }
                     break;
             }
         }

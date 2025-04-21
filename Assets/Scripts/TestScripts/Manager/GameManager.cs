@@ -5,7 +5,7 @@ using Com.LuisPedroFonseca.ProCamera2D;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
-
+using System.Linq;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -99,15 +99,28 @@ public partial class GameManager : MonoBehaviour
         Application.targetFrameRate = targetFrame;
     }
 
+    // private void Start() => Init();
+
     private void Init()
     {
         var saveData = SystemManager.Instance.saveData;
+        Scene currentActiveScene = SceneManager.GetActiveScene();
 
         if(mapsearchCoroutine == null) mapsearchCoroutine = StartCoroutine(MapSearchStart());
         if(saveData != null && saveData.chapter != SceneManager.GetActiveScene().name) DataReset();
 
-        player = FindFirstObjectByType<Player>();
-        interactionEvent = FindFirstObjectByType<InteractionEvent>();
+        var allPlayerObjs = FindObjectsByType<Player>(FindObjectsSortMode.None);
+        player = allPlayerObjs.FirstOrDefault(p => p.gameObject.scene == currentActiveScene);
+        if (player == null)
+        {
+            Debug.LogError("Active scene does not contain a Player object!");
+            return;
+        }
+
+
+        var allInteractionEvents = FindObjectsByType<InteractionEvent>(FindObjectsSortMode.None);
+        interactionEvent = allInteractionEvents.FirstOrDefault(e => e.gameObject.scene == currentActiveScene);
+        if (interactionEvent == null) Debug.LogWarning("Active scene does not contain an InteractionEvent object!");
 
         var playerScript = player.GetComponent<Player>();
         var playerControllerScript = player.GetComponent<PlayerController>();

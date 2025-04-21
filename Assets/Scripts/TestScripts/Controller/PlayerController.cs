@@ -18,12 +18,11 @@ public class PlayerController : MonoBehaviour, IBaseController
         Move = 1<<9
     }
 
+    private GameManager gameManager;
     private IUnitController unitController;
     [SerializeField] private PlayerControllerMask pcm;
 
     public GameObject playerUI;
-
-    private float resetTimer;
 
     private Action _onDown;
     public Action onDown { get => _onDown; set => throw new NotImplementedException(); }
@@ -37,24 +36,24 @@ public class PlayerController : MonoBehaviour, IBaseController
         _onDown = () => playerUI.SetActive(false);
         _onUp = () => playerUI.SetActive(true);
     }
-    void OnEnable() => resetTimer = 0;
     void OnDestroy() => ((IBaseController)this).RemoveController();
 
     public void Init(PlayerData playerData)
     {
         ((IBaseController)this).AddController();
         pcm = playerData.pcm;
+        gameManager = ServiceLocator.Get<GameManager>();
 
     }
     public PlayerControllerMask DataSet() => pcm;
 
     public void Controller()
     {
-        if(ServiceLocator.Get<GameManager>() == null) return;
+        if(gameManager == null) return;
         bool isKeyDown = false;
 
         // System Control
-        if(Input.GetButtonDown("Cancel")) ServiceLocator.Get<GameManager>().Pause();
+        if(Input.GetButtonDown("Cancel")) gameManager.Pause();
         // if(Input.GetButtonDown("Reload") || Input.GetButton("Reload"))
         // {
         //     resetTimer += Time.unscaledDeltaTime;
@@ -62,7 +61,7 @@ public class PlayerController : MonoBehaviour, IBaseController
         // }
         // else resetTimer = 0;
 
-        if(ServiceLocator.Get<GameManager>().isPaused) return;
+        if(gameManager.isPaused) return;
 
         // Player Control
         if(SystemManager.GetButtonDown("formChange") && KeyControl(PlayerControllerMask.FormChange, ref isKeyDown)) unitController.FormChange();

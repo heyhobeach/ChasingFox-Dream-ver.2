@@ -60,6 +60,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
             playerData = new PlayerData();
             playerData.Init();
             playerData.health = maxHealth;
+            playerData.pcm = (PlayerController.PlayerControllerMask)~0;
             SystemManager.Instance.saveData.playerData = playerData;
         }
         health = playerData.health;
