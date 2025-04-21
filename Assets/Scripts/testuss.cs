@@ -414,7 +414,7 @@ public class UI_DynamicText : MonoBehaviour
             dragGhost.style.position = Position.Absolute; // 절대 위치 사용
             dragGhost.style.opacity = 0.7f; // 반투명하게
             dragGhost.pickingMode = PickingMode.Ignore; // 고스트는 이벤트 받지 않음
-
+            dragGhost.style.fontSize = 25;
             // 초기 위치 설정 
 
 
@@ -422,9 +422,11 @@ public class UI_DynamicText : MonoBehaviour
         }
         Vector2 ghostStartPosition = evt.position; // 스크린/월드 좌표
 
+
         ghostStartPosition = visualElement.WorldToLocal(ghostStartPosition); // 루트 요소 기준 로컬 좌표로 변환
         dragGhost.style.left = ghostStartPosition.x;
         dragGhost.style.top = ghostStartPosition.y;
+        Debug.Log(string.Format("{0} 넓기 {1}높이",dragGhost.style.width,dragGhost.style.height));
         startMousePosition = evt.position;
     }
 
