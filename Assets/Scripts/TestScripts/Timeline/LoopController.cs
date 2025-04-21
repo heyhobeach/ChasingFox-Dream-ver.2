@@ -88,8 +88,14 @@ public class LoopController : MonoBehaviour
 
     public void EndLoop()
     {
+
+        if (!UIManager.isTypingEnd)
+        {
+            UIManager.isTypingEnd = true;
+            return;
+        }
         //backgroundImage.SetActive(false);
-        if (isHold == 2)
+        if (isHold == 2)//hold 부분
         {
             //Debug.Log("isHold");
             isHold = 0;
@@ -228,7 +234,7 @@ public class LoopController : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.anyKeyDown && !(Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow)
+        if (Input.anyKeyDown && !(Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow)//키입력 수정 필요한 부분
                                                                   || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D)))
         {
             //Debug.Log("anyKeyDonw");

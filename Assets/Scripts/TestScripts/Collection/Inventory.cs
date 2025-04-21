@@ -10,11 +10,22 @@ using UnityEngine.UI;
 public class Inventory : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    public class Info:News
+    public class Info//이 부분 의존성 주입으로 수정 예정
     {
+        public News news;
         //public string _name;
         public string context;
+
+        public string[] keywords;
         //public Sprite image;
+        public Info(News news,string context, string[] keywords)
+        {
+            this.news = news;
+            this.news.image = news.image;
+            this.news.image_name = news.image_name;
+            this.context = context;
+            this.keywords = keywords;
+        }
     }
 
     public class News
@@ -24,10 +35,13 @@ public class Inventory : MonoBehaviour
     }
     public  Dictionary<int, Info> invenDic;//static으로 해결은 가능한데
     public Dictionary<int, News> newsDic;//static으로 해결은 가능한데
-    //public Dictionary<int, int> inventory2;
-    // public  event Action<int, Info> OnItemAdded;//static으로 해결은 가능한데
     InventoryScripable invendata;
-    //InventoryScripable newsdata;
+
+    /// <summary>
+    /// 테스트 종료후 삭제하세요, 데이터 미리 넣어서 테스트 하기 용도입니다 추후 인벤토리 저장 기능이 생기면 필요없습니다
+    /// </summary>
+    [SerializeField]
+    private Collection.CollectionScriptorble[] tempcollections;
 
     public int invenCount;
     public int newsCount;
@@ -37,20 +51,26 @@ public class Inventory : MonoBehaviour
         invendata = Resources.Load("Inventory") as InventoryScripable;
         newsDic = new Dictionary<int, News>();
         invenDic = new Dictionary<int, Info>();
-    }
-    public void testFunc1()
-    {
-        Debug.Log("inventory 싱글톤 테스트");
+
+        
+        foreach(var collection in tempcollections)//테스트 이후 삭제하세요 미리 설정한 데이터를 삽입 하는 용입니다 추후 인벤토리 저장 기능이 생기면 필요없습니다
+        {
+            AddInventory(collection);
+        }
     }
 
     private Info SetInfoStruct(Collection.CollectionScriptorble collection)
     {
 
-        Info info=new Info(); 
-        info.image_name = collection._name;
-        info.context = collection._context;
-        info.image = collection.image;
-        Debug.Log(string.Format("{0},{1},{2}", info.image_name, info.context, "collection"));
+        News news = new News
+        {
+            image = collection.image,
+            image_name = collection._name
+        };
+
+
+        Info info=new Info(news,collection._context,collection.keywords);
+        Debug.Log(string.Format("{0},{1},{2}", info.news.image_name, info.context, "collection"));
         return info;
     }
 
@@ -62,17 +82,27 @@ public class Inventory : MonoBehaviour
         Debug.Log(string.Format("{0},{1}", _news.image_name, "news"));
         return _news;
     }
-    public void AddInventory(Collection.CollectionScriptorble collection)
+    public void AddInventory(Collection.CollectionScriptorble collection)//흔적
     {
         Debug.Log("AddInventory");
         if (invendata == null)
         {
+            Debug.LogError("InvendataNull");
             invendata = Resources.Load("Inventory") as InventoryScripable;
-            //inventory = new Dictionary<int, Info>();
         }
+        //CollectionInteractive collectionInteractive = new GameObject("CollectionInteractive").AddComponent<CollectionInteractive>();    
+        //if (collectionInteractive == null)
+        //{
+        //    Debug.Log("collectionInteractive null");
+        //}
+        //else
+        //{
+        //    collectionInteractive.CallCollectionPopup(collection);
+        //}
+ 
+
         if (!invenDic.ContainsKey(collection.id))
         {
-
             if (!collection.is_collect)
             {
                 Debug.Log("수집 하지 않는 수집품");
@@ -80,18 +110,19 @@ public class Inventory : MonoBehaviour
             }
             invenDic.Add(collection.id, SetInfoStruct(collection));
 
-            invendata.inventory = invenDic;
+            invendata.inventory = invenDic;//이 부분은 결국 scriptorble에 저장하기 위함 아닌가? 굳이 필요한가? 구조도 추가가 아닌 덮어쓰기 처럼 보이는데
             invenCount = invendata.inventory.Count;
-            Debug.Log("inventory 흔적 개수" + invendata.inventory.Count);
-            Debug.Log(string.Format("흔적 추가 완료+{0} : {1},{2}",   collection.id, invenDic[collection.id].image_name, invenDic[collection.id].context));
+        }
+        else
+        {
+            Debug.Log("이미 있는 데이터");
         }
     }
-    public void AddNews(Collection.NewsScriptorble collection)
+    public void AddNews(Collection.NewsScriptorble collection)//뉴스
     {
         if (invendata == null)
         {
             invendata = Resources.Load("Inventory") as InventoryScripable;
-            //newsDic = new Dictionary<int, News>();
         }
         else
         {
@@ -99,16 +130,9 @@ public class Inventory : MonoBehaviour
         }
         if (!newsDic.ContainsKey(collection.id))    
         {
-
-            //if (!collection.is_collect)
-            //{
-            //    return;
-            //}
             newsDic.Add(collection.id, SetInfoStruct(collection));
-            invendata.news= newsDic;
+            invendata.news= newsDic;//이 부분은 결국 scriptorble에 저장하기 위함 아닌가? 굳이 필요한가? 구조도 추가가 아닌 덮어쓰기 처럼 보이는데
             newsCount = invendata.news.Count;
-            Debug.Log("inventory 뉴스 개수" + newsDic.Count);
-            Debug.Log(string.Format("뉴스 추가 완료+{0} : {1},{2}", collection.id, invenDic[collection.id].image, invenDic[collection.id].image_name));
         }
     }
 
@@ -131,11 +155,11 @@ public class Inventory : MonoBehaviour
             return null;
         }
     }
-    protected Info GetInfo()
-    {
-        Info info = new Info();
-        return info;
-    }
+    //protected Info GetInfo()//필요없는 부분처럼 보임
+    //{
+    //    Info info = new Info();
+    //    return info;
+    //}
 
 }
 

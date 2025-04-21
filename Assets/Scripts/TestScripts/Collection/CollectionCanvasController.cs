@@ -12,6 +12,8 @@ public class CollectionCanvasController : MonoBehaviour
     public GameObject panel;
     public TMP_Text contentText;
 
+    public GameObject _image;
+
     private void Awake()
     {
         if(Instance == null)
@@ -25,22 +27,27 @@ public class CollectionCanvasController : MonoBehaviour
         panel.SetActive(true);
     }
     public void SetPosition(Vector2 vec)
-
     {
-        //Vector2 _vec = new Vector2(vec.x,vec.y+ypos);
         this.gameObject.transform.localScale = new Vector3(0.01f, 0.01f, this.transform.localScale.z);
         this.gameObject.transform.position = vec;
-        //panel.gameObject.transform.position = vec;
-        //panel.gameObject.transform.localPosition = vec;
     }
 
      public void SetContentText(string text)
     {
         contentText.text = text;
     }
-
      public void PopupEnd()
     {
         panel.SetActive(false);
+        _image.SetActive(false);
+    }
+    public void ImagePopup()
+    {
+        _image.SetActive(true);
+    }
+    public void ImageSetPosition(Vector2 vec)
+    {
+        _image.transform.localScale = new Vector3(0.3f, 0.3f, this.transform.localScale.z);
+        _image.transform.position = vec;
     }
 }

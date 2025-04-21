@@ -133,7 +133,7 @@ public class InteractionEvent : MonoBehaviour
         {
             //base.OnExecute();
             Debug.Log("Skip onExecute테스트");
-            _manager.skipco = _manager.StartCoroutine(_manager.ChoiceTimer(5, true, null));
+            //_manager.skipco = _manager.StartCoroutine(_manager.ChoiceTimer(5, true, null));
             //_uiManger.
         }
     }
@@ -339,7 +339,7 @@ public class InteractionEvent : MonoBehaviour
 
     public void SetSkip(bool skip)
     {
-        // Debug.Log("int setskip");
+        Debug.Log("int setskip");
         isSkip = skip;
     }
     public void SetSkip(Transform tf) { }
@@ -412,6 +412,7 @@ public class InteractionEvent : MonoBehaviour
     }
     public void SetNextContext()
     {
+        Debug.Log("next image");
         //Debug.Log("postcommand");
         CallCommand(ref postcommands);//이후 실행되어야하는 명령어들
         //EditorApplication.isPaused = true;
@@ -459,8 +460,8 @@ public class InteractionEvent : MonoBehaviour
                 if (start == false)
                 {
                     start = true;
-                    choiceTimer = ChoiceTimer(10, start, Timeover);
-                    StartCoroutine(choiceTimer);//선택지 제한시간 부분
+                    //choiceTimer = ChoiceTimer(10, start, Timeover);
+                    //StartCoroutine(choiceTimer);//선택지 제한시간 부분
                 }
             }
 
@@ -783,7 +784,7 @@ public class InteractionEvent : MonoBehaviour
     {
 
 
-        StopCoroutine(choiceTimer);
+        //StopCoroutine(choiceTimer);
         TimelineBranchManager.Instance.TimelineBranch(id);
 
     }

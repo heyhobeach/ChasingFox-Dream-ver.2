@@ -52,17 +52,6 @@ public class UIController : MonoBehaviour//해당 스크립트는 UI를 그리�
     // Update is called once per frame
     void Update()
     {
-        // if (ControllerScript.Instance.b_reload)//만약 재장전 중이라면
-        // {
-        //     _DrawReload();//재장전 그림
-        //     //Debug.Log("그리는중");
-        // }
-        // else
-        // {
-        //     //Debug.Log("그림완");
-        // }
-
-
 
     }
 

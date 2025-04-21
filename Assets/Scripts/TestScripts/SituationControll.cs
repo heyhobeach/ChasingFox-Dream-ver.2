@@ -75,7 +75,7 @@ public class SituationControll : MonoBehaviour
         }
         //scenearr[0].stage_branch["brutal"] = "chp2";// 설명 및 예시 scenearr[0](0chp) 의 brutal 분기는 chp2
 
-        foreach (var i in scenearr)
+        /*foreach (var i in scenearr)//연결 확인용
         {
             Debug.Log(i.sceneName + "설정 완료");
             Debug.Log(string.Format(
@@ -92,7 +92,7 @@ public class SituationControll : MonoBehaviour
             {
                 Debug.Log(i.stage_branch.Count + "count");
             }
-        }
+        }*/
     }
 
     // Update is called once per frame

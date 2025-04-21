@@ -1,0 +1,28 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:appui="Unity.UI.Builder" editor-extension-mode="False">
+    <Style src="project://database/Assets/Scripts/NewUSSFile.uss?fileID=7433441132597879392&amp;guid=3c5ba5d19934de243b83383a82ad9b71&amp;type=3#NewUSSFile" />
+    <ui:VisualElement name="VisualElement" style="height: 100%; width: 100%; align-self: auto; align-content: flex-start; justify-content: flex-start; visibility: visible; display: flex; align-items: flex-start; top: 0; left: 0; flex-direction: row;">
+        <ui:VisualElement name="textContainer" class="diary-center">
+            <ui:ScrollView style="position: absolute; width: 60%; height: 70%; translate: 6% 0; align-self: center; top: 15%;">
+                <ui:VisualElement name="textContainerContent" style="flex-grow: 1; width: 100%; height: auto; align-self: center; position: absolute; top: 15%; translate: 0 0; text-overflow: ellipsis; flex-direction: row;" />
+            </ui:ScrollView>
+        </ui:VisualElement>
+        <ui:VisualElement name="drop-area" style="display: flex;">
+            <ui:Label text="여기에 드롭" class="dropArea" />
+        </ui:VisualElement>
+        <ui:VisualElement name="TracerNotePanel" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; scale: 1 1; left: auto; flex-shrink: 0; flex-direction: row; display: none;" />
+        <ui:VisualElement name="TracerNote" class="test1" style="height: 100%;">
+            <ui:VisualElement name="VisualElement" style="flex-grow: 0; flex-direction: row; width: 100%; height: 32%; flex-basis: auto; padding-top: 0; padding-right: 0; padding-left: 0; padding-bottom: 0; flex-shrink: 0;">
+                <ui:VisualElement name="TracerImage" style="flex-grow: 1; width: 30%; height: 100%; margin-top: 0; margin-bottom: 0; background-image: resource(&apos;illustration/ally1_normal_1&apos;); margin-right: 0; margin-left: 0; background-repeat: no-repeat no-repeat; align-self: auto; -unity-background-scale-mode: stretch-to-fill; padding-top: 0;" />
+                <ui:VisualElement name="TracerTitle" style="flex-grow: 1; position: relative; width: 70%; height: 100%; align-self: center; padding-top: 2%; padding-left: 8.6%;" />
+            </ui:VisualElement>
+            <ui:ScrollView name="ScrollView" style="flex-shrink: 1; flex-grow: 1; width: 100%; padding: 0;">
+                <ui:VisualElement name="TracerContent" style="flex-grow: 1; width: 100%; height: auto; position: relative; align-self: flex-start; left: auto; flex-shrink: 1; translate: 0 0; padding: 3% 15% 10% 8%; flex-direction: column; white-space: normal; display: flex;" />
+            </ui:ScrollView>
+            <ui:VisualElement enabled="true" name="button_parent" style="flex-grow: 1; position: absolute; width: 130%; height: 10%; align-content: flex-start; justify-content: space-between; top: 80%; align-self: center; padding-right: 5%; flex-direction: row; display: flex;">
+                <ui:Button text="Button" name="left_button" style="flex-shrink: 0; flex-grow: 0; width: 10%; background-color: rgba(196, 196, 196, 0); background-image: resource(&apos;화살표&apos;); rotate: 180deg;" />
+                <ui:Button text="Button" name="right_button" style="justify-content: flex-start; align-self: stretch; flex-wrap: nowrap; right: auto; flex-direction: column; flex-shrink: 0; flex-grow: 0; width: 10%; background-image: resource(&apos;화살표&apos;); background-color: rgba(76, 76, 76, 0);" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="textContainerContent" style="flex-grow: 1; width: 60%; height: 70%; align-self: center; position: absolute; top: 15%; translate: 6% 0; text-overflow: ellipsis; flex-direction: row; display: none;" />
+</ui:UXML>
