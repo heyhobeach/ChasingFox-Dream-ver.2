@@ -277,6 +277,11 @@ public class UI_DynamicText : MonoBehaviour
                                 string[] pSplits = p.Split(" ");
                                 foreach(string s in pSplits)
                                 {
+                                    Debug.Log("문장 테스트 " + s+"길이 "+s.Length);
+                                    if (s.Length == 0)
+                                    {
+                                        continue;
+                                    }
                                     TextElement tElement = new TextElement { text = s, name = "TextElement" };
                                     tElement.style.whiteSpace = WhiteSpace.PreWrap;
                                     tElement.AddToClassList("sentence");
@@ -424,9 +429,11 @@ public class UI_DynamicText : MonoBehaviour
 
 
         ghostStartPosition = visualElement.WorldToLocal(ghostStartPosition); // 루트 요소 기준 로컬 좌표로 변환
+        dragGhost.style.translate = new Translate(Length.Percent(-50), Length.Percent(-50));//가운데 정렬
         dragGhost.style.left = ghostStartPosition.x;
         dragGhost.style.top = ghostStartPosition.y;
-        Debug.Log(string.Format("{0} 넓기 {1}높이",dragGhost.style.width,dragGhost.style.height));
+
+        Debug.Log(string.Format("{0} 넓기 {1}높이", dragGhost.layout.width,dragGhost.layout.height));
         startMousePosition = evt.position;
     }
 
