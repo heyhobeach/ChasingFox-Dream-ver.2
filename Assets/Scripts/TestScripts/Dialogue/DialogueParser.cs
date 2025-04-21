@@ -14,7 +14,7 @@ public class DialogueParser : MonoBehaviour
     string SPLIT_RE = @",(?=(?:[^""]*""[^""]*"")*(?![^""]*""))";//정규식 from chat gpt
                                                                 // string SPLIT_COMMAND_PASER = @"[""!,]";//명령어 분리 정규식
                                                                 // string SPLIT_NUM = @"([^1-9]{1,})";//공백 분리 정규식
-    int id, Chapter, C_name, string_kr, command, image_name, dir, problem;
+    int id, Chapter, C_name, string_kr, command, image_name, dir, problem, correct_answer;
     string[] row;
     //string[] command;
     string[] testarr;
@@ -56,7 +56,7 @@ public class DialogueParser : MonoBehaviour
             Debug.Log("내용" + i);
         }
 
-        string[] category = { "string_kr", "Chapter", "C_name", "id", "command", "image_name", "dir" , "problem" };
+        string[] category = { "string_kr", "Chapter", "C_name", "id", "command", "image_name", "dir" , "problem", "correct_answer" };
         int index = 0;
         foreach (string item in category)
         {
@@ -89,7 +89,9 @@ public class DialogueParser : MonoBehaviour
                 case "problem":
                     problem= temp;
                     break;
-
+                case "correct_answer":
+                    correct_answer= temp;
+                    break;
             }
             //bool a=exists?true:false;
             //Debug.Log($"{row[1]} - Find {item}: {(exists ? "Exists" : "Not Found")}");
@@ -129,6 +131,7 @@ public class DialogueParser : MonoBehaviour
 
             List<string> contextList = new List<string>();
             List<string> problemList = new List<string>();
+            List<string> answerList = new List<string>();
             
             do//동일 id에서 대화 창 변경 한 경우 표시
             {
@@ -142,6 +145,10 @@ public class DialogueParser : MonoBehaviour
                         Debug.Log("problem not null and problem number is " + this.problem);
                         Debug.Log("problem add" + row[this.problem]);
                         problemList.Add(row[this.problem]);
+                    }
+                    if (this.correct_answer != -1)
+                    {
+                        answerList.Add(row[this.correct_answer]);
                     }
 
                 }catch(Exception e)
@@ -179,6 +186,7 @@ public class DialogueParser : MonoBehaviour
             }
             dialogue.context = contextList.ToArray();
             dialogue.problem = problemList.ToArray();
+            dialogue.correct_answer = answerList.ToArray();
 
             dialoguesList.Add(dialogue); //대화 내용 리스트에 삽입
             if (isEnd)
