@@ -29,6 +29,7 @@ public class UI_DynamicText : MonoBehaviour
     VisualElement diary;
 
     VisualElement drop_area;
+    string dragGhostName = "";
 
     private List<int> info_keys = new List<int>();
     bool is_drag = false;
@@ -263,6 +264,7 @@ public class UI_DynamicText : MonoBehaviour
                                         var querylabel = dragGhost.Query<TextElement>().Build();
                                         //querylabel.First().text//오브젝트 내용 적혀있음
                                         Debug.Log("문제 위치에 놓았습니다 내용 =>" + querylabel.First().text);
+                                        underbarElement.text=querylabel.First().text;   
                                     }
                                 });
                                 //textelement = underbarElement;
@@ -404,7 +406,7 @@ public class UI_DynamicText : MonoBehaviour
         //evt.
         if (dragGhost == null)//고스트( 오브젝트 생성)
         {
-            dragGhost = new Label("visualElement 고스트");
+            dragGhost = new Label(dragGhostName);
             dragGhost.style.fontSize = visualElement.resolvedStyle.fontSize;
             dragGhost.style.color = UnityEngine.Color.red;
             dragGhost.style.unityFont = visualElement.resolvedStyle.unityFont;
@@ -481,7 +483,11 @@ public class UI_DynamicText : MonoBehaviour
                 lineContainer.Add(textelement);
                 if (check)
                 {
-                    textelement.RegisterCallback<PointerDownEvent>(evt => { is_sentence = true; });
+                    
+                    textelement.RegisterCallback<PointerDownEvent>(evt => { 
+                        is_sentence = true;
+                        dragGhostName = keys[0];
+                    });//여기에 문구 변경
                     textelement.RegisterCallback<PointerMoveEvent>(evt => { //Debug.Log("label 드래그 확인 문구");
                                                                             });
                     textelement.RegisterCallback<PointerUpEvent>(evt => { //Debug.Log("label 클릭 놓은 확인 문구"); 
