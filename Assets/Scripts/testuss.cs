@@ -123,17 +123,17 @@ public class UI_DynamicText : MonoBehaviour
 
 
 
-        drop_area = visualElement.Q<VisualElement>("drop-area");
-
-        drop_area.RegisterCallback<PointerUpEvent>(evt =>
-        {
-            if (is_sentence)
-            {
-                var querylabel = dragGhost.Query<Label>().Build();
-                //querylabel.First().text//오브젝트 내용 적혀있음
-                Debug.Log("테스트 위치에 놓았습니다 내용 =>" + querylabel.First().text);
-            }
-        });
+        //drop_area = visualElement.Q<VisualElement>("drop-area");
+        //
+        //drop_area.RegisterCallback<PointerUpEvent>(evt =>
+        //{
+        //    if (is_sentence)
+        //    {
+        //        var querylabel = dragGhost.Query<Label>().Build();
+        //        //querylabel.First().text//오브젝트 내용 적혀있음
+        //        Debug.Log("테스트 위치에 놓았습니다 내용 =>" + querylabel.First().text);
+        //    }
+        //});
 
         //패널에 함수 등록
         visualElement.RegisterCallback<PointerDownEvent>(OnPointerDown);
@@ -206,7 +206,7 @@ public class UI_DynamicText : MonoBehaviour
                 string contentContext = "";
                 contentContext = dialogues[i].context[rowIndex];
                 string answerText = "";
-                //string[] parts = Regex.Split(dialogues[i].context[rowIndex], @"<br\s*/?>");//나눈 문장들 들어 있음
+                string[] keys = InventoryManager.Instance.GetInfo_(info_keys[i]).keywords;
                 if (dialogues[i].problem.Length > 0)//해당 부분없으면 다른 csv파일상에서 접근시 문제 생김
                 {
                     isProblemCSV = true;
@@ -216,6 +216,7 @@ public class UI_DynamicText : MonoBehaviour
                     }
                     else//문제에 내용있을때
                     {
+                        Debug.Log("문제 부분 작동 " + dialogues[i].problem[rowIndex] + "정답은 " + dialogues[i].correct_answer[rowIndex]);
                         contentContext = dialogues[i].problem[rowIndex];
                         answerText = dialogues[i].correct_answer[rowIndex];
                     }
@@ -226,127 +227,15 @@ public class UI_DynamicText : MonoBehaviour
                     isProblemCSV = false;
                 }
 
-                //Regex.Replace()
-                string[] parts = Regex.Split(contentContext, @"<br\s*/?>");//나눈 문장들 들어 있음
-                string[] keys = InventoryManager.Instance.GetInfo_(info_keys[i]).keywords;
-                List<List<string>> tags = new List<List<string>>();//___으로 변환 되어있는 내용에서 해당 번째가 person인지 destination인지 확인용
-                int iter = 0;
-                foreach (string part in parts)//br기준,사실상 없는거나 마찬가지
+                if (isProblemCSV)
                 {
-                    Debug.Log("part is " + part);
-                    string[] _part;
-
-
-                    if (isProblemCSV)//여기 부분은 추리가 있는 csv부분
-                    {
-                        float estimatedLineHeightInPixels = 50f;
-                        visuallist.style.minHeight = new StyleLength(new Length(estimatedLineHeightInPixels, LengthUnit.Pixel));
-                        Debug.Log("part = " + part);
-                        _part = Regex.Split(part, "(!(?:[a-zA-Z]+))");
-                        MatchCollection matches = Regex.Matches(part, "(!([a-zA-Z]+))");//순서는 여기가 맞음, !XXXX패턴있는거 순서 찾는중
-                        tags.Add(new List<string>());
-                        foreach (var match in matches)
-                        {
-                            Debug.Log(iter + "번째" + "매치된것은" + match.ToString());
-                            tags[0].Add(match.ToString());
-
-                        }
-                        iter++;
-                    }
-                    else
-                    {
-                        _part = part.Split(' ');
-                    }
-                    /// <summary>
-                    /// 문제 ___있는 부분의 가로 열을 담는부분
-                    /// </summary>
-                    VisualElement problemElement = new VisualElement { name = "problemElementline" };
-                    var textelement = new TextElement { text = part, name = "textelement" };
-
-                    foreach (string p in _part)//여기 드래그 관련 내용들은 csv가 아닌 수집품의 내용 관련으로 갈것임 지금 해당내용은 테스트용이라고 생각하는것이 좋음 띄워 쓰기 관련은 인벤토리(수집품) 추리시 발생, 스페이스 기준
-                    {
-                        bool check = (keys.Length > 0 ? part.ContainsAny(keys[0]) : false);
-                        //int a = part.IndexOf(keys[0]);
-                        Debug.Log($"분리 후: [{p}] check[{check}]"); //지금 분리도 안 되는거같은데
-                        if (!isProblemCSV)
-                        {
-                            if (check)
-                            {
-                                textelement.AddToClassList("clickable");
-                                textelement.RegisterCallback<PointerDownEvent>(LoadMestery);
-
-                            }
-                            else
-                            {
-                                textelement.AddToClassList("sentence");
-                            }
-                            visuallist.Add(textelement);
-                        }
-                        else
-                        {
-                            Debug.Log("p =" + p);
-                            if (Regex.IsMatch(p, "(!([a-zA-Z]+))"))
-                            {
-                                string replaceString = Regex.Replace(p, "(!([a-zA-Z]+))", "____");
-                                Debug.Log(string.Format("before = {0} after {1}", p, replaceString));
-                                TextElement underbarElement = new TextElement { text = replaceString, name = "underbarTextElement" };
-                                //underbarElement.style.whiteSpace = WhiteSpace.PreWrap;
-                                underbarElement.AddToClassList("dropArea");
-                                underbarElement.RegisterCallback<PointerUpEvent>(evt =>
-                                {
-                                    if (is_sentence)
-                                    {
-                                        var querylabel = dragGhost.Query<TextElement>().Build();
-                                        //querylabel.First().text//오브젝트 내용 적혀있음
-                                        Debug.Log("문제 위치에 놓았습니다 내용 =>" + querylabel.First().text);
-
-                                        underbarElement.text = querylabel.First().text;
-                                        Debug.Log($"Immediately after update, underbarElement.text: [{underbarElement.text}]");//변경 적용 되어있음
-                                        string linestring = "";
-                                        //problemElement = underbarElement.parent;
-                                        foreach (var line in problemElement.Query<TextElement>().Build().ToList())//지금 정답과 동일해야한다고 생각했는데 정답만 맞추면 되는거 아닌가 싶음
-                                        {
-                                            linestring += line.text;
-                                            //linestring += " ";
-                                            //Debug.Log("정답 확인 중" + line.text);
-                                        }
-                                        Debug.Log("정답 제출 텍스트" + linestring + "정답 :" + answerText);
-                                        List<string> answerList = Regex.Split(answerText, SPLIT_COMMAND_PASER).Where(answer => !string.IsNullOrWhiteSpace(answer)).ToList();//answer=>answer.length>=2 이렇게도 사용 가능
-
-                                        foreach (var answer in answerList)
-                                        {
-                                            Debug.Log("정답 리스트" + answer + "길이" + answer.Length);
-                                        }
-                                    }
-                                });
-                                //textelement = underbarElement;
-                                underbarElement.style.whiteSpace = WhiteSpace.PreWrap;
-                                problemElement.Add(underbarElement);
-                            }
-                            else
-                            {
-                                //띄워쓰기 기준으로 분리 해야함 안 그러면 너무 길어짐
-                                string[] pSplits = p.Split(" ");
-                                foreach (string s in pSplits)
-                                {
-                                    Debug.Log("문장 테스트 " + s + "길이 " + s.Length);
-                                    if (s.Length == 0)
-                                    {
-                                        continue;
-                                    }
-                                    TextElement tElement = new TextElement { text = s, name = "TextElement" };
-                                    tElement.style.whiteSpace = WhiteSpace.PreWrap;
-                                    tElement.AddToClassList("sentence");
-                                    problemElement.Add(tElement);
-                                }
-                            }
-                            problemElement.style.flexDirection = FlexDirection.Row;
-                            problemElement.style.flexWrap = Wrap.Wrap;
-                            visuallist.Add(problemElement);
-                            //textelement.text = temp;    
-                        }
-                    }
+                    SetDairyTextProblem(visuallist, contentContext, keys);
                 }
+                else
+                {
+                    SetDairyTextNormal(visuallist, contentContext, keys);
+                }
+
 
                 //Debug.Log(visuallist.childCount);    
                 textList.Add(visuallist);
@@ -364,6 +253,130 @@ public class UI_DynamicText : MonoBehaviour
         {
             textContainerContent.Add(textList[number]);
         }
+    }
+
+
+    private void SetDairyTextNormal(VisualElement visuallist, string contentContext, string[] keys)
+    {
+        string[] parts = Regex.Split(contentContext, @"<br\s*/?>");//나눈 문장들 들어 있음
+        //string[] keys = InventoryManager.Instance.GetInfo_(info_keys[i]).keywords;
+        List<List<string>> tags = new List<List<string>>();//___으로 변환 되어있는 내용에서 해당 번째가 person인지 destination인지 확인용
+        foreach (string part in parts)//br기준,사실상 없는거나 마찬가지
+        {
+            Debug.Log("part is " + part);
+            string[] _part;
+            _part = part.Split(' ');
+
+
+            var textelement = new TextElement { text = part, name = "textelement" };
+
+            foreach (string p in _part)//여기 드래그 관련 내용들은 csv가 아닌 수집품의 내용 관련으로 갈것임 지금 해당내용은 테스트용이라고 생각하는것이 좋음 띄워 쓰기 관련은 인벤토리(수집품) 추리시 발생, 스페이스 기준
+            {
+                bool check = (keys.Length > 0 ? part.ContainsAny(keys[0]) : false);
+                //int a = part.IndexOf(keys[0]);
+                Debug.Log($"분리 후: [{p}] check[{check}]"); //지금 분리도 안 되는거같은데
+
+                if (check)
+                {
+                    textelement.AddToClassList("clickable");
+                    textelement.RegisterCallback<PointerDownEvent>(LoadMestery);
+
+                }
+                else
+                {
+                    textelement.AddToClassList("sentence");
+                }
+                visuallist.Add(textelement);
+
+
+
+            }
+        }
+
+    }
+    private void SetDairyTextProblem(VisualElement visuallist, string contentContext, string[] keys)
+    {
+        string[] parts = Regex.Split(contentContext, @"<br\s*/?>");//나눈 문장들 들어 있음
+        List<List<string>> tags = new List<List<string>>();//___으로 변환 되어있는 내용에서 해당 번째가 person인지 destination인지 확인용
+        foreach (string part in parts)//br기준,사실상 없는거나 마찬가지
+        {
+            Debug.Log("part is " + part);
+            string[] _part;
+            float estimatedLineHeightInPixels = 50f;
+            visuallist.style.minHeight = new StyleLength(new Length(estimatedLineHeightInPixels, LengthUnit.Pixel));
+            Debug.Log("part = " + part);
+            _part = Regex.Split(part, "(!(?:[a-zA-Z]+))");
+            MatchCollection matches = Regex.Matches(part, "(!([a-zA-Z]+))");//순서는 여기가 맞음, !XXXX패턴있는거 순서 찾는중
+            tags.Add(new List<string>());
+            foreach (var match in matches)
+            {
+                //Debug.Log(iter + "번째" + "매치된것은" + match.ToString());
+                tags[0].Add(match.ToString());
+
+            }
+
+
+            /// <summary>
+            /// 문제 ___있는 부분의 가로 열을 담는부분
+            /// </summary>
+            VisualElement problemElement = new VisualElement { name = "problemElementline" };
+            //var textelement = new TextElement { text = part, name = "textelement" };
+
+            foreach (string p in _part)//여기 드래그 관련 내용들은 csv가 아닌 수집품의 내용 관련으로 갈것임 지금 해당내용은 테스트용이라고 생각하는것이 좋음 띄워 쓰기 관련은 인벤토리(수집품) 추리시 발생, 스페이스 기준
+            {
+                //bool check = (keys.Length > 0 ? part.ContainsAny(keys[0]) : false);
+                //Debug.Log($"분리 후: [{p}] check[{check}]"); //지금 분리도 안 되는거같은데
+
+
+                Debug.Log("p =" + p);
+                if (Regex.IsMatch(p, "(!([a-zA-Z]+))"))
+                {
+                    string replaceString = Regex.Replace(p, "(!([a-zA-Z]+))", "____");
+                    Debug.Log(string.Format("before = {0} after {1}", p, replaceString));
+                    TextElement underbarElement = new TextElement { text = replaceString, name = "underbarTextElement" };
+                    underbarElement.AddToClassList("dropArea");
+                    underbarElement.RegisterCallback<PointerUpEvent>(evt =>
+                    {
+                        if (is_sentence)
+                        {
+                            var querylabel = dragGhost.Query<TextElement>().Build();
+                            Debug.Log("문제 위치에 놓았습니다 내용 =>" + querylabel.First().text);
+
+                            underbarElement.text = querylabel.First().text;
+                            string linestring = "";
+                            foreach (var line in problemElement.Query<TextElement>().Build().ToList())//지금 정답과 동일해야한다고 생각했는데 정답만 맞추면 되는거 아닌가 싶음
+                            {
+                                linestring += line.text;
+                            }
+                            Debug.Log("정답 제출 텍스트" + linestring);
+                        }
+                    });
+                    underbarElement.style.whiteSpace = WhiteSpace.PreWrap;
+                    problemElement.Add(underbarElement);
+                }
+                else
+                {
+                    //띄워쓰기 기준으로 분리 해야함 안 그러면 너무 길어짐
+                    string[] pSplits = p.Split(" ");
+                    foreach (string s in pSplits)
+                    {
+                        Debug.Log("문장 테스트 " + s + "길이 " + s.Length);
+                        if (s.Length == 0)
+                        {
+                            continue;
+                        }
+                        TextElement tElement = new TextElement { text = s, name = "TextElement" };
+                        tElement.style.whiteSpace = WhiteSpace.PreWrap;
+                        tElement.AddToClassList("sentence");
+                        problemElement.Add(tElement);
+                    }
+                }
+                problemElement.style.flexDirection = FlexDirection.Row;
+                problemElement.style.flexWrap = Wrap.Wrap;
+                visuallist.Add(problemElement);
+            }
+        }
+
     }
 
 
@@ -533,7 +546,7 @@ public class UI_DynamicText : MonoBehaviour
         }
 
 
-        drop_area.style.color = UnityEngine.Color.white;
+        //drop_area.style.color = UnityEngine.Color.white;
 
         textContainer.style.flexGrow = 0;
 
