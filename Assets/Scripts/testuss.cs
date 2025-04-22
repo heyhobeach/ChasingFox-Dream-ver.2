@@ -42,6 +42,7 @@ public class UI_DynamicText : MonoBehaviour
 
     int num = 0;
 
+    string SPLIT_COMMAND_PASER = @"[""!,]";
     private void OnEnable()
     {
 
@@ -281,7 +282,13 @@ public class UI_DynamicText : MonoBehaviour
                                             //linestring += " ";
                                             //Debug.Log("정답 확인 중" + line.text);
                                         }
-                                        Debug.Log("정답 제출 텍스트" + linestring);
+                                        Debug.Log("정답 제출 텍스트" + linestring+"정답 :"+answerText);
+                                        List<string> answerList = Regex.Split(answerText, SPLIT_COMMAND_PASER).Where(answer=>!string.IsNullOrWhiteSpace(answer)).ToList();//answer=>answer.length>=2 이렇게도 사용 가능
+
+                                        foreach (var answer in answerList)
+                                        {
+                                            Debug.Log("정답 리스트" + answer+"길이"+answer.Length);
+                                        }
                                     }
                                 });
                                 //textelement = underbarElement;
