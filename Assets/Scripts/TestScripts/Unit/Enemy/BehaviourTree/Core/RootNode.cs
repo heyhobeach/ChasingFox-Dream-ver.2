@@ -10,7 +10,7 @@ namespace BehaviourTree
 {
     public class RootNode : BehaviourNode
     {
-        [DisableInspector] public BehaviourNode child;
+        [DisableInInspector] public BehaviourNode child;
 
         protected override void OnEnd() {}
 

@@ -41,7 +41,6 @@ public class PopupManager : MonoBehaviour
     public void DeathPop()
     {
         var temp = deathPopup.GetComponent<TempDeathPopup>();
-        temp.info = "RETURN TO MEMORIES";
         temp.unityEvent.RemoveAllListeners();
         temp.unityEvent.AddListener(() => PageManger.Instance.SceneActive());
         deathPopup.SetActive(true);

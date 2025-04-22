@@ -24,7 +24,7 @@ public class TempDeathPopup : MonoBehaviour, IPointerClickHandler, IBaseControll
 
     void OnEnable()
     {
-        text.text = info;
+        text.text = "RETURN TO MEMORIES";
         ((IBaseController)this).AddController();
     }
     void OnDisable() => ((IBaseController)this).RemoveController();
