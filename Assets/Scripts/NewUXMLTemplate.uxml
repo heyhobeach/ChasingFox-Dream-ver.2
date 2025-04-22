@@ -4,6 +4,10 @@
         <ui:VisualElement name="textContainer" class="diary-center">
             <ui:ScrollView style="position: absolute; width: 60%; height: 70%; translate: 6% 0; align-self: center; top: 15%;">
                 <ui:VisualElement name="textContainerContent" style="flex-grow: 1; width: 100%; height: auto; align-self: center; position: absolute; top: 15%; translate: 0 0; text-overflow: ellipsis; flex-direction: row;" />
+                <ui:VisualElement name="ButtonList" style="flex-grow: 1; display: flex; flex-direction: row; align-items: flex-end; justify-content: space-between; width: 95%; align-self: auto; -unity-text-align: upper-left; margin-top: 135%;">
+                    <ui:Button text="Back" name="Back" />
+                    <ui:Button text="Fine" name="Finsh" style="align-self: auto;" />
+                </ui:VisualElement>
             </ui:ScrollView>
         </ui:VisualElement>
         <ui:VisualElement name="drop-area" style="display: flex;">

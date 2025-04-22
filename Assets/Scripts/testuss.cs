@@ -1,18 +1,15 @@
-using NUnit.Framework;
-using NUnit.Framework.Internal;
-using System;
+
 using System.Collections.Generic;
-using System.Drawing;
+
 using System.Linq;
 using System.Text.RegularExpressions;
-using TMPro;
-using Unity.VisualScripting;
+
 using UnityEditor.Rendering;
+
 using UnityEngine;
-using UnityEngine.Rendering;
+
 using UnityEngine.UIElements;
-using static Inventory;
-using static UnityEditor.Recorder.OutputPath;
+
 
 public class UI_DynamicText : MonoBehaviour
 {
@@ -22,9 +19,31 @@ public class UI_DynamicText : MonoBehaviour
     VisualElement textContainer;//일기
     VisualElement textContainerContent;//일기의 내용을 담고 있음
 
-    VisualElement button_parent;//버튼들을 담고있는 객체
-    Button left_button;
-    Button right_button;
+    /// <summary>
+    /// 버튼들을 담고있는 객체
+    /// </summary>
+    VisualElement inven_button_parent;
+    /// <summary>
+    /// inven 버튼 좌
+    /// </summary>
+    Button inven_left_button;
+    /// <summary>
+    /// inven 버튼 우
+    /// </summary>
+    Button inven_right_button;
+
+    /// <summary>
+    /// 일기 부분 버튼 담는 객체
+    /// </summary>
+    VisualElement diary_button_parent;
+    /// <summary>
+    /// 일기 부분 버튼 왼쪽
+    /// </summary>
+    Button diary_button_back;
+    /// <summary>
+    /// 일기 부분 버튼 오른쪽
+    /// </summary>
+    Button diary_button_finsh;
 
 
     VisualElement diary;
@@ -75,12 +94,9 @@ public class UI_DynamicText : MonoBehaviour
         textContainerContent = root.Q<VisualElement>("textContainerContent");
         visualElement.Add(diary);
 
-        button_parent = root.Q<VisualElement>("button_parent");
-        left_button = root.Q<Button>("left_button");
-        right_button = root.Q<Button>("right_button");
-        left_button.clickable.clicked += LeftButtonEvent;
-        right_button.clickable.clicked += RightButtonEvent;
-        button_parent.visible = false;
+
+        ButtonSet(root);
+
 
         var text1 = new TextElement { text = "클릭 이벤트 가능한 문장 1 ", name = "sentence1" };
         var clickableText = new TextElement { text = "클릭 이벤트 가능한 문장 2", name = "clickableWord" };
@@ -89,7 +105,7 @@ public class UI_DynamicText : MonoBehaviour
         // 클릭 이벤트 추가
         List<TextElement> textList = new List<TextElement>();//이벤트가 들어가야하는 내용들
         textList.Add(text1); textList.Add(text2); textList.Add(clickableText);
-        SetDiaryText(ref textContainer,StartEvent("테스트파일2"));
+        SetDiaryText(ref textContainer, StartEvent("테스트파일2"));
         //ui toolkit에서 제공하는 함수로 이벤트 등록에 사용됨
         foreach (var text in textList)
         {
@@ -108,7 +124,7 @@ public class UI_DynamicText : MonoBehaviour
 
 
         drop_area = visualElement.Q<VisualElement>("drop-area");
-        
+
         drop_area.RegisterCallback<PointerUpEvent>(evt =>
         {
             if (is_sentence)
@@ -148,29 +164,47 @@ public class UI_DynamicText : MonoBehaviour
 
     }
 
-    private void Clickable_clicked()
+    private void ButtonSet(VisualElement root)
     {
-        throw new NotImplementedException();
+        inven_button_parent = root.Q<VisualElement>("button_parent");
+        inven_left_button = root.Q<Button>("left_button");
+        inven_right_button = root.Q<Button>("right_button");
+        inven_left_button.clickable.clicked += InvenLeftButtonEvent;
+        inven_right_button.clickable.clicked += InvenRightButtonEvent;
+        inven_button_parent.visible = false;
+
+        diary_button_parent = root.Q<VisualElement>("ButtonList");
+        diary_button_back = root.Q<Button>("Back");
+        diary_button_finsh = root.Q<Button>("Finsh");
+        diary_button_back.clickable.clicked += DiaryBackButtonEvent;
+        diary_button_finsh.clickable.clicked += DiaryFinishButtonEvent;
+        diary_button_parent.visible = false;
     }
+
+    private void DiaryFinishButtonEvent()
+    {
+        Debug.Log("일기 finish");
+    }
+
+    private void DiaryBackButtonEvent()
+    {
+        Debug.Log("일기 back 버튼");
+    }
+
+
 
     private void SetDiaryText(ref VisualElement textContainer, Dialogue[] dialogues)//diary csv (현재는 테스트파일2) 데이터를 가져와서 사용하는 부분
     {
         List<VisualElement> textList = new List<VisualElement>();
-        //Dialogue[] dialogues = StartEvent(fileName);
-
-
-
         VisualElement visuallist = new VisualElement();
         visuallist.style.flexWrap = Wrap.Wrap;
-        //int num = 0;//사용안되고 있다고 나옴 아마 위에 새로 선언한 num변수 때문인듯?
         bool isProblemCSV = false;
         for (int i = 0; i < dialogues.Length; i++)
         {
-
-            for(int rowIndex = 0; rowIndex < dialogues[i].context.Length; rowIndex++)
+            for (int rowIndex = 0; rowIndex < dialogues[i].context.Length; rowIndex++)
             {
                 string contentContext = "";
-                contentContext=dialogues[i].context[rowIndex];
+                contentContext = dialogues[i].context[rowIndex];
                 string answerText = "";
                 //string[] parts = Regex.Split(dialogues[i].context[rowIndex], @"<br\s*/?>");//나눈 문장들 들어 있음
                 if (dialogues[i].problem.Length > 0)//해당 부분없으면 다른 csv파일상에서 접근시 문제 생김
@@ -182,7 +216,6 @@ public class UI_DynamicText : MonoBehaviour
                     }
                     else//문제에 내용있을때
                     {
-                        Debug.Log("문제 부분 작동 " + dialogues[i].problem[rowIndex]+"정답은 "+ dialogues[i].correct_answer[rowIndex]);
                         contentContext = dialogues[i].problem[rowIndex];
                         answerText = dialogues[i].correct_answer[rowIndex];
                     }
@@ -200,7 +233,7 @@ public class UI_DynamicText : MonoBehaviour
                 int iter = 0;
                 foreach (string part in parts)//br기준,사실상 없는거나 마찬가지
                 {
-                    Debug.Log("part is "+part);
+                    Debug.Log("part is " + part);
                     string[] _part;
 
 
@@ -211,12 +244,12 @@ public class UI_DynamicText : MonoBehaviour
                         Debug.Log("part = " + part);
                         _part = Regex.Split(part, "(!(?:[a-zA-Z]+))");
                         MatchCollection matches = Regex.Matches(part, "(!([a-zA-Z]+))");//순서는 여기가 맞음, !XXXX패턴있는거 순서 찾는중
-                        tags.Add(new List<string>());   
+                        tags.Add(new List<string>());
                         foreach (var match in matches)
                         {
                             Debug.Log(iter + "번째" + "매치된것은" + match.ToString());
                             tags[0].Add(match.ToString());
-         
+
                         }
                         iter++;
                     }
@@ -227,7 +260,7 @@ public class UI_DynamicText : MonoBehaviour
                     /// <summary>
                     /// 문제 ___있는 부분의 가로 열을 담는부분
                     /// </summary>
-                    VisualElement problemElement = new VisualElement { name="problemElementline"};
+                    VisualElement problemElement = new VisualElement { name = "problemElementline" };
                     var textelement = new TextElement { text = part, name = "textelement" };
 
                     foreach (string p in _part)//여기 드래그 관련 내용들은 csv가 아닌 수집품의 내용 관련으로 갈것임 지금 해당내용은 테스트용이라고 생각하는것이 좋음 띄워 쓰기 관련은 인벤토리(수집품) 추리시 발생, 스페이스 기준
@@ -252,42 +285,37 @@ public class UI_DynamicText : MonoBehaviour
                         else
                         {
                             Debug.Log("p =" + p);
-                            //string temp = Regex.Replace(p, "(!([a-zA-Z]+))", "_____");
-                            //Debug.Log("temp = " + temp);
-                            //string[] tempArray = Regex.Split(temp, "_____");
-                            if(Regex.IsMatch(p, "(!([a-zA-Z]+))"))
+                            if (Regex.IsMatch(p, "(!([a-zA-Z]+))"))
                             {
                                 string replaceString = Regex.Replace(p, "(!([a-zA-Z]+))", "____");
-                                Debug.Log(string.Format("before = {0} after {1}", p,replaceString));
-                                TextElement underbarElement = new TextElement { text = replaceString, name = "underbarTextElement"};
+                                Debug.Log(string.Format("before = {0} after {1}", p, replaceString));
+                                TextElement underbarElement = new TextElement { text = replaceString, name = "underbarTextElement" };
                                 //underbarElement.style.whiteSpace = WhiteSpace.PreWrap;
                                 underbarElement.AddToClassList("dropArea");
                                 underbarElement.RegisterCallback<PointerUpEvent>(evt =>
                                 {
                                     if (is_sentence)
                                     {
-
-
                                         var querylabel = dragGhost.Query<TextElement>().Build();
                                         //querylabel.First().text//오브젝트 내용 적혀있음
                                         Debug.Log("문제 위치에 놓았습니다 내용 =>" + querylabel.First().text);
 
-                                        underbarElement.text=querylabel.First().text;
+                                        underbarElement.text = querylabel.First().text;
                                         Debug.Log($"Immediately after update, underbarElement.text: [{underbarElement.text}]");//변경 적용 되어있음
                                         string linestring = "";
                                         //problemElement = underbarElement.parent;
                                         foreach (var line in problemElement.Query<TextElement>().Build().ToList())//지금 정답과 동일해야한다고 생각했는데 정답만 맞추면 되는거 아닌가 싶음
                                         {
-                                            linestring+= line.text;
+                                            linestring += line.text;
                                             //linestring += " ";
                                             //Debug.Log("정답 확인 중" + line.text);
                                         }
-                                        Debug.Log("정답 제출 텍스트" + linestring+"정답 :"+answerText);
-                                        List<string> answerList = Regex.Split(answerText, SPLIT_COMMAND_PASER).Where(answer=>!string.IsNullOrWhiteSpace(answer)).ToList();//answer=>answer.length>=2 이렇게도 사용 가능
+                                        Debug.Log("정답 제출 텍스트" + linestring + "정답 :" + answerText);
+                                        List<string> answerList = Regex.Split(answerText, SPLIT_COMMAND_PASER).Where(answer => !string.IsNullOrWhiteSpace(answer)).ToList();//answer=>answer.length>=2 이렇게도 사용 가능
 
                                         foreach (var answer in answerList)
                                         {
-                                            Debug.Log("정답 리스트" + answer+"길이"+answer.Length);
+                                            Debug.Log("정답 리스트" + answer + "길이" + answer.Length);
                                         }
                                     }
                                 });
@@ -299,9 +327,9 @@ public class UI_DynamicText : MonoBehaviour
                             {
                                 //띄워쓰기 기준으로 분리 해야함 안 그러면 너무 길어짐
                                 string[] pSplits = p.Split(" ");
-                                foreach(string s in pSplits)
+                                foreach (string s in pSplits)
                                 {
-                                    Debug.Log("문장 테스트 " + s+"길이 "+s.Length);
+                                    Debug.Log("문장 테스트 " + s + "길이 " + s.Length);
                                     if (s.Length == 0)
                                     {
                                         continue;
@@ -309,45 +337,15 @@ public class UI_DynamicText : MonoBehaviour
                                     TextElement tElement = new TextElement { text = s, name = "TextElement" };
                                     tElement.style.whiteSpace = WhiteSpace.PreWrap;
                                     tElement.AddToClassList("sentence");
-                                    //textelement.text = p;
-                                    //tElement.style.whiteSpace = WhiteSpace.PreWrap;
                                     problemElement.Add(tElement);
                                 }
-                                //TextElement tElement = new TextElement { text = p, name = "TextElement" };
-                                //tElement.AddToClassList("sentence");
-                                ////textelement.text = p;
-                                ////tElement.style.whiteSpace = WhiteSpace.PreWrap;
-                                //problemElement.Add(tElement);
                             }
-
-                   
-
-
                             problemElement.style.flexDirection = FlexDirection.Row;
                             problemElement.style.flexWrap = Wrap.Wrap;
                             visuallist.Add(problemElement);
                             //textelement.text = temp;    
                         }
-
-
                     }
-
-                    //Debug.Log("text = " + textelement.text);
-                    //
-                    //textelement.style.width = Length.Percent(100);
-                }
-
-                int first = 0;
-                foreach(var tag in tags)
-                {
-                    int second = 0;
-
-                    foreach (var text in tag)
-                    {
-                        Debug.Log(string.Format("{0} {1}tag 내용 = {2}",first,second,text) );
-                        second++;
-                    }
-                    first++;
                 }
 
                 //Debug.Log(visuallist.childCount);    
@@ -362,13 +360,8 @@ public class UI_DynamicText : MonoBehaviour
                 visuallist = new VisualElement();
             }
         }
-        //Debug.Log("textlist count is " + textList.Count);//textelement개수 확인용
-        for(int number = 0; number < textList.Count; number++)
+        for (int number = 0; number < textList.Count; number++)
         {
-            //if (number == 0)
-            //{
-            //    textList[number].Q<TextElement>().text = "가장 처음입니다 테스트용입니다";//이런식으로 변경
-            //}
             textContainerContent.Add(textList[number]);
         }
     }
@@ -392,7 +385,7 @@ public class UI_DynamicText : MonoBehaviour
         List<Dialogue> templist = new List<Dialogue>();
         foreach (var i in info_keys)//현재 가지고 있는 키에서 문자를 받을수있음
         {
-            bool check=csv_id_list.Contains(i);
+            bool check = csv_id_list.Contains(i);
             if (!check)
             {
                 Debug.Log("스크립트에 키 값이 없음 continue");
@@ -473,11 +466,12 @@ public class UI_DynamicText : MonoBehaviour
         SetDiaryText(ref textContainer, StartEvent("다이어리 내용"));
 
 
-    } 
+    }
 
     private void MesterySystem()
     {
-        button_parent.visible = true;
+        inven_button_parent.visible = true;
+        diary_button_parent.visible = true;
         var root = GetComponent<UIDocument>().rootVisualElement;
         var panel = root.Q<VisualElement>("TracerNotePanel");//사용안함
         panel.style.scale = new Vector2(1, 1);
@@ -515,14 +509,17 @@ public class UI_DynamicText : MonoBehaviour
                 lineContainer.Add(textelement);
                 if (check)
                 {
-                    
-                    textelement.RegisterCallback<PointerDownEvent>(evt => { 
+
+                    textelement.RegisterCallback<PointerDownEvent>(evt =>
+                    {
                         is_sentence = true;
                         dragGhostName = keys[0];
                     });//여기에 문구 변경
-                    textelement.RegisterCallback<PointerMoveEvent>(evt => { //Debug.Log("label 드래그 확인 문구");
-                                                                            });
-                    textelement.RegisterCallback<PointerUpEvent>(evt => { //Debug.Log("label 클릭 놓은 확인 문구"); 
+                    textelement.RegisterCallback<PointerMoveEvent>(evt =>
+                    { //Debug.Log("label 드래그 확인 문구");
+                    });
+                    textelement.RegisterCallback<PointerUpEvent>(evt =>
+                    { //Debug.Log("label 클릭 놓은 확인 문구"); 
                     });
                     textelement.AddToClassList("draggable");
                 }
@@ -545,7 +542,7 @@ public class UI_DynamicText : MonoBehaviour
         tracer.AddToClassList("test2-2");
     }
 
-    public void LeftButtonEvent()
+    public void InvenLeftButtonEvent()
     {
         num--;
         if (num < 0)
@@ -556,7 +553,7 @@ public class UI_DynamicText : MonoBehaviour
         Debug.Log("왼쪽 버튼 눌림");
     }
 
-    public void RightButtonEvent()
+    public void InvenRightButtonEvent()
     {
         num++;
         if (inventoryScripable.inventory.Count <= num)
