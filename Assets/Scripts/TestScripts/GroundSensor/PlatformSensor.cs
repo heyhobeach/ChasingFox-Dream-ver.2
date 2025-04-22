@@ -14,7 +14,7 @@ public class PlatformSensor : MonoBehaviour
     Vector2[] groundPoints = new Vector2[2];
     Vector2[] onPlaotformPoints = new Vector2[2];
 
-    [DisableInspector] public PlatformScript currentPlatform;
+    [DisableInInspector] public PlatformScript currentPlatform;
     public bool onPlatform;
     public Vector2 normal = Vector2.up;
 

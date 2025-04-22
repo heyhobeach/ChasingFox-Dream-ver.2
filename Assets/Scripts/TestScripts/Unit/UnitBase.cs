@@ -273,7 +273,9 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         }
     }
 
-    public void SetUnitState(UnitState unitState)
+    [VisibleEnum(typeof(UnitState))]
+    public void SetUnitState(int unitState) => SetUnitState(unitState);
+    private void SetUnitState(UnitState unitState)
     {
         switch(unitState)
         {

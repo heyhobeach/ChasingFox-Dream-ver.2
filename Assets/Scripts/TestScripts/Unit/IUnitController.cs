@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 // 유닛의 상태를 정의하는 열거형
+[Serializable]
 public enum UnitState
 {
     Default,        // 기본

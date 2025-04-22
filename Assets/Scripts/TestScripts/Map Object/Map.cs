@@ -21,7 +21,7 @@ public class Map : MonoBehaviour
     public bool cleared { get => mapData.cleared; set => mapData.cleared = value; }
     public Vector3 position { get => mapData.position; set => mapData.position = value; }
 
-    [DisableInspector] public MapData mapData;
+    [DisableInInspector] public MapData mapData;
 
     public void Reset() => mapData.Init();
     public void Init(MapData.JsonData data) => mapData.Init(data);

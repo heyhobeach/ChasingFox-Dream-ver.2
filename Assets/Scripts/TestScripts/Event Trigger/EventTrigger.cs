@@ -11,7 +11,7 @@ using UnityEditor;
 [RequireComponent(typeof(BoxCollider2D))]
 public class EventTrigger : MonoBehaviour
 {
-    [SerializeField, DisableInspector] private EventTriggerData _eventTriggerData;
+    [SerializeField, DisableInInspector] private EventTriggerData _eventTriggerData;
     public EventTriggerData eventTriggerData
     {
         get

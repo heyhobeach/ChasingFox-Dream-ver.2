@@ -10,7 +10,7 @@ namespace BehaviourTree
 {
     public abstract class DecoratorNode : BehaviourNode
     {
-        [DisableInspector] public BehaviourNode child;
+        [DisableInInspector] public BehaviourNode child;
 
         public override BehaviourNode Clone()
         {

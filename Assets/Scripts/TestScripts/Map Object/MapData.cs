@@ -28,7 +28,7 @@ public class MapData : ScriptableObject
         }
     }
 
-    [DisableInspector] public string guid;
+    [DisableInInspector] public string guid;
     public Vector3 position;
     public bool used;
     public bool cleared;
