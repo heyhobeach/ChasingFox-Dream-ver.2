@@ -137,6 +137,7 @@ public partial class GameManager : MonoBehaviour
             saveData.mapDatas = mapDatas;
         }
         for (int i = 0; i < maps.Count; i++) maps[i].Init(saveData.mapDatas[i]);
+        if(maps[PlayerData.lastRoomIdx].used) player.transform.position = maps[PlayerData.lastRoomIdx].position;
 
         if(saveData.eventTriggerDatas == null || saveData.eventTriggerDatas.Length == 0)
         {
@@ -163,6 +164,7 @@ public partial class GameManager : MonoBehaviour
                 player.transform.position = trigger.targetPosition;
             }
         }
+
 
         ProCamera2D.Instance.CameraTargets.Add(new CameraTarget(){ TargetTransform = player.transform });
         ProCamera2D.Instance.MoveCameraInstantlyToPosition(player.transform.position);
@@ -226,9 +228,9 @@ public partial class GameManager : MonoBehaviour
 
     public void LoadScene(string name, bool active = true)
     {
-        ServiceLocator.Get<UIController>().DialogueCanvasSetFalse();
         SaveData();
         PageManger.Instance.LoadScene(name, active);
+        ServiceLocator.Get<UIController>().DialogueCanvasSetFalse();
     }
     public void RetryScene() => LoadScene(SceneManager.GetActiveScene().name, false);
 
@@ -276,11 +278,11 @@ public partial class GameManager : MonoBehaviour
     }
     public void InventoryEnable()
     {
-        inventoryCanvas?.SetActive(true);
+        if(inventoryCanvas != null) inventoryCanvas.SetActive(true);
     }
 
     public void InventoryDisable()
     {
-        inventoryCanvas?.SetActive(false);
+        if(inventoryCanvas != null) inventoryCanvas.SetActive(false);
     }
 }

@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-[CustomPropertyDrawer(typeof(DisableInspector), true)]
-public class DisableInspectorDrawer : PropertyDrawer
+[CustomPropertyDrawer(typeof(DisableInInspector), true)]
+public class DisableInInspectorDrawer : PropertyDrawer
 {
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
