@@ -26,6 +26,7 @@ public class UI_DynamicText : MonoBehaviour
     Button left_button;
     Button right_button;
 
+
     VisualElement diary;
 
     VisualElement drop_area;
@@ -222,7 +223,10 @@ public class UI_DynamicText : MonoBehaviour
                     {
                         _part = part.Split(' ');
                     }
-                    VisualElement problemElement = new VisualElement();
+                    /// <summary>
+                    /// 문제 ___있는 부분의 가로 열을 담는부분
+                    /// </summary>
+                    VisualElement problemElement = new VisualElement { name="problemElementline"};
                     var textelement = new TextElement { text = part, name = "textelement" };
 
                     foreach (string p in _part)//여기 드래그 관련 내용들은 csv가 아닌 수집품의 내용 관련으로 갈것임 지금 해당내용은 테스트용이라고 생각하는것이 좋음 띄워 쓰기 관련은 인벤토리(수집품) 추리시 발생, 스페이스 기준
@@ -261,10 +265,23 @@ public class UI_DynamicText : MonoBehaviour
                                 {
                                     if (is_sentence)
                                     {
+
+
                                         var querylabel = dragGhost.Query<TextElement>().Build();
                                         //querylabel.First().text//오브젝트 내용 적혀있음
                                         Debug.Log("문제 위치에 놓았습니다 내용 =>" + querylabel.First().text);
-                                        underbarElement.text=querylabel.First().text;   
+
+                                        underbarElement.text=querylabel.First().text;
+                                        Debug.Log($"Immediately after update, underbarElement.text: [{underbarElement.text}]");//변경 적용 되어있음
+                                        string linestring = "";
+                                        //problemElement = underbarElement.parent;
+                                        foreach (var line in problemElement.Query<TextElement>().Build().ToList())//지금 정답과 동일해야한다고 생각했는데 정답만 맞추면 되는거 아닌가 싶음
+                                        {
+                                            linestring+= line.text;
+                                            //linestring += " ";
+                                            //Debug.Log("정답 확인 중" + line.text);
+                                        }
+                                        Debug.Log("정답 제출 텍스트" + linestring);
                                     }
                                 });
                                 //textelement = underbarElement;
@@ -433,7 +450,6 @@ public class UI_DynamicText : MonoBehaviour
         dragGhost.style.left = ghostStartPosition.x;
         dragGhost.style.top = ghostStartPosition.y;
 
-        Debug.Log(string.Format("{0} 넓기 {1}높이", dragGhost.layout.width,dragGhost.layout.height));
         startMousePosition = evt.position;
     }
 
