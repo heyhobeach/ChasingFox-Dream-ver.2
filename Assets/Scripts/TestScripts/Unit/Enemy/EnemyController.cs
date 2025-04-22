@@ -160,6 +160,9 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    [VisibleEnum(typeof(Blackboard.Enemy_State.StateCase))]
+    public void SetState(int i) => blackboard.enemy_state.stateCase = (Blackboard.Enemy_State.StateCase)i;
+
 #if UNITY_EDITOR
     public bool showRange;
     void OnDrawGizmos()
