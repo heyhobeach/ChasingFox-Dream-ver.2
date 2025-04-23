@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections.Generic;
 
 using System.Linq;
@@ -48,7 +49,7 @@ public class UI_DynamicText : MonoBehaviour
 
     VisualElement diary;
 
-    VisualElement drop_area;
+    VisualElement currentProblem;
     string dragGhostName = "";
 
     private List<int> info_keys = new List<int>();
@@ -65,6 +66,8 @@ public class UI_DynamicText : MonoBehaviour
 
     string[] contentContextArray;
     int contentContextArrayIndex = 0;
+    List<string>answerTexts=new List<string>();
+    List<string>originText=new List<string>();
 
     private void OnEnable()
     {
@@ -188,7 +191,48 @@ public class UI_DynamicText : MonoBehaviour
     private void DiaryFinishButtonEvent()//정답 확인
     {
         Debug.Log("일기 finish");
-        RefactoryingTest();
+        List<string>strings = new List<string>();
+        var container = textContainerContent.Query<TextElement>(className: "dropArea");
+        string pattern = @"\s*,\s*";
+        string textWithoutQuotes = answerTexts[contentContextArrayIndex].Replace("\"", "").Trim();
+        string[] answer_strings = Regex.Split(textWithoutQuotes, pattern);
+
+        int index = 0;
+        foreach (var i in container.ToList())
+        {
+            Debug.Log("제출 답변" + i.text+"정답은 "+ answer_strings[index]);
+            index++;
+            strings.Add(i.text.Trim());
+        }
+        if (answerTexts[contentContextArrayIndex].Length <= 1)
+        {
+            contentContextArrayIndex++;
+            SetDiaryTextProblem();
+            return;
+        }
+        bool is_correct = false;
+        if (answer_strings.SequenceEqual(strings.ToArray()))//answerTexts[contentContextArrayIndex].Length<=1
+        {
+            is_correct = true;
+            contentContextArrayIndex++;
+            CorrectRespon();
+        }
+        else
+        {
+            is_correct = false;
+            Debug.Log("오답");
+        }
+
+        //if (is_correct)
+        //{
+        //    contentContextArrayIndex++;
+        //    CorrectRespon();
+        //}
+        //else
+        //{
+        //    Debug.Log("오답");
+        //}
+
     }
 
     private void DiaryBackButtonEvent()
@@ -201,8 +245,7 @@ public class UI_DynamicText : MonoBehaviour
     private void SetDiaryText(ref VisualElement textContainer, Dialogue[] dialogues)//diary csv (현재는 테스트파일2) 데이터를 가져와서 사용하는 부분
     {
         List<VisualElement> textList = new List<VisualElement>();
-        VisualElement visuallist = new VisualElement();
-        visuallist.style.flexWrap = Wrap.Wrap;
+
         bool isProblemCSV = false;
 
         List<string> contentContextList=new List<string>();
@@ -211,22 +254,28 @@ public class UI_DynamicText : MonoBehaviour
         {
             for (int rowIndex = 0; rowIndex < dialogues[i].context.Length; rowIndex++)
             {
+                VisualElement visuallist = new VisualElement { name = "textList" };
+                visuallist.style.flexWrap = Wrap.Wrap;
                 string contentContext = "";
                 contentContext = dialogues[i].context[rowIndex];
-                string answerText = "";
+
+
                 string[] keys = InventoryManager.Instance.GetInfo_(info_keys[i]).keywords;
                 if (dialogues[i].problem.Length > 0)//해당 부분없으면 다른 csv파일상에서 접근시 문제 생김
                 {
                     isProblemCSV = true;
+                    originText.Add(contentContext);
                     if (dialogues[i].problem[rowIndex].Length <= 1)//문제 빈칸일때
                     {
                         //Debug.Log("문제 부분 작동중 이지만 빈칸임" + dialogues[i].problem[rowIndex][0]);
+
+                        answerTexts.Add("");
                     }
                     else//문제에 내용있을때
                     {
                         Debug.Log("문제 부분 작동 " + dialogues[i].problem[rowIndex] + "정답은 " + dialogues[i].correct_answer[rowIndex]);
                         contentContext = dialogues[i].problem[rowIndex];
-                        answerText = dialogues[i].correct_answer[rowIndex];
+                        answerTexts.Add( dialogues[i].correct_answer[rowIndex]);
                     }
 
                 }
@@ -238,7 +287,7 @@ public class UI_DynamicText : MonoBehaviour
                 contentContextList.Add(contentContext);
                 if (isProblemCSV)
                 {
-                    SetDairyTextProblem(visuallist, contentContext, keys);
+                    //SetDairyTextProblem(visuallist, contentContext, keys);
                 }
                 else
                 {
@@ -247,15 +296,17 @@ public class UI_DynamicText : MonoBehaviour
 
 
                 //Debug.Log(visuallist.childCount);    
+
                 textList.Add(visuallist);
 
 
                 visuallist.style.flexDirection = FlexDirection.Column;
                 visuallist.style.width = Length.Percent(100);
                 textList[i].style.flexDirection = FlexDirection.Column;
+                //textList[i].name = "TextList";
                 textContainerContent.style.flexDirection = FlexDirection.Column;
-                var t = visuallist.Query<TextElement>().Build();
-                visuallist = new VisualElement();
+                //var t = visuallist.Query<TextElement>().Build();
+                //visuallist = new VisualElement();
             }
         }
 
@@ -266,16 +317,38 @@ public class UI_DynamicText : MonoBehaviour
         {
             textContainerContent.Add(textList[number]);
         }
+        Debug.Log("answerTexts length " + answerTexts.Count +" , contentContextArray"+contentContextArray.Length);
     }
 
-    private void RefactoryingTest()
+    private void CorrectRespon()
     {
         if (contentContextArrayIndex >= contentContextArray.Length)
         {
             Debug.LogError("버튼 범위 벗어남");
             return;
         }
-        Debug.Log("버튼 확인 " + contentContextArray[contentContextArrayIndex++]);
+
+        VisualElement problem = currentProblem;
+        problem.Clear();
+        currentProblem.Clear();
+        //problem.Clear();
+        string str = originText[contentContextArrayIndex-1];//여기 문자열 교체하는 방식으로
+        string[] pSplits = str.Split(" ");
+        foreach (string s in pSplits)
+        {
+            Debug.Log("문장 테스트 " + s + "길이 " + s.Length);
+            if (s.Length == 0)
+            {
+                continue;
+            }
+            TextElement tElement = new TextElement { text = s, name = "TextElement" };
+            tElement.style.whiteSpace = WhiteSpace.PreWrap;
+            tElement.AddToClassList("sentence");
+            currentProblem.Add(tElement);
+        }
+
+        SetDiaryTextProblem();
+        Debug.Log("버튼 확인 " + contentContextArray[contentContextArrayIndex]);
     }
 
     private void SetDairyTextNormal(VisualElement visuallist, string contentContext, string[] keys)
@@ -316,8 +389,14 @@ public class UI_DynamicText : MonoBehaviour
         }
 
     }
-    private void SetDairyTextProblem(VisualElement visuallist, string contentContext, string[] keys)
+    private void SetDiaryTextProblem()
     {
+
+        VisualElement visuallist = new VisualElement { name = "visuallistLine" };
+       
+        visuallist.style.flexWrap = Wrap.Wrap;
+        //string[] keys = InventoryManager.Instance.GetInfo_(info_keys[contentContextArrayIndex]).keywords;
+        string contentContext = contentContextArray[contentContextArrayIndex];
         string[] parts = Regex.Split(contentContext, @"<br\s*/?>");//나눈 문장들 들어 있음
         List<List<string>> tags = new List<List<string>>();//___으로 변환 되어있는 내용에서 해당 번째가 person인지 destination인지 확인용
         foreach (string part in parts)//br기준,사실상 없는거나 마찬가지
@@ -365,6 +444,7 @@ public class UI_DynamicText : MonoBehaviour
                             Debug.Log("문제 위치에 놓았습니다 내용 =>" + querylabel.First().text);
 
                             underbarElement.text = querylabel.First().text;
+                            currentProblem = underbarElement.parent;
                             string linestring = "";
                             foreach (var line in problemElement.Query<TextElement>().Build().ToList())//지금 정답과 동일해야한다고 생각했는데 정답만 맞추면 되는거 아닌가 싶음
                             {
@@ -398,7 +478,7 @@ public class UI_DynamicText : MonoBehaviour
                 visuallist.Add(problemElement);
             }
         }
-
+        textContainerContent.Add(visuallist);
     }
 
 
@@ -493,6 +573,7 @@ public class UI_DynamicText : MonoBehaviour
         textContainerContent.Clear();
         DiaryContentSet();
         MesterySystem();
+        SetDiaryTextProblem();
     }
     private void DiaryContentSet()
     {
@@ -536,7 +617,21 @@ public class UI_DynamicText : MonoBehaviour
 
             foreach (string p in _part)//여기 드래그 관련 내용들은 csv가 아닌 수집품의 내용 관련으로 갈것임 지금 해당내용은 테스트용이라고 생각하는것이 좋음 띄워 쓰기 관련은 인벤토리(수집품) 추리시 발생
             {
-                bool check = (keys.Length > 0 ? p.ContainsAny(keys[0]) : false);
+                //여기를 수정해야할듯?
+                bool check = false;
+                string key = "";
+                foreach (string k in keys)
+                {
+                    Debug.Log("Key = " + k);
+                    check = (keys.Length > 0 ? p.ContainsAny(k) : false);
+                    if (check)
+                    {
+                        key = k;
+                        break;
+                    }
+
+                }
+
                 string p_str = p + " ";
                 Debug.Log($"분리 후: [{p_str}] check[{check}]"); //지금 분리도 안 되는거같은데
                 var textelement = new TextElement { text = p_str, name = "textelement" };
@@ -548,7 +643,7 @@ public class UI_DynamicText : MonoBehaviour
                     textelement.RegisterCallback<PointerDownEvent>(evt =>
                     {
                         is_sentence = true;
-                        dragGhostName = keys[0];
+                        dragGhostName = key;
                     });//여기에 문구 변경
                     textelement.RegisterCallback<PointerMoveEvent>(evt =>
                     { //Debug.Log("label 드래그 확인 문구");
