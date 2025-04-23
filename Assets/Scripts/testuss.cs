@@ -62,6 +62,10 @@ public class UI_DynamicText : MonoBehaviour
     int num = 0;
 
     string SPLIT_COMMAND_PASER = @"[""!,]";
+
+    string[] contentContextArray;
+    int contentContextArrayIndex = 0;
+
     private void OnEnable()
     {
 
@@ -181,9 +185,10 @@ public class UI_DynamicText : MonoBehaviour
         diary_button_parent.visible = false;
     }
 
-    private void DiaryFinishButtonEvent()
+    private void DiaryFinishButtonEvent()//정답 확인
     {
         Debug.Log("일기 finish");
+        RefactoryingTest();
     }
 
     private void DiaryBackButtonEvent()
@@ -199,6 +204,9 @@ public class UI_DynamicText : MonoBehaviour
         VisualElement visuallist = new VisualElement();
         visuallist.style.flexWrap = Wrap.Wrap;
         bool isProblemCSV = false;
+
+        List<string> contentContextList=new List<string>();
+
         for (int i = 0; i < dialogues.Length; i++)
         {
             for (int rowIndex = 0; rowIndex < dialogues[i].context.Length; rowIndex++)
@@ -227,6 +235,7 @@ public class UI_DynamicText : MonoBehaviour
                     isProblemCSV = false;
                 }
 
+                contentContextList.Add(contentContext);
                 if (isProblemCSV)
                 {
                     SetDairyTextProblem(visuallist, contentContext, keys);
@@ -249,12 +258,25 @@ public class UI_DynamicText : MonoBehaviour
                 visuallist = new VisualElement();
             }
         }
+
+        contentContextArray = contentContextList.ToArray();
+        //RefactoryingTest();
+
         for (int number = 0; number < textList.Count; number++)
         {
             textContainerContent.Add(textList[number]);
         }
     }
 
+    private void RefactoryingTest()
+    {
+        if (contentContextArrayIndex >= contentContextArray.Length)
+        {
+            Debug.LogError("버튼 범위 벗어남");
+            return;
+        }
+        Debug.Log("버튼 확인 " + contentContextArray[contentContextArrayIndex++]);
+    }
 
     private void SetDairyTextNormal(VisualElement visuallist, string contentContext, string[] keys)
     {
