@@ -200,7 +200,7 @@ public class UI_DynamicText : MonoBehaviour
         int index = 0;
         foreach (var i in container.ToList())
         {
-            Debug.Log("제출 답변" + i.text+"정답은 "+ answer_strings[index]);
+            Debug.Log("제출 답변" + i.text+"정답은 "+ answer_strings[index]);//범위 넘어갈때 문제 생김
             index++;
             strings.Add(i.text.Trim());
         }
