@@ -123,10 +123,8 @@ public partial class GameManager : MonoBehaviour
         var playerScript = player.GetComponent<Player>();
         var playerControllerScript = player.GetComponent<PlayerController>();
 
-        if(saveData == null || saveData.chapter != currentActiveScene.name) 
-        {
-            DataReset();
-        }
+        if(saveData == null || saveData.chapter != currentActiveScene.name) DataReset();
+        
         playerScript.Init(saveData.playerData);
         playerControllerScript.Init(saveData.playerData);
         karmaRatio = saveData.karma;
