@@ -211,7 +211,7 @@ public class UI_DynamicText : MonoBehaviour
             return;
         }
         bool is_correct = false;
-        if (answer_strings.SequenceEqual(strings.ToArray()))//answerTexts[contentContextArrayIndex].Length<=1
+        if (answer_strings.SequenceEqual(strings.ToArray()))//정답일경우
         {
             is_correct = true;
             contentContextArrayIndex++;
@@ -222,17 +222,6 @@ public class UI_DynamicText : MonoBehaviour
             is_correct = false;
             Debug.Log("오답");
         }
-
-        //if (is_correct)
-        //{
-        //    contentContextArrayIndex++;
-        //    CorrectRespon();
-        //}
-        //else
-        //{
-        //    Debug.Log("오답");
-        //}
-
     }
 
     private void DiaryBackButtonEvent()
@@ -250,8 +239,10 @@ public class UI_DynamicText : MonoBehaviour
 
         List<string> contentContextList=new List<string>();
 
+        //Debug.Log("dialogue length" + dialogues.Length);
         for (int i = 0; i < dialogues.Length; i++)
         {
+            //Debug.Log("LowIndex = " + dialogues[i].context.Length);
             for (int rowIndex = 0; rowIndex < dialogues[i].context.Length; rowIndex++)
             {
                 VisualElement visuallist = new VisualElement { name = "textList" };
@@ -292,17 +283,19 @@ public class UI_DynamicText : MonoBehaviour
                 else
                 {
                     SetDairyTextNormal(visuallist, contentContext, keys);
+                    textList.Add(visuallist);
+
+                    visuallist.style.flexDirection = FlexDirection.Column;
+                    visuallist.style.width = Length.Percent(100);
+                    textList[i].style.flexDirection = FlexDirection.Column;
                 }
 
 
                 //Debug.Log(visuallist.childCount);    
 
-                textList.Add(visuallist);
+                //textList.Add(visuallist);
 
 
-                visuallist.style.flexDirection = FlexDirection.Column;
-                visuallist.style.width = Length.Percent(100);
-                textList[i].style.flexDirection = FlexDirection.Column;
                 //textList[i].name = "TextList";
                 textContainerContent.style.flexDirection = FlexDirection.Column;
                 //var t = visuallist.Query<TextElement>().Build();
@@ -322,7 +315,7 @@ public class UI_DynamicText : MonoBehaviour
 
     private void CorrectRespon()
     {
-        if (contentContextArrayIndex >= contentContextArray.Length)
+        if (contentContextArrayIndex > contentContextArray.Length)
         {
             Debug.LogError("버튼 범위 벗어남");
             return;
@@ -392,7 +385,7 @@ public class UI_DynamicText : MonoBehaviour
     private void SetDiaryTextProblem()
     {
 
-        VisualElement visuallist = new VisualElement { name = "visuallistLine" };
+        VisualElement visuallist = new VisualElement { name = "visuallistLine" };//얘의 위치를 알아야함
        
         visuallist.style.flexWrap = Wrap.Wrap;
         //string[] keys = InventoryManager.Instance.GetInfo_(info_keys[contentContextArrayIndex]).keywords;
@@ -478,7 +471,33 @@ public class UI_DynamicText : MonoBehaviour
                 visuallist.Add(problemElement);
             }
         }
+        visuallist.RegisterCallback<GeometryChangedEvent>(VisualElementChangeEvent);
         textContainerContent.Add(visuallist);
+
+        Debug.Log(string.Format("visualist position {0} {1} {2} ",visuallist.worldBound.position,visuallist.layout.height,visuallist.worldBound.y));
+        Debug.Log(string.Format("textContainerContent position {0} {1} {2} ", textContainerContent.worldBound.position, textContainerContent.layout.height, textContainerContent.worldBound.y));
+
+    }
+
+    public void VisualElementChangeEvent(GeometryChangedEvent evt)
+    {
+        VisualElement target = evt.target as VisualElement;
+        if (target == null || target.name != "visuallistLine") return; // 직접 만든 visuallist가 맞는지 확인
+
+        // 이 시점에서는 레이아웃 계산이 완료되었습니다.
+        Debug.Log("--- GeometryChangedEvent 발생 ---");
+        Debug.Log($"visuallist worldBound: {target.worldBound}");
+        Debug.Log($"visuallist layout: {target.layout}");
+        Debug.Log($"visuallist worldBound.position: {target.worldBound.position}");
+        Debug.Log($"visuallist layout.position: {target.layout.position}");//이거 기준으로 해야할듯?
+        Debug.Log($"visuallist layout.height: {target.layout.height}");
+
+        // textContainerContent 위치도 필요하다면 여기서 확인 (evt.target.parent 로 접근 가능)
+        if (target.parent != null)
+        {
+            Debug.Log($"textContainerContent worldBound: {target.parent.worldBound}");
+            Debug.Log($"textContainerContent layout: {target.parent.layout}");
+        }
     }
 
 
@@ -509,6 +528,12 @@ public class UI_DynamicText : MonoBehaviour
             templist.Add(trace_dic[i]);//아마 키가 달라서? 
         }
         Dialogue[] dialogues = templist.ToArray();
+        Debug.Log("제목"+title_str+"dialogue length" + dialogues.Length);
+        for (int i = 0; i < dialogues.Length; i++)
+        {
+            Debug.Log("제목" + title_str + "LowIndex = " + dialogues[i].context.Length);
+
+        }
 
         return dialogues;
     }
