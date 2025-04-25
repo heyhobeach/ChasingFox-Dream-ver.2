@@ -107,7 +107,6 @@ public partial class GameManager : MonoBehaviour
         Scene currentActiveScene = SceneManager.GetActiveScene();
 
         if(mapsearchCoroutine == null) mapsearchCoroutine = StartCoroutine(MapSearchStart());
-        if(saveData != null && saveData.chapter != SceneManager.GetActiveScene().name) DataReset();
 
         var allPlayerObjs = FindObjectsByType<Player>(FindObjectsSortMode.None);
         player = allPlayerObjs.FirstOrDefault(p => p.gameObject.scene == currentActiveScene);
@@ -117,17 +116,20 @@ public partial class GameManager : MonoBehaviour
             return;
         }
 
-
         var allInteractionEvents = FindObjectsByType<InteractionEvent>(FindObjectsSortMode.None);
         interactionEvent = allInteractionEvents.FirstOrDefault(e => e.gameObject.scene == currentActiveScene);
         if (interactionEvent == null) Debug.LogWarning("Active scene does not contain an InteractionEvent object!");
 
         var playerScript = player.GetComponent<Player>();
         var playerControllerScript = player.GetComponent<PlayerController>();
+
+        if(saveData == null || saveData.chapter != currentActiveScene.name) 
+        {
+            DataReset();
+        }
         playerScript.Init(saveData.playerData);
         playerControllerScript.Init(saveData.playerData);
         karmaRatio = saveData.karma;
-        PlayerData.lastRoomIdx = saveData.chapterIdx;
 
         for (int i = 0; i < maps.Count; i++) CreateWallRoom(i).enabled = false;
         if(saveData.mapDatas == null || saveData.mapDatas.Length == 0)
@@ -135,8 +137,8 @@ public partial class GameManager : MonoBehaviour
             var mapDatas = new MapData.JsonData[maps.Count];
             for (int i = 0; i < maps.Count; i++) mapDatas[i] = maps[i].mapData;
             saveData.mapDatas = mapDatas;
+            for (int i = 0; i < maps.Count; i++) maps[i].Init(saveData.mapDatas[i]);
         }
-        for (int i = 0; i < maps.Count; i++) maps[i].Init(saveData.mapDatas[i]);
         if(maps[PlayerData.lastRoomIdx].used) player.transform.position = maps[PlayerData.lastRoomIdx].position;
 
         if(saveData.eventTriggerDatas == null || saveData.eventTriggerDatas.Length == 0)
@@ -147,13 +149,9 @@ public partial class GameManager : MonoBehaviour
                 eventTriggerDatas[i] = eventTriggers[i].eventTriggerData;
             }
             saveData.eventTriggerDatas = eventTriggerDatas;
-        }
-        for (int i = 0; i < eventTriggers.Count; i++) 
-        {
-            eventTriggers[i].Init(saveData.eventTriggerDatas[i]);
+            for (int i = 0; i < eventTriggers.Count; i++) eventTriggers[i].Init(saveData.eventTriggerDatas[i]);
         }
 
-        SystemManager.Instance.saveData = saveData;
 
         if (!string.IsNullOrEmpty(saveData.eventTriggerInstanceID))
         {
@@ -226,13 +224,13 @@ public partial class GameManager : MonoBehaviour
         return maps[currentRoomIndex].edgeCollider2D;
     }
 
-    public void LoadScene(string name, bool active = true)
+    public void LoadScene(string name, bool active = true, bool save = true)
     {
-        SaveData();
+        if(save) SaveData();
         PageManger.Instance.LoadScene(name, active);
         ServiceLocator.Get<UIController>().DialogueCanvasSetFalse();
     }
-    public void RetryScene() => LoadScene(SceneManager.GetActiveScene().name, false);
+    public void RetryScene() => LoadScene(SceneManager.GetActiveScene().name, false, false);
 
     public void Pause()
     {
@@ -275,6 +273,7 @@ public partial class GameManager : MonoBehaviour
         PlayerData.lastRoomIdx = 0;
         SystemManager.Instance.saveData.chapterIdx = 0;
         SystemManager.Instance.UpdateDataForEventTrigger(null, 0);
+        SaveData();
     }
     public void InventoryEnable()
     {

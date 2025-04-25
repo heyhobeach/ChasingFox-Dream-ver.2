@@ -35,23 +35,4 @@ public class PlayerData
         brutalGaugeRemaining = playerData.brutalGaugeRemaining;
         pcm = playerData.pcm;
     }
-
-// #if UNITY_EDITOR
-//     void OnEnable()
-//     {
-//         EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
-//     }
-//     void OnDisable()
-//     {
-//         EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
-//     }
-
-//     private void OnPlayModeStateChanged(PlayModeStateChange playModeStateChange)
-//     {
-//         if(playModeStateChange == PlayModeStateChange.ExitingPlayMode)
-//         {
-//             lastRoomIdx = 0;
-//         }
-//     }
-// #endif
 }

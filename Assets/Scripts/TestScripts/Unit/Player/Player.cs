@@ -34,7 +34,6 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     public int health { get => _health; set => _health = value; }
     public bool invalidation { get; set; }
 
-
     /// <summary>
     /// 폼 체인지 딜레이 시간
     /// </summary>
