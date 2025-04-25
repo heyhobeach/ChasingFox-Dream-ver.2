@@ -100,7 +100,6 @@ public class EventTrigger : MonoBehaviour
         GetComponent<BoxCollider2D>().enabled = true;
         gameObject.SetActive(eventTriggerData.isEneable);
     }
-
     private void Init()
     {
         var path = $"ScriptableObject Datas/{SceneManager.GetActiveScene().name}_{gameObject.name}";
@@ -121,8 +120,7 @@ public class EventTrigger : MonoBehaviour
         GetComponent<BoxCollider2D>().isTrigger = true;
         GetComponent<BoxCollider2D>().enabled = false;
     }
-
-    void Awake()
+    private void Awake()
     {
         Init();
     }

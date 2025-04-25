@@ -23,9 +23,15 @@ public partial class GameManager : MonoBehaviour
     {
         if(playModeStateChange == PlayModeStateChange.EnteredPlayMode) 
         {
-            Init();
+            StartCoroutine(DelayedInit());
             PageManger.Instance.aoComplatedAction -= Init;
         }
+    }
+
+    IEnumerator DelayedInit()
+    {
+        yield return new WaitForEndOfFrame();
+        Init();
     }
 #endif
 
@@ -149,7 +155,10 @@ public partial class GameManager : MonoBehaviour
             saveData.eventTriggerDatas = eventTriggerDatas;
             for (int i = 0; i < eventTriggers.Count; i++) eventTriggers[i].Init(saveData.eventTriggerDatas[i]);
         }
-
+        else 
+        {
+            for (int i = 0; i < eventTriggers.Count; i++) eventTriggers[i].GetComponent<BoxCollider2D>().enabled = true;
+        }
 
         if (!string.IsNullOrEmpty(saveData.eventTriggerInstanceID))
         {

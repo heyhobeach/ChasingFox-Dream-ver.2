@@ -35,10 +35,9 @@ public class Map : MonoBehaviour
 
     public void SortTimedEvents() => mapEvents.Sort();
 
-    public void Reset() => mapData.Init();
     public void Init(MapData.JsonData data) => mapData.Init(data);
 
-    void Awake()
+    private void Awake()
     {
         var path = $"ScriptableObject Datas/{SceneManager.GetActiveScene().name}_{gameObject.name}";
         mapData = Resources.Load<MapData>(path);
