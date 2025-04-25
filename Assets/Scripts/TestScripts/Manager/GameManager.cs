@@ -23,15 +23,9 @@ public partial class GameManager : MonoBehaviour
     {
         if(playModeStateChange == PlayModeStateChange.EnteredPlayMode) 
         {
-            StartCoroutine(DelayedInit());
+            Init();
             PageManger.Instance.aoComplatedAction -= Init;
         }
-    }
-
-    IEnumerator DelayedInit()
-    {
-        yield return new WaitForEndOfFrame();
-        Init();
     }
 #endif
 
