@@ -135,7 +135,16 @@ public partial class GameManager : MonoBehaviour
             playerScript.Init(maps[PlayerData.lastRoomIdx].playerData);
             playerControllerScript.Init(maps[PlayerData.lastRoomIdx].playerData);
         }
-        for(int i=0; i<eventTriggers.Count; i++) eventTriggers[i].GetComponent<BoxCollider2D>().enabled = true;
+        for(int i=0; i<eventTriggers.Count; i++)
+        {
+            if(EventTriggerData.currentEventTriggerData != null 
+                && EventTriggerData.currentEventTriggerData.guid == eventTriggers[i].eventTriggerData.guid)
+            {
+                player.transform.position = EventTriggerData.currentEventTriggerData.targetPosition;
+                eventTriggers[i].OnTrigger();
+            }
+            eventTriggers[i].GetComponent<BoxCollider2D>().enabled = true;
+        } 
 
         ProCamera2D.Instance.CameraTargets.Add(new CameraTarget(){ TargetTransform = player.transform });
         ProCamera2D.Instance.MoveCameraInstantlyToPosition(player.transform.position);

@@ -37,7 +37,7 @@ public class EventTrigger : MonoBehaviour
     /// </summary>
     public bool limit;
     public EventList[] eventLists;
-    protected int eventIdx = 0;
+    protected int eventIdx { get => eventTriggerData.eventIdx; set => eventTriggerData.eventIdx = value; }
     public bool used { get => eventTriggerData.used; set => eventTriggerData.used = value; }
     protected bool eventLock;
     private Action action;
