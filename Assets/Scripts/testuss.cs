@@ -386,8 +386,8 @@ public class UI_DynamicText : MonoBehaviour
     {
 
         VisualElement visuallist = new VisualElement { name = "visuallistLine"};//얘의 위치를 알아야함
-        //visuallist.AddToClassList("textOri");
-        //visuallist.AddToClassList("textPos");
+        visuallist.AddToClassList("textOri");
+        visuallist.AddToClassList("textPos");
        
         visuallist.style.flexWrap = Wrap.Wrap;
         //visuallist.style.position = Position.Absolute;//아래에서 relative로 해야함
@@ -479,6 +479,10 @@ public class UI_DynamicText : MonoBehaviour
         visuallist.RegisterCallback<GeometryChangedEvent>(VisualElementChangeEvent);
         textContainerContent.Add(visuallist);
         //visuallist.RemoveFromClassList("textPos"); 
+        visuallist.schedule.Execute(() => {
+            // 여기에 다음 프레임에 하고 싶은 동작
+            visuallist.RemoveFromClassList("textPos");
+        }).ExecuteLater(0);
         Debug.Log(string.Format("visualist position {0} {1} {2} ",visuallist.worldBound.position,visuallist.layout.height,visuallist.worldBound.y));
         Debug.Log(string.Format("textContainerContent position {0} {1} {2} ", textContainerContent.worldBound.position, textContainerContent.layout.height, textContainerContent.worldBound.y));
 
