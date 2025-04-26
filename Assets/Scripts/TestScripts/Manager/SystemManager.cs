@@ -78,8 +78,10 @@ public class SystemManager : MonoBehaviour
         var tempPlayerData = ScriptableObject.CreateInstance<PlayerData>();
         tempPlayerData.Init();
         defaultSaveData = new SaveData{
-            chapter = "Chp0",
+            chapter = "",
             playerData = tempPlayerData,
+            mapData = new MapData.JsonData[0],
+            eventTriggerData = new EventTriggerData.JsonData[0]
         };
 
         resolutions = new Resolution[]{
@@ -270,12 +272,27 @@ public class SystemManager : MonoBehaviour
         }
         return saveDatas[index];
     }
+    [ContextMenu("Delete SaveData")]
+    public void DeleteData() => DeleteData(saveIndex);
     public void DeleteData(int index)
     {
         if(index < 0 || index >= saveDatas.Length) return;
         try { DeleteJson("SaveData" + index + ".sv"); }
         catch (FileNotFoundException e) { Debug.Log("SaveData" + index + " not found.\n" + e); }
         saveDatas[index] = null;
+    }
+    [ContextMenu("Create SaveData")]
+    public void CreateData()
+    {
+        var tempPlayerData = ScriptableObject.CreateInstance<PlayerData>();
+        tempPlayerData.Init();
+        defaultSaveData = new SaveData{
+            chapter = "",
+            playerData = tempPlayerData,
+            mapData = new MapData.JsonData[0],
+            eventTriggerData = new EventTriggerData.JsonData[0]
+        };
+        CreateData(saveIndex);
     }
     public void CreateData(int index)
     {

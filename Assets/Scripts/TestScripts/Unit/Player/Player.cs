@@ -179,13 +179,13 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
 
     public bool Reload(KeyState reloadKey) => changedForm.Reload(reloadKey); 
 
-    void Update()
-    {
-        if(changedForm.GetType() != typeof(Werewolf))
-        {
-            if (changedForm.UnitState == UnitState.Dash) invalidation = true;
-            else invalidation = false;
-        }
+    // void Update()
+    // {
+        // if(changedForm.GetType() != typeof(Werewolf))
+        // {
+        //     if (changedForm.UnitState == UnitState.Dash) invalidation = true;
+        //     else invalidation = false;
+        // }
         // if(changedForm.GetType() == typeof(Werewolf) && ((Werewolf) changedForm).isFormChangeReady) FormChange();
         // if (changedForm.UnitState == UnitState.Dash)
         // {
@@ -199,7 +199,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         // }
 
         //OverlapTest();
-    }
+    // }
 
     public void OverlapTest()//여기 부분 수정필요
     {

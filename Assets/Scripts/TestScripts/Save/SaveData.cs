@@ -12,14 +12,22 @@ public class SaveData
     public string chapter;
 
     public int karma => playerData.karma;
+    public int stageIdx;
+    public string currentEventTriggerDataGuid;
     public PlayerData.JsonData playerData;
+    public MapData.JsonData[] mapData;
+    public EventTriggerData.JsonData[] eventTriggerData;
 
     // TODO : Add inventory data
 
     public void Init(DateTime date, SaveData saveData)
     {
         createdTime = date;
+        stageIdx = saveData.stageIdx;
+        currentEventTriggerDataGuid = saveData.currentEventTriggerDataGuid;
         chapter = saveData.chapter;
         playerData = saveData.playerData;
+        mapData = saveData.mapData;
+        eventTriggerData = saveData.eventTriggerData;
     }
 }
