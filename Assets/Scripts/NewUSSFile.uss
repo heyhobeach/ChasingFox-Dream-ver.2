@@ -6,7 +6,7 @@ VisualElement {
     text-decoration: underline;
     cursor: pointer;
     display: inline;
-    font-size:40px;
+    font-size: 40px;
 }
 
 .clickable:hover {
@@ -20,12 +20,12 @@ VisualElement {
     cursor: pointer;
     display: inline;
     font-size: 40px;
-    padding-right:15px;
+    padding-right: 15px;
 }
 
 .draggable {
     color: red;
-    font-size:40px;
+    font-size: 40px;
 }
 
 #sentence-container Label {
@@ -77,10 +77,21 @@ VisualElement {
 }
 
 .dropArea {
-    color:blue;
+    color: blue;
     text-decoration: underline;
     cursor: pointer;
     display: inline;
     font-size: 40px;
-    padding-right:15px;
+    padding-right: 15px;
+}
+
+.textOri {
+    transition-timing-function: ease-out-cubic;
+    transition-duration: 1s;
+}
+
+.textPos {
+    transition-timing-function: ease-out-cubic;
+    transition-duration: 1s;
+    translate: 0 50px;
 }

@@ -385,9 +385,13 @@ public class UI_DynamicText : MonoBehaviour
     private void SetDiaryTextProblem()
     {
 
-        VisualElement visuallist = new VisualElement { name = "visuallistLine" };//얘의 위치를 알아야함
+        VisualElement visuallist = new VisualElement { name = "visuallistLine"};//얘의 위치를 알아야함
+        //visuallist.AddToClassList("textOri");
+        //visuallist.AddToClassList("textPos");
        
         visuallist.style.flexWrap = Wrap.Wrap;
+        //visuallist.style.position = Position.Absolute;//아래에서 relative로 해야함
+
         //string[] keys = InventoryManager.Instance.GetInfo_(info_keys[contentContextArrayIndex]).keywords;
         string contentContext = contentContextArray[contentContextArrayIndex];
         string[] parts = Regex.Split(contentContext, @"<br\s*/?>");//나눈 문장들 들어 있음
@@ -471,11 +475,14 @@ public class UI_DynamicText : MonoBehaviour
                 visuallist.Add(problemElement);
             }
         }
+        //visuallist.style.translate = new Translate(0, 50);
         visuallist.RegisterCallback<GeometryChangedEvent>(VisualElementChangeEvent);
         textContainerContent.Add(visuallist);
-
+        //visuallist.RemoveFromClassList("textPos"); 
         Debug.Log(string.Format("visualist position {0} {1} {2} ",visuallist.worldBound.position,visuallist.layout.height,visuallist.worldBound.y));
         Debug.Log(string.Format("textContainerContent position {0} {1} {2} ", textContainerContent.worldBound.position, textContainerContent.layout.height, textContainerContent.worldBound.y));
+
+        //visuallist.style.position = Position.Relative;
 
     }
 
