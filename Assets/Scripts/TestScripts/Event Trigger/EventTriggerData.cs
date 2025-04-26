@@ -33,6 +33,8 @@ public class EventTriggerData : ScriptableObject
     public bool isEneable;
     public Vector2 targetPosition;
 
+    public static EventTriggerData currentEventTriggerData = null;
+
     public void Init(bool enabled)
     {
         used = false;

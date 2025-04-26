@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour, IBaseController
     }
     void OnDestroy() => ((IBaseController)this).RemoveController();
 
-    public void Init(PlayerData playerData)
+    public void Init(PlayerData.JsonData playerData)
     {
         ((IBaseController)this).AddController();
         pcm = playerData.pcm;

@@ -494,7 +494,7 @@ public class Human : PlayerUnit, IDoorInteractable
         switch(skileKey)
         {
             case KeyState.KeyDown:
-                CameraManager.Instance.SetState(new(){
+                ServiceLocator.Get<CameraManager>().SetState(new(){
                     maxHorizontalInfluence = 15f,
                     maxVerticalInfluence = 15f,
                     influenceSmoothness = 0.5f,
@@ -502,7 +502,7 @@ public class Human : PlayerUnit, IDoorInteractable
                 });
             break;
             case KeyState.KeyUp:
-                CameraManager.Instance.SetState(cameraState);
+                ServiceLocator.Get<CameraManager>().SetState(cameraState);
             break;
         }
         return base.Skill2(skileKey);

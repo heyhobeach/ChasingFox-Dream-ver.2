@@ -10,16 +10,9 @@ public class SaveData
     public DateTime createdTime;
     
     public string chapter;
-    public int chapterIdx;
 
-    public MapData.JsonData[] mapDatas;
-    public EventTriggerData.JsonData[] eventTriggerDatas;
-
-    public string eventTriggerInstanceID;
-    public int eventIdx;
-
-    public int karma;
-    public PlayerData playerData;
+    public int karma => playerData.karma;
+    public PlayerData.JsonData playerData;
 
     // TODO : Add inventory data
 
@@ -27,12 +20,6 @@ public class SaveData
     {
         createdTime = date;
         chapter = saveData.chapter;
-        chapterIdx = saveData.chapterIdx;
-        mapDatas = saveData.mapDatas;
-        eventTriggerDatas = saveData.eventTriggerDatas;
-        eventTriggerInstanceID = saveData.eventTriggerInstanceID;
-        eventIdx = saveData.eventIdx;
-        karma = saveData.karma;
         playerData = saveData.playerData;
     }
 }

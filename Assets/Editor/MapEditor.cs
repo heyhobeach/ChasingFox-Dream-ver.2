@@ -27,10 +27,9 @@ public class MapEditor : Editor
 
         if (EditorGUI.EndChangeCheck())
         {
-            serializedObject.ApplyModifiedProperties();
             mapScript.SortTimedEvents();
             EditorUtility.SetDirty(mapScript);
-            serializedObject.Update();
         }
+        serializedObject.ApplyModifiedProperties();
     }
 }

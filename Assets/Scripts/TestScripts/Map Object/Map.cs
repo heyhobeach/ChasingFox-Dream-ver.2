@@ -24,17 +24,20 @@ public class Map : MonoBehaviour
     public bool used { get => mapData.used; set => mapData.used = value; }
     public bool cleared { get => mapData.cleared; set => mapData.cleared = value; }
     public Vector3 position { get => mapData.position; set => mapData.position = value; }
+    public PlayerData.JsonData playerData { get => mapData.playerData; set => mapData.playerData = value; }
 
     [DisableInInspector] public MapData mapData;
 
     public float Timelimit = -1f;
-    [DisableInInspector] private float playTime = 0f;
+    [SerializeField, DisableInInspector] private float playTime = 0f;
     public UnityAction timeoutAction;
     public List<MapEvent> mapEvents = new List<MapEvent>();
     private Queue<MapEvent> mapEventQueue;
 
     public void SortTimedEvents() => mapEvents.Sort();
 
+
+    public void DataReset() => mapData.Init();
     public void Init(MapData.JsonData data) => mapData.Init(data);
 
     private void Awake()
@@ -79,8 +82,7 @@ public class Map : MonoBehaviour
         if(enemyCount > 0) edgeCollider2D.enabled = true;
         mapData.used = true;
         mapData.position = pos;
-        SystemManager.Instance.saveData.playerData = ServiceLocator.Get<GameManager>().player.GetComponent<Player>().DataSet();
-        SystemManager.Instance.saveData.playerData.pcm = ServiceLocator.Get<GameManager>().player.GetComponent<PlayerController>().DataSet();
+        mapData.playerData = ServiceLocator.Get<GameManager>().player.GetComponent<Player>().GetJsonData();
         if(Timelimit > 0) await TimeUpdate();
     }
     public void OnEnd()
@@ -101,13 +103,13 @@ public class Map : MonoBehaviour
     
     async Awaitable TimeUpdate()
     {
-        while (!mapData.cleared || playTime < Timelimit)
+        while (!mapData.cleared && playTime < Timelimit)
         {
             await Awaitable.FixedUpdateAsync();
             if(!ServiceLocator.Get<GameManager>().isPaused)
             {
                 playTime += Time.fixedDeltaTime;
-                if(mapEventQueue.Peek().time >= playTime) mapEventQueue.Dequeue().action?.Invoke();
+                if(mapEventQueue.Count > 0 && mapEventQueue.Peek().time >= playTime) mapEventQueue.Dequeue().action?.Invoke();
             }
         }
         if(!mapData.cleared) timeoutAction?.Invoke();

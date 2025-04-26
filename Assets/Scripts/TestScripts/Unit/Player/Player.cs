@@ -5,6 +5,9 @@ using Com.LuisPedroFonseca.ProCamera2D;
 using Damageables;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 [RequireComponent(typeof(PlayerController))]
 /// <summary>
@@ -12,6 +15,7 @@ using UnityEngine;
 /// </summary>
 public class Player : MonoBehaviour, IUnitController, IDamageable
 {
+    [SerializeField, DisableInInspector] private PlayerData playerData;
     /// <summary>
     /// 폼을 저장하는 배열
     /// 0 : 인간, 1 : 늑대인간, 2 : 버서커
@@ -28,10 +32,8 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     public BrutalData brutalData { get => ((Werewolf)forms[1]).brutalData; set => ((Werewolf)forms[1]).brutalData = value; }
     public int currentGauge { get => ((Werewolf)forms[1]).currentGauge; set => ((Werewolf)forms[1]).currentGauge = value; }
 
-    [SerializeField] private int _maxHealth;    //?private아닌가 A : 맞음
-    public int maxHealth { get => _maxHealth; set => _maxHealth = value; }
-    [SerializeField] private int _health;
-    public int health { get => _health; set => _health = value; }
+    public int maxHealth { get => playerData.maxHealth; set => playerData.maxHealth = value; }
+    public int health { get => playerData.health; set => playerData.health = value; }
     public bool invalidation { get; set; }
 
     /// <summary>
@@ -49,23 +51,34 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     /// </summary>
     // [SerializeField] private float bulletTime;
 
-    public void Init(PlayerData playerData = null)
+
+    private void Awake()
+    {
+        var path = $"ScriptableObject Datas/Player Data/playerData";
+        playerData = Resources.Load<PlayerData>(path);
+        if(!playerData)
+        {
+            PlayerData asset = ScriptableObject.CreateInstance<PlayerData>();
+#if UNITY_EDITOR
+            AssetDatabase.CreateAsset(asset, "Assets/Resources/" + path + ".asset");
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+#endif
+            playerData = asset;
+            playerData.Init();
+        }
+    }
+
+    public void Init(PlayerData.JsonData playerData)
     {
         fixedDir = 1;
         invalidation = false;
 
-        if(playerData == null) 
-        {
-            playerData = new PlayerData();
-            playerData.Init();
-            playerData.health = maxHealth;
-            playerData.pcm = (PlayerController.PlayerControllerMask)~0;
-            SystemManager.Instance.saveData.playerData = playerData;
-        }
-        health = playerData.health;
+        this.playerData.Init(playerData);
+
         changedForm = forms[playerData.formIdx];
-        ((Werewolf)forms[1]).brutalData = playerData.brutalData;
-        ((Werewolf)forms[1]).currentGauge = playerData.brutalGaugeRemaining;
+        brutalData = GameManager.GetBrutalData();
+        currentGauge = playerData.brutalGaugeRemaining;
         ((Werewolf)forms[1]).formChangeTest += () => FormChange();
         formChangeDelegate = ToWerewolf;
         ((Werewolf)forms[1]).currentCount = brutalData.isDoubleTime ? 2 : 1;
@@ -76,14 +89,9 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         }
         changedForm.gameObject.SetActive(true);
     }
-    public PlayerData DataSet()
+    public PlayerData.JsonData GetJsonData()
     {
-        PlayerData playerData = new();
-        playerData.health = health;
-        playerData.formIdx = Array.FindIndex(forms, (form) => form == changedForm);
-        playerData.brutalData = ((Werewolf)forms[1]).brutalData;
-        playerData.brutalGaugeRemaining = ((Werewolf)forms[1]).currentGauge;
-
+        playerData.brutalGaugeRemaining = currentGauge;
         return playerData;
     }
 

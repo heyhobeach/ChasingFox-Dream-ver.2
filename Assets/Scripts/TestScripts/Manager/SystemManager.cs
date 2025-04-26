@@ -75,13 +75,11 @@ public class SystemManager : MonoBehaviour
             skill2 = KeyCode.LeftShift,
             retry = KeyCode.R
         };
+        var tempPlayerData = ScriptableObject.CreateInstance<PlayerData>();
+        tempPlayerData.Init();
         defaultSaveData = new SaveData{
             chapter = "Chp0",
-            mapDatas = null,
-            eventTriggerDatas = null,
-            eventTriggerInstanceID = null,
-            eventIdx = 0,
-            karma = 65
+            playerData = tempPlayerData,
         };
 
         resolutions = new Resolution[]{
@@ -288,11 +286,4 @@ public class SystemManager : MonoBehaviour
     }
 
     public SaveData GetData() => saveDatas[saveIndex];
-
-    public void UpdateDataForEventTrigger(string eventTriggerInstanceID, int eventIdx)
-    {
-        if(saveData == null) return;
-        saveData.eventTriggerInstanceID = eventTriggerInstanceID;
-        saveData.eventIdx = eventIdx;
-    }
 }
