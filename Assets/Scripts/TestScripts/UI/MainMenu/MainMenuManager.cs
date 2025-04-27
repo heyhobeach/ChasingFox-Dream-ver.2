@@ -95,8 +95,9 @@ public class MainMenuManager : MonoBehaviour
             SystemManager.Instance.CreateData(idx);
             save = SystemManager.Instance.saveData;
         }
+        PageManger.Instance.LoadScene(save.chapter, false);
         yield return new WaitForSeconds(moveSpeed);
-        PageManger.Instance.LoadScene(save.chapter);
+        PageManger.Instance.SceneActive();
     }
     public void QuitGame() => StartCoroutine(Quit());
     private IEnumerator<WaitForSeconds> Quit()

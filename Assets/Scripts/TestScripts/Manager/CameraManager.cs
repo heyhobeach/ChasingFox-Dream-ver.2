@@ -6,9 +6,6 @@ using UnityEngine.Playables;
 
 public class CameraManager : MonoBehaviour
 {
-    private static CameraManager instance;
-    public static CameraManager Instance { get => instance; }
-
     public struct State
     {
         public float maxHorizontalInfluence;
@@ -34,9 +31,13 @@ public class CameraManager : MonoBehaviour
     public void AddTarget(Transform transform) => ProCamera2D.Instance.AddCameraTarget(transform, 1, 1, 1);
     public void RemoveTarget(Transform transform) => ProCamera2D.Instance.RemoveCameraTarget(transform, 1);
 
+    private void OnDestroy()
+    {
+        ServiceLocator.Unregister(this);
+    }
     void Awake()
     {
-        if(instance == null) instance = this;
+        ServiceLocator.Register(this);
         proCamera2DShake = GetComponent<ProCamera2DShake>();
         proCamera2DPointerInfluence = GetComponent<ProCamera2DPointerInfluence>();
         proCamera2DRooms = GetComponent<ProCamera2DRooms>();

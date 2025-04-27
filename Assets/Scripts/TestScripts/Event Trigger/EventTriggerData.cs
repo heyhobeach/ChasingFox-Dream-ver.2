@@ -14,6 +14,8 @@ public class EventTriggerData : ScriptableObject
     [Serializable]
     public class JsonData
     {
+        public string guid;
+        public int eventIdx;
         public bool used;
         public bool isEneable;
         public Vector2 targetPosition;
@@ -21,6 +23,8 @@ public class EventTriggerData : ScriptableObject
         public static implicit operator JsonData(EventTriggerData data)
         {
             return new JsonData {
+                guid = data.guid,
+                eventIdx = data.eventIdx,
                 used = data.used,
                 isEneable = data.isEneable,
                 targetPosition = data.targetPosition
@@ -29,18 +33,24 @@ public class EventTriggerData : ScriptableObject
     }
 
     [DisableInInspector] public string guid;
+    public int eventIdx;
     public bool used;
     public bool isEneable;
     public Vector2 targetPosition;
 
+    public static EventTriggerData currentEventTriggerData = null;
+
     public void Init(bool enabled)
     {
+        eventIdx = 0;
         used = false;
         isEneable = enabled;
         targetPosition = Vector2.zero;
     }
     public void Init(JsonData eventTriggerData)
     {
+        guid = eventTriggerData.guid;
+        eventIdx = eventTriggerData.eventIdx;
         used = eventTriggerData.used;
         isEneable = eventTriggerData.isEneable;
         targetPosition = eventTriggerData.targetPosition;

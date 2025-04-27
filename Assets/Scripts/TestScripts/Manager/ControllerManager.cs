@@ -25,24 +25,34 @@ public class ControllerManager : MonoBehaviour
             Debug.LogError("controllers not set");
             return;
         }
-        if(controllers.Count > 0 && controllers.Peek() != @base)
+        if(controllers.Count > 0 && controllers.Contains(@base))
         {
-            Stack<IBaseController> temp = new();
-            while(controllers.Count > 0 && !temp.Equals(controllers.Peek())) temp.Push(controllers.Pop());
-            while(temp.Count > 0) controllers.Push(temp.Pop());
+            if(controllers.Peek().Equals(@base))
+            {
+                controllers.Pop();
+                if(controllers.Count > 0) controllers.Peek().onUp?.Invoke();
+            }
+            else
+            {
+                Stack<IBaseController> temp = new();
+                while(controllers.Count > 0 && !temp.Equals(controllers.Peek())) temp.Push(controllers.Pop());
+                if(controllers.Peek().Equals(@base))
+                {
+                    controllers.Pop();
+                    if(controllers.Count > 0) controllers.Peek().onUp?.Invoke();                   
+                }
+                while(temp.Count > 0) controllers.Push(temp.Pop());
+            }
         }
-        if(controllers.Count > 0) 
-        {
-            controllers.Pop();
-        }
-        if(controllers.Count > 0)controllers.Peek().onUp?.Invoke();
     }
 
     private void OnDestroy() => ServiceLocator.Unregister(this);
 
-    private void Awake() => ServiceLocator.Register(this);
-
-    private void Start() => controllers = new();
+    private void Awake()
+    {
+        ServiceLocator.Register(this);
+        controllers = new();
+    }
 
     private void Update()
     {

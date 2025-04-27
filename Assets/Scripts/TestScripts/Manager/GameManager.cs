@@ -6,6 +6,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Linq;
+using UnityEditor.Overlays;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -23,6 +25,7 @@ public partial class GameManager : MonoBehaviour
     {
         if(playModeStateChange == PlayModeStateChange.EnteredPlayMode) 
         {
+            ApplySaveData();
             Init();
             PageManger.Instance.aoComplatedAction -= Init;
         }
@@ -81,11 +84,9 @@ public partial class GameManager : MonoBehaviour
         BehaviourNode.clone.Clear();
         StopAllCoroutines();
         mapsearchCoroutine = null;
-        CameraManager.Instance?.proCamera2DRooms.OnStartedTransition.RemoveListener(MoveNextRoom);
+        ServiceLocator.Get<CameraManager>().proCamera2DRooms.OnStartedTransition.RemoveListener(MoveNextRoom);
         if (isPaused) Pause();
     }
-
-    private void OnApplicationQuit() => SaveData();
 
     private void Awake()
     {
@@ -107,7 +108,6 @@ public partial class GameManager : MonoBehaviour
         Scene currentActiveScene = SceneManager.GetActiveScene();
 
         if(mapsearchCoroutine == null) mapsearchCoroutine = StartCoroutine(MapSearchStart());
-        if(saveData != null && saveData.chapter != SceneManager.GetActiveScene().name) DataReset();
 
         var allPlayerObjs = FindObjectsByType<Player>(FindObjectsSortMode.None);
         player = allPlayerObjs.FirstOrDefault(p => p.gameObject.scene == currentActiveScene);
@@ -117,59 +117,66 @@ public partial class GameManager : MonoBehaviour
             return;
         }
 
-
         var allInteractionEvents = FindObjectsByType<InteractionEvent>(FindObjectsSortMode.None);
         interactionEvent = allInteractionEvents.FirstOrDefault(e => e.gameObject.scene == currentActiveScene);
         if (interactionEvent == null) Debug.LogWarning("Active scene does not contain an InteractionEvent object!");
 
         var playerScript = player.GetComponent<Player>();
         var playerControllerScript = player.GetComponent<PlayerController>();
+
+        karmaRatio = saveData.playerData.karma;
         playerScript.Init(saveData.playerData);
         playerControllerScript.Init(saveData.playerData);
-        karmaRatio = saveData.karma;
-        PlayerData.lastRoomIdx = saveData.chapterIdx;
 
-        for (int i = 0; i < maps.Count; i++) CreateWallRoom(i).enabled = false;
-        if(saveData.mapDatas == null || saveData.mapDatas.Length == 0)
+        for (int i=0; i<maps.Count; i++) CreateWallRoom(i).enabled = false;
+        if(maps[PlayerData.lastRoomIdx].used) 
         {
-            var mapDatas = new MapData.JsonData[maps.Count];
-            for (int i = 0; i < maps.Count; i++) mapDatas[i] = maps[i].mapData;
-            saveData.mapDatas = mapDatas;
+            player.transform.position = maps[PlayerData.lastRoomIdx].position;
+            karmaRatio = maps[PlayerData.lastRoomIdx].playerData.karma;
+            playerScript.Init(maps[PlayerData.lastRoomIdx].playerData);
+            playerControllerScript.Init(maps[PlayerData.lastRoomIdx].playerData);
         }
-        for (int i = 0; i < maps.Count; i++) maps[i].Init(saveData.mapDatas[i]);
-        if(maps[PlayerData.lastRoomIdx].used) player.transform.position = maps[PlayerData.lastRoomIdx].position;
-
-        if(saveData.eventTriggerDatas == null || saveData.eventTriggerDatas.Length == 0)
+        for(int i=0; i<eventTriggers.Count; i++)
         {
-            var eventTriggerDatas = new EventTriggerData.JsonData[eventTriggers.Count];
-            for (int i = 0; i < eventTriggers.Count; i++) 
+            if(EventTriggerData.currentEventTriggerData != null 
+                && EventTriggerData.currentEventTriggerData.guid.Equals(eventTriggers[i].eventTriggerData.guid))
             {
-                eventTriggerDatas[i] = eventTriggers[i].eventTriggerData;
+                player.transform.position = EventTriggerData.currentEventTriggerData.targetPosition;
+                eventTriggers[i].OnTrigger();
             }
-            saveData.eventTriggerDatas = eventTriggerDatas;
-        }
-        for (int i = 0; i < eventTriggers.Count; i++) 
-        {
-            eventTriggers[i].Init(saveData.eventTriggerDatas[i]);
-        }
-
-        SystemManager.Instance.saveData = saveData;
-
-        if (!string.IsNullOrEmpty(saveData.eventTriggerInstanceID))
-        {
-            var trigger = eventTriggers.Find(x => x.eventTriggerData.guid.Equals(saveData.eventTriggerInstanceID));
-            if (trigger) 
-            {
-                trigger.OnTrigger(saveData.eventIdx);
-                player.transform.position = trigger.targetPosition;
-            }
-        }
-
+            eventTriggers[i].GetComponent<BoxCollider2D>().enabled = true;
+        } 
 
         ProCamera2D.Instance.CameraTargets.Add(new CameraTarget(){ TargetTransform = player.transform });
         ProCamera2D.Instance.MoveCameraInstantlyToPosition(player.transform.position);
-        CameraManager.Instance.proCamera2DRooms.OnStartedTransition.AddListener(MoveNextRoom);
+        ServiceLocator.Get<CameraManager>().proCamera2DRooms.OnStartedTransition.AddListener(MoveNextRoom);
         MoveNextRoom(PlayerData.lastRoomIdx, -1);
+    }
+
+    public void ApplySaveData()
+    {
+        var saveData = SystemManager.Instance.saveData;
+        if (saveData == null) return;
+
+        Scene currentActiveScene = SceneManager.GetActiveScene();
+        var allPlayerObjs = FindObjectsByType<Player>(FindObjectsSortMode.None);
+        player = allPlayerObjs.FirstOrDefault(p => p.gameObject.scene == currentActiveScene);
+
+        PlayerData.lastRoomIdx = saveData.stageIdx;
+
+        if(saveData.chapter == currentActiveScene.name)
+        {
+            for(int i=0; i<maps.Count; i++) maps[i].Init(saveData.mapData[i]);
+
+            for(int i=0; i<eventTriggers.Count; i++) 
+            {
+                eventTriggers[i].Init(saveData.eventTriggerData[i]);
+                if(!string.IsNullOrEmpty(saveData.currentEventTriggerDataGuid)
+                    && eventTriggers[i].eventTriggerData.guid.Equals(saveData.currentEventTriggerDataGuid)) 
+                        EventTriggerData.currentEventTriggerData = eventTriggers[i].eventTriggerData;
+            }
+        }
+        else SaveData();
     }
 
     private void Update()
@@ -197,7 +204,7 @@ public partial class GameManager : MonoBehaviour
         Rect rect;
         GameObject go;
 
-        rect = CameraManager.Instance.proCamera2DRooms.Rooms[currentRoomIndex].Dimensions;
+        rect = ServiceLocator.Get<CameraManager>().proCamera2DRooms.Rooms[currentRoomIndex].Dimensions;
         var bl = new Vector2(rect.x - (rect.width * 0.5f), rect.y - (rect.height * 0.5f));
         var tr = new Vector2(rect.x + (rect.width * 0.5f), rect.y + (rect.height * 0.5f));
 
@@ -228,7 +235,11 @@ public partial class GameManager : MonoBehaviour
 
     public void LoadScene(string name, bool active = true)
     {
-        SaveData();
+        if (SceneManager.GetActiveScene().name != name) 
+        {
+            DataReset();
+            SaveData();
+        }
         PageManger.Instance.LoadScene(name, active);
         ServiceLocator.Get<UIController>().DialogueCanvasSetFalse();
     }
@@ -248,33 +259,35 @@ public partial class GameManager : MonoBehaviour
 
     public void Quit()
     {
-        SaveData();
+        DataReset();
         PageManger.Instance.Quit();
     }
 
-    private void SaveData()
+    public void SaveData()
     {
         var mapDatas = new MapData.JsonData[maps.Count];
         for (int i = 0; i < maps.Count; i++) mapDatas[i] = maps[i].mapData;
         var eventTriggerDatas = new EventTriggerData.JsonData[eventTriggers.Count];
         for (int i = 0; i < eventTriggers.Count; i++) eventTriggerDatas[i] = eventTriggers[i].eventTriggerData;
-        SystemManager.Instance.saveData.mapDatas = mapDatas;
-        SystemManager.Instance.saveData.eventTriggerDatas = eventTriggerDatas;
-        SystemManager.Instance.saveData.karma = karmaRatio;
-        SystemManager.Instance.saveData.chapterIdx = PlayerData.lastRoomIdx;
+
+        SystemManager.Instance.saveData = new SaveData(){
+            chapter = SceneManager.GetActiveScene().name,
+            stageIdx = PlayerData.lastRoomIdx,
+            currentEventTriggerDataGuid = EventTriggerData.currentEventTriggerData?.guid,
+            playerData = player.GetComponent<Player>().GetJsonData(),
+            mapData = mapDatas,
+            eventTriggerData = eventTriggerDatas
+        };
         SystemManager.Instance.SaveData(SystemManager.Instance.saveIndex);
     }
 
     private void DataReset()
     {
-        SystemManager.Instance.saveData.mapDatas = null;
-        SystemManager.Instance.saveData.eventTriggerDatas = null;
+        foreach (var map in maps) map.DataReset();
+        foreach (var eventTrigger in eventTriggers) eventTrigger.DataReset();
         SystemManager.Instance.saveData.chapter = SceneManager.GetActiveScene().name;
-        SystemManager.Instance.saveData.karma = karmaRatio;
-        SystemManager.Instance.saveData.playerData = null;
         PlayerData.lastRoomIdx = 0;
-        SystemManager.Instance.saveData.chapterIdx = 0;
-        SystemManager.Instance.UpdateDataForEventTrigger(null, 0);
+        EventTriggerData.currentEventTriggerData = null;
     }
     public void InventoryEnable()
     {

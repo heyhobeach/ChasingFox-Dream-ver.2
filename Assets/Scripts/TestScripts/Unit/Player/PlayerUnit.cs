@@ -140,7 +140,7 @@ public abstract class PlayerUnit : UnitBase
     protected override void OnEnable()
     {
         base.OnEnable();
-        CameraManager.Instance.SetState(cameraState);
+        ServiceLocator.Get<CameraManager>().SetState(cameraState);
         mapSensor.Set(rg, GetComponent<CapsuleCollider2D>());
     }
     protected override void OnDisable()
