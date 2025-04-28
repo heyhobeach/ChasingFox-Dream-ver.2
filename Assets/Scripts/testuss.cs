@@ -527,12 +527,20 @@ public class UI_DynamicText : MonoBehaviour
         DatabaseManager.instance.dialogueDic.Clear();
         Dictionary<int, Dialogue> trace_dic = new Dictionary<int, Dialogue>();//매번 할 필요없을거같긷한데 나중에 수정해도 될듯
         List<int> csv_id_list = new List<int>();
+        bool is_problem = false;
         foreach (var dialogue in tempdialogue)
         {
             Debug.Log("dialogue id" + dialogue.id + "dialogue text" + dialogue.context[0]);
             trace_dic.Add(int.Parse(dialogue.id), dialogue);
             csv_id_list.Add(int.Parse(dialogue.id));
+            if (dialogue.problem.Length >0)
+            {
+                Debug.Log("문제 길이" + dialogue.problem.Length);
+                is_problem = true;
+            }
         }
+
+
 
         List<Dialogue> templist = new List<Dialogue>();
         foreach (var i in info_keys)//현재 가지고 있는 키에서 문자를 받을수있음
@@ -545,7 +553,17 @@ public class UI_DynamicText : MonoBehaviour
             }
             templist.Add(trace_dic[i]);//아마 키가 달라서? 
         }
-        
+        if (is_problem)
+        {
+            Debug.Log("문제 파일 입니다");
+            templist.Clear();
+            templist.Add(trace_dic[mesteryEventNum]);
+        }
+        else
+        {
+            Debug.Log("일반 파일 입니다");
+        }
+
         //여기서 추리식에서 특정 id내용만 가져올수 있도록 내용 추가 필요 
         /*
          내용 작성
