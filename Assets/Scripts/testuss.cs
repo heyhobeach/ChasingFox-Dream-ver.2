@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 using System.Linq;
 using System.Text.RegularExpressions;
-
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEditor.Rendering;
 
 using UnityEngine;
@@ -68,6 +68,8 @@ public class UI_DynamicText : MonoBehaviour
     int contentContextArrayIndex = 0;
     List<string>answerTexts=new List<string>();
     List<string>originText=new List<string>();
+
+    int mesteryEventNum;
 
     private void OnEnable()
     {
@@ -282,7 +284,8 @@ public class UI_DynamicText : MonoBehaviour
                 }
                 else
                 {
-                    SetDairyTextNormal(visuallist, contentContext, keys);
+                    SetDairyTextNormal(visuallist, contentContext, keys, dialogues[i].id);
+                    
                     textList.Add(visuallist);
 
                     visuallist.style.flexDirection = FlexDirection.Column;
@@ -344,7 +347,7 @@ public class UI_DynamicText : MonoBehaviour
         Debug.Log("버튼 확인 " + contentContextArray[contentContextArrayIndex]);
     }
 
-    private void SetDairyTextNormal(VisualElement visuallist, string contentContext, string[] keys)
+    private void SetDairyTextNormal(VisualElement visuallist, string contentContext, string[] keys,string id)
     {
         string[] parts = Regex.Split(contentContext, @"<br\s*/?>");//나눈 문장들 들어 있음
         //string[] keys = InventoryManager.Instance.GetInfo_(info_keys[i]).keywords;
@@ -366,7 +369,11 @@ public class UI_DynamicText : MonoBehaviour
 
                 if (check)
                 {
+                    Debug.Log(keys[0] + "Key 가지고 있음");
                     textelement.AddToClassList("clickable");
+                    textelement.RegisterCallback<PointerDownEvent>(evt => {
+                        mesteryEventNum = int.Parse(id);
+                        Debug.Log("id" + id); });
                     textelement.RegisterCallback<PointerDownEvent>(LoadMestery);
 
                 }
@@ -387,7 +394,10 @@ public class UI_DynamicText : MonoBehaviour
 
         VisualElement visuallist = new VisualElement { name = "visuallistLine"};//얘의 위치를 알아야함
         visuallist.AddToClassList("textOri");
-        visuallist.AddToClassList("textPos");
+        if (textContainerContent.childCount >0)
+        {
+            visuallist.AddToClassList("textPos");
+        }
        
         visuallist.style.flexWrap = Wrap.Wrap;
         //visuallist.style.position = Position.Absolute;//아래에서 relative로 해야함
@@ -476,32 +486,29 @@ public class UI_DynamicText : MonoBehaviour
             }
         }
         //visuallist.style.translate = new Translate(0, 50);
-        visuallist.RegisterCallback<GeometryChangedEvent>(VisualElementChangeEvent);
+        //visuallist.RegisterCallback<GeometryChangedEvent>(VisualElementChangeEvent);
         textContainerContent.Add(visuallist);
         //visuallist.RemoveFromClassList("textPos"); 
         visuallist.schedule.Execute(() => {
             // 여기에 다음 프레임에 하고 싶은 동작
             visuallist.RemoveFromClassList("textPos");
         }).ExecuteLater(0);
-        Debug.Log(string.Format("visualist position {0} {1} {2} ",visuallist.worldBound.position,visuallist.layout.height,visuallist.worldBound.y));
-        Debug.Log(string.Format("textContainerContent position {0} {1} {2} ", textContainerContent.worldBound.position, textContainerContent.layout.height, textContainerContent.worldBound.y));
-
         //visuallist.style.position = Position.Relative;
 
     }
 
-    public void VisualElementChangeEvent(GeometryChangedEvent evt)
+    public void VisualElementChangeEvent(GeometryChangedEvent evt)//위치 확인해서 옮기는 용으로 사용하려했으나 필요없을듯?
     {
         VisualElement target = evt.target as VisualElement;
         if (target == null || target.name != "visuallistLine") return; // 직접 만든 visuallist가 맞는지 확인
 
         // 이 시점에서는 레이아웃 계산이 완료되었습니다.
-        Debug.Log("--- GeometryChangedEvent 발생 ---");
-        Debug.Log($"visuallist worldBound: {target.worldBound}");
-        Debug.Log($"visuallist layout: {target.layout}");
-        Debug.Log($"visuallist worldBound.position: {target.worldBound.position}");
-        Debug.Log($"visuallist layout.position: {target.layout.position}");//이거 기준으로 해야할듯?
-        Debug.Log($"visuallist layout.height: {target.layout.height}");
+        //Debug.Log("--- GeometryChangedEvent 발생 ---");
+        //Debug.Log($"visuallist worldBound: {target.worldBound}");
+        //Debug.Log($"visuallist layout: {target.layout}");
+        //Debug.Log($"visuallist worldBound.position: {target.worldBound.position}");
+        //Debug.Log($"visuallist layout.position: {target.layout.position}");//이거 기준으로 해야할듯?
+        //Debug.Log($"visuallist layout.height: {target.layout.height}");
 
         // textContainerContent 위치도 필요하다면 여기서 확인 (evt.target.parent 로 접근 가능)
         if (target.parent != null)
@@ -538,6 +545,13 @@ public class UI_DynamicText : MonoBehaviour
             }
             templist.Add(trace_dic[i]);//아마 키가 달라서? 
         }
+        
+        //여기서 추리식에서 특정 id내용만 가져올수 있도록 내용 추가 필요 
+        /*
+         내용 작성
+         if()
+         */
+
         Dialogue[] dialogues = templist.ToArray();
         Debug.Log("제목"+title_str+"dialogue length" + dialogues.Length);
         for (int i = 0; i < dialogues.Length; i++)
