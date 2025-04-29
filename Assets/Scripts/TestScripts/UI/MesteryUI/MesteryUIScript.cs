@@ -193,6 +193,12 @@ public class UI_DynamicText : MonoBehaviour
     private void DiaryFinishButtonEvent()//정답 확인
     {
         Debug.Log("일기 finish");
+        if (contentContextArrayIndex >= contentContextArray.Length)
+        {
+            Debug.Log("마지막 라인 종료");
+            this.gameObject.SetActive(false);
+            return;
+        }
         List<string>strings = new List<string>();
         var container = textContainerContent.Query<TextElement>(className: "dropArea");
         string pattern = @"\s*,\s*";
@@ -213,10 +219,17 @@ public class UI_DynamicText : MonoBehaviour
             return;
         }
         bool is_correct = false;
+
         if (answer_strings.SequenceEqual(strings.ToArray()))//정답일경우
         {
             is_correct = true;
             contentContextArrayIndex++;
+            if(contentContextArrayIndex>contentContextArray.Length)
+            {
+                Debug.Log("마지막 라인 종료");
+                this.gameObject.SetActive(false);   
+                return;
+            }
             CorrectRespon();
         }
         else
