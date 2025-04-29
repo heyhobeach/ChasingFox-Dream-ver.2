@@ -124,6 +124,7 @@ public class EventTrigger : MonoBehaviour
 
         GetComponent<BoxCollider2D>().isTrigger = true;
         GetComponent<BoxCollider2D>().enabled = false;
+        ServiceLocator.Get<GameManager>().eventTriggers.Add(this);
     }
     private void Awake() => Init();
 

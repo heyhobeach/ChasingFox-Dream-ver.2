@@ -62,8 +62,8 @@ public partial class GameManager : MonoBehaviour
 
     public Player player;
 
-    public List<Map> maps = new List<Map>();
-    public List<EventTrigger> eventTriggers = new List<EventTrigger>();
+    [DisableInInspector] public List<Map> maps = new List<Map>();
+    [DisableInInspector] public List<EventTrigger> eventTriggers = new List<EventTrigger>();
 
     private Coroutine mapsearchCoroutine;
 
@@ -100,7 +100,11 @@ public partial class GameManager : MonoBehaviour
         Application.targetFrameRate = targetFrame;
     }
 
-    // private void Start() => Init();
+    private void Start()
+    {
+        maps = maps.OrderBy(x => x.transform.GetSiblingIndex()).ToList();
+        eventTriggers = eventTriggers.OrderBy(x => x.transform.GetSiblingIndex()).ToList();
+    }
 
     private void Init()
     {
