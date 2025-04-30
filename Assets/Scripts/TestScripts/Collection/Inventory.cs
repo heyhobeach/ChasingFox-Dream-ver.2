@@ -10,6 +10,7 @@ using UnityEngine.UI;
 public class Inventory : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    [Serializable]
     public class Info//이 부분 의존성 주입으로 수정 예정
     {
         public News news;

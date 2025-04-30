@@ -2,6 +2,8 @@ using System;
 using BehaviourTree;
 using UnityEngine;
 using UnityEngine.Playables;
+using System.Linq;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -64,7 +66,7 @@ public class EnemyController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if(!isStop || ServiceLocator.Get<GameManager>() != null) CircleRay();
+        if(ServiceLocator.Get<GameManager>() != null) CircleRay();
     }
 
     private bool ViewCheck(Collider2D hit)
@@ -73,11 +75,12 @@ public class EnemyController : MonoBehaviour
         var subvec = (Vector2)hit.transform.position - (Vector2)(transform.position+Vector3.up);// ray2d=>tartget_ray2d[index_player]
         float deg = Mathf.Atan2(subvec.y, subvec.x);//mathf.de
         deg *= Mathf.Rad2Deg;
+        var rayHits = Physics2D.RaycastAll(transform.position+Vector3.up, subvec.normalized, subvec.magnitude, layerMapMask).Where(x => !x.collider.isTrigger);
         bool inAngle = 180-viewAngle*0.5f < MathF.Abs(deg) || Mathf.Abs(deg) < viewAngle*0.5f;
         bool isForword = Mathf.Sign(subvec.normalized.x)>0&&!spriteRenderer.flipX ? true : Mathf.Sign(subvec.normalized.x)<0&&spriteRenderer.flipX ? true : false;
         if((subvec.magnitude <= viewInnerRange || (subvec.magnitude <= viewOuterRange && inAngle && isForword))
-            && !Physics2D.Raycast(transform.position+Vector3.up, subvec.normalized, subvec.magnitude, layerMapMask))
-        {                
+            && rayHits.Count() == 0)
+        {
             return true;
         }
         else return false;
@@ -88,10 +91,11 @@ public class EnemyController : MonoBehaviour
         var subvec = pos - (Vector2)(transform.position+Vector3.up);// ray2d=>tartget_ray2d[index_player]
         float deg = Mathf.Atan2(subvec.y, subvec.x);//mathf.de
         deg *= Mathf.Rad2Deg;
+        var rayHits = Physics2D.RaycastAll(transform.position+Vector3.up, subvec.normalized, subvec.magnitude, layerMapMask).Where(x => !x.collider.isTrigger);
         bool inAngle = 180-viewAngle*0.5f < MathF.Abs(deg) || Mathf.Abs(deg) < viewAngle*0.5f;
         bool isForword = Mathf.Sign(subvec.normalized.x)>0&&!spriteRenderer.flipX ? true : Mathf.Sign(subvec.normalized.x)<0&&spriteRenderer.flipX ? true : false;
         if((subvec.magnitude <= viewInnerRange || (subvec.magnitude <= viewOuterRange && inAngle && isForword))
-            && !Physics2D.Raycast(transform.position+Vector3.up, subvec.normalized, subvec.magnitude, layerMapMask))
+            && rayHits.Count() == 0)
         {                
             return true;
         }
@@ -112,7 +116,7 @@ public class EnemyController : MonoBehaviour
         Collider2D hit = null;
         foreach(var h in hits)
         {
-            if(h.CompareTag("Player") && blackboard.thisUnit.AttackCheck(h.bounds.center)) 
+            if(h.CompareTag("Player")) 
             {
                 hit = h;
                 break;

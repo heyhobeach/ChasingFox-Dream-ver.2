@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using Com.LuisPedroFonseca.ProCamera2D;
 using Damageables;
 using UnityEngine;
@@ -52,6 +53,7 @@ public class EnemyUnit : UnitBase, IDamageable, ISelectObject
     {
         if(ControllerChecker()) 
         {
+            Debug.Log("ControllerChecker");
             hzForce = 0;
             base.Move(Vector2.zero);
             return false;
@@ -69,9 +71,9 @@ public class EnemyUnit : UnitBase, IDamageable, ISelectObject
     {
         var pos = attackPos-transform.position;
         bool isForword = Mathf.Sign(pos.normalized.x)>0&&!spriteRenderer.flipX ? true : Mathf.Sign(pos.normalized.x)<0&&spriteRenderer.flipX ? true : false;
-        var hit = Physics2D.Raycast(transform.position+Vector3.up, pos.normalized, pos.magnitude, 1<<LayerMask.NameToLayer("Map")|1<<LayerMask.NameToLayer("Wall"));
-        if((hit && !hit.collider.isTrigger) || isForword) return false;
-        else return true;
+        var hits = Physics2D.RaycastAll(transform.position+Vector3.up, pos.normalized, pos.magnitude, 1<<LayerMask.NameToLayer("Map")|1<<LayerMask.NameToLayer("Wall")).Where(x => !x.collider.isTrigger);
+        if(hits.Count() == 0 && isForword) return true;
+        else return false;
     }
 
     void IDamageable.Death()
