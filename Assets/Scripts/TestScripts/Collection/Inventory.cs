@@ -120,23 +120,6 @@ public class Inventory : MonoBehaviour
 
     public void AddInventory(Info collectionInfo)//흔적
     {
-        //Debug.Log("AddInventory");
-        //if (invendata == null)
-        //{
-        //    Debug.LogError("InvendataNull");
-        //    invendata = Resources.Load("Inventory") as InventoryScripable;
-        //}
-        //CollectionInteractive collectionInteractive = new GameObject("CollectionInteractive").AddComponent<CollectionInteractive>();    
-        //if (collectionInteractive == null)
-        //{
-        //    Debug.Log("collectionInteractive null");
-        //}
-        //else
-        //{
-        //    collectionInteractive.CallCollectionPopup(collection);
-        //}
-
-
         if (!invenDic.ContainsKey(collectionInfo.news.id))
         {
             invenDic.Add(collectionInfo.news.id, collectionInfo);

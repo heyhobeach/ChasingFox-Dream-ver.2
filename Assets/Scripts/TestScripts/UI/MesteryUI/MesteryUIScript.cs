@@ -12,7 +12,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 
-public class UI_DynamicText : MonoBehaviour
+public class MesteryUIScript : MonoBehaviour
 {
 
     VisualElement visualElement;//메인 부분
@@ -71,11 +71,13 @@ public class UI_DynamicText : MonoBehaviour
 
     int mesteryEventNum;
 
+
     private void OnEnable()
     {
 
-
+        Debug.Log(InventoryManager.Instance.GetInventoryAll().name);
         inventoryScripable = InventoryManager.Instance.GetInventoryAll();//인벤토리에서 데이터를 가져옴
+        
 
         Dictionary<int, Inventory.Info>.KeyCollection keys = InventoryManager.Instance.GetinventoryKeys();//키를 가져오기 위한 변수
 
