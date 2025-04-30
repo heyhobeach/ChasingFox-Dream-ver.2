@@ -54,6 +54,8 @@ public class Inventory : MonoBehaviour
         invendata = Resources.Load("Inventory") as InventoryScripable;
         newsDic = new Dictionary<int, News>();
         invenDic = new Dictionary<int, Info>();
+
+        InventoryManager.Instance.inventory = this;
         //Info testInfo = new Info { "이름",};
         //AddInventory()
 
