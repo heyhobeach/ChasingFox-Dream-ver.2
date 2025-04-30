@@ -80,6 +80,9 @@ public class SystemManager : MonoBehaviour
         defaultSaveData = new SaveData{
             chapter = "",
             playerData = tempPlayerData,
+            stageIdx = 0,
+            currentEventTriggerDataGuid = "",
+            inventoryData = new Inventory.Info[0],
             mapData = new MapData.JsonData[0],
             eventTriggerData = new EventTriggerData.JsonData[0]
         };

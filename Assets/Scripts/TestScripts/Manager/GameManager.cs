@@ -6,7 +6,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Linq;
-using UnityEditor.Overlays;
 
 
 #if UNITY_EDITOR
@@ -62,8 +61,8 @@ public partial class GameManager : MonoBehaviour
 
     public Player player;
 
-    public List<Map> maps = new List<Map>();
-    public List<EventTrigger> eventTriggers = new List<EventTrigger>();
+    [DisableInInspector] public List<Map> maps = new List<Map>();
+    [DisableInInspector] public List<EventTrigger> eventTriggers = new List<EventTrigger>();
 
     private Coroutine mapsearchCoroutine;
 
@@ -100,7 +99,11 @@ public partial class GameManager : MonoBehaviour
         Application.targetFrameRate = targetFrame;
     }
 
-    // private void Start() => Init();
+    private void Start()
+    {
+        maps = maps.OrderBy(x => x.transform.GetSiblingIndex()).ToList();
+        eventTriggers = eventTriggers.OrderBy(x => x.transform.GetSiblingIndex()).ToList();
+    }
 
     private void Init()
     {
@@ -162,10 +165,14 @@ public partial class GameManager : MonoBehaviour
         var allPlayerObjs = FindObjectsByType<Player>(FindObjectsSortMode.None);
         player = allPlayerObjs.FirstOrDefault(p => p.gameObject.scene == currentActiveScene);
 
-        PlayerData.lastRoomIdx = saveData.stageIdx;
-
         if(saveData.chapter == currentActiveScene.name)
         {
+            PlayerData.lastRoomIdx = saveData.stageIdx;
+
+            InventoryManager.Instance.invendata.inventory?.Clear();
+            foreach(var item in SystemManager.Instance.saveData.inventoryData) 
+                InventoryManager.Instance.inventory?.AddInventory(item);
+
             for(int i=0; i<maps.Count; i++) maps[i].Init(saveData.mapData[i]);
 
             for(int i=0; i<eventTriggers.Count; i++) 
@@ -267,17 +274,22 @@ public partial class GameManager : MonoBehaviour
     {
         var mapDatas = new MapData.JsonData[maps.Count];
         for (int i = 0; i < maps.Count; i++) mapDatas[i] = maps[i].mapData;
+
         var eventTriggerDatas = new EventTriggerData.JsonData[eventTriggers.Count];
         for (int i = 0; i < eventTriggers.Count; i++) eventTriggerDatas[i] = eventTriggers[i].eventTriggerData;
+
+        var items = InventoryManager.Instance.invendata.inventory?.Values.ToArray();
 
         SystemManager.Instance.saveData = new SaveData(){
             chapter = SceneManager.GetActiveScene().name,
             stageIdx = PlayerData.lastRoomIdx,
             currentEventTriggerDataGuid = EventTriggerData.currentEventTriggerData?.guid,
+            inventoryData = items,
             playerData = player.GetComponent<Player>().GetJsonData(),
             mapData = mapDatas,
             eventTriggerData = eventTriggerDatas
         };
+
         SystemManager.Instance.SaveData(SystemManager.Instance.saveIndex);
     }
 

@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 using System;
 using System.Threading.Tasks;
 using UnityEngine.Events;
+using Unity.VisualScripting;
+
 
 
 
@@ -61,17 +63,21 @@ public class Map : MonoBehaviour
         // gameObject.SetActive(false);
         foreach (EnemyUnit unit in enemyUnits)
         {
-            unit.gameObject.SetActive(false);
+            if(!unit.IsUnityNull()) unit.gameObject.SetActive(false);
+            else Debug.LogError($"EnemyUnit not set in {gameObject.name}");
         }
 
         mapEventQueue = new Queue<MapEvent>(mapEvents);
+
+        ServiceLocator.Get<GameManager>().maps.Add(this);
     }
 
     void Start()
     {
         foreach (EnemyUnit unit in enemyUnits)
         {
-            unit.onDeath += EnemyDeathAction;
+            if(!unit.IsUnityNull()) unit.onDeath += EnemyDeathAction;
+            else Debug.LogError($"EnemyUnit not set in {gameObject.name}");
         }
     }
 
