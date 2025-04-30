@@ -289,7 +289,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
                 if(this.unitState != UnitState.Death) this.unitState = unitState;
             break;
             default:
-                if(!ControllerChecker()) this.unitState = unitState;
+                if(!ControllerChecker() || this.unitState == UnitState.Pause) this.unitState = unitState;
             break;
         }
     }

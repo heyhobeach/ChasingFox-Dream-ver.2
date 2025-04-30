@@ -19,17 +19,17 @@ public class DistanceCheck : DecoratorNode
     {
         if(!snapshot) targetDistance = Vector2.Distance((Vector2)blackboard.target.position, (Vector2)blackboard.thisUnit.transform.position);
         var pos = blackboard.target.CompareTag("Player") ? blackboard.target.transform.position + Vector3.up : blackboard.target.transform.position;
-        var hit = blackboard.thisUnit.AttackCheck(pos);
+        var canHit = blackboard.thisUnit.AttackCheck(pos);
         switch(distanceType)
         {
             case DistanceType.Less:
-            if(distanceA > targetDistance && hit) return child.Update();
+            if(distanceA > targetDistance && canHit) return child.Update();
             break;
             case DistanceType.Greater:
-            if(distanceA < targetDistance || !hit) return child.Update();
+            if(distanceA < targetDistance || !canHit) return child.Update();
             break;
             case DistanceType.Between:
-            if(distanceA < targetDistance && distanceB > targetDistance && hit) return child.Update();
+            if(distanceA < targetDistance && distanceB > targetDistance && canHit) return child.Update();
             break;
         }
         return NodeState.Failure;
