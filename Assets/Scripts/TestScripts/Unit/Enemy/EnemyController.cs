@@ -156,7 +156,7 @@ public class EnemyController : MonoBehaviour
         if(blackboard.enemy_state.stateCase == Blackboard.Enemy_State.StateCase.Chase) return;
 
         var subvec = pos - (Vector2)transform.position;
-        if(subvec.magnitude <= soundRange + (size.x * 0.5f))
+        if(subvec.magnitude <= soundRange + size.x)
         {
             blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Alert;
             blackboard.target = tr;
