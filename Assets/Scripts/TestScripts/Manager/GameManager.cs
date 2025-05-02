@@ -99,16 +99,14 @@ public partial class GameManager : MonoBehaviour
         Application.targetFrameRate = targetFrame;
     }
 
-    private void Start()
-    {
-        maps = maps.OrderBy(x => x.transform.GetSiblingIndex()).ToList();
-        eventTriggers = eventTriggers.OrderBy(x => x.transform.GetSiblingIndex()).ToList();
-    }
-
     private void Init()
     {
+        Debug.Log("GameManager Init called");
         var saveData = SystemManager.Instance.saveData;
         Scene currentActiveScene = SceneManager.GetActiveScene();
+        
+        maps = maps.OrderBy(x => x.transform.GetSiblingIndex()).ToList();
+        eventTriggers = eventTriggers.OrderBy(x => x.transform.GetSiblingIndex()).ToList();
 
         if(mapsearchCoroutine == null) mapsearchCoroutine = StartCoroutine(MapSearchStart());
 
@@ -160,6 +158,8 @@ public partial class GameManager : MonoBehaviour
     {
         var saveData = SystemManager.Instance.saveData;
         if (saveData == null) return;
+
+        Debug.Log("ApplySaveData called");
 
         Scene currentActiveScene = SceneManager.GetActiveScene();
         var allPlayerObjs = FindObjectsByType<Player>(FindObjectsSortMode.None);

@@ -51,6 +51,11 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     /// </summary>
     // [SerializeField] private float bulletTime;
 
+    private void OnDsable()
+    {
+        StopAllCoroutines();
+    }
+
 
     private void Awake()
     {
@@ -113,7 +118,22 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
 
     public bool Attack(Vector3 clickPos) => changedForm.Attack(clickPos);
 
-    public bool Dash() => changedForm.Dash();
+    public bool Dash()
+    {
+        if(changedForm.Dash())
+        {
+            invalidation = true;
+            StartCoroutine(DashDelay());
+            return true;
+        }
+        return false;
+    }
+
+    IEnumerator DashDelay()
+    {
+        yield return new WaitForSeconds(0.3f);
+        invalidation = false;
+    }
 
     public void Death()
     {

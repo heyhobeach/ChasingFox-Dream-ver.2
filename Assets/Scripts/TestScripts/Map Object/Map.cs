@@ -84,7 +84,11 @@ public class Map : MonoBehaviour
     public async void OnStart(Vector3 pos)
     {
         if(cleared) return;
-        foreach (EnemyUnit unit in enemyUnits) unit.gameObject.SetActive(true);
+        foreach (EnemyUnit unit in enemyUnits) 
+        {
+            if(!unit.IsUnityNull()) unit.gameObject.SetActive(true);
+            else Debug.LogError($"EnemyUnit not set in {gameObject.name}");
+        }
         if(enemyCount > 0) edgeCollider2D.enabled = true;
         mapData.used = true;
         mapData.position = pos;

@@ -165,7 +165,24 @@ public class EnemyController : MonoBehaviour
     }
 
     [VisibleEnum(typeof(Blackboard.Enemy_State.StateCase))]
-    public void SetState(int i) => blackboard.enemy_state.stateCase = (Blackboard.Enemy_State.StateCase)i;
+    public void SetState(int i)
+    {
+        blackboard.enemy_state.stateCase = (Blackboard.Enemy_State.StateCase)i;
+        switch(blackboard.enemy_state.stateCase)
+        {
+            case Blackboard.Enemy_State.StateCase.Default:
+                blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Default;
+                blackboard.target = null;
+                break;
+            case Blackboard.Enemy_State.StateCase.Chase:
+            case Blackboard.Enemy_State.StateCase.Alert:
+                blackboard.target = ServiceLocator.Get<GameManager>().player.transform;
+                blackboard.enemy_state.Increase_Sight++;
+                break;
+            default:
+                break;
+        }
+    }
 
 #if UNITY_EDITOR
     public bool showRange;
