@@ -52,6 +52,9 @@ public class MesteryUIScript : MonoBehaviour
     VisualElement currentProblem;
     string dragGhostName = "";
 
+    /// <summary>
+    /// 현재 info_keys가 id에 맞게 정확하게 들어있다는 보장이 없음
+    /// </summary>
     private List<int> info_keys = new List<int>();
     bool is_drag = false;
 
@@ -271,7 +274,8 @@ public class MesteryUIScript : MonoBehaviour
                 contentContext = dialogues[i].context[rowIndex];
 
 
-                string[] keys = InventoryManager.Instance.GetInfo_(info_keys[i]).keywords;
+                //string[] keys = InventoryManager.Instance.GetInfo_(info_keys[i]).keywords;
+                string[] keys = InventoryManager.Instance.GetInfo_(int.Parse(dialogues[i].id)).keywords;
                 if (dialogues[i].problem.Length > 0)//해당 부분없으면 다른 csv파일상에서 접근시 문제 생김
                 {
                     isProblemCSV = true;
@@ -372,7 +376,9 @@ public class MesteryUIScript : MonoBehaviour
         List<List<string>> tags = new List<List<string>>();//___으로 변환 되어있는 내용에서 해당 번째가 person인지 destination인지 확인용
         foreach (string part in parts)//br기준,사실상 없는거나 마찬가지
         {
-            Debug.Log("part is " + part);
+            //Debug.Log("part is " + part);
+            //Debug.Log("id=>" + id);
+            Debug.Log(string.Format("part is {0} , id => {1} key is {2}", part, id, keys[0]));
             string[] _part;
             _part = part.Split(' ');
 
@@ -391,7 +397,8 @@ public class MesteryUIScript : MonoBehaviour
                     textelement.AddToClassList("clickable");
                     textelement.RegisterCallback<PointerDownEvent>(evt => {
                         mesteryEventNum = int.Parse(id);
-                        Debug.Log("id" + id); });
+                        //Debug.Log("id" + id); 
+                    });
                     textelement.RegisterCallback<PointerDownEvent>(LoadMestery);
 
                 }
