@@ -201,20 +201,16 @@ public class Human : PlayerUnit, IDoorInteractable
         if(attackCoroutine != null) StopCoroutine(attackCoroutine);
     }
 
-    protected override void Start() => Init();
 
     public override void Init()
-    {
-        base.Init();
-        sound=GetComponent<AudioSource>(); 
-        //sound.PlayOneShot(soundClip, 0.3f);
+    {        
         cameraState = new() {
             maxHorizontalInfluence = 5.15f,
             maxVerticalInfluence = 0.35f,
             influenceSmoothness = 0.275f,
             changeSize = 5.15f
         };
-        bulletTimeCount = GameManager.GetHumanData();
+        base.Init();
         residualAmmo = maxAmmo;
         if(!anim.runtimeAnimatorController) anim.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("PlayerAnim/Human/Human Lib Ani");
     }

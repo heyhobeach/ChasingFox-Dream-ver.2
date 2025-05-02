@@ -43,7 +43,6 @@ public class Werewolf : PlayerUnit
 
     public GameObject playerArea;
     public Image maskImage;
-    private Coroutine unscaledTimeCoroutine;
 
     private Collider2D[] selectObjects;
     
@@ -51,8 +50,7 @@ public class Werewolf : PlayerUnit
     {
         base.OnEnable();
 
-        Time.timeScale = 0.3f;
-        Time.fixedDeltaTime = 0.02f * Time.timeScale;
+        ServiceLocator.Get<GameManager>().ingameTimescale = 0.3f;
         playerArea.transform.position = transform.position + Vector3.up;
         playerArea.transform.localScale = brutalData.brutalArea - Vector2.one;
         currentTime = brutalData.brutalTime;
@@ -60,8 +58,6 @@ public class Werewolf : PlayerUnit
         currentGauge -= brutalData.useGage;
 
         SelectObjects();
-
-        unscaledTimeCoroutine = StartCoroutine(UnscaledTime());
     }
 
     protected override void OnDisable()
@@ -72,13 +68,7 @@ public class Werewolf : PlayerUnit
             StopCoroutine(attackCoroutine);
             attackCoroutine = null;
         }
-        if(unscaledTimeCoroutine != null) 
-        {
-            StopCoroutine(unscaledTimeCoroutine);
-            unscaledTimeCoroutine = null;
-        }
-        Time.timeScale = 1f;
-        Time.fixedDeltaTime = 0.02f;
+        ServiceLocator.Get<GameManager>().ingameTimescale = 1f;
     }
 
     // private void Awake()
@@ -94,9 +84,9 @@ public class Werewolf : PlayerUnit
     //         return pos;
     //     }
     // }
-    protected override void Start()
+
+    public override void Init()
     {
-        Init();
         cameraState = new() {
             maxHorizontalInfluence = 5.15f,
             maxVerticalInfluence = 0.3f,
@@ -105,30 +95,22 @@ public class Werewolf : PlayerUnit
         };
         meleeAttack.GetComponent<MaleeAttack>().Set(3, gameObject);
         UnitState = UnitState.FormChange;
+        base.Init();
     }
 
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
         SelectObjects();
-    }
 
-    private IEnumerator UnscaledTime()
-    {
-        while(true)
+        if(ServiceLocator.Get<GameManager>().isPaused || attackCoroutine != null) return;
+        if(currentTime >= 0) 
         {
-            yield return new WaitForSecondsRealtime(0.02f);
-            if(ServiceLocator.Get<GameManager>().isPaused || attackCoroutine != null) continue;
-            Time.timeScale = 0.3f;
-            Time.fixedDeltaTime = 0.02f * Time.timeScale;
-            if(currentTime >= 0) 
-            {
-                currentTime -= 0.02f;
-                maskImage.material.SetFloat("_Alpha", Utils.EaseFromTo(0, brutalData.brutalTime, currentTime, EaseType.EaseOut) / brutalData.brutalTime);
-            }
-            else formChangeTest?.Invoke();
-            if(currentCount <= 0) formChangeTest?.Invoke();
+            currentTime -= 0.02f;
+            maskImage.material.SetFloat("_Alpha", Utils.EaseFromTo(0, brutalData.brutalTime, currentTime, EaseType.EaseOut) / brutalData.brutalTime);
         }
+        else formChangeTest?.Invoke();
+        if(currentCount <= 0) formChangeTest?.Invoke();
     }
 
     public override bool Attack(Vector3 clickPos) => MeleeAttack(clickPos);
@@ -169,7 +151,7 @@ public class Werewolf : PlayerUnit
                 Vector2.zero
             );
         };
-        yield return new WaitForSecondsRealtime(0.5f);
+        yield return new WaitForSeconds(0.5f);
         attackCoroutine = null;
         if(currentCount <= 0) formChangeTest?.Invoke();
     }
@@ -196,15 +178,13 @@ public class Werewolf : PlayerUnit
     private IEnumerator Attacking()
     {
         shootingAnimationController.NomalAni();
-        Time.timeScale = 1f;
-        Time.fixedDeltaTime = 0.02f;
+        ServiceLocator.Get<GameManager>().ingameTimescale = 0.3f;
         yield return new WaitForFixedUpdate();
         meleeAttack.SetActive(true);
         yield return new WaitForFixedUpdate();
         meleeAttack.SetActive(false);
-        yield return new WaitForSecondsRealtime(0.5f);
-        Time.timeScale = 0.3f;
-        Time.fixedDeltaTime = 0.02f * Time.timeScale;
+        yield return new WaitForSeconds(0.5f);
+        ServiceLocator.Get<GameManager>().ingameTimescale = 0.3f;
         attackCoroutine = null;
         if(currentCount <= 0) formChangeTest?.Invoke();
     }

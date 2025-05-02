@@ -29,7 +29,7 @@ namespace BehaviourTree
 
         protected override NodeState OnUpdate()
         {
-            if(!isRunning) startTime += Time.deltaTime;
+            if(!isRunning) startTime += ServiceLocator.Get<GameManager>().ingameDeltaTime;
             if(!isRunning && blackboard.target != null && (startTime >= reloadTime || blackboard.FinalNodeList == default))
             {
                 if(startTime >= reloadTime) startTime = 0;

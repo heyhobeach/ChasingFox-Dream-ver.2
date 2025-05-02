@@ -71,7 +71,10 @@ public class FixedEventTrigger : EventTrigger, IBaseController
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        if((autoTrigger ? false : !Input.GetKeyDown(keyCode)) || !collider.CompareTag(targetTag) || (prerequisites != null && !prerequisites.isSatisfied)) return;
+        if((autoTrigger ? false : !Input.GetKeyDown(keyCode)) 
+            || !collider.CompareTag(targetTag) 
+            || (prerequisites != null && !prerequisites.isSatisfied)
+            || collider.GetComponent<UnitBase>()?.UnitState != UnitState.Default) return;
         targetPosition = collider.transform.position;
         OnTrigger();
     }

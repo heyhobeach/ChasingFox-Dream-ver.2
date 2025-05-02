@@ -66,13 +66,20 @@ public partial class GameManager : MonoBehaviour
 
     private Coroutine mapsearchCoroutine;
 
-    public int targetFrame = 60;
-    private float deltaTime = 0f;
+    public float _ingameTimescale = 1f;
+    public float ingameTimescale
+    {
+        get => _ingameTimescale;
+        set
+        {
+            _ingameTimescale = value;
+            Time.fixedDeltaTime = value * 0.02f;
+        }
+    }
+    public float ingameDeltaTime { get => Time.deltaTime * ingameTimescale; }
     public static float fps { get; private set; }
 
     public bool isPaused { get; private set; }
-
-    public void TimeScale(float t) => Time.timeScale = t;
 
     private void OnDestroy()
     {
@@ -95,20 +102,17 @@ public partial class GameManager : MonoBehaviour
 #if UNITY_EDITOR
         EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
 #endif
-
-        Application.targetFrameRate = targetFrame;
-    }
-
-    private void Start()
-    {
-        maps = maps.OrderBy(x => x.transform.GetSiblingIndex()).ToList();
-        eventTriggers = eventTriggers.OrderBy(x => x.transform.GetSiblingIndex()).ToList();
     }
 
     private void Init()
     {
+        Debug.Log("GameManager Init called");
+        Time.fixedDeltaTime = 0.02f;
         var saveData = SystemManager.Instance.saveData;
         Scene currentActiveScene = SceneManager.GetActiveScene();
+
+        maps = maps.OrderBy(x => x.transform.GetSiblingIndex()).ToList();
+        eventTriggers = eventTriggers.OrderBy(x => x.transform.GetSiblingIndex()).ToList();
 
         if(mapsearchCoroutine == null) mapsearchCoroutine = StartCoroutine(MapSearchStart());
 
@@ -144,7 +148,7 @@ public partial class GameManager : MonoBehaviour
             if(EventTriggerData.currentEventTriggerData != null 
                 && EventTriggerData.currentEventTriggerData.guid.Equals(eventTriggers[i].eventTriggerData.guid))
             {
-                player.transform.position = EventTriggerData.currentEventTriggerData.targetPosition;
+                // player.transform.position = EventTriggerData.currentEventTriggerData.targetPosition;
                 eventTriggers[i].OnTrigger();
             }
             eventTriggers[i].GetComponent<BoxCollider2D>().enabled = true;
@@ -160,6 +164,8 @@ public partial class GameManager : MonoBehaviour
     {
         var saveData = SystemManager.Instance.saveData;
         if (saveData == null) return;
+
+        Debug.Log("ApplySaveData called");
 
         Scene currentActiveScene = SceneManager.GetActiveScene();
         var allPlayerObjs = FindObjectsByType<Player>(FindObjectsSortMode.None);
@@ -188,13 +194,7 @@ public partial class GameManager : MonoBehaviour
 
     private void Update()
     {
-        deltaTime += Time.unscaledDeltaTime - deltaTime;
-    }
-    private void FixedUpdate()
-    {
-        fps = 1.0f / deltaTime;
-        // if(fps < 120) Time.fixedDeltaTime = 0.02f / (120 / (int)fps);
-        // else Time.fixedDeltaTime = 0.02f;
+        
     }
 
     public void MoveNextRoom(int currentRoomIndex, int previousRoomIndex)

@@ -86,14 +86,10 @@ public class DoorOpen : MonoBehaviour, IBaseController
         switch(Mathf.Sign((collider.transform.position-transform.position).x))
         {
             case -1:
-                rightPos.position += Vector3.right;
-                doorPos.position += Vector3.left*target.BoxSizeX;
                 cols[0].offset += Vector2.right*1.5f;
                 timeline.SetGenericBinding(leftBehaviour, target.rg.transform);
             break;
             case 1:
-                leftPos.position += Vector3.left;
-                doorPos.position += Vector3.right*target.BoxSizeX;
                 cols[0].offset += Vector2.left*1.5f;
                 GetComponent<SpriteRenderer>().flipX = true;
                 timeline.SetGenericBinding(rightBehaviour, target.rg.transform);
