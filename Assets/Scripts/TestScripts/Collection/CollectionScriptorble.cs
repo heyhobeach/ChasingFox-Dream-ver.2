@@ -14,6 +14,7 @@ namespace Collection
         [TextArea(3,8)]
         public string _context;
         public string[] keywords;
+        public int chapter_info;
     }
 
 }

@@ -27,6 +27,7 @@ public class Inventory : MonoBehaviour
             this.context = context;
             this.keywords = keywords;
             this.news.id=news.id;   
+            this.news.chapter=news.chapter; 
         }
     }
 
@@ -35,6 +36,7 @@ public class Inventory : MonoBehaviour
         public Sprite image;
         public string image_name;
         public int id;
+        public int chapter;
     }
     public  Dictionary<int, Info> invenDic;//static으로 해결은 가능한데
     public Dictionary<int, News> newsDic;//static으로 해결은 가능한데
@@ -71,7 +73,8 @@ public class Inventory : MonoBehaviour
         {
             image = collection.image,
             image_name = collection._name,
-            id=collection.id
+            id = collection.id,
+            chapter = collection.chapter_info
         };
 
 
@@ -86,6 +89,7 @@ public class Inventory : MonoBehaviour
         _news.image = news.image;
         _news.image_name=news.image_name;
         _news.id=news.id;
+        _news.chapter = news.chapter_info;
         Debug.Log(string.Format("{0},{1}", _news.image_name, "news"));
         return _news;
     }

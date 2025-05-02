@@ -71,6 +71,8 @@ public class MesteryUIScript : MonoBehaviour
 
     int mesteryEventNum;
 
+    [Tooltip("추리 시스템 진행할때 현재 챕터 가능한 부분")]
+    public int currentChapterNum = 2;
 
     private void OnEnable()
     {
@@ -262,6 +264,7 @@ public class MesteryUIScript : MonoBehaviour
             //Debug.Log("LowIndex = " + dialogues[i].context.Length);
             for (int rowIndex = 0; rowIndex < dialogues[i].context.Length; rowIndex++)
             {
+                //if (InventoryManager.Instance.GetInfo_(info_keys[i]).news.chapter != currentChapterNum) { continue; }
                 VisualElement visuallist = new VisualElement { name = "textList" };
                 visuallist.style.flexWrap = Wrap.Wrap;
                 string contentContext = "";
@@ -561,6 +564,8 @@ public class MesteryUIScript : MonoBehaviour
         foreach (var i in info_keys)//현재 가지고 있는 키에서 문자를 받을수있음
         {
             bool check = csv_id_list.Contains(i);
+            print("chapter :" + InventoryManager.Instance.GetInfo_(i).news.chapter);
+            check=check&&(InventoryManager.Instance.GetInfo_(i).news.chapter == currentChapterNum);//이 부분 들어가면 내용에도 chapter 동일해야 들어감
             if (!check)
             {
                 Debug.Log("스크립트에 키 값이 없음 continue");
@@ -684,7 +689,10 @@ public class MesteryUIScript : MonoBehaviour
         content.style.flexShrink = 0;
 
         VisualElement visuallist = new VisualElement();
-        Debug.Log("inven =" + InventoryManager.Instance.GetInfo_(info_keys[num]).context);
+        Debug.Log("inven =" + InventoryManager.Instance.GetInfo_(info_keys[num]).context+" ||||"
+            +"correction Num" + InventoryManager.Instance.GetInfo_(info_keys[num]).news.chapter??"0");
+
+        bool is_same_chapter = InventoryManager.Instance.GetInfo_(info_keys[num]).news.chapter==currentChapterNum ? true : false;
         string textContent = InventoryManager.Instance.GetInfo_(info_keys[num]).context ?? "";
         string[] keys = InventoryManager.Instance.GetInfo_(info_keys[num]).keywords ?? new string[0];
         string[] parts = Regex.Split(textContent, @"(\n)");
@@ -720,7 +728,7 @@ public class MesteryUIScript : MonoBehaviour
                 var textelement = new TextElement { text = p_str, name = "textelement" };
                 textelement.style.whiteSpace = WhiteSpace.PreWrap;
                 lineContainer.Add(textelement);
-                if (check)
+                if (check&&is_same_chapter)
                 {
 
                     textelement.RegisterCallback<PointerDownEvent>(evt =>
