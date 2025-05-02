@@ -40,7 +40,7 @@ namespace BehaviourTree
             }
             if(time < aimingTime)
             {
-                time += Time.deltaTime;
+                time += ServiceLocator.Get<GameManager>().ingameDeltaTime;
                 if(targetRigidbody) aimPos = targetRigidbody.worldCenterOfMass;
                 else aimPos = blackboard.target.position;
                 canAttack = blackboard.thisUnit.AttackCheck(aimPos);
@@ -48,7 +48,7 @@ namespace BehaviourTree
             }
             else if(time < aimingTime+delayTime)
             {
-                time += Time.deltaTime;
+                time += ServiceLocator.Get<GameManager>().ingameDeltaTime;
             }
             else if(!isAttacking && time >= aimingTime+delayTime)
             {

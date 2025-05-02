@@ -77,12 +77,12 @@ public class Bullet : MonoBehaviour
             transform.position = transform.position + (Vector3)(-destination * distance);
             WallFeedBack(collision);
             Destroy(gameObject);
+            BulletSound();
         }
 
         if (collision.CompareTag("Player"))//레이어 설정한 것 때문에 적군 총알만 플레이어 에게 충돌일어남
         {
             PlayerDamage(collision);
-            BulletSound();
         }
         if(life > 0 && collision.CompareTag("Enemy"))//플레이어 총알이 적군에게 충돌시
         {
@@ -115,10 +115,8 @@ public class Bullet : MonoBehaviour
 
     private void PlayerDamage(Collider2D collision)
     {
-        bool isDamaged = false;
-        var playerUnit = collision.gameObject.GetComponent<PlayerUnit>();
-        var temp = playerUnit.rg.gameObject.GetInterface<IDamageable>();
-        isDamaged = temp.GetDamage(damage, parentGo.transform, damagedFeedBack);
+        var temp = collision.attachedRigidbody.gameObject.GetInterface<IDamageable>();
+        var isDamaged = temp.GetDamage(damage, parentGo.transform, damagedFeedBack);
         if (isDamaged) 
         {
             DamagedFeedBack(collision);
@@ -127,9 +125,8 @@ public class Bullet : MonoBehaviour
     }
     private void EnemyDamage(Collider2D collision)
     {
-        bool isDamaged = false;
         var temp = collision.gameObject.GetInterface<IDamageable>();
-        if(temp != null) isDamaged = temp.GetDamage(damage,parentGo.transform,damagedFeedBack);
+        var isDamaged = temp.GetDamage(damage,parentGo.transform,damagedFeedBack);
         if (isDamaged) 
         {
             BulletSound();

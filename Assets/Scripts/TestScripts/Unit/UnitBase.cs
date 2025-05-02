@@ -159,6 +159,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
             anim.SetBool("isRun", true);
         }
         anim.SetFloat("dashMultiplier", dashDuration > 0 ? 1/dashDuration : 1);
+        anim.speed = ServiceLocator.Get<GameManager>().ingameTimescale;
     }
 
     // private void LateUpdate()

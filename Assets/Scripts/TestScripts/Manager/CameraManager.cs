@@ -22,6 +22,7 @@ public class CameraManager : MonoBehaviour
 
     public void SetState(State state)
     {
+        Debug.Log($"SetState: {state.maxHorizontalInfluence}, {state.maxVerticalInfluence}, {state.influenceSmoothness}, {state.changeSize}");
         proCamera2DPointerInfluence.MaxHorizontalInfluence = state.maxHorizontalInfluence;
         proCamera2DPointerInfluence.MaxVerticalInfluence = state.maxVerticalInfluence;
         proCamera2DPointerInfluence.InfluenceSmoothness = state.influenceSmoothness;

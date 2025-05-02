@@ -59,7 +59,7 @@ public class EnemyUnit : UnitBase, IDamageable, ISelectObject
             return false;
         }
         hzForce = (dir-(Vector2)transform.position).normalized.x;
-        transform.position = Vector2.MoveTowards(transform.position, dir, Time.deltaTime * movementSpeed);
+        transform.position = Vector2.MoveTowards(transform.position, dir, ServiceLocator.Get<GameManager>().ingameDeltaTime * movementSpeed);
         return base.Move(Vector2.right * Mathf.Sign(hzForce));
     }
 
