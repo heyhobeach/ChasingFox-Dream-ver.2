@@ -33,7 +33,7 @@ public class GroundSensor : MonoBehaviour
     private void OnCollisionStay2D(Collision2D collision) => CollisionCheck(collision);
     private void OnCollisionExit2D(Collision2D collision) => isGrounded = false;
 
-    private void Awake() => col = GetComponent<CircleCollider2D>();
+    // private void Awake() => col = GetComponent<CircleCollider2D>();
 
     private void FixedUpdate()
     {

@@ -104,11 +104,11 @@ namespace BehaviourTree
         {
             if(!jobHandle.IsCompleted) jobHandle.Complete();
             isRunning = false;
-            if(pathFinding.isLoad.IsCreated) ServiceLocator.Get<GameManager>().isLoad = pathFinding.isLoad[0];
             if(pathFinding.OpenList.IsCreated) pathFinding.OpenList.Dispose();
             if(pathFinding.ClosedList.IsCreated) pathFinding.ClosedList.Dispose();
             if(pathFinding.NodeArray.IsCreated) pathFinding.NodeArray.Dispose();
             if(pathFinding.FinalNodeList.IsCreated) pathFinding.FinalNodeList.Dispose();
+            if(pathFinding.isLoad.IsCreated && ServiceLocator.Get<GameManager>() != null) ServiceLocator.Get<GameManager>().isLoad = pathFinding.isLoad[0];
             if(pathFinding.isLoad.IsCreated) pathFinding.isLoad.Dispose();
         }
     }

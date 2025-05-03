@@ -7,13 +7,14 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.U2D.Animation;
 
+// TODO : 무기 시스템 구현
 [RequireComponent(typeof(ShootingAnimationController))]
 [RequireComponent(typeof(SpriteLibrary))]
 [RequireComponent(typeof(SpriteResolver))]
 /// <summary>
 /// 인간 상태 클래스, PlayerUnit 클래스를 상속함
 /// </summary>
-public class Human : PlayerUnit, IDoorInteractable
+public class Human : PlayerUnit, IDoorInteractable   
 {
     [Header("Test"), Space(10)]
     public AttackType attackType = AttackType.Projectile;
@@ -34,9 +35,6 @@ public class Human : PlayerUnit, IDoorInteractable
     
     [Header("Human"), Space(10)]
     public GameObject bullet;
-
-    AudioSource sound;
-    public AudioClip soundClip;
 
     public GameObject userGunsoud;
 
@@ -259,8 +257,6 @@ public class Human : PlayerUnit, IDoorInteractable
 
             // Debug.Log("여기 문제");
             base.Attack(clickPos);
-//            Assert.IsNotNull(sound, "총기 격발음 셋팅 안됨");
-            sound?.PlayOneShot(soundClip, 0.3f);
             SoundManager.Instance.CoStartBullet(userGunsoud, false);
             ProCamera2DShake.Instance.Shake("GunShot ShakePreset");
             Assert.IsNotNull(bullet, "총알 셋팅 안됨");
@@ -292,7 +288,6 @@ public class Human : PlayerUnit, IDoorInteractable
         if(((Vector2)transform.position-(Vector2)clickPos).magnitude < ((Vector2)transform.position-shootingAnimationController.GetShootPosition()).magnitude) return false;
         shootingAnimationController.AttackAni();
         this.clickPos = clickPos;
-        sound?.PlayOneShot(soundClip, 0.3f);
         SoundManager.Instance.CoStartBullet(userGunsoud, false);
         ProCamera2DShake.Instance.Shake("GunShot ShakePreset");
         residualAmmo--;

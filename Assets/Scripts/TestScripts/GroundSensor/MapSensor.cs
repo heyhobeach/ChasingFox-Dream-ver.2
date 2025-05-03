@@ -30,6 +30,7 @@ public class MapSensor : MonoBehaviour
 
     public void Set(Rigidbody2D target, Collider2D targetCol)
     {
+        Debug.Log(targetCol.bounds.size);
         groundSensor.Set(target, targetCol);
         platformSensor.Set(target, targetCol);
     }
