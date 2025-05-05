@@ -7,13 +7,16 @@ public class SoundLibrary : MonoBehaviour
     private AudioSource audioSource; // AudioSource component
     private SoundClip currentClip; // Current sound clip being
 
-    private void Start()
+    private void Awake()
     {
         audioSource = gameObject.GetComponent<AudioSource>();
     }
     private void Update()
     {
-        if (audioSource.isPlaying && audioSource.time >= currentClip.playRange.y) StopSound();
+        if (currentClip != null 
+            && audioSource.isPlaying 
+            && audioSource.time >= currentClip.playRange.y) 
+            StopSound();
     }
 
     public void PlaySoundOneShot(Object clip)
@@ -36,12 +39,10 @@ public class SoundLibrary : MonoBehaviour
                     Debug.LogWarning("Sound clip package has more than one sound clip!");
                 }
                 var temp = (clip as SoundClipPackage).soundClips[0];
-                audioSource.time = temp.playRange.x;
                 audioSource.PlayOneShot(temp.clip);
                 break;
             case nameof(SoundClip):
                 var tempClip = clip as SoundClip;
-                audioSource.time = tempClip.playRange.x;
                 audioSource.PlayOneShot(tempClip.clip);
                 break;
             default:
