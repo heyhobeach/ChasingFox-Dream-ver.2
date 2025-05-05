@@ -18,8 +18,7 @@ public class DistanceCheck : DecoratorNode
     protected override NodeState OnUpdate()
     {
         if(!snapshot) targetDistance = Vector2.Distance((Vector2)blackboard.target.position, (Vector2)blackboard.thisUnit.transform.position);
-        var pos = blackboard.target.CompareTag("Player") ? blackboard.target.transform.position + Vector3.up : blackboard.target.transform.position;
-        var canHit = blackboard.thisUnit.AttackCheck(pos);
+        var canHit = blackboard.thisUnit.AttackCheck(blackboard.target.transform.position);
         switch(distanceType)
         {
             case DistanceType.Less:

@@ -77,7 +77,6 @@ public partial class GameManager : MonoBehaviour
         }
     }
     public float ingameDeltaTime { get => Time.deltaTime * ingameTimescale; }
-    public static float fps { get; private set; }
 
     public bool isPaused { get; private set; }
 
@@ -90,8 +89,8 @@ public partial class GameManager : MonoBehaviour
         BehaviourNode.clone.Clear();
         StopAllCoroutines();
         mapsearchCoroutine = null;
-        ServiceLocator.Get<CameraManager>().proCamera2DRooms.OnStartedTransition.RemoveListener(MoveNextRoom);
         if (isPaused) Pause();
+        ServiceLocator.Get<CameraManager>().proCamera2DRooms.OnStartedTransition.RemoveListener(MoveNextRoom);
     }
 
     private void Awake()

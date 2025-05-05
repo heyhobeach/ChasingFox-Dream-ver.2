@@ -23,6 +23,7 @@ public class Bullet : MonoBehaviour
     private Vector2 destination;
 
     [HideInInspector] public GameObject parentGo;
+    private SoundLibrary soundLibrary;
     private Rigidbody2D rg;
     private float startTime;
 
@@ -54,6 +55,7 @@ public class Bullet : MonoBehaviour
     private void Awake()
     {
         rg = GetComponent<Rigidbody2D>();
+        soundLibrary = GetComponent<SoundLibrary>();
         rg.excludeLayers = 1<<LayerMask.NameToLayer("Platform");
     }
     private void Update()
@@ -78,15 +80,18 @@ public class Bullet : MonoBehaviour
             WallFeedBack(collision);
             Destroy(gameObject);
             BulletSound();
+            soundLibrary.RandomPlaySoundOneShot(0);
         }
 
         if (collision.CompareTag("Player"))//레이어 설정한 것 때문에 적군 총알만 플레이어 에게 충돌일어남
         {
             PlayerDamage(collision);
+            soundLibrary.RandomPlaySoundOneShot(0);
         }
         if(life > 0 && collision.CompareTag("Enemy"))//플레이어 총알이 적군에게 충돌시
         {
             EnemyDamage(collision);
+            soundLibrary.RandomPlaySoundOneShot(0);
         }
 
         // if (collision.gameObject.tag == "guard")//필요없어보임

@@ -58,7 +58,7 @@ public class PlatformSensor : MonoBehaviour
         }
     }
 
-    private void Awake() => col = GetComponent<EdgeCollider2D>();
+    // private void Awake() => col = GetComponent<EdgeCollider2D>();
 
     private void FixedUpdate()
     {
@@ -67,14 +67,7 @@ public class PlatformSensor : MonoBehaviour
         if(currentPlatform) col.points = onPlaotformPoints;
         else
         {
-            if(GameManager.fps < 120)
-            {
-                var temp = 0.01f * (120 / GameManager.fps);
-                groundPoints[0] = new Vector2(-size.x - temp, -size.y - 0.1f);
-                groundPoints[1] = new Vector2(size.x + temp, -size.y - 0.1f);
-                col.points = groundPoints;
-            }
-            else col.points = defaultPoints;
+            col.points = defaultPoints;
             onPlatform = false;
         }
 

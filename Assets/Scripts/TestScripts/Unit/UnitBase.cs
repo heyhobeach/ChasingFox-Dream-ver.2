@@ -169,7 +169,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     
     protected virtual void OnEnable()
     {
-        var col = gameObject.GetComponent<CapsuleCollider2D>();
+        var col = gameObject.GetComponent<CapsuleCollider2D>(); 
         boxSizeX = col.bounds.extents.x;
         boxSizeY = col.bounds.extents.y;
         boxOffsetX = col.offset.x;

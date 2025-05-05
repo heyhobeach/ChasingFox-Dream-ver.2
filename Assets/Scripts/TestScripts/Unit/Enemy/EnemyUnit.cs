@@ -53,7 +53,6 @@ public class EnemyUnit : UnitBase, IDamageable, ISelectObject
     {
         if(ControllerChecker()) 
         {
-            Debug.Log("ControllerChecker");
             hzForce = 0;
             base.Move(Vector2.zero);
             return false;

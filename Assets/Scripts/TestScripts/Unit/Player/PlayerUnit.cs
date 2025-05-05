@@ -151,6 +151,11 @@ public abstract class PlayerUnit : UnitBase
         SetVerticalVelocity(0);
     }
 
+    public override void Init()
+    {
+        base.Init();
+    }
+
     private float jumpingHight;
     public override bool Jump(KeyState jumpKey)
     {
