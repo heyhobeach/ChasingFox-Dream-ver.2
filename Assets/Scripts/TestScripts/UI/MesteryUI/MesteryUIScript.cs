@@ -121,7 +121,7 @@ public class MesteryUIScript : MonoBehaviour
         // 클릭 이벤트 추가
         List<TextElement> textList = new List<TextElement>();//이벤트가 들어가야하는 내용들
         textList.Add(text1); textList.Add(text2); textList.Add(clickableText);
-        SetDiaryText(ref textContainer, StartEvent("테스트파일2"));
+        SetDiaryText(ref textContainer, StartEvent("Diary_0.001"));//처음 수집품별 다이어리 내용
         //ui toolkit에서 제공하는 함수로 이벤트 등록에 사용됨
         foreach (var text in textList)
         {
@@ -261,7 +261,7 @@ public class MesteryUIScript : MonoBehaviour
 
         List<string> contentContextList=new List<string>();
 
-        //Debug.Log("dialogue length" + dialogues.Length);
+        Debug.Log("dialogue length" + dialogues.Length);
         for (int i = 0; i < dialogues.Length; i++)
         {
             //Debug.Log("LowIndex = " + dialogues[i].context.Length);
@@ -280,15 +280,21 @@ public class MesteryUIScript : MonoBehaviour
                 {
                     isProblemCSV = true;
                     originText.Add(contentContext);
+                    Debug.Log("row index count" + rowIndex);
+                    Debug.Log("길이"+dialogues[i].problem[rowIndex].Length);
                     if (dialogues[i].problem[rowIndex].Length <= 1)//문제 빈칸일때
                     {
-                        //Debug.Log("문제 부분 작동중 이지만 빈칸임" + dialogues[i].problem[rowIndex][0]);
+                        Debug.Log("빈칸 부분");
+                        Debug.Log("문제 부분 작동중 이지만 빈칸임" + dialogues[i].problem[rowIndex]);
 
                         answerTexts.Add("");
                     }
                     else//문제에 내용있을때
                     {
+                        Debug.Log("문제 부분");
+                        Debug.Log(string.Format("각 길이 확인{0} ||||| {1}", dialogues[i].problem.Length, dialogues[i].correct_answer.Length));
                         Debug.Log("문제 부분 작동 " + dialogues[i].problem[rowIndex] + "정답은 " + dialogues[i].correct_answer[rowIndex]);
+
                         contentContext = dialogues[i].problem[rowIndex];
                         answerTexts.Add( dialogues[i].correct_answer[rowIndex]);
                     }
@@ -674,7 +680,7 @@ public class MesteryUIScript : MonoBehaviour
     {
 
         //Dialogue[] dialyDialogue = StartEvent("다이어리 내용");
-        SetDiaryText(ref textContainer, StartEvent("다이어리 내용"));
+        SetDiaryText(ref textContainer, StartEvent("Reasoning_0.001"));
 
 
     }
