@@ -7,7 +7,7 @@ public class DatabaseManager : MonoBehaviour
     // Start is called before the first frame update
     public static DatabaseManager instance;//나중에 싱글턴 될듯
 
-    [DisableInInspector] public string csv_FileName;
+    [DisableInspector] public string csv_FileName;
     public enum Lang//언어 설정
     {
         KOR,

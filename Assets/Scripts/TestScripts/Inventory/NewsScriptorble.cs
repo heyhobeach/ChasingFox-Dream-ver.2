@@ -6,6 +6,7 @@ namespace Collection{
     public class NewsScriptorble : ScriptableObject
     {
         public int id;
+        public int chapter_info;
         public Sprite image;
         public string image_name;
     }

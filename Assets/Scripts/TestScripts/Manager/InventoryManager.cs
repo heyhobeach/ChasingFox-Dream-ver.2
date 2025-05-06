@@ -21,6 +21,7 @@ public class InventoryManager : MonoBehaviour
     {
 
         invendata = Resources.Load("Inventory") as InventoryScripable;//이걸 가져오면 저장이 어떻게 되는지?
+        Debug.Log("invendata" + invendata.name);
         if (instance == null)
         {
             instance = this;
@@ -62,6 +63,14 @@ public class InventoryManager : MonoBehaviour
     /// <returns>InventoryScripable</returns>
     public InventoryScripable GetInventoryAll()
     {
+        if(invendata == null)
+        {
+            Debug.LogError("inventory is null");
+        }
+        else
+        {
+            Debug.Log("inventory count" + invendata.name);//여기서 아직 set이 안 되어있음
+        }
         return invendata;
     }
 
