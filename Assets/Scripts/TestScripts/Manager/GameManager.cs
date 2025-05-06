@@ -239,17 +239,17 @@ public partial class GameManager : MonoBehaviour
         return maps[currentRoomIndex].edgeCollider2D;
     }
 
-    public void LoadScene(string name, bool active = true)
+    public bool LoadScene(string name, bool active = true)
     {
         if (SceneManager.GetActiveScene().name != name) 
         {
             DataReset();
             SaveData();
         }
-        PageManger.Instance.LoadScene(name, active);
-        ServiceLocator.Get<UIController>().DialogueCanvasSetFalse();
+        ServiceLocator.Get<UIController>()?.DialogueCanvasSetFalse();
+        return PageManger.Instance.LoadScene(name, active);
     }
-    public void RetryScene() => LoadScene(SceneManager.GetActiveScene().name, false);
+    public bool RetryScene() => LoadScene(SceneManager.GetActiveScene().name, false);
 
     public void Pause()
     {
