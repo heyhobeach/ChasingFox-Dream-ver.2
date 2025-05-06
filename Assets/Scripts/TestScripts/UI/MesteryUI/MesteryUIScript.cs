@@ -282,10 +282,10 @@ public class MesteryUIScript : MonoBehaviour
                     originText.Add(contentContext);
                     Debug.Log("row index count" + rowIndex);
                     Debug.Log("길이"+dialogues[i].problem[rowIndex].Length);
-                    if (dialogues[i].problem[rowIndex].Length <= 1)//문제 빈칸일때
+                    if (dialogues[i].problem[rowIndex].Length <= 1&& dialogues[i].mode[rowIndex] != "hidden")//문제 빈칸일때
                     {
                         Debug.Log("빈칸 부분");
-                        Debug.Log("문제 부분 작동중 이지만 빈칸임" + dialogues[i].problem[rowIndex]);
+                        Debug.Log("문제 부분 작동중 이지만 빈칸임" + dialogues[i].problem[rowIndex] + "모드" + dialogues[i].mode[rowIndex]);
 
                         answerTexts.Add("");
                     }
@@ -295,8 +295,16 @@ public class MesteryUIScript : MonoBehaviour
                         Debug.Log(string.Format("각 길이 확인{0} ||||| {1}", dialogues[i].problem.Length, dialogues[i].correct_answer.Length));
                         Debug.Log("문제 부분 작동 " + dialogues[i].problem[rowIndex] + "정답은 " + dialogues[i].correct_answer[rowIndex]);
 
+
+                        //Debug.Log("히든 정답" + dialogues[i].hidden_answer[rowIndex] + "모드" + dialogues[i].mode[rowIndex]);//hidden정답 부분
+
                         contentContext = dialogues[i].problem[rowIndex];
                         answerTexts.Add( dialogues[i].correct_answer[rowIndex]);
+                    }
+
+                    if (dialogues[i].mode[rowIndex] == "hidden")
+                    {
+                        Debug.Log("히든 문장 " + dialogues[i].context[rowIndex]);
                     }
 
                 }
@@ -567,6 +575,7 @@ public class MesteryUIScript : MonoBehaviour
             if (dialogue.problem.Length >0)
             {
                 Debug.Log("문제 길이" + dialogue.problem.Length);
+                //Debug.Log("히든 정답" + dialogue.hidden_answer);
                 is_problem = true;
             }
         }
@@ -589,6 +598,7 @@ public class MesteryUIScript : MonoBehaviour
         if (is_problem)
         {
             Debug.Log("문제 파일 입니다");
+            //Debug.Log()
             templist.Clear();
             templist.Add(trace_dic[mesteryEventNum]);
         }
@@ -596,12 +606,6 @@ public class MesteryUIScript : MonoBehaviour
         {
             Debug.Log("일반 파일 입니다");
         }
-
-        //여기서 추리식에서 특정 id내용만 가져올수 있도록 내용 추가 필요 
-        /*
-         내용 작성
-         if()
-         */
 
         Dialogue[] dialogues = templist.ToArray();
         Debug.Log("제목"+title_str+"dialogue length" + dialogues.Length);
