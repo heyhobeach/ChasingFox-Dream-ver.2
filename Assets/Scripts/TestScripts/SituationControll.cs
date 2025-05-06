@@ -24,7 +24,7 @@ public class SituationControll : MonoBehaviour
 
     public SceneNode[] scenearr = new SceneNode[CHP_COUNT];
 
-
+    public GameObject mesteryObj;
 
     public class SceneNode
     {
@@ -44,10 +44,11 @@ public class SituationControll : MonoBehaviour
     {
         InventoryBox,
         Wingman,
-        door
+        door,
+        sofa
     }
 
-    private bool iskeydown = false;
+    private bool isTrigger = false;
 
     public Situation situation;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -103,23 +104,20 @@ public class SituationControll : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D collision)
     {
-        iskeydown = false;
+        isTrigger = false;
     }
 
     public void OnTriggerStay2D(Collider2D collision)
     {
+        isTrigger = true;
+    }
 
-        if (Input.GetKeyDown(KeyCode.F))
+    private void FixedUpdate()
+    {
+        if (Input.GetKeyDown(KeyCode.F)&&isTrigger)
         {
-            iskeydown = true;
-        }
-        if (iskeydown)
-        {
-
-            iskeydown = false;
             ObjectEvent();
         }
-
     }
 
     public void ObjectEvent()
@@ -138,9 +136,17 @@ public class SituationControll : MonoBehaviour
                 Debug.Log("door");
                 CallDoorSystem();
                 break;
+            case Situation.sofa:
+                MesterySystem();
+                break;
         }
     }
 
+    public void MesterySystem()
+    {
+        Debug.Log("mesterySystem");
+        mesteryObj.SetActive(true);
+    }
 
     public void PopInventory()
     {
