@@ -144,7 +144,6 @@ public class Werewolf : PlayerUnit
             _bullet.GetComponent<Bullet>().Set(
                 shootingAnimationController.GetShootPosition(), 
                 clickPos, 
-                shootingAnimationController.GetShootRotation(), 
                 1, 
                 100, 
                 gObj, 

@@ -37,13 +37,13 @@ public class Bullet : MonoBehaviour
 
     private Vector3 shootPos;
 
-    public void Set(Vector3 shootPos, Vector3 targetPos, Vector3 rotation, int damage, float speed, GameObject gobj, Vector3 addPos = new Vector3(), Action func = null)
+    public void Set(Vector3 shootPos, Vector3 targetPos, int damage, float speed, GameObject gobj, Vector3 addPos = new Vector3(), Action func = null)
     {
         // Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Bullet"), gobj.layer);
         parentGo = gobj;
         transform.position = (Vector2)shootPos + (Vector2)addPos;
         destination = ((Vector2)targetPos - (Vector2)shootPos).normalized;
-        transform.GetChild(0).transform.localEulerAngles = rotation;
+        transform.localEulerAngles = new Vector3(0, 0, Mathf.Atan2(destination.y, destination.x) * Mathf.Rad2Deg);
         this.damage = damage;
         this.speed = speed;
         damagedFeedBack = func;

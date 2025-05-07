@@ -35,7 +35,6 @@ public class RangedEnemy : EnemyUnit, IDoorInteractable
         _bullet.GetComponent<Bullet>().Set(
             shootingAnimationController.GetShootPosition(), 
             attackPos, 
-            shootingAnimationController.GetShootRotation(), 
             1, 
             bulletSpeed, 
             gObj
