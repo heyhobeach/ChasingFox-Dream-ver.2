@@ -184,7 +184,7 @@ public class MesteryUIScript : MonoBehaviour
     {
         var background = GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("BackGround");
         float current = 0;
-        float value_a = 255;
+        float value_a = 255*0.2f;
         while (current < time)
         {
             await Awaitable.EndOfFrameAsync();
