@@ -59,13 +59,13 @@ public class EnemyController : MonoBehaviour
             ServiceLocator.Get<GameManager>().OnEnemyDeath(blackboard.thisUnit);
         };
     }
-    void Update()
-    {
-        if(!isStop || ServiceLocator.Get<GameManager>() != null) behaviorTree.Update();
-    }
+    // void Update()
+    // {
+    // }
 
     void FixedUpdate()
     {
+        if(!isStop || ServiceLocator.Get<GameManager>() != null) behaviorTree.Update();
         if(ServiceLocator.Get<GameManager>() != null) CircleRay();
     }
 
