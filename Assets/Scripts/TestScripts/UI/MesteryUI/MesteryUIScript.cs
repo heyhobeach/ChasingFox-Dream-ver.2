@@ -855,6 +855,7 @@ public class MesteryUIScript : MonoBehaviour
         textContainer.AddToClassList("diary-left");
         //tracer.AddToClassList("test1");
         tracer.AddToClassList("test2-2");
+        tracer.style.marginRight = Length.Percent(2);
     }
 
     public void InvenLeftButtonEvent()
