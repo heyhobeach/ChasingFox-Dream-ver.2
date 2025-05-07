@@ -267,7 +267,6 @@ public class Human : PlayerUnit, IDoorInteractable
                 _bullet.GetComponent<Bullet>().Set(
                     shootingAnimationController.GetShootPosition(), 
                     clickPos, 
-                    shootingAnimationController.GetShootRotation(), 
                     bulletDamage, 
                     bulletSpeed, 
                     gObj, 

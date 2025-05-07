@@ -59,8 +59,8 @@ public class Map : MonoBehaviour
             mapData.Init();
         }
 
-        enemyCount= enemyUnits.Count;
-        // gameObject.SetActive(false);
+        enemyCount = enemyUnits.Count;
+
         foreach (EnemyUnit unit in enemyUnits)
         {
             if(!unit.IsUnityNull()) unit.gameObject.SetActive(false);

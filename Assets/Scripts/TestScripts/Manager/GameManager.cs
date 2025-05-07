@@ -66,16 +66,14 @@ public partial class GameManager : MonoBehaviour
 
     private Coroutine mapsearchCoroutine;
 
-    public float _ingameTimescale = 1f;
+    private float _ingameTimescale = 1f;
     public float ingameTimescale
     {
         get => _ingameTimescale;
-        set
-        {
-            _ingameTimescale = value;
-            Time.fixedDeltaTime = value * 0.02f;
-        }
+        set =>_ingameTimescale = value;
     }
+    public void SetIngameTimescale(float value) => ServiceLocator.Get<GameManager>().ingameTimescale = value;
+    public void SetSystemTimescale(float value) => Time.timeScale = value;
     public float ingameDeltaTime { get => Time.deltaTime * ingameTimescale; }
 
     public bool isPaused { get; private set; }
@@ -191,11 +189,6 @@ public partial class GameManager : MonoBehaviour
         else SaveData();
     }
 
-    private void Update()
-    {
-        
-    }
-
     public void MoveNextRoom(int currentRoomIndex, int previousRoomIndex)
     {
         CreateWallRoom(currentRoomIndex);
@@ -279,12 +272,15 @@ public partial class GameManager : MonoBehaviour
 
         var items = InventoryManager.Instance.invendata.inventory?.Values.ToArray();
 
+        var playerData = player.GetComponent<Player>().GetJsonData();
+        playerData.pcm = player.GetComponent<PlayerController>().DataSet();
+
         SystemManager.Instance.saveData = new SaveData(){
             chapter = SceneManager.GetActiveScene().name,
             stageIdx = PlayerData.lastRoomIdx,
             currentEventTriggerDataGuid = EventTriggerData.currentEventTriggerData?.guid,
             inventoryData = items,
-            playerData = player.GetComponent<Player>().GetJsonData(),
+            playerData = playerData,
             mapData = mapDatas,
             eventTriggerData = eventTriggerDatas
         };

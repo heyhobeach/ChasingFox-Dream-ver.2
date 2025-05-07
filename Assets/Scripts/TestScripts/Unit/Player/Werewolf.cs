@@ -31,6 +31,7 @@ public class Werewolf : PlayerUnit
             brutalGauge?.Invoke(_currentGauge, brutalData.maxGage);
         }
     }
+    public void SetGauge(int value) => currentGauge = value;
     public int currentCount;
     [SerializeField] private float currentTime;
 
@@ -144,7 +145,6 @@ public class Werewolf : PlayerUnit
             _bullet.GetComponent<Bullet>().Set(
                 shootingAnimationController.GetShootPosition(), 
                 clickPos, 
-                shootingAnimationController.GetShootRotation(), 
                 1, 
                 100, 
                 gObj, 
@@ -163,7 +163,7 @@ public class Werewolf : PlayerUnit
         if(Physics2D.Linecast(transform.position, clickPos, 1<<LayerMask.NameToLayer("Map") | 1<<LayerMask.NameToLayer("Wall"))) return false;
         var hit = Physics2D.OverlapPoint(clickPos, 1<<LayerMask.NameToLayer("Enemy") | 1<<LayerMask.NameToLayer("GimmickObject"));
         if(!hit) return false;
-        if(hit.CompareTag("Enemy") && hit.GetComponent<EnemyUnit>().UnitState == UnitState.Death) return false;
+        if(hit.CompareTag("Enemy") && hit.GetComponent<EnemyUnit>()?.UnitState == UnitState.Death) return false;
 
         base.FormChange();
         currentCount--;
