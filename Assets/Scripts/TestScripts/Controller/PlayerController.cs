@@ -69,7 +69,7 @@ public class PlayerController : MonoBehaviour, IBaseController
 
         if(SystemManager.GetButtonDown("skill1") && KeyControl(PlayerControllerMask.Skill1, ref isKeyDown)) unitController.Skill1(ClickPos());
         if(SystemManager.GetButtonDown("skill2")) unitController.Skill2(KeyState.KeyDown);
-        if(SystemManager.GetButtonUp("skill2")) unitController.Skill2(KeyState.KeyUp);
+        else if(SystemManager.GetButtonUp("skill2")) unitController.Skill2(KeyState.KeyUp);
 
         if(SystemManager.GetButtonDown("reload") && KeyControl(PlayerControllerMask.Reload, ref isKeyDown)) unitController.Reload(KeyState.KeyDown);
         else if(SystemManager.GetButton("reload") && KeyControl(PlayerControllerMask.Reload, ref isKeyDown)) unitController.Reload(KeyState.KeyStay);
@@ -103,15 +103,16 @@ public class PlayerController : MonoBehaviour, IBaseController
         return false;
     }
 
-    public void AddControl(int mask) => AddControl((PlayerControllerMask) (1<<mask));
-    public void DelControl(int mask) => DelControl((PlayerControllerMask) (1<<mask));
+    [VisibleEnum(typeof(PlayerControllerMask))] public void AddControl(int mask) => AddControl((PlayerControllerMask)mask);
+    [VisibleEnum(typeof(PlayerControllerMask))] public void DelControl(int mask) => DelControl((PlayerControllerMask)mask);
     public void AddControl(PlayerControllerMask mask) => pcm |= mask;
     public void DelControl(PlayerControllerMask mask) => pcm = (pcm & mask) == mask ? pcm ^ mask : pcm;
 
     public void Move(float dir) => unitController.Move(Vector2.right * dir);
-    public void Attack(float angle) => unitController.Attack(new Vector3(Mathf.Sin(Mathf.Deg2Rad * angle) * 10000, Mathf.Cos(Mathf.Deg2Rad * angle) * 10000));
+    public void Attack() => unitController.Attack(ClickPos());
     public void Reload(KeyState keyState) => unitController.Reload(keyState);
     public void Dash() => unitController.Dash();
+    public void FormChange() => unitController.FormChange();
 
     public Vector3 ClickPos()//클릭한 좌료를 보내주며 현재 공격 클릭시 캐릭터의 바라보는 방향도 변해야한다고 생각해서 필요했던 부분
     {

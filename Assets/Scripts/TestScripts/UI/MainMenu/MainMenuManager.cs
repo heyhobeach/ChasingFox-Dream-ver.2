@@ -94,6 +94,7 @@ public class MainMenuManager : MonoBehaviour
         {
             SystemManager.Instance.CreateData(idx);
             save = SystemManager.Instance.saveData;
+            save.chapter = "Chp0";
         }
         PageManger.Instance.LoadScene(save.chapter, false);
         yield return new WaitForSeconds(moveSpeed);
