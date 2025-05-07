@@ -14,7 +14,7 @@ public class DialogueParser : MonoBehaviour
     string SPLIT_RE = @",(?=(?:[^""]*""[^""]*"")*(?![^""]*""))";//정규식 from chat gpt
                                                                 // string SPLIT_COMMAND_PASER = @"[""!,]";//명령어 분리 정규식
                                                                 // string SPLIT_NUM = @"([^1-9]{1,})";//공백 분리 정규식
-    int id, Chapter, C_name, string_kr, command, image_name, dir, problem, correct_answer;
+    int id, Chapter, C_name, string_kr, command, image_name, dir, problem, correct_answer,hidden_answer,mode;
     string[] row;
     //string[] command;
     string[] testarr;
@@ -56,7 +56,7 @@ public class DialogueParser : MonoBehaviour
             Debug.Log("내용" + i);
         }
 
-        string[] category = { "string_kr", "Chapter", "C_name", "id", "command", "image_name", "dir" , "problem", "correct_answer" };
+        string[] category = { "string_kr", "Chapter", "C_name", "id", "command", "image_name", "dir" , "problem", "correct_answer" , "hidden_answer","mode" };
         int index = 0;
         foreach (string item in category)
         {
@@ -91,6 +91,12 @@ public class DialogueParser : MonoBehaviour
                     break;
                 case "correct_answer":
                     correct_answer= temp;
+                    break;
+                case "hidden_answer":
+                    hidden_answer = temp;
+                    break;
+                case "mode":
+                    mode = temp;
                     break;
             }
             //bool a=exists?true:false;
@@ -132,6 +138,8 @@ public class DialogueParser : MonoBehaviour
             List<string> contextList = new List<string>();
             List<string> problemList = new List<string>();
             List<string> answerList = new List<string>();
+            List<string> hiddenAnswerList = new List<string>();
+            List<string> modeList = new List<string>();
             
             do//동일 id에서 대화 창 변경 한 경우 표시
             {
@@ -149,6 +157,14 @@ public class DialogueParser : MonoBehaviour
                     if (this.correct_answer != -1)
                     {
                         answerList.Add(row[this.correct_answer]);
+                    }
+                    if (this.hidden_answer != -1)
+                    {
+                        hiddenAnswerList.Add(row[this.hidden_answer]);
+                    }
+                    if(this.mode != -1)
+                    {
+                        modeList.Add(row[this.mode]);
                     }
 
                 }catch(Exception e)
@@ -187,6 +203,8 @@ public class DialogueParser : MonoBehaviour
             dialogue.context = contextList.ToArray();
             dialogue.problem = problemList.ToArray();
             dialogue.correct_answer = answerList.ToArray();
+            dialogue.hidden_answer = hiddenAnswerList.ToArray();
+            dialogue.mode=modeList.ToArray();
 
             dialoguesList.Add(dialogue); //대화 내용 리스트에 삽입
             if (isEnd)

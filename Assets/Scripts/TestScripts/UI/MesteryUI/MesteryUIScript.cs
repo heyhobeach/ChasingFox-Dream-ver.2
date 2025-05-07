@@ -69,17 +69,20 @@ public class MesteryUIScript : MonoBehaviour
 
     string[] contentContextArray;
     int contentContextArrayIndex = 0;
-    List<string>answerTexts=new List<string>();
+    List<Tuple<string,string>>answerTexts=new List<Tuple<string, string>>();
     List<string>originText=new List<string>();
 
     int mesteryEventNum;
+    int hidden_start_index = -1;
 
     [Tooltip("추리 시스템 진행할때 현재 챕터 가능한 부분")]
     public int currentChapterNum = 2;
 
+    bool is_hiddenmode = false; 
+
     private void OnEnable()
     {
-
+        hidden_start_index = -1;
         Debug.Log(InventoryManager.Instance.GetInventoryAll().name);
         inventoryScripable = InventoryManager.Instance.GetInventoryAll();//인벤토리에서 데이터를 가져옴
         
@@ -200,18 +203,24 @@ public class MesteryUIScript : MonoBehaviour
     private void DiaryFinishButtonEvent()//정답 확인
     {
         Debug.Log("일기 finish");
-        if (contentContextArrayIndex >= contentContextArray.Length)
+        if (contentContextArrayIndex >= contentContextArray.Length-1)
         {
             Debug.Log("마지막 라인 종료");
-            this.gameObject.SetActive(false);
+            EndMeystery();
             return;
         }
         List<string>strings = new List<string>();
         var container = textContainerContent.Query<TextElement>(className: "dropArea");
         string pattern = @"\s*,\s*";
-        string textWithoutQuotes = answerTexts[contentContextArrayIndex].Replace("\"", "").Trim();
+        string textWithoutQuotes = answerTexts[contentContextArrayIndex].Item1.Replace("\"", "").Trim();
+        string hiddentextWithoutQuotes = answerTexts[contentContextArrayIndex].Item2.Replace("\"", "").Trim();
         string[] answer_strings = Regex.Split(textWithoutQuotes, pattern);
+        string[] hidden_answer_strings= Regex.Split(hiddentextWithoutQuotes, pattern);
 
+        foreach(string str in hidden_answer_strings)
+        {
+            Debug.Log("히드 정답 " + str);
+        }
         int index = 0;
         foreach (var i in container.ToList())
         {
@@ -219,7 +228,7 @@ public class MesteryUIScript : MonoBehaviour
             index++;
             strings.Add(i.text.Trim());
         }
-        if (answerTexts[contentContextArrayIndex].Length <= 1)
+        if (answerTexts[contentContextArrayIndex].Item1.Length <= 1)
         {
             contentContextArrayIndex++;
             SetDiaryTextProblem();
@@ -234,9 +243,15 @@ public class MesteryUIScript : MonoBehaviour
             if(contentContextArrayIndex>contentContextArray.Length)
             {
                 Debug.Log("마지막 라인 종료");
-                this.gameObject.SetActive(false);   
+                EndMeystery();
                 return;
             }
+            //is_hiddenmode = false;
+            CorrectRespon();
+        }else if (hidden_answer_strings.SequenceEqual(strings.ToArray()))
+        {
+            Debug.Log("히든 정답 맞춤");
+            is_hiddenmode = true;
             CorrectRespon();
         }
         else
@@ -272,6 +287,7 @@ public class MesteryUIScript : MonoBehaviour
                 visuallist.style.flexWrap = Wrap.Wrap;
                 string contentContext = "";
                 contentContext = dialogues[i].context[rowIndex];
+                
 
 
                 //string[] keys = InventoryManager.Instance.GetInfo_(info_keys[i]).keywords;
@@ -282,12 +298,13 @@ public class MesteryUIScript : MonoBehaviour
                     originText.Add(contentContext);
                     Debug.Log("row index count" + rowIndex);
                     Debug.Log("길이"+dialogues[i].problem[rowIndex].Length);
-                    if (dialogues[i].problem[rowIndex].Length <= 1)//문제 빈칸일때
+                    if (dialogues[i].problem[rowIndex].Length <= 1)//문제 빈칸일때//&& dialogues[i].mode[rowIndex] != "hidden"
                     {
                         Debug.Log("빈칸 부분");
-                        Debug.Log("문제 부분 작동중 이지만 빈칸임" + dialogues[i].problem[rowIndex]);
+                        Debug.Log("문제 부분 작동중 이지만 빈칸임" + dialogues[i].problem[rowIndex] + "모드" + dialogues[i].mode[rowIndex]);
 
-                        answerTexts.Add("");
+                        answerTexts.Add(new Tuple<string,string> ( "",""));
+                        contentContext = dialogues[i].context[rowIndex];
                     }
                     else//문제에 내용있을때
                     {
@@ -295,10 +312,21 @@ public class MesteryUIScript : MonoBehaviour
                         Debug.Log(string.Format("각 길이 확인{0} ||||| {1}", dialogues[i].problem.Length, dialogues[i].correct_answer.Length));
                         Debug.Log("문제 부분 작동 " + dialogues[i].problem[rowIndex] + "정답은 " + dialogues[i].correct_answer[rowIndex]);
 
+
+                        //Debug.Log("히든 정답" + dialogues[i].hidden_answer[rowIndex] + "모드" + dialogues[i].mode[rowIndex]);//hidden정답 부분
+
                         contentContext = dialogues[i].problem[rowIndex];
-                        answerTexts.Add( dialogues[i].correct_answer[rowIndex]);
+                        Debug.Log("히든 정답" + dialogues[i].hidden_answer[rowIndex]);
+                        //if (dialogues[i].hidden_answer[rowIndex])
+                        answerTexts.Add(new Tuple<string, string>(dialogues[i].correct_answer[rowIndex], dialogues[i].hidden_answer[rowIndex]));
                     }
 
+                    Debug.Log("contentContext =>" + contentContext);
+                    if (dialogues[i].mode[rowIndex] == "hidden"&&hidden_start_index==-1)
+                    {
+                        hidden_start_index = rowIndex;
+                        Debug.Log("hidden index is " + hidden_start_index);
+                    }
                 }
                 else
                 {
@@ -335,6 +363,15 @@ public class MesteryUIScript : MonoBehaviour
         }
 
         contentContextArray = contentContextList.ToArray();
+
+        foreach (string str in contentContextArray)
+        {
+            Debug.Log("contentcontextArray ->" + str);
+        }
+        foreach(string str in originText)
+        {
+            Debug.Log("originText ->" + str);
+        }
         //RefactoryingTest();
 
         for (int number = 0; number < textList.Count; number++)
@@ -346,17 +383,30 @@ public class MesteryUIScript : MonoBehaviour
 
     private void CorrectRespon()
     {
+        Debug.Log("히든 모드 체크" + is_hiddenmode);
         if (contentContextArrayIndex > contentContextArray.Length)
         {
             Debug.LogError("버튼 범위 벗어남");
             return;
         }
 
+
+
         VisualElement problem = currentProblem;
         problem.Clear();
         currentProblem.Clear();
         //problem.Clear();
+
+
         string str = originText[contentContextArrayIndex-1];//여기 문자열 교체하는 방식으로
+        if (is_hiddenmode&&contentContextArrayIndex<=hidden_start_index)//hidden 처음 만났을때 번호로 이동하기위함
+        {
+            Debug.Log("hidden start index is " + hidden_start_index);
+            contentContextArrayIndex = hidden_start_index+1;
+            str = originText[contentContextArrayIndex-1];
+        }
+
+
         string[] pSplits = str.Split(" ");
         foreach (string s in pSplits)
         {
@@ -423,7 +473,20 @@ public class MesteryUIScript : MonoBehaviour
     private void SetDiaryTextProblem()
     {
 
+        if ((hidden_start_index == contentContextArrayIndex))
+        {
+            contentContextArrayIndex = contentContextArray.Length;
+            this.gameObject.SetActive(false);
+            Debug.Log("정답 못 맞춘 상태 히든 부분");
+            return;
+        }
+        else
+        {
+            Debug.Log(string.Format("hidden index{0} contentarrayindex{1}", hidden_start_index, contentContextArrayIndex));
+        }
         VisualElement visuallist = new VisualElement { name = "visuallistLine"};//얘의 위치를 알아야함
+
+
         visuallist.AddToClassList("textOri");
         if (textContainerContent.childCount >0)
         {
@@ -434,6 +497,7 @@ public class MesteryUIScript : MonoBehaviour
         //visuallist.style.position = Position.Absolute;//아래에서 relative로 해야함
 
         //string[] keys = InventoryManager.Instance.GetInfo_(info_keys[contentContextArrayIndex]).keywords;
+        Debug.Log("contentContextArrayIndex" + contentContextArrayIndex);
         string contentContext = contentContextArray[contentContextArrayIndex];
         string[] parts = Regex.Split(contentContext, @"<br\s*/?>");//나눈 문장들 들어 있음
         List<List<string>> tags = new List<List<string>>();//___으로 변환 되어있는 내용에서 해당 번째가 person인지 destination인지 확인용
@@ -516,10 +580,7 @@ public class MesteryUIScript : MonoBehaviour
                 visuallist.Add(problemElement);
             }
         }
-        //visuallist.style.translate = new Translate(0, 50);
-        //visuallist.RegisterCallback<GeometryChangedEvent>(VisualElementChangeEvent);
         textContainerContent.Add(visuallist);
-        //visuallist.RemoveFromClassList("textPos"); 
         visuallist.schedule.Execute(() => {
             // 여기에 다음 프레임에 하고 싶은 동작
             visuallist.RemoveFromClassList("textPos");
@@ -532,15 +593,6 @@ public class MesteryUIScript : MonoBehaviour
     {
         VisualElement target = evt.target as VisualElement;
         if (target == null || target.name != "visuallistLine") return; // 직접 만든 visuallist가 맞는지 확인
-
-        // 이 시점에서는 레이아웃 계산이 완료되었습니다.
-        //Debug.Log("--- GeometryChangedEvent 발생 ---");
-        //Debug.Log($"visuallist worldBound: {target.worldBound}");
-        //Debug.Log($"visuallist layout: {target.layout}");
-        //Debug.Log($"visuallist worldBound.position: {target.worldBound.position}");
-        //Debug.Log($"visuallist layout.position: {target.layout.position}");//이거 기준으로 해야할듯?
-        //Debug.Log($"visuallist layout.height: {target.layout.height}");
-
         // textContainerContent 위치도 필요하다면 여기서 확인 (evt.target.parent 로 접근 가능)
         if (target.parent != null)
         {
@@ -567,6 +619,7 @@ public class MesteryUIScript : MonoBehaviour
             if (dialogue.problem.Length >0)
             {
                 Debug.Log("문제 길이" + dialogue.problem.Length);
+                //Debug.Log("히든 정답" + dialogue.hidden_answer);
                 is_problem = true;
             }
         }
@@ -589,6 +642,7 @@ public class MesteryUIScript : MonoBehaviour
         if (is_problem)
         {
             Debug.Log("문제 파일 입니다");
+            //Debug.Log()
             templist.Clear();
             templist.Add(trace_dic[mesteryEventNum]);
         }
@@ -597,18 +651,11 @@ public class MesteryUIScript : MonoBehaviour
             Debug.Log("일반 파일 입니다");
         }
 
-        //여기서 추리식에서 특정 id내용만 가져올수 있도록 내용 추가 필요 
-        /*
-         내용 작성
-         if()
-         */
-
         Dialogue[] dialogues = templist.ToArray();
         Debug.Log("제목"+title_str+"dialogue length" + dialogues.Length);
         for (int i = 0; i < dialogues.Length; i++)
         {
             Debug.Log("제목" + title_str + "LowIndex = " + dialogues[i].context.Length);
-
         }
 
         return dialogues;
@@ -796,6 +843,11 @@ public class MesteryUIScript : MonoBehaviour
         }
         MesterySystem();
         Debug.Log("오른쪽 버튼 눌림");
+    }
+
+    private void EndMeystery()
+    {
+        this.gameObject.SetActive(false);
     }
 }
 
