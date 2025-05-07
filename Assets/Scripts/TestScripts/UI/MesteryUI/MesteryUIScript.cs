@@ -12,7 +12,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 
-public class UI_DynamicText : MonoBehaviour
+public class MesteryUIScript : MonoBehaviour
 {
 
     VisualElement visualElement;//메인 부분
@@ -52,6 +52,9 @@ public class UI_DynamicText : MonoBehaviour
     VisualElement currentProblem;
     string dragGhostName = "";
 
+    /// <summary>
+    /// 현재 info_keys가 id에 맞게 정확하게 들어있다는 보장이 없음
+    /// </summary>
     private List<int> info_keys = new List<int>();
     bool is_drag = false;
 
@@ -71,11 +74,15 @@ public class UI_DynamicText : MonoBehaviour
 
     int mesteryEventNum;
 
+    [Tooltip("추리 시스템 진행할때 현재 챕터 가능한 부분")]
+    public int currentChapterNum = 2;
+
     private void OnEnable()
     {
 
-
+        Debug.Log(InventoryManager.Instance.GetInventoryAll().name);
         inventoryScripable = InventoryManager.Instance.GetInventoryAll();//인벤토리에서 데이터를 가져옴
+        
 
         Dictionary<int, Inventory.Info>.KeyCollection keys = InventoryManager.Instance.GetinventoryKeys();//키를 가져오기 위한 변수
 
@@ -114,7 +121,7 @@ public class UI_DynamicText : MonoBehaviour
         // 클릭 이벤트 추가
         List<TextElement> textList = new List<TextElement>();//이벤트가 들어가야하는 내용들
         textList.Add(text1); textList.Add(text2); textList.Add(clickableText);
-        SetDiaryText(ref textContainer, StartEvent("테스트파일2"));
+        SetDiaryText(ref textContainer, StartEvent("Diary_0.001"));//처음 수집품별 다이어리 내용
         //ui toolkit에서 제공하는 함수로 이벤트 등록에 사용됨
         foreach (var text in textList)
         {
@@ -254,32 +261,40 @@ public class UI_DynamicText : MonoBehaviour
 
         List<string> contentContextList=new List<string>();
 
-        //Debug.Log("dialogue length" + dialogues.Length);
+        Debug.Log("dialogue length" + dialogues.Length);
         for (int i = 0; i < dialogues.Length; i++)
         {
             //Debug.Log("LowIndex = " + dialogues[i].context.Length);
             for (int rowIndex = 0; rowIndex < dialogues[i].context.Length; rowIndex++)
             {
+                //if (InventoryManager.Instance.GetInfo_(info_keys[i]).news.chapter != currentChapterNum) { continue; }
                 VisualElement visuallist = new VisualElement { name = "textList" };
                 visuallist.style.flexWrap = Wrap.Wrap;
                 string contentContext = "";
                 contentContext = dialogues[i].context[rowIndex];
 
 
-                string[] keys = InventoryManager.Instance.GetInfo_(info_keys[i]).keywords;
+                //string[] keys = InventoryManager.Instance.GetInfo_(info_keys[i]).keywords;
+                string[] keys = InventoryManager.Instance.GetInfo_(int.Parse(dialogues[i].id)).keywords;
                 if (dialogues[i].problem.Length > 0)//해당 부분없으면 다른 csv파일상에서 접근시 문제 생김
                 {
                     isProblemCSV = true;
                     originText.Add(contentContext);
+                    Debug.Log("row index count" + rowIndex);
+                    Debug.Log("길이"+dialogues[i].problem[rowIndex].Length);
                     if (dialogues[i].problem[rowIndex].Length <= 1)//문제 빈칸일때
                     {
-                        //Debug.Log("문제 부분 작동중 이지만 빈칸임" + dialogues[i].problem[rowIndex][0]);
+                        Debug.Log("빈칸 부분");
+                        Debug.Log("문제 부분 작동중 이지만 빈칸임" + dialogues[i].problem[rowIndex]);
 
                         answerTexts.Add("");
                     }
                     else//문제에 내용있을때
                     {
+                        Debug.Log("문제 부분");
+                        Debug.Log(string.Format("각 길이 확인{0} ||||| {1}", dialogues[i].problem.Length, dialogues[i].correct_answer.Length));
                         Debug.Log("문제 부분 작동 " + dialogues[i].problem[rowIndex] + "정답은 " + dialogues[i].correct_answer[rowIndex]);
+
                         contentContext = dialogues[i].problem[rowIndex];
                         answerTexts.Add( dialogues[i].correct_answer[rowIndex]);
                     }
@@ -367,7 +382,9 @@ public class UI_DynamicText : MonoBehaviour
         List<List<string>> tags = new List<List<string>>();//___으로 변환 되어있는 내용에서 해당 번째가 person인지 destination인지 확인용
         foreach (string part in parts)//br기준,사실상 없는거나 마찬가지
         {
-            Debug.Log("part is " + part);
+            //Debug.Log("part is " + part);
+            //Debug.Log("id=>" + id);
+            Debug.Log(string.Format("part is {0} , id => {1} key is {2}", part, id, keys[0]));
             string[] _part;
             _part = part.Split(' ');
 
@@ -386,7 +403,8 @@ public class UI_DynamicText : MonoBehaviour
                     textelement.AddToClassList("clickable");
                     textelement.RegisterCallback<PointerDownEvent>(evt => {
                         mesteryEventNum = int.Parse(id);
-                        Debug.Log("id" + id); });
+                        //Debug.Log("id" + id); 
+                    });
                     textelement.RegisterCallback<PointerDownEvent>(LoadMestery);
 
                 }
@@ -559,6 +577,8 @@ public class UI_DynamicText : MonoBehaviour
         foreach (var i in info_keys)//현재 가지고 있는 키에서 문자를 받을수있음
         {
             bool check = csv_id_list.Contains(i);
+            print("chapter :" + InventoryManager.Instance.GetInfo_(i).news.chapter);
+            check=check&&(InventoryManager.Instance.GetInfo_(i).news.chapter == currentChapterNum);//이 부분 들어가면 내용에도 chapter 동일해야 들어감
             if (!check)
             {
                 Debug.Log("스크립트에 키 값이 없음 continue");
@@ -660,7 +680,7 @@ public class UI_DynamicText : MonoBehaviour
     {
 
         //Dialogue[] dialyDialogue = StartEvent("다이어리 내용");
-        SetDiaryText(ref textContainer, StartEvent("다이어리 내용"));
+        SetDiaryText(ref textContainer, StartEvent("Reasoning_0.001"));
 
 
     }
@@ -682,7 +702,10 @@ public class UI_DynamicText : MonoBehaviour
         content.style.flexShrink = 0;
 
         VisualElement visuallist = new VisualElement();
-        Debug.Log("inven =" + InventoryManager.Instance.GetInfo_(info_keys[num]).context);
+        Debug.Log("inven =" + InventoryManager.Instance.GetInfo_(info_keys[num]).context+" ||||"
+            +"correction Num" + InventoryManager.Instance.GetInfo_(info_keys[num]).news.chapter??"0");
+
+        bool is_same_chapter = InventoryManager.Instance.GetInfo_(info_keys[num]).news.chapter==currentChapterNum ? true : false;
         string textContent = InventoryManager.Instance.GetInfo_(info_keys[num]).context ?? "";
         string[] keys = InventoryManager.Instance.GetInfo_(info_keys[num]).keywords ?? new string[0];
         string[] parts = Regex.Split(textContent, @"(\n)");
@@ -718,7 +741,7 @@ public class UI_DynamicText : MonoBehaviour
                 var textelement = new TextElement { text = p_str, name = "textelement" };
                 textelement.style.whiteSpace = WhiteSpace.PreWrap;
                 lineContainer.Add(textelement);
-                if (check)
+                if (check&&is_same_chapter)
                 {
 
                     textelement.RegisterCallback<PointerDownEvent>(evt =>

@@ -5,6 +5,7 @@ public class RainContoroller : MonoBehaviour
 {
     public VisualEffect targetVFX;
 
+    public Color color = Color.white;
     [Range(0f, 100f)]
     public float strength = 100f;
     [Range(-50f, 50f)]
@@ -25,13 +26,15 @@ public class RainContoroller : MonoBehaviour
     {
         if(strength == 0) targetVFX.Stop();
         else targetVFX.Play();
+        targetVFX.SetVector4("color", color);
         targetVFX.SetFloat("strength", strength);
         targetVFX.SetFloat("windForce", windForce);
         targetVFX.SetFloat("range", range);
         targetVFX.SetFloat("height", height);
     }
-    public void UpdateVFXProperties(float strength, float windForce, float range, float height)
+    public void UpdateVFXProperties(Color color, float strength, float windForce, float range, float height)
     {
+        this.color = color;
         this.strength = strength;
         this.windForce = windForce;
         this.range = range;

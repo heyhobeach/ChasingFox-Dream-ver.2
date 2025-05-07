@@ -21,7 +21,7 @@ public class RangedEnemy : EnemyUnit, IDoorInteractable
     {
         var pos = attackPos-transform.position;
         // bool isForword = Mathf.Sign(pos.normalized.x)>0&&!spriteRenderer.flipX ? true : Mathf.Sign(pos.normalized.x)<0&&spriteRenderer.flipX ? true : false;
-        var hits = Physics2D.RaycastAll(transform.position+Vector3.up, pos.normalized, pos.magnitude, 1<<LayerMask.NameToLayer("Map")|1<<LayerMask.NameToLayer("Wall")).Where(x => !x.collider.isTrigger);
+        var hits = Physics2D.RaycastAll(shootingAnimationController.GetShootPosition(), pos.normalized, pos.magnitude, 1<<LayerMask.NameToLayer("Map")|1<<LayerMask.NameToLayer("Wall")).Where(x => !x.collider.isTrigger);
         if(hits.Count() == 0) return true;
         else return false;
     }

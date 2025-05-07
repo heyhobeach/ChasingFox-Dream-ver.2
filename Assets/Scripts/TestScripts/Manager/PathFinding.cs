@@ -142,6 +142,7 @@ public struct PathFinding : IJob
                 Node NeighborNode = NodeArray[GetIndex(checkX - bottomLeft.x, checkY - bottomLeft.y)];
                 
                 if(CurNode.isplatform && !CurNode.isGround && NeighborNode.isGround && !NeighborNode.isplatform) return;
+                if(CurNode.isGround && !CurNode.isplatform && NeighborNode.isplatform && !NeighborNode.isGround) return;
 
                 int MoveCost = CurNode.G;
                 MoveCost += CurNode.x - checkX == 0 || CurNode.y - checkY == 0 ? 10 : 14;

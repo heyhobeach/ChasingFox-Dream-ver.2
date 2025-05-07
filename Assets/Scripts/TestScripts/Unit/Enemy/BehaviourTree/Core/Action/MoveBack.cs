@@ -49,7 +49,7 @@ namespace BehaviourTree
             moveDir = tempDir - blackboard.thisUnit.transform.position;
             moveDir = moveDir.normalized;
             if(!blackboard.thisUnit.Move(tempDir)) return NodeState.Failure;
-            if((blackboard.thisUnit.transform.position - tempDir).magnitude < 0.1f) blackboard.nodeIdx++;
+            if((blackboard.thisUnit.transform.position - tempDir).magnitude < Mathf.Epsilon) blackboard.nodeIdx++;
             return NodeState.Running;
         }
 

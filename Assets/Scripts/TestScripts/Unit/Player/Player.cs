@@ -148,7 +148,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     IEnumerator PopupDelay()
     {
         ServiceLocator.Get<GameManager>().RetryScene();
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(1.5f);
         PopupManager.Instance.DeathPop();
     }
 

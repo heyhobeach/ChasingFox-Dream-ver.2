@@ -47,6 +47,11 @@ public class PopupManager : MonoBehaviour
     }
     public void PausePop(bool enabled)
     {
+        if(enabled)
+        {
+            if(PageManger.Instance.isLoadingScene) RestartButtonEnable(false);
+        }
+        else RestartButtonEnable(true);
         pausePopup.SetActive(enabled);
         pausePopup.GetComponent<Canvas>().sortingOrder = 101;
     }

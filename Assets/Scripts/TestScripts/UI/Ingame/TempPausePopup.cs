@@ -21,9 +21,11 @@ public class TempPausePopup : MonoBehaviour
             gameObject.SetActive(false);
         });
         restartButton.onClick.AddListener(() => {
-            ServiceLocator.Get<GameManager>().RetryScene();
-            PageManger.Instance.SceneActive();
-            gameObject.SetActive(false);
+            if(ServiceLocator.Get<GameManager>().RetryScene())
+            {
+                PageManger.Instance.SceneActive();
+                gameObject.SetActive(false);
+            }
         });
         // optionButton.onClick.AddListener(() => );
         mainMenuButton.onClick.AddListener(() => {
