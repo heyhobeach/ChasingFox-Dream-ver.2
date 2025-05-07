@@ -69,13 +69,15 @@ public class MesteryUIScript : MonoBehaviour
 
     string[] contentContextArray;
     int contentContextArrayIndex = 0;
-    List<string>answerTexts=new List<string>();
+    List<Tuple<string,string>>answerTexts=new List<Tuple<string, string>>();
     List<string>originText=new List<string>();
 
     int mesteryEventNum;
 
     [Tooltip("추리 시스템 진행할때 현재 챕터 가능한 부분")]
     public int currentChapterNum = 2;
+
+    bool is_hiddenmode = false; 
 
     private void OnEnable()
     {
@@ -209,9 +211,15 @@ public class MesteryUIScript : MonoBehaviour
         List<string>strings = new List<string>();
         var container = textContainerContent.Query<TextElement>(className: "dropArea");
         string pattern = @"\s*,\s*";
-        string textWithoutQuotes = answerTexts[contentContextArrayIndex].Replace("\"", "").Trim();
+        string textWithoutQuotes = answerTexts[contentContextArrayIndex].Item1.Replace("\"", "").Trim();
+        string hiddentextWithoutQuotes = answerTexts[contentContextArrayIndex].Item2.Replace("\"", "").Trim();
         string[] answer_strings = Regex.Split(textWithoutQuotes, pattern);
+        string[] hidden_answer_strings= Regex.Split(hiddentextWithoutQuotes, pattern);
 
+        foreach(string str in hidden_answer_strings)
+        {
+            Debug.Log("히드 정답 " + str);
+        }
         int index = 0;
         foreach (var i in container.ToList())
         {
@@ -219,7 +227,7 @@ public class MesteryUIScript : MonoBehaviour
             index++;
             strings.Add(i.text.Trim());
         }
-        if (answerTexts[contentContextArrayIndex].Length <= 1)
+        if (answerTexts[contentContextArrayIndex].Item1.Length <= 1)
         {
             contentContextArrayIndex++;
             SetDiaryTextProblem();
@@ -237,6 +245,11 @@ public class MesteryUIScript : MonoBehaviour
                 this.gameObject.SetActive(false);   
                 return;
             }
+            CorrectRespon();
+        }else if (hidden_answer_strings.SequenceEqual(strings.ToArray()))
+        {
+            Debug.Log("히든 정답 맞춤");
+            is_hiddenmode = true;
             CorrectRespon();
         }
         else
@@ -287,7 +300,7 @@ public class MesteryUIScript : MonoBehaviour
                         Debug.Log("빈칸 부분");
                         Debug.Log("문제 부분 작동중 이지만 빈칸임" + dialogues[i].problem[rowIndex] + "모드" + dialogues[i].mode[rowIndex]);
 
-                        answerTexts.Add("");
+                        answerTexts.Add(new Tuple<string,string> ( "",""));
                     }
                     else//문제에 내용있을때
                     {
@@ -299,7 +312,9 @@ public class MesteryUIScript : MonoBehaviour
                         //Debug.Log("히든 정답" + dialogues[i].hidden_answer[rowIndex] + "모드" + dialogues[i].mode[rowIndex]);//hidden정답 부분
 
                         contentContext = dialogues[i].problem[rowIndex];
-                        answerTexts.Add( dialogues[i].correct_answer[rowIndex]);
+                        Debug.Log("히든 정답" + dialogues[i].hidden_answer[rowIndex]);
+                        //if (dialogues[i].hidden_answer[rowIndex])
+                        answerTexts.Add(new Tuple<string, string>(dialogues[i].correct_answer[rowIndex], dialogues[i].hidden_answer[rowIndex]));
                     }
 
                     if (dialogues[i].mode[rowIndex] == "hidden")
@@ -354,11 +369,18 @@ public class MesteryUIScript : MonoBehaviour
 
     private void CorrectRespon()
     {
+        Debug.Log("히든 모드 체크" + is_hiddenmode);
+        if(is_hiddenmode)
+        {
+            
+        }
         if (contentContextArrayIndex > contentContextArray.Length)
         {
             Debug.LogError("버튼 범위 벗어남");
             return;
         }
+
+
 
         VisualElement problem = currentProblem;
         problem.Clear();
@@ -524,10 +546,7 @@ public class MesteryUIScript : MonoBehaviour
                 visuallist.Add(problemElement);
             }
         }
-        //visuallist.style.translate = new Translate(0, 50);
-        //visuallist.RegisterCallback<GeometryChangedEvent>(VisualElementChangeEvent);
         textContainerContent.Add(visuallist);
-        //visuallist.RemoveFromClassList("textPos"); 
         visuallist.schedule.Execute(() => {
             // 여기에 다음 프레임에 하고 싶은 동작
             visuallist.RemoveFromClassList("textPos");
@@ -540,15 +559,6 @@ public class MesteryUIScript : MonoBehaviour
     {
         VisualElement target = evt.target as VisualElement;
         if (target == null || target.name != "visuallistLine") return; // 직접 만든 visuallist가 맞는지 확인
-
-        // 이 시점에서는 레이아웃 계산이 완료되었습니다.
-        //Debug.Log("--- GeometryChangedEvent 발생 ---");
-        //Debug.Log($"visuallist worldBound: {target.worldBound}");
-        //Debug.Log($"visuallist layout: {target.layout}");
-        //Debug.Log($"visuallist worldBound.position: {target.worldBound.position}");
-        //Debug.Log($"visuallist layout.position: {target.layout.position}");//이거 기준으로 해야할듯?
-        //Debug.Log($"visuallist layout.height: {target.layout.height}");
-
         // textContainerContent 위치도 필요하다면 여기서 확인 (evt.target.parent 로 접근 가능)
         if (target.parent != null)
         {
