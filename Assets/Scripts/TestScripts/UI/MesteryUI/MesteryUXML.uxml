@@ -4,12 +4,12 @@
     <ui:VisualElement name="VisualElement" style="height: 100%; width: 100%; align-self: auto; align-content: flex-start; justify-content: flex-start; visibility: visible; display: flex; align-items: flex-start; top: 0; left: 0; flex-direction: row; -unity-font-definition: resource(&apos;Font/PF스타더스트 3.0 Bold&apos;);">
         <ui:VisualElement name="textContainer" class="diary-center" style="background-size: 100% 100%; width: 100%; height: 100%; align-self: center;">
             <ui:ScrollView name="ScrollView" style="position: absolute; width: 60%; height: 70%; translate: 6% 0; align-self: center; top: 15%;">
-                <ui:VisualElement name="textContainerContent" style="flex-grow: 1; width: 100%; height: auto; align-self: center; position: absolute; top: 15%; translate: 0 0; text-overflow: ellipsis; flex-direction: row;" />
-                <ui:VisualElement name="ButtonList" style="flex-grow: 1; display: flex; flex-direction: row; align-items: flex-end; justify-content: space-between; width: 100%; align-self: center; -unity-text-align: upper-left; margin-top: 120%; position: relative; height: auto; padding-left: 0;">
-                    <ui:Button text="Back" name="Back" />
-                    <ui:Button text="Fine" name="Finsh" style="align-self: auto;" />
-                </ui:VisualElement>
+                <ui:VisualElement name="textContainerContent" style="flex-grow: 1; width: 100%; height: auto; align-self: center; position: relative; top: auto; translate: 0 0; text-overflow: ellipsis; flex-direction: row;" />
             </ui:ScrollView>
+            <ui:VisualElement name="ButtonList" style="flex-grow: 1; display: flex; flex-direction: row; align-items: flex-end; justify-content: space-between; width: 60%; align-self: center; -unity-text-align: upper-left; margin-top: 80%; position: absolute; height: 5%; padding-left: 6%; visibility: visible; transform-origin: center; translate: 0 0; padding-bottom: 0; padding-top: 0;">
+                <ui:Button text="Back" name="Back" />
+                <ui:Button text="Fine" name="Finsh" style="align-self: auto;" />
+            </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="TracerNotePanel" style="flex-grow: 1; position: absolute; width: 100%; height: 100%; scale: 1 1; left: auto; flex-shrink: 0; flex-direction: row; display: none;" />
         <ui:VisualElement name="TracerNote" class="test1" style="height: 80%; width: 80%; align-self: center; padding-right: 0; margin-right: 0; background-size: 90% 100%;">
