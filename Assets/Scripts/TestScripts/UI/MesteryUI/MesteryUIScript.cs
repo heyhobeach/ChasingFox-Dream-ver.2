@@ -4,12 +4,14 @@ using System.Collections.Generic;
 
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Unity.VisualScripting.Antlr3.Runtime;
-using UnityEditor.Rendering;
+//using UnityEditor.Rendering;
 
 using UnityEngine;
 
 using UnityEngine.UIElements;
+using static UnityEditor.Recorder.OutputPath;
 
 
 public class MesteryUIScript : MonoBehaviour
@@ -78,11 +80,18 @@ public class MesteryUIScript : MonoBehaviour
     [Tooltip("추리 시스템 진행할때 현재 챕터 가능한 부분")]
     public int currentChapterNum = 2;
 
-    bool is_hiddenmode = false; 
+    bool is_hiddenmode = false;
+
+
+    private async void Awake()
+    {
+        await CloseRoom(0.5f, GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("VisualElement"));
+    }
 
     private void OnEnable()
     {
         hidden_start_index = -1;
+  
         Debug.Log(InventoryManager.Instance.GetInventoryAll().name);
         inventoryScripable = InventoryManager.Instance.GetInventoryAll();//인벤토리에서 데이터를 가져옴
         
@@ -111,7 +120,9 @@ public class MesteryUIScript : MonoBehaviour
         //textContainer.setpa
         visualElement = root.Q<VisualElement>("VisualElement");
         textContainerContent = root.Q<VisualElement>("textContainerContent");
+
         visualElement.Add(diary);
+        visualElement.style.visibility = Visibility.Hidden;
 
 
         ButtonSet(root);
@@ -140,20 +151,6 @@ public class MesteryUIScript : MonoBehaviour
 
         });
 
-
-
-        //drop_area = visualElement.Q<VisualElement>("drop-area");
-        //
-        //drop_area.RegisterCallback<PointerUpEvent>(evt =>
-        //{
-        //    if (is_sentence)
-        //    {
-        //        var querylabel = dragGhost.Query<Label>().Build();
-        //        //querylabel.First().text//오브젝트 내용 적혀있음
-        //        Debug.Log("테스트 위치에 놓았습니다 내용 =>" + querylabel.First().text);
-        //    }
-        //});
-
         //패널에 함수 등록
         visualElement.RegisterCallback<PointerDownEvent>(OnPointerDown);
         visualElement.RegisterCallback<PointerMoveEvent>(OnPointerMove);
@@ -181,6 +178,42 @@ public class MesteryUIScript : MonoBehaviour
 
         }
 
+    }
+
+    public async Awaitable OpenRoom(float time, VisualElement visual)//지금 스프라이트 랜더러에서 값이 변경이 안되는듯함
+    {
+        var background = GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("BackGround");
+        float current = 0;
+        float value_a = 255;
+        while (current < time)
+        {
+            await Awaitable.EndOfFrameAsync();
+            current += Time.deltaTime / time;
+            value_a = Mathf.Lerp(255, 0, current);
+            Debug.Log("알파값" + value_a);
+            background.style.backgroundColor = new Color(0, 0, 0, value_a/255f);
+            //spriteRenderer.color.a= value_a;
+        }
+        background.style.backgroundColor = new Color(0,0,0, 0);
+        visual.style.display = DisplayStyle.None;
+    }
+
+    public async Awaitable CloseRoom(float time,VisualElement visual)//지금 스프라이트 랜더러에서 값이 변경이 안되는듯함
+    {
+        var background = GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("BackGround");
+        float current = 0;
+        float value_a = 255;
+        while (current < time)
+        {
+            await Awaitable.EndOfFrameAsync();
+            current += Time.deltaTime / time;
+            value_a = Mathf.Lerp(0, 255, current);
+            Debug.Log("알파값" + value_a);
+            background.style.backgroundColor = new Color(0, 0, 0, value_a / 255f);
+            //spriteRenderer.color.a= value_a;
+        }
+        background.style.backgroundColor = new Color(0,0,0, 0.2f);
+        visual.style.visibility = Visibility.Visible;
     }
 
     private void ButtonSet(VisualElement root)
@@ -443,7 +476,7 @@ public class MesteryUIScript : MonoBehaviour
 
             foreach (string p in _part)//여기 드래그 관련 내용들은 csv가 아닌 수집품의 내용 관련으로 갈것임 지금 해당내용은 테스트용이라고 생각하는것이 좋음 띄워 쓰기 관련은 인벤토리(수집품) 추리시 발생, 스페이스 기준
             {
-                bool check = (keys.Length > 0 ? part.ContainsAny(keys[0]) : false);
+                bool check = keys.Length > 0 && keys[0] != null && part != null && keys[0].Any(charInKey => part.Contains(charInKey));
                 //int a = part.IndexOf(keys[0]);
                 Debug.Log($"분리 후: [{p}] check[{check}]"); //지금 분리도 안 되는거같은데
 
@@ -476,7 +509,8 @@ public class MesteryUIScript : MonoBehaviour
         if ((hidden_start_index == contentContextArrayIndex))
         {
             contentContextArrayIndex = contentContextArray.Length;
-            this.gameObject.SetActive(false);
+            //this.gameObject.SetActive(false);
+            EndMeystery();
             Debug.Log("정답 못 맞춘 상태 히든 부분");
             return;
         }
@@ -774,7 +808,7 @@ public class MesteryUIScript : MonoBehaviour
                 foreach (string k in keys)
                 {
                     Debug.Log("Key = " + k);
-                    check = (keys.Length > 0 ? p.ContainsAny(k) : false);
+                    check = keys.Length > 0 && p != null && k != null && k.Any(c => p.Contains(c));
                     if (check)
                     {
                         key = k;
@@ -845,9 +879,9 @@ public class MesteryUIScript : MonoBehaviour
         Debug.Log("오른쪽 버튼 눌림");
     }
 
-    private void EndMeystery()
+    private async void EndMeystery()
     {
-        this.gameObject.SetActive(false);
+        await OpenRoom(0.7f, GetComponent<UIDocument>().rootVisualElement);
     }
 }
 
