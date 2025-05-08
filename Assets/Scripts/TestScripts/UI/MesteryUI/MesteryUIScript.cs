@@ -290,8 +290,17 @@ public class MesteryUIScript : MonoBehaviour
         else
         {
             is_correct = false;
+            //textContainer.style.display = DisplayStyle.Flex;
+            textContainer.Q<TextElement>("WrongAnswer").style.display = DisplayStyle.Flex;
+
+            Invoke("WrongAnswerPopDown", 1);
             Debug.Log("오답");
         }
+    }
+
+    private void WrongAnswerPopDown()
+    {
+        textContainer.Q<TextElement>("WrongAnswer").style.display = DisplayStyle.None;
     }
 
     private void DiaryBackButtonEvent()
