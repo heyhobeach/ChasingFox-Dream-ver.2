@@ -84,6 +84,7 @@ public class MesteryUIScript : MonoBehaviour
 
     bool is_hiddenmode = false;
 
+    TextElement currentElement = new TextElement();
 
     private async void Awake()
     {
@@ -245,6 +246,9 @@ public class MesteryUIScript : MonoBehaviour
             textContainer.RemoveFromClassList("diary-left");
             GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("TracerNote").RemoveFromClassList("test2-2");
             //추가 필요 flex none
+            currentElement.RemoveFromClassList("clickable");
+            currentElement.AddToClassList("sentence");
+            currentElement.text = originText[contentContextArrayIndex];    
             textContainerContent.style.display = DisplayStyle.Flex;
             mesteryContainer.style.display = DisplayStyle.None;
             //EndMeystery();
@@ -516,8 +520,9 @@ public class MesteryUIScript : MonoBehaviour
                 {
                     Debug.Log(keys[0] + "Key 가지고 있음");
                     textelement.AddToClassList("clickable");
-                    textelement.RegisterCallback<PointerDownEvent>(evt => {
+                    textelement.RegisterCallback<PointerDownEvent>(evt => {//여기서 수정 해 볼까
                         mesteryEventNum = int.Parse(id);
+                        currentElement = textelement;
                         //Debug.Log("id" + id); 
                     });
                     textelement.RegisterCallback<PointerDownEvent>(LoadMestery);
