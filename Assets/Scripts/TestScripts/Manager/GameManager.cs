@@ -244,6 +244,11 @@ public partial class GameManager : MonoBehaviour
         return PageManger.Instance.LoadScene(name, active);
     }
     public bool RetryScene() => LoadScene(SceneManager.GetActiveScene().name, false);
+    public void GoHideoutScene(string nextChp)
+    {
+        SystemManager.Instance.saveData.nextChapter = nextChp;
+        LoadScene("Hideout", true);
+    }
 
     public void Pause()
     {

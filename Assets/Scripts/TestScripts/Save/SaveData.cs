@@ -10,6 +10,7 @@ public class SaveData
     public DateTime createdTime;
     
     public string chapter;
+    public string nextChapter;
 
     public int karma => playerData.karma;
     public int stageIdx;
@@ -26,6 +27,7 @@ public class SaveData
         currentEventTriggerDataGuid = saveData.currentEventTriggerDataGuid;
         inventoryData = saveData.inventoryData;
         chapter = saveData.chapter;
+        nextChapter = saveData.nextChapter;
         playerData = saveData.playerData;
         mapData = saveData.mapData;
         eventTriggerData = saveData.eventTriggerData;

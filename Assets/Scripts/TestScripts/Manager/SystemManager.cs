@@ -79,6 +79,7 @@ public class SystemManager : MonoBehaviour
         tempPlayerData.Init();
         defaultSaveData = new SaveData{
             chapter = "",
+            nextChapter = "Chp0",
             playerData = tempPlayerData,
             stageIdx = 0,
             currentEventTriggerDataGuid = "",
@@ -291,6 +292,7 @@ public class SystemManager : MonoBehaviour
         tempPlayerData.Init();
         defaultSaveData = new SaveData{
             chapter = "",
+            nextChapter = "Chp0",
             playerData = tempPlayerData,
             stageIdx = 0,
             currentEventTriggerDataGuid = "",
