@@ -214,19 +214,20 @@ public class SituationControll : MonoBehaviour
 
     public void NextSatge()
     {
+        ServiceLocator.Get<GameManager>().LoadScene(SystemManager.Instance.saveData.nextChapter);
         
-        int current = chapter;
-        current = 1;//테스트용
-        Debug.Log(scenearr[current].stage_branch.Count);
-        if (scenearr[current].stage_branch.Count > 0)
-        {
-            //branch 관련 로드
-            //ServiceLocator.Get<GameManager>().LoadScene(scenearr[current].stage_branch["brutal"]);
-        }
-        else
-        {
-            ServiceLocator.Get<GameManager>().LoadScene(scenearr[current].next);
-        }
+        // int current = chapter;
+        // current = 1;//테스트용
+        // Debug.Log(scenearr[current].stage_branch.Count);
+        // if (scenearr[current].stage_branch.Count > 0)
+        // {
+        //     //branch 관련 로드
+        //     //ServiceLocator.Get<GameManager>().LoadScene(scenearr[current].stage_branch["brutal"]);
+        // }
+        // else
+        // {
+        //     // ServiceLocator.Get<GameManager>().LoadScene(scenearr[current].next);
+        // }
     }
 
     public void CloseDoorPop()
