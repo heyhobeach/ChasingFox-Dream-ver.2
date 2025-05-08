@@ -474,7 +474,11 @@ public class MesteryUIScript : MonoBehaviour
         List<List<string>> tags = new List<List<string>>();//___으로 변환 되어있는 내용에서 해당 번째가 person인지 destination인지 확인용
         foreach (string part in parts)//br기준,사실상 없는거나 마찬가지
         {
-            //Debug.Log("part is " + part);
+            Debug.Log("part is " + part+"id =>"+id+"key length"+keys.Length);
+            if (keys.Length < 1)
+            {
+                keys = new string[] { "" };
+            }
             //Debug.Log("id=>" + id);
             Debug.Log(string.Format("part is {0} , id => {1} key is {2}", part, id, keys[0]));
             string[] _part;
