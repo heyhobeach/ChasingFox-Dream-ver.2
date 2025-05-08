@@ -240,20 +240,7 @@ public class MesteryUIScript : MonoBehaviour
     private void DiaryFinishButtonEvent()//정답 확인
     {
         Debug.Log("일기 finish");
-        if (contentContextArrayIndex >= contentContextArray.Length-1)//여기가 중요
-        {
-            Debug.Log("마지막 라인 종료");
-            textContainer.RemoveFromClassList("diary-left");
-            GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("TracerNote").RemoveFromClassList("test2-2");
-            //추가 필요 flex none
-            currentElement.RemoveFromClassList("clickable");
-            currentElement.AddToClassList("sentence");
-            currentElement.text = originText[contentContextArrayIndex];    
-            textContainerContent.style.display = DisplayStyle.Flex;
-            mesteryContainer.style.display = DisplayStyle.None;
-            //EndMeystery();
-            return;
-        }
+
         List<string>strings = new List<string>();
         var container = mesteryContainer.Query<TextElement>(className: "dropArea");
         string pattern = @"\s*,\s*";
@@ -273,43 +260,90 @@ public class MesteryUIScript : MonoBehaviour
             index++;
             strings.Add(i.text.Trim());
         }
-        if (answerTexts[contentContextArrayIndex].Item1.Length <= 1)
+        if (answerTexts[contentContextArrayIndex].Item1.Length <= 1)//문제가 아닐경우 해당 경우 마지막 라인 수정 필요
         {
+            Debug.Log("문제가 아님");
             contentContextArrayIndex++;
             SetDiaryTextProblem();
             return;
         }
-        bool is_correct = false;
-
+        //bool is_correct = false;
+        foreach(string str in strings)
+        {
+            Debug.Log("제출 정답 =>" + str);
+        }
+        foreach(string str in answer_strings)
+        {
+            Debug.Log("일반 정답 =>" + str);
+        }
+        foreach (string str in hidden_answer_strings)
+        {
+            Debug.Log("히든 정답 =>" + str);
+        }
         if (answer_strings.SequenceEqual(strings.ToArray()))//정답일경우
         {
-            is_correct = true;
+            //is_correct = true;
             contentContextArrayIndex++;
-            if(contentContextArrayIndex>contentContextArray.Length)
+            if(contentContextArrayIndex<=contentContextArray.Length-1)
             {
-                Debug.Log("마지막 라인 종료");
-                textContainer.RemoveFromClassList("diary-left");
-                GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("TracerNote").RemoveFromClassList("test2-2");
-
-                //EndMeystery();
-                return;
+                CorrectRespon();
+                //Debug.Log("마지막 라인 종료");
+                //textContainer.RemoveFromClassList("diary-left");
+                //GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("TracerNote").RemoveFromClassList("test2-2");
+                ////추가 필요 flex none
+                //currentElement.RemoveFromClassList("clickable");
+                //currentElement.AddToClassList("sentence");
+                //currentElement.text = originText[contentContextArrayIndex];
+                //textContainerContent.style.display = DisplayStyle.Flex;
+                //mesteryContainer.style.display = DisplayStyle.None;
+                ////EndMeystery();
+                //return;
             }
             //is_hiddenmode = false;
-            CorrectRespon();
+
         }else if (hidden_answer_strings.SequenceEqual(strings.ToArray()))
         {
             Debug.Log("히든 정답 맞춤");
             is_hiddenmode = true;
-            CorrectRespon();
+            if (contentContextArrayIndex <= contentContextArray.Length - 1)
+            {
+                CorrectRespon();
+                //Debug.Log("마지막 라인 종료");
+                //textContainer.RemoveFromClassList("diary-left");
+                //GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("TracerNote").RemoveFromClassList("test2-2");
+                ////추가 필요 flex none
+                //currentElement.RemoveFromClassList("clickable");
+                //currentElement.AddToClassList("sentence");
+                //currentElement.text = originText[contentContextArrayIndex];
+                //textContainerContent.style.display = DisplayStyle.Flex;
+                //mesteryContainer.style.display = DisplayStyle.None;
+                ////EndMeystery();
+                //return;
+            }
         }
         else
         {
-            is_correct = false;
+            //is_correct = false;
             //textContainer.style.display = DisplayStyle.Flex;
             textContainer.Q<TextElement>("WrongAnswer").style.display = DisplayStyle.Flex;
 
             Invoke("WrongAnswerPopDown", 1);
             Debug.Log("오답");
+        }
+
+        if (contentContextArrayIndex > contentContextArray.Length-1 )//여기가 중요
+        {
+            Debug.Log("마지막 라인 종료");
+            textContainer.RemoveFromClassList("diary-left");
+            GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("TracerNote").RemoveFromClassList("test2-2");
+            //추가 필요 flex none
+            currentElement.RemoveFromClassList("clickable");
+            currentElement.AddToClassList("sentence");
+            currentElement.text = originText[contentContextArrayIndex-1];
+            textContainerContent.style.display = DisplayStyle.Flex;
+            mesteryContainer.style.display = DisplayStyle.None;
+            //EndMeystery();
+            return;
         }
     }
 
