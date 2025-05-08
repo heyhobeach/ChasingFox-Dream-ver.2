@@ -775,6 +775,9 @@ public class MesteryUIScript : MonoBehaviour
         panel.style.scale = new Vector2(1, 1);
         var tracer = root.Q<VisualElement>("TracerNote");//여기 하위에 오브젝트 배치
         var content = root.Q<VisualElement>("TracerContent");
+
+        var title_element = tracer.Q<Label>("Title");
+        var charactor_image = tracer.Q<VisualElement>("TracerImage");
         content.Clear();
 
         //content.style.flexDirection = FlexDirection.Column;
@@ -787,9 +790,13 @@ public class MesteryUIScript : MonoBehaviour
             +"correction Num" + InventoryManager.Instance.GetInfo_(info_keys[num]).news.chapter??"0");
 
         bool is_same_chapter = InventoryManager.Instance.GetInfo_(info_keys[num]).news.chapter==currentChapterNum ? true : false;
+        //string collection_name = InventoryManager.Instance.GetInfo_(info_keys[num]).news.image_name;
         string textContent = InventoryManager.Instance.GetInfo_(info_keys[num]).context ?? "";
         string[] keys = InventoryManager.Instance.GetInfo_(info_keys[num]).keywords ?? new string[0];
         string[] parts = Regex.Split(textContent, @"(\n)");
+
+        //Debug.Log("수집품 이름" + collection_name);
+        title_element.text = InventoryManager.Instance.GetInfo_(info_keys[num]).news.image_name;
         foreach (string part in parts)
         {
             VisualElement lineContainer = new VisualElement();
