@@ -786,17 +786,17 @@ public class MesteryUIScript : MonoBehaviour
         content.style.flexShrink = 0;
 
         VisualElement visuallist = new VisualElement();
+        //Inventory.Info info = InventoryManager.Instance.GetInfo_(info_keys[num]);
         Debug.Log("inven =" + InventoryManager.Instance.GetInfo_(info_keys[num]).context+" ||||"
             +"correction Num" + InventoryManager.Instance.GetInfo_(info_keys[num]).news.chapter??"0");
 
         bool is_same_chapter = InventoryManager.Instance.GetInfo_(info_keys[num]).news.chapter==currentChapterNum ? true : false;
-        //string collection_name = InventoryManager.Instance.GetInfo_(info_keys[num]).news.image_name;
         string textContent = InventoryManager.Instance.GetInfo_(info_keys[num]).context ?? "";
         string[] keys = InventoryManager.Instance.GetInfo_(info_keys[num]).keywords ?? new string[0];
         string[] parts = Regex.Split(textContent, @"(\n)");
 
-        //Debug.Log("수집품 이름" + collection_name);
         title_element.text = InventoryManager.Instance.GetInfo_(info_keys[num]).news.image_name;
+        charactor_image.style.backgroundImage = new StyleBackground(InventoryManager.Instance.GetInfo_(info_keys[num]).news.image);
         foreach (string part in parts)
         {
             VisualElement lineContainer = new VisualElement();
