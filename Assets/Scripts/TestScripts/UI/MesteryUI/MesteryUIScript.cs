@@ -22,6 +22,7 @@ public class MesteryUIScript : MonoBehaviour
     VisualElement dragGhost = null;
     VisualElement textContainer;//일기
     VisualElement textContainerContent;//일기의 내용을 담고 있음
+    VisualElement mesteryContainer;
 
     /// <summary>
     /// 버튼들을 담고있는 객체
@@ -121,6 +122,7 @@ public class MesteryUIScript : MonoBehaviour
         //textContainer.setpa
         visualElement = root.Q<VisualElement>("VisualElement");
         textContainerContent = root.Q<VisualElement>("textContainerContent");
+        mesteryContainer = root.Q<VisualElement>("MysteryContainer");
 
         visualElement.Add(diary);
         visualElement.style.visibility = Visibility.Hidden;
@@ -237,14 +239,19 @@ public class MesteryUIScript : MonoBehaviour
     private void DiaryFinishButtonEvent()//정답 확인
     {
         Debug.Log("일기 finish");
-        if (contentContextArrayIndex >= contentContextArray.Length-1)
+        if (contentContextArrayIndex >= contentContextArray.Length-1)//여기가 중요
         {
             Debug.Log("마지막 라인 종료");
-            EndMeystery();
+            textContainer.RemoveFromClassList("diary-left");
+            GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("TracerNote").RemoveFromClassList("test2-2");
+            //추가 필요 flex none
+            textContainerContent.style.display = DisplayStyle.Flex;
+            mesteryContainer.style.display = DisplayStyle.None;
+            //EndMeystery();
             return;
         }
         List<string>strings = new List<string>();
-        var container = textContainerContent.Query<TextElement>(className: "dropArea");
+        var container = mesteryContainer.Query<TextElement>(className: "dropArea");
         string pattern = @"\s*,\s*";
         string textWithoutQuotes = answerTexts[contentContextArrayIndex].Item1.Replace("\"", "").Trim();
         string hiddentextWithoutQuotes = answerTexts[contentContextArrayIndex].Item2.Replace("\"", "").Trim();
@@ -277,7 +284,10 @@ public class MesteryUIScript : MonoBehaviour
             if(contentContextArrayIndex>contentContextArray.Length)
             {
                 Debug.Log("마지막 라인 종료");
-                EndMeystery();
+                textContainer.RemoveFromClassList("diary-left");
+                GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("TracerNote").RemoveFromClassList("test2-2");
+
+                //EndMeystery();
                 return;
             }
             //is_hiddenmode = false;
@@ -332,7 +342,7 @@ public class MesteryUIScript : MonoBehaviour
                 contentContext = dialogues[i].context[rowIndex];
                 
 
-
+                //mesteryContainer
                 //string[] keys = InventoryManager.Instance.GetInfo_(info_keys[i]).keywords;
                 string[] keys = InventoryManager.Instance.GetInfo_(int.Parse(dialogues[i].id)).keywords;
                 if (dialogues[i].problem.Length > 0)//해당 부분없으면 다른 csv파일상에서 접근시 문제 생김
@@ -407,20 +417,25 @@ public class MesteryUIScript : MonoBehaviour
 
         contentContextArray = contentContextList.ToArray();
 
-        foreach (string str in contentContextArray)
+        if (!isProblemCSV)
         {
-            Debug.Log("contentcontextArray ->" + str);
+            for (int number = 0; number < textList.Count; number++)
+            {
+                textContainerContent.Add(textList[number]);
+            }
         }
-        foreach(string str in originText)
+        else
         {
-            Debug.Log("originText ->" + str);
+            Debug.Log("textlist count is " + textList.Count);
+            
+            for (int number = 0; number < textList.Count; number++)
+            {
+                textContainerContent.Add(textList[number]);
+                //mesteryContainer.Add(textList[number]);
+            }
         }
-        //RefactoryingTest();
 
-        for (int number = 0; number < textList.Count; number++)
-        {
-            textContainerContent.Add(textList[number]);
-        }
+
         Debug.Log("answerTexts length " + answerTexts.Count +" , contentContextArray"+contentContextArray.Length);
     }
 
@@ -527,7 +542,9 @@ public class MesteryUIScript : MonoBehaviour
         {
             contentContextArrayIndex = contentContextArray.Length;
             //this.gameObject.SetActive(false);
-            EndMeystery();
+            mesteryContainer.RemoveFromClassList("diary-left");
+            GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("TracerNote").RemoveFromClassList("test2-2");
+            //EndMeystery();
             Debug.Log("정답 못 맞춘 상태 히든 부분");
             return;
         }
@@ -539,7 +556,7 @@ public class MesteryUIScript : MonoBehaviour
 
 
         visuallist.AddToClassList("textOri");
-        if (textContainerContent.childCount >0)
+        if (mesteryContainer.childCount >0)
         {
             visuallist.AddToClassList("textPos");
         }
@@ -631,7 +648,7 @@ public class MesteryUIScript : MonoBehaviour
                 visuallist.Add(problemElement);
             }
         }
-        textContainerContent.Add(visuallist);
+        mesteryContainer.Add(visuallist);
         visuallist.schedule.Execute(() => {
             // 여기에 다음 프레임에 하고 싶은 동작
             visuallist.RemoveFromClassList("textPos");
@@ -769,7 +786,9 @@ public class MesteryUIScript : MonoBehaviour
 
     private void LoadMestery(PointerDownEvent evt)//데이터를 미리 정해놔야할듯?
     {
-        textContainerContent.Clear();
+        //textContainerContent.Clear();
+        textContainerContent.style.display = DisplayStyle.None;
+        mesteryContainer.style.display = DisplayStyle.Flex;
         DiaryContentSet();
         MesterySystem();
         SetDiaryTextProblem();
