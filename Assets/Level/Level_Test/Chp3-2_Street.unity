@@ -5123,6 +5123,7 @@ GameObject:
   - component: {fileID: 1318297887}
   - component: {fileID: 1318297886}
   - component: {fileID: 1318297885}
+  - component: {fileID: 1318297888}
   m_Layer: 0
   m_Name: map_Timeline
   m_TagString: Untagged
@@ -5179,6 +5180,18 @@ Transform:
   - {fileID: 938556226}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1318297888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1318297884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d86692a0caa24a40b7655d95e27b2bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1405735399
 GameObject:
   m_ObjectHideFlags: 0
@@ -5707,8 +5720,20 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
+        - m_Target: {fileID: 81773031}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
     exitPrerequisites: {fileID: 1589723883}
-  - enterPrerequisites: {fileID: 0}
+  - enterPrerequisites: {fileID: 1318297888}
     keyCode: 0
     action:
       m_PersistentCalls:
@@ -5737,10 +5762,22 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-        - m_Target: {fileID: 1790528226}
+        - m_Target: {fileID: 81773031}
           m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_MethodName: SetActive
           m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 1790528229}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: OnTrigger
+          m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -6294,7 +6331,7 @@ GameObject:
   - component: {fileID: 1790528228}
   - component: {fileID: 1790528232}
   m_Layer: 0
-  m_Name: Timeline_3-7
+  m_Name: Timeline_3-7 (wingman escape)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7399,7 +7436,6 @@ MonoBehaviour:
   eventTriggers:
   - {fileID: 1589723880}
   - {fileID: 1790528229}
-  _ingameTimescale: 1
   showNodes: 0
   showPath: 0
   correctionPos: {x: 0.5, y: -0.5}
@@ -8116,6 +8152,7 @@ SceneRoots:
   - {fileID: 1952601965}
   - {fileID: 1113753471}
   - {fileID: 542346036}
+  - {fileID: 399237156}
   - {fileID: 1038649928}
   - {fileID: 1091182308}
   - {fileID: 1969045000}
@@ -8132,4 +8169,3 @@ SceneRoots:
   - {fileID: 97656094}
   - {fileID: 81773035}
   - {fileID: 2063048094}
-  - {fileID: 399237156}
