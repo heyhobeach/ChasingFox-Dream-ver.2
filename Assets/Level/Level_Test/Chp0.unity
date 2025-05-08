@@ -13399,6 +13399,7 @@ MonoBehaviour:
   csv_FileName: "\uD14C\uC2A4\uD2B8\uD30C\uC77C"
   eLang: 0
   chapter: 0
+  theParser: {fileID: 0}
   endLine: 0
   startLine: 0
   lastIndex: 0
@@ -13972,17 +13973,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 26835970288ea26449f40536aa423ba4, type: 3}
---- !u!114 &505145888 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2083543593801638, guid: 26835970288ea26449f40536aa423ba4, type: 3}
-  m_PrefabInstance: {fileID: 505145887}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7461689c11e36314ca9287232b1fa5e4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &517512815
 GameObject:
   m_ObjectHideFlags: 0
@@ -16049,6 +16039,30 @@ PrefabInstance:
     - target: {fileID: 803384999456598887, guid: 7abada79b3adc4e48b9201d263d8f42b, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -8.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3480560752445313901, guid: 7abada79b3adc4e48b9201d263d8f42b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 168.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3480560752445313901, guid: 7abada79b3adc4e48b9201d263d8f42b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -5.4000006
+      objectReference: {fileID: 0}
+    - target: {fileID: 3618016448543876213, guid: 7abada79b3adc4e48b9201d263d8f42b, type: 3}
+      propertyPath: m_Events.m_Events.Array.data[6].m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1444835467}
+    - target: {fileID: 3618016448543876213, guid: 7abada79b3adc4e48b9201d263d8f42b, type: 3}
+      propertyPath: m_Events.m_Events.Array.data[43].m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1444835467}
+    - target: {fileID: 3618016448543876213, guid: 7abada79b3adc4e48b9201d263d8f42b, type: 3}
+      propertyPath: m_Events.m_Events.Array.data[6].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: DialogueCanvasSetFalse
+      objectReference: {fileID: 0}
+    - target: {fileID: 3618016448543876213, guid: 7abada79b3adc4e48b9201d263d8f42b, type: 3}
+      propertyPath: m_Events.m_Events.Array.data[43].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: DialogueCanvasSetTrue
       objectReference: {fileID: 0}
     - target: {fileID: 5880359054287818998, guid: 7abada79b3adc4e48b9201d263d8f42b, type: 3}
       propertyPath: m_Pivot.x
@@ -21460,9 +21474,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0522f97873de74345b09fe1321b2896b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundManager: {fileID: 505145888}
   interactionEvent: {fileID: 0}
-  inventoryManager: {fileID: 0}
   inventoryCanvas: {fileID: 1032119769}
   brutalDatas: {fileID: 11400000, guid: 3dd26ef704510464b8dfc1701b077cb6, type: 2}
   humanDatas: {fileID: 11400000, guid: 64b063eba2fdac44e8f9374fda825bb1, type: 2}
@@ -21483,6 +21495,7 @@ MonoBehaviour:
   bottomLeft: {x: 0, y: 0}
   topRight: {x: 0, y: 0}
   startPos: {x: 0, y: 0}
+  isLoad: 0
 --- !u!114 &1182773770
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21495,6 +21508,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 750ac22bb91b9f04480c310cf27b3c86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tempcollections: []
   invenCount: 0
   newsCount: 0
 --- !u!114 &1182773771
@@ -21509,8 +21523,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa15bfb7321b53044862d60984848238, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  invenCount: 0
-  newsCount: 0
 --- !u!114 &1182773772
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22335,6 +22347,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   panel: {fileID: 1368050647}
   contentText: {fileID: 1908803410}
+  _image: {fileID: 0}
 --- !u!114 &1308560466
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -43301,6 +43314,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Vertical: {fileID: 0}
+  gobj: {fileID: 0}
   duration: 3
   namemesh: {fileID: 52356635}
   content: {fileID: 102362551}

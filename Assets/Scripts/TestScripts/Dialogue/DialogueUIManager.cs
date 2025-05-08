@@ -241,6 +241,7 @@ public class UIManager : MonoBehaviour
     public void SetImage(string image_name,string image_dir,bool is_disable=false)//이 부분은 next text에서 계속 불러옴 그래서 그런 느낌을 원하면 여기서 값을 조정해야하는게 맞ㅇ므
     {
         //string str = @"^[a-zA-Z]";
+        Debug.Log("image dir" + image_dir);
         if(image_name == null)//추가 한 부분
         {
             return;

@@ -230,6 +230,11 @@ public partial class GameManager : MonoBehaviour
         SaveData();
         PageManger.Instance.LoadScene(name, active);
     }
+
+    public void LoadScene(string name)
+    {
+        LoadScene(name);
+    }
     public void RetryScene() => LoadScene(SceneManager.GetActiveScene().name, false);
 
     public void Pause()
