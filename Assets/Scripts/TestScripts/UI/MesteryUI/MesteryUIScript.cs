@@ -475,12 +475,12 @@ public class MesteryUIScript : MonoBehaviour
         foreach (string part in parts)//br기준,사실상 없는거나 마찬가지
         {
             Debug.Log("part is " + part+"id =>"+id+"key length"+keys.Length);
-            //if (keys.Length < 1)
-            //{
-            //    keys = new string[] { "" };
-            //}
+            if (keys.Length < 1)
+            {
+                keys = new string[] { "" };
+            }
             //Debug.Log("id=>" + id);
-            //Debug.Log(string.Format("part is {0} , id => {1} key is {2}", part, id, keys[0]));
+            Debug.Log(string.Format("part is {0} , id => {1} key is {2}", part, id, keys[0]));
             string[] _part;
             _part = part.Split(' ');
 
@@ -489,10 +489,7 @@ public class MesteryUIScript : MonoBehaviour
 
             foreach (string p in _part)//여기 드래그 관련 내용들은 csv가 아닌 수집품의 내용 관련으로 갈것임 지금 해당내용은 테스트용이라고 생각하는것이 좋음 띄워 쓰기 관련은 인벤토리(수집품) 추리시 발생, 스페이스 기준
             {
-                bool check = keys.Length > 0
-             && keys[0] != null
-             && part != null
-             && part.Contains(keys[0]);
+                bool check = keys.Length > 0 && keys[0] != null && part != null && keys[0].Any(charInKey => part.Contains(charInKey));
                 //int a = part.IndexOf(keys[0]);
                 Debug.Log($"분리 후: [{p}] check[{check}]"); //지금 분리도 안 되는거같은데
 
@@ -831,8 +828,7 @@ public class MesteryUIScript : MonoBehaviour
                 foreach (string k in keys)
                 {
                     Debug.Log("Key = " + k);
-                    check = keys.Length > 0 && p != null && k != null && p.Contains(k);
-
+                    check = keys.Length > 0 && p != null && k != null && k.Any(c => p.Contains(c));
                     if (check)
                     {
                         key = k;
