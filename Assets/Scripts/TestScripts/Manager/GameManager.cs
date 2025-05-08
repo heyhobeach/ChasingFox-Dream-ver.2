@@ -233,7 +233,7 @@ public partial class GameManager : MonoBehaviour
 
     public void LoadScene(string name)
     {
-        LoadScene(name, true);
+        LoadScene(name);
     }
     public void RetryScene() => LoadScene(SceneManager.GetActiveScene().name, false);
 
