@@ -11,6 +11,7 @@ using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 
 using UnityEngine.UIElements;
+using UnityEngine.Windows;
 using static UnityEditor.Recorder.OutputPath;
 
 
@@ -821,8 +822,11 @@ public class MesteryUIScript : MonoBehaviour
             lineContainer.style.flexWrap = Wrap.Wrap;//이게 들어가야 줄 이상한거 없어짐
             //float estimatedLineHeightInPixels = 50f;
             //lineContainer.style.minHeight = new StyleLength(new Length(estimatedLineHeightInPixels, LengthUnit.Pixel));
-            string[] _part = part.Split(' ');
-
+            //string[] _part = part.Split(' ');
+            string pattern = @"""([^""]*)""|([^""\s]+)";
+            var matches = Regex.Matches(part, pattern);
+            string[] _part = matches.Cast<Match>().Select(m => m.Value).ToList().ToArray();
+            //string[] _part = Regex.Replace(part, @"(?<![""])\s+(?![^""]*[""])", "");
             foreach (string p in _part)//여기 드래그 관련 내용들은 csv가 아닌 수집품의 내용 관련으로 갈것임 지금 해당내용은 테스트용이라고 생각하는것이 좋음 띄워 쓰기 관련은 인벤토리(수집품) 추리시 발생
             {
                 //여기를 수정해야할듯?
