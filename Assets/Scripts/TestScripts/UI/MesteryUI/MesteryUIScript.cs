@@ -184,7 +184,7 @@ public class MesteryUIScript : MonoBehaviour
     {
         var background = GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("BackGround");
         float current = 0;
-        float value_a = 255;
+        float value_a = 255*0.2f;
         while (current < time)
         {
             await Awaitable.EndOfFrameAsync();
@@ -290,8 +290,17 @@ public class MesteryUIScript : MonoBehaviour
         else
         {
             is_correct = false;
+            //textContainer.style.display = DisplayStyle.Flex;
+            textContainer.Q<TextElement>("WrongAnswer").style.display = DisplayStyle.Flex;
+
+            Invoke("WrongAnswerPopDown", 1);
             Debug.Log("오답");
         }
+    }
+
+    private void WrongAnswerPopDown()
+    {
+        textContainer.Q<TextElement>("WrongAnswer").style.display = DisplayStyle.None;
     }
 
     private void DiaryBackButtonEvent()
@@ -775,6 +784,9 @@ public class MesteryUIScript : MonoBehaviour
         panel.style.scale = new Vector2(1, 1);
         var tracer = root.Q<VisualElement>("TracerNote");//여기 하위에 오브젝트 배치
         var content = root.Q<VisualElement>("TracerContent");
+
+        var title_element = tracer.Q<Label>("Title");
+        var charactor_image = tracer.Q<VisualElement>("TracerImage");
         content.Clear();
 
         //content.style.flexDirection = FlexDirection.Column;
@@ -783,6 +795,7 @@ public class MesteryUIScript : MonoBehaviour
         content.style.flexShrink = 0;
 
         VisualElement visuallist = new VisualElement();
+        //Inventory.Info info = InventoryManager.Instance.GetInfo_(info_keys[num]);
         Debug.Log("inven =" + InventoryManager.Instance.GetInfo_(info_keys[num]).context+" ||||"
             +"correction Num" + InventoryManager.Instance.GetInfo_(info_keys[num]).news.chapter??"0");
 
@@ -790,6 +803,9 @@ public class MesteryUIScript : MonoBehaviour
         string textContent = InventoryManager.Instance.GetInfo_(info_keys[num]).context ?? "";
         string[] keys = InventoryManager.Instance.GetInfo_(info_keys[num]).keywords ?? new string[0];
         string[] parts = Regex.Split(textContent, @"(\n)");
+
+        title_element.text = InventoryManager.Instance.GetInfo_(info_keys[num]).news.image_name;
+        charactor_image.style.backgroundImage = new StyleBackground(InventoryManager.Instance.GetInfo_(info_keys[num]).news.image);
         foreach (string part in parts)
         {
             VisualElement lineContainer = new VisualElement();
@@ -855,6 +871,7 @@ public class MesteryUIScript : MonoBehaviour
         textContainer.AddToClassList("diary-left");
         //tracer.AddToClassList("test1");
         tracer.AddToClassList("test2-2");
+        tracer.style.marginRight = Length.Percent(2);
     }
 
     public void InvenLeftButtonEvent()
