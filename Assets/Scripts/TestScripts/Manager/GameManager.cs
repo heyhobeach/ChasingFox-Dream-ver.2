@@ -247,6 +247,7 @@ public partial class GameManager : MonoBehaviour
     public void GoHideoutScene(string nextChp)
     {
         SystemManager.Instance.saveData.nextChapter = nextChp;
+        SystemManager.Instance.SaveData(SystemManager.Instance.saveIndex);
         LoadScene("Hideout", true);
     }
 
@@ -283,6 +284,7 @@ public partial class GameManager : MonoBehaviour
 
         SystemManager.Instance.saveData = new SaveData(){
             chapter = SceneManager.GetActiveScene().name,
+            nextChapter = SystemManager.Instance.saveData.nextChapter,
             stageIdx = PlayerData.lastRoomIdx,
             currentEventTriggerDataGuid = EventTriggerData.currentEventTriggerData?.guid,
             inventoryData = items,
