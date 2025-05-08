@@ -46,7 +46,7 @@ public abstract class PlayerUnit : UnitBase
 
     public MapSensor mapSensor;
 
-    protected CameraManager.State cameraState;
+    public CameraManager.State cameraState;
 
     protected MapType[] mapTypesEnter;
     protected HashSet<MapType> mapTypesExit = new();

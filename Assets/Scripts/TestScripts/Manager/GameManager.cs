@@ -6,6 +6,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Linq;
+using Unity.VisualScripting;
+
 
 
 #if UNITY_EDITOR
@@ -193,7 +195,6 @@ public partial class GameManager : MonoBehaviour
     {
         CreateWallRoom(currentRoomIndex);
         isLoad = true;
-
         if(!maps[currentRoomIndex].used) PlayerData.lastRoomIdx = currentRoomIndex;
         if (!maps[currentRoomIndex].cleared) maps[currentRoomIndex].OnStart(player.transform.position);
         if (previousRoomIndex >= 0 && previousRoomIndex != currentRoomIndex) maps[previousRoomIndex].OnEnd();
@@ -243,6 +244,12 @@ public partial class GameManager : MonoBehaviour
         return PageManger.Instance.LoadScene(name, active);
     }
     public bool RetryScene() => LoadScene(SceneManager.GetActiveScene().name, false);
+    public void GoHideoutScene(string nextChp)
+    {
+        SystemManager.Instance.saveData.nextChapter = nextChp;
+        SystemManager.Instance.SaveData(SystemManager.Instance.saveIndex);
+        LoadScene("Hideout", true);
+    }
 
     public void Pause()
     {
@@ -277,6 +284,7 @@ public partial class GameManager : MonoBehaviour
 
         SystemManager.Instance.saveData = new SaveData(){
             chapter = SceneManager.GetActiveScene().name,
+            nextChapter = SystemManager.Instance.saveData.nextChapter,
             stageIdx = PlayerData.lastRoomIdx,
             currentEventTriggerDataGuid = EventTriggerData.currentEventTriggerData?.guid,
             inventoryData = items,
