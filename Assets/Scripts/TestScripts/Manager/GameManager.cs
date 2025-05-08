@@ -6,6 +6,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Linq;
+using Unity.VisualScripting;
+
 
 
 #if UNITY_EDITOR
@@ -193,7 +195,6 @@ public partial class GameManager : MonoBehaviour
     {
         CreateWallRoom(currentRoomIndex);
         isLoad = true;
-
         if(!maps[currentRoomIndex].used) PlayerData.lastRoomIdx = currentRoomIndex;
         if (!maps[currentRoomIndex].cleared) maps[currentRoomIndex].OnStart(player.transform.position);
         if (previousRoomIndex >= 0 && previousRoomIndex != currentRoomIndex) maps[previousRoomIndex].OnEnd();

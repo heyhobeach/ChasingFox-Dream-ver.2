@@ -51,7 +51,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     /// </summary>
     // [SerializeField] private float bulletTime;
 
-    private void OnDsable()
+    private void OnDisable()
     {
         StopAllCoroutines();
     }
@@ -94,6 +94,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         }
         changedForm.gameObject.SetActive(true);
     }
+
     public PlayerData.JsonData GetJsonData()
     {
         playerData.brutalGaugeRemaining = currentGauge;
