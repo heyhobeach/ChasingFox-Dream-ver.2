@@ -9,8 +9,8 @@ namespace BehaviourTree
     [Serializable]
     public class Blackboard
     {
-        [DisableInspector] public EnemyUnit thisUnit;
-        [DisableInspector] public Transform target;
+        [DisableInInspector] public EnemyUnit thisUnit;
+        [DisableInInspector] public Transform target;
         [HideInInspector] public Transform originPos;
         [HideInInspector] public PlayableDirector playableDirector;
         [Serializable]
@@ -18,9 +18,9 @@ namespace BehaviourTree
         {
             // public bool Defalut=true;//생성시 기준 생성시 defalut는 true기 때문에
             public enum StateCase { Default, Alert, Chase }
-            [DisableInspector] public StateCase stateCase;
-            [DisableInspector] public bool recognition = true;
-            [DisableInspector] public int Increase_Sight = 0;
+            [DisableInInspector] public StateCase stateCase;
+            [DisableInInspector] public bool recognition = true;
+            [DisableInInspector] public int Increase_Sight = 0;
 
             public void Reset_State()//모든 상태를 false로 전환
             {

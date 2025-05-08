@@ -13,7 +13,8 @@ public class InventoryManager : MonoBehaviour
     private static InventoryManager instance;
 
     public static InventoryManager Instance { get { return instance; } }
-    InventoryScripable invendata;
+    [DisableInInspector] public InventoryScripable invendata;
+    [DisableInInspector] public Inventory inventory;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created\
     private void Awake()

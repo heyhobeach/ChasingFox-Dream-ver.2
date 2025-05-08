@@ -41,13 +41,17 @@ public class PopupManager : MonoBehaviour
     public void DeathPop()
     {
         var temp = deathPopup.GetComponent<TempDeathPopup>();
-        temp.info = "Press to Continue";
         temp.unityEvent.RemoveAllListeners();
         temp.unityEvent.AddListener(() => PageManger.Instance.SceneActive());
         deathPopup.SetActive(true);
     }
     public void PausePop(bool enabled)
     {
+        if(enabled)
+        {
+            if(PageManger.Instance.isLoadingScene) RestartButtonEnable(false);
+        }
+        else RestartButtonEnable(true);
         pausePopup.SetActive(enabled);
         pausePopup.GetComponent<Canvas>().sortingOrder = 101;
     }

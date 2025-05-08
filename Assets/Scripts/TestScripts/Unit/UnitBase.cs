@@ -159,6 +159,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
             anim.SetBool("isRun", true);
         }
         anim.SetFloat("dashMultiplier", dashDuration > 0 ? 1/dashDuration : 1);
+        anim.speed = ServiceLocator.Get<GameManager>().ingameTimescale;
     }
 
     // private void LateUpdate()
@@ -168,7 +169,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     
     protected virtual void OnEnable()
     {
-        var col = gameObject.GetComponent<CapsuleCollider2D>();
+        var col = gameObject.GetComponent<CapsuleCollider2D>(); 
         boxSizeX = col.bounds.extents.x;
         boxSizeY = col.bounds.extents.y;
         boxOffsetX = col.offset.x;
@@ -273,6 +274,8 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         }
     }
 
+    [VisibleEnum(typeof(UnitState))]
+    public void SetUnitState(int unitState) => SetUnitState(unitState);
     private void SetUnitState(UnitState unitState)
     {
         switch(unitState)
@@ -287,7 +290,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
                 if(this.unitState != UnitState.Death) this.unitState = unitState;
             break;
             default:
-                if(!ControllerChecker()) this.unitState = unitState;
+                if(!ControllerChecker() || this.unitState == UnitState.Pause) this.unitState = unitState;
             break;
         }
     }

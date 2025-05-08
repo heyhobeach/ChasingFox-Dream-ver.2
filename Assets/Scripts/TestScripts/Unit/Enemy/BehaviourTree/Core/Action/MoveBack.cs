@@ -29,7 +29,7 @@ namespace BehaviourTree
 
         protected override NodeState OnUpdate()
         {
-            if(!isRunning) startTime += Time.deltaTime;
+            if(!isRunning) startTime += ServiceLocator.Get<GameManager>().ingameDeltaTime;
             if(!isRunning && blackboard.target != null && (startTime >= reloadTime || blackboard.FinalNodeList == default))
             {
                 if(startTime >= reloadTime) startTime = 0;
@@ -49,7 +49,7 @@ namespace BehaviourTree
             moveDir = tempDir - blackboard.thisUnit.transform.position;
             moveDir = moveDir.normalized;
             if(!blackboard.thisUnit.Move(tempDir)) return NodeState.Failure;
-            if((blackboard.thisUnit.transform.position - tempDir).magnitude < 0.1f) blackboard.nodeIdx++;
+            if((blackboard.thisUnit.transform.position - tempDir).magnitude < Mathf.Epsilon) blackboard.nodeIdx++;
             return NodeState.Running;
         }
 

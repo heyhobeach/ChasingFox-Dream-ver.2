@@ -23,6 +23,7 @@ public class Bullet : MonoBehaviour
     private Vector2 destination;
 
     [HideInInspector] public GameObject parentGo;
+    private SoundLibrary soundLibrary;
     private Rigidbody2D rg;
     private float startTime;
 
@@ -36,13 +37,13 @@ public class Bullet : MonoBehaviour
 
     private Vector3 shootPos;
 
-    public void Set(Vector3 shootPos, Vector3 targetPos, Vector3 rotation, int damage, float speed, GameObject gobj, Vector3 addPos = new Vector3(), Action func = null)
+    public void Set(Vector3 shootPos, Vector3 targetPos, int damage, float speed, GameObject gobj, Vector3 addPos = new Vector3(), Action func = null)
     {
         // Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Bullet"), gobj.layer);
         parentGo = gobj;
         transform.position = (Vector2)shootPos + (Vector2)addPos;
         destination = ((Vector2)targetPos - (Vector2)shootPos).normalized;
-        transform.GetChild(0).transform.localEulerAngles = rotation;
+        transform.localEulerAngles = new Vector3(0, 0, Mathf.Atan2(destination.y, destination.x) * Mathf.Rad2Deg);
         this.damage = damage;
         this.speed = speed;
         damagedFeedBack = func;
@@ -54,6 +55,7 @@ public class Bullet : MonoBehaviour
     private void Awake()
     {
         rg = GetComponent<Rigidbody2D>();
+        soundLibrary = GetComponent<SoundLibrary>();
         rg.excludeLayers = 1<<LayerMask.NameToLayer("Platform");
     }
     private void Update()
@@ -77,16 +79,19 @@ public class Bullet : MonoBehaviour
             transform.position = transform.position + (Vector3)(-destination * distance);
             WallFeedBack(collision);
             Destroy(gameObject);
+            BulletSound();
+            soundLibrary.RandomPlaySoundOneShot(0);
         }
 
         if (collision.CompareTag("Player"))//레이어 설정한 것 때문에 적군 총알만 플레이어 에게 충돌일어남
         {
             PlayerDamage(collision);
-            BulletSound();
+            soundLibrary.RandomPlaySoundOneShot(0);
         }
         if(life > 0 && collision.CompareTag("Enemy"))//플레이어 총알이 적군에게 충돌시
         {
             EnemyDamage(collision);
+            soundLibrary.RandomPlaySoundOneShot(0);
         }
 
         // if (collision.gameObject.tag == "guard")//필요없어보임
@@ -115,10 +120,8 @@ public class Bullet : MonoBehaviour
 
     private void PlayerDamage(Collider2D collision)
     {
-        bool isDamaged = false;
-        var playerUnit = collision.gameObject.GetComponent<PlayerUnit>();
-        var temp = playerUnit.rg.gameObject.GetInterface<IDamageable>();
-        isDamaged = temp.GetDamage(damage, parentGo.transform, damagedFeedBack);
+        var temp = collision.attachedRigidbody.gameObject.GetInterface<IDamageable>();
+        var isDamaged = temp.GetDamage(damage, parentGo.transform, damagedFeedBack);
         if (isDamaged) 
         {
             DamagedFeedBack(collision);
@@ -127,9 +130,8 @@ public class Bullet : MonoBehaviour
     }
     private void EnemyDamage(Collider2D collision)
     {
-        bool isDamaged = false;
         var temp = collision.gameObject.GetInterface<IDamageable>();
-        if(temp != null) isDamaged = temp.GetDamage(damage,parentGo.transform,damagedFeedBack);
+        var isDamaged = temp.GetDamage(damage,parentGo.transform,damagedFeedBack);
         if (isDamaged) 
         {
             BulletSound();

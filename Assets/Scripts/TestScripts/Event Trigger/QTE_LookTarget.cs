@@ -8,12 +8,18 @@ public class QTE_LookTarget : QTE_Prerequisites
 
     private bool isLook;
     private Vector3 colSize;
+    private Vector3 pos;
 
-    private void Start() => colSize = new Vector2(GetComponent<Collider2D>().bounds.extents.x * 0.75f, GetComponent<Collider2D>().bounds.extents.y * 0.75f);
+    private void OnEnable()
+    {
+        var col = GetComponent<Collider2D>();
+        colSize = new Vector2(col.bounds.extents.x * 0.75f, col.bounds.extents.y * 0.75f);
+        pos = col.bounds.center;
+    }
 
     private void Update()
     {
-        var temp = transform.position - MousePos();
+        var temp = pos - MousePos();
         temp.x = Mathf.Abs(temp.x);
         temp.y = Mathf.Abs(temp.y);
         if(temp.x > colSize.x || temp.y > colSize.y) isLook = false;

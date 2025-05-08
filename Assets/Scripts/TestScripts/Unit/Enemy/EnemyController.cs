@@ -2,6 +2,8 @@ using System;
 using BehaviourTree;
 using UnityEngine;
 using UnityEngine.Playables;
+using System.Linq;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -57,14 +59,14 @@ public class EnemyController : MonoBehaviour
             ServiceLocator.Get<GameManager>().OnEnemyDeath(blackboard.thisUnit);
         };
     }
-    void Update()
-    {
-        if(!isStop || ServiceLocator.Get<GameManager>() != null) behaviorTree.Update();
-    }
+    // void Update()
+    // {
+    // }
 
     void FixedUpdate()
     {
-        if(!isStop || ServiceLocator.Get<GameManager>() != null) CircleRay();
+        if(!isStop || ServiceLocator.Get<GameManager>() != null) behaviorTree.Update();
+        if(ServiceLocator.Get<GameManager>() != null) CircleRay();
     }
 
     private bool ViewCheck(Collider2D hit)
@@ -73,11 +75,12 @@ public class EnemyController : MonoBehaviour
         var subvec = (Vector2)hit.transform.position - (Vector2)(transform.position+Vector3.up);// ray2d=>tartget_ray2d[index_player]
         float deg = Mathf.Atan2(subvec.y, subvec.x);//mathf.de
         deg *= Mathf.Rad2Deg;
+        var rayHits = Physics2D.RaycastAll(transform.position+Vector3.up, subvec.normalized, subvec.magnitude, layerMapMask).Where(x => !x.collider.isTrigger);
         bool inAngle = 180-viewAngle*0.5f < MathF.Abs(deg) || Mathf.Abs(deg) < viewAngle*0.5f;
         bool isForword = Mathf.Sign(subvec.normalized.x)>0&&!spriteRenderer.flipX ? true : Mathf.Sign(subvec.normalized.x)<0&&spriteRenderer.flipX ? true : false;
         if((subvec.magnitude <= viewInnerRange || (subvec.magnitude <= viewOuterRange && inAngle && isForword))
-            && !Physics2D.Raycast(transform.position+Vector3.up, subvec.normalized, subvec.magnitude, layerMapMask))
-        {                
+            && rayHits.Count() == 0)
+        {
             return true;
         }
         else return false;
@@ -88,10 +91,11 @@ public class EnemyController : MonoBehaviour
         var subvec = pos - (Vector2)(transform.position+Vector3.up);// ray2d=>tartget_ray2d[index_player]
         float deg = Mathf.Atan2(subvec.y, subvec.x);//mathf.de
         deg *= Mathf.Rad2Deg;
+        var rayHits = Physics2D.RaycastAll(transform.position+Vector3.up, subvec.normalized, subvec.magnitude, layerMapMask).Where(x => !x.collider.isTrigger);
         bool inAngle = 180-viewAngle*0.5f < MathF.Abs(deg) || Mathf.Abs(deg) < viewAngle*0.5f;
         bool isForword = Mathf.Sign(subvec.normalized.x)>0&&!spriteRenderer.flipX ? true : Mathf.Sign(subvec.normalized.x)<0&&spriteRenderer.flipX ? true : false;
         if((subvec.magnitude <= viewInnerRange || (subvec.magnitude <= viewOuterRange && inAngle && isForword))
-            && !Physics2D.Raycast(transform.position+Vector3.up, subvec.normalized, subvec.magnitude, layerMapMask))
+            && rayHits.Count() == 0)
         {                
             return true;
         }
@@ -112,7 +116,7 @@ public class EnemyController : MonoBehaviour
         Collider2D hit = null;
         foreach(var h in hits)
         {
-            if(h.CompareTag("Player") && blackboard.thisUnit.AttackCheck(h.bounds.center)) 
+            if(h.CompareTag("Player")) 
             {
                 hit = h;
                 break;
@@ -152,11 +156,31 @@ public class EnemyController : MonoBehaviour
         if(blackboard.enemy_state.stateCase == Blackboard.Enemy_State.StateCase.Chase) return;
 
         var subvec = pos - (Vector2)transform.position;
-        if(subvec.magnitude <= soundRange + (size.x * 0.5f))
+        if(subvec.magnitude <= soundRange + size.x)
         {
             blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Alert;
             blackboard.target = tr;
             blackboard.enemy_state.Increase_Sight++;
+        }
+    }
+
+    [VisibleEnum(typeof(Blackboard.Enemy_State.StateCase))]
+    public void SetState(int i)
+    {
+        blackboard.enemy_state.stateCase = (Blackboard.Enemy_State.StateCase)i;
+        switch(blackboard.enemy_state.stateCase)
+        {
+            case Blackboard.Enemy_State.StateCase.Default:
+                blackboard.enemy_state.stateCase = Blackboard.Enemy_State.StateCase.Default;
+                blackboard.target = null;
+                break;
+            case Blackboard.Enemy_State.StateCase.Chase:
+            case Blackboard.Enemy_State.StateCase.Alert:
+                blackboard.target = ServiceLocator.Get<GameManager>().player.transform;
+                blackboard.enemy_state.Increase_Sight++;
+                break;
+            default:
+                break;
         }
     }
 

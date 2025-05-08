@@ -30,7 +30,7 @@ namespace BehaviourTree
 
         protected override NodeState OnUpdate()
         {
-            if(!isRunning) startTime += Time.deltaTime;
+            if(!isRunning) startTime += ServiceLocator.Get<GameManager>().ingameDeltaTime;
             if(!isRunning && blackboard.target != null && (startTime >= reloadTime || blackboard.FinalNodeList == default))
             {
                 if(startTime >= reloadTime) startTime = 0;
@@ -50,7 +50,7 @@ namespace BehaviourTree
             moveDir = tempDir - blackboard.thisUnit.transform.position;
             moveDir = moveDir.normalized;
             if(!blackboard.thisUnit.Move(tempDir)) return NodeState.Failure;
-            if((blackboard.thisUnit.transform.position - tempDir).magnitude < 0.1f) blackboard.nodeIdx++;
+            if((blackboard.thisUnit.transform.position - tempDir).magnitude < Mathf.Epsilon) blackboard.nodeIdx++;
             return NodeState.Running;
         }
 
@@ -104,11 +104,11 @@ namespace BehaviourTree
         {
             if(!jobHandle.IsCompleted) jobHandle.Complete();
             isRunning = false;
-            if(pathFinding.isLoad.IsCreated) ServiceLocator.Get<GameManager>().isLoad = pathFinding.isLoad[0];
             if(pathFinding.OpenList.IsCreated) pathFinding.OpenList.Dispose();
             if(pathFinding.ClosedList.IsCreated) pathFinding.ClosedList.Dispose();
             if(pathFinding.NodeArray.IsCreated) pathFinding.NodeArray.Dispose();
             if(pathFinding.FinalNodeList.IsCreated) pathFinding.FinalNodeList.Dispose();
+            if(pathFinding.isLoad.IsCreated && ServiceLocator.Get<GameManager>() != null) ServiceLocator.Get<GameManager>().isLoad = pathFinding.isLoad[0];
             if(pathFinding.isLoad.IsCreated) pathFinding.isLoad.Dispose();
         }
     }

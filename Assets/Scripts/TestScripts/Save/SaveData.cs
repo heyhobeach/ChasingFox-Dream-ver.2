@@ -10,29 +10,24 @@ public class SaveData
     public DateTime createdTime;
     
     public string chapter;
-    public int chapterIdx;
 
-    public MapData.JsonData[] mapDatas;
-    public EventTriggerData.JsonData[] eventTriggerDatas;
-
-    public string eventTriggerInstanceID;
-    public int eventIdx;
-
-    public int karma;
-    public PlayerData playerData;
-
-    // TODO : Add inventory data
+    public int karma => playerData.karma;
+    public int stageIdx;
+    public string currentEventTriggerDataGuid;
+    public Inventory.Info[] inventoryData;
+    public PlayerData.JsonData playerData;
+    public MapData.JsonData[] mapData;
+    public EventTriggerData.JsonData[] eventTriggerData;
 
     public void Init(DateTime date, SaveData saveData)
     {
         createdTime = date;
+        stageIdx = saveData.stageIdx;
+        currentEventTriggerDataGuid = saveData.currentEventTriggerDataGuid;
+        inventoryData = saveData.inventoryData;
         chapter = saveData.chapter;
-        chapterIdx = saveData.chapterIdx;
-        mapDatas = saveData.mapDatas;
-        eventTriggerDatas = saveData.eventTriggerDatas;
-        eventTriggerInstanceID = saveData.eventTriggerInstanceID;
-        eventIdx = saveData.eventIdx;
-        karma = saveData.karma;
         playerData = saveData.playerData;
+        mapData = saveData.mapData;
+        eventTriggerData = saveData.eventTriggerData;
     }
 }

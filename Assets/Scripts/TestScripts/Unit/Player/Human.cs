@@ -7,13 +7,14 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.U2D.Animation;
 
+// TODO : 무기 시스템 구현
 [RequireComponent(typeof(ShootingAnimationController))]
 [RequireComponent(typeof(SpriteLibrary))]
 [RequireComponent(typeof(SpriteResolver))]
 /// <summary>
 /// 인간 상태 클래스, PlayerUnit 클래스를 상속함
 /// </summary>
-public class Human : PlayerUnit, IDoorInteractable
+public class Human : PlayerUnit, IDoorInteractable   
 {
     [Header("Test"), Space(10)]
     public AttackType attackType = AttackType.Projectile;
@@ -34,9 +35,6 @@ public class Human : PlayerUnit, IDoorInteractable
     
     [Header("Human"), Space(10)]
     public GameObject bullet;
-
-    AudioSource sound;
-    public AudioClip soundClip;
 
     public GameObject userGunsoud;
 
@@ -201,20 +199,16 @@ public class Human : PlayerUnit, IDoorInteractable
         if(attackCoroutine != null) StopCoroutine(attackCoroutine);
     }
 
-    protected override void Start() => Init();
 
     public override void Init()
-    {
-        base.Init();
-        sound=GetComponent<AudioSource>(); 
-        //sound.PlayOneShot(soundClip, 0.3f);
+    {        
         cameraState = new() {
             maxHorizontalInfluence = 5.15f,
             maxVerticalInfluence = 0.35f,
             influenceSmoothness = 0.275f,
             changeSize = 5.15f
         };
-        bulletTimeCount = GameManager.GetHumanData();
+        base.Init();
         residualAmmo = maxAmmo;
         if(!anim.runtimeAnimatorController) anim.runtimeAnimatorController = Resources.Load<RuntimeAnimatorController>("PlayerAnim/Human/Human Lib Ani");
     }
@@ -263,8 +257,6 @@ public class Human : PlayerUnit, IDoorInteractable
 
             // Debug.Log("여기 문제");
             base.Attack(clickPos);
-//            Assert.IsNotNull(sound, "총기 격발음 셋팅 안됨");
-            sound?.PlayOneShot(soundClip, 0.3f);
             SoundManager.Instance.CoStartBullet(userGunsoud, false);
             ProCamera2DShake.Instance.Shake("GunShot ShakePreset");
             Assert.IsNotNull(bullet, "총알 셋팅 안됨");
@@ -275,7 +267,6 @@ public class Human : PlayerUnit, IDoorInteractable
                 _bullet.GetComponent<Bullet>().Set(
                     shootingAnimationController.GetShootPosition(), 
                     clickPos, 
-                    shootingAnimationController.GetShootRotation(), 
                     bulletDamage, 
                     bulletSpeed, 
                     gObj, 
@@ -296,7 +287,6 @@ public class Human : PlayerUnit, IDoorInteractable
         if(((Vector2)transform.position-(Vector2)clickPos).magnitude < ((Vector2)transform.position-shootingAnimationController.GetShootPosition()).magnitude) return false;
         shootingAnimationController.AttackAni();
         this.clickPos = clickPos;
-        sound?.PlayOneShot(soundClip, 0.3f);
         SoundManager.Instance.CoStartBullet(userGunsoud, false);
         ProCamera2DShake.Instance.Shake("GunShot ShakePreset");
         residualAmmo--;
@@ -494,7 +484,7 @@ public class Human : PlayerUnit, IDoorInteractable
         switch(skileKey)
         {
             case KeyState.KeyDown:
-                CameraManager.Instance.SetState(new(){
+                ServiceLocator.Get<CameraManager>().SetState(new(){
                     maxHorizontalInfluence = 15f,
                     maxVerticalInfluence = 15f,
                     influenceSmoothness = 0.5f,
@@ -502,7 +492,7 @@ public class Human : PlayerUnit, IDoorInteractable
                 });
             break;
             case KeyState.KeyUp:
-                CameraManager.Instance.SetState(cameraState);
+                ServiceLocator.Get<CameraManager>().SetState(cameraState);
             break;
         }
         return base.Skill2(skileKey);

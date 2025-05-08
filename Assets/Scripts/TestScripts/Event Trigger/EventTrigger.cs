@@ -11,7 +11,7 @@ using UnityEditor;
 [RequireComponent(typeof(BoxCollider2D))]
 public class EventTrigger : MonoBehaviour
 {
-    [SerializeField, DisableInspector] private EventTriggerData _eventTriggerData;
+    [SerializeField, DisableInInspector] private EventTriggerData _eventTriggerData;
     public EventTriggerData eventTriggerData
     {
         get
@@ -37,10 +37,12 @@ public class EventTrigger : MonoBehaviour
     /// </summary>
     public bool limit;
     public EventList[] eventLists;
-    protected int eventIdx = 0;
+    protected int eventIdx { get => eventTriggerData.eventIdx; set => eventTriggerData.eventIdx = value; }
     public bool used { get => eventTriggerData.used; set => eventTriggerData.used = value; }
     protected bool eventLock;
     private Action action;
+
+    private bool enabledBackup;
 
     /// <summary>
     /// 이벤트 작동부
@@ -49,9 +51,9 @@ public class EventTrigger : MonoBehaviour
     {
         if(eventIdx >= eventLists.Length)
         {
+            EventTriggerData.currentEventTriggerData = null;
             if(limit) used = true;
             eventIdx = 0;
-            SystemManager.Instance.UpdateDataForEventTrigger(null, 0);
             action = null;
             return;
         }
@@ -59,7 +61,6 @@ public class EventTrigger : MonoBehaviour
             (eventLists[eventIdx].enterPrerequisites == null || eventLists[eventIdx].enterPrerequisites.isSatisfied) &&
             (eventLists[eventIdx].keyCode == KeyCode.None || Input.GetKeyDown(eventLists[eventIdx].keyCode)))
         {
-            SystemManager.Instance.UpdateDataForEventTrigger(eventTriggerData.guid, eventIdx);
             try { eventLists[eventIdx].action?.Invoke(); }
             catch (Exception e) { Debug.LogError(e); }
             if(eventLists[eventIdx].exitPrerequisites != null) StartCoroutine(LockTime(eventLists[eventIdx].exitPrerequisites));
@@ -74,17 +75,19 @@ public class EventTrigger : MonoBehaviour
     {
         if(limit ? used : false) return;
         action = Controller;
+        EventTriggerData.currentEventTriggerData = eventTriggerData;
     }
     public virtual void OnTrigger(int idx)
     {
         if(limit ? used : false) return;
         eventIdx = idx;
         action = Controller;
+        EventTriggerData.currentEventTriggerData = eventTriggerData;
     }
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        if(!collider.CompareTag(targetTag)) return;
+        if(!collider.CompareTag(targetTag) || collider.GetComponent<UnitBase>()?.UnitState != UnitState.Default) return;
         targetPosition = collider.transform.position;
         OnTrigger();
     }
@@ -94,15 +97,16 @@ public class EventTrigger : MonoBehaviour
         action = null;
     }
 
+    public void DataReset() => eventTriggerData.Init(enabledBackup);
     public void Init(EventTriggerData.JsonData data)
     {
         eventTriggerData.Init(data);
         GetComponent<BoxCollider2D>().enabled = true;
         gameObject.SetActive(eventTriggerData.isEneable);
     }
-
     private void Init()
     {
+        enabledBackup = gameObject.activeSelf;
         var path = $"ScriptableObject Datas/{SceneManager.GetActiveScene().name}_{gameObject.name}";
         _eventTriggerData = Resources.Load<EventTriggerData>(path);
         if(_eventTriggerData == null)
@@ -115,17 +119,14 @@ public class EventTrigger : MonoBehaviour
             AssetDatabase.Refresh();
 #endif
             _eventTriggerData = asset;
-            eventTriggerData.Init(gameObject.activeSelf);
+            eventTriggerData.Init(enabledBackup);
         }
 
         GetComponent<BoxCollider2D>().isTrigger = true;
         GetComponent<BoxCollider2D>().enabled = false;
+        ServiceLocator.Get<GameManager>().eventTriggers.Add(this);
     }
-
-    void Awake()
-    {
-        Init();
-    }
+    private void Awake() => Init();
 
     private void Update()
     {

@@ -140,7 +140,7 @@ public abstract class PlayerUnit : UnitBase
     protected override void OnEnable()
     {
         base.OnEnable();
-        CameraManager.Instance.SetState(cameraState);
+        ServiceLocator.Get<CameraManager>().SetState(cameraState);
         mapSensor.Set(rg, GetComponent<CapsuleCollider2D>());
     }
     protected override void OnDisable()
@@ -149,6 +149,11 @@ public abstract class PlayerUnit : UnitBase
         ResetForce();
         SetHorizontalVelocity(0);
         SetVerticalVelocity(0);
+    }
+
+    public override void Init()
+    {
+        base.Init();
     }
 
     private float jumpingHight;
@@ -171,13 +176,13 @@ public abstract class PlayerUnit : UnitBase
                 AddVerticalVelocity(jumpImpulse);
                 return true;
             case KeyState.KeyStay:
-                jumpingHight += Time.deltaTime / jumpTime;
+                jumpingHight += ServiceLocator.Get<GameManager>().ingameDeltaTime / jumpTime;
                 if(!isJumping || jumpingHight >= 1)
                 {
                     isJumping = false;
                     return false;
                 }
-                AddVerticalVelocity(Mathf.Cos(jumpingHight) * jumpForce * Time.deltaTime);
+                AddVerticalVelocity(Mathf.Cos(jumpingHight) * jumpForce * ServiceLocator.Get<GameManager>().ingameDeltaTime);
                 return true;
             case KeyState.KeyUp:
                 isJumping = false;
@@ -189,7 +194,7 @@ public abstract class PlayerUnit : UnitBase
     public override bool Move(Vector2 dir)
     {
         if(ControllerChecker()) return false;
-        AddHorizontalVelocity(dir.x * movementSpeed * accelerate * Time.deltaTime);  // 가속도만큼 입력 방향에 힘을 추가
+        AddHorizontalVelocity(dir.x * movementSpeed * accelerate * ServiceLocator.Get<GameManager>().ingameDeltaTime);  // 가속도만큼 입력 방향에 힘을 추가
         if(dir.x == 0 && Mathf.Abs(hzVel) < 0.01f) hzVel = 0;
         if(UnitState == UnitState.FormChange || dir.x == 0) // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
         {

@@ -31,7 +31,7 @@ public class FixedEventTrigger : EventTrigger, IBaseController
         if(ServiceLocator.Get<GameManager>().isPaused) return;
         if(eventIdx >= eventLists.Length)
         {
-            SystemManager.Instance.UpdateDataForEventTrigger(null, 0);
+            EventTriggerData.currentEventTriggerData = null;
             PopupManager.Instance.RestartButtonEnable(true);
             targetPosition = Vector2.zero;
             eventIdx = 0;
@@ -44,7 +44,6 @@ public class FixedEventTrigger : EventTrigger, IBaseController
             (eventLists[eventIdx].enterPrerequisites == null || eventLists[eventIdx].enterPrerequisites.isSatisfied) &&
             (eventLists[eventIdx].keyCode == KeyCode.None || Input.GetKeyDown(eventLists[eventIdx].keyCode)))
         {
-            SystemManager.Instance.UpdateDataForEventTrigger(eventTriggerData.guid, eventIdx);
             eventLists[eventIdx].action?.Invoke();
             if(eventLists[eventIdx].exitPrerequisites != null) StartCoroutine(LockTime(eventLists[eventIdx].exitPrerequisites));
             eventIdx++;
@@ -57,12 +56,14 @@ public class FixedEventTrigger : EventTrigger, IBaseController
     public override void OnTrigger()
     {
         if(limit ? used : false) return;
+        EventTriggerData.currentEventTriggerData = eventTriggerData;
         ((IBaseController)this).AddController();
         PopupManager.Instance.RestartButtonEnable(false);
     }
     public override void OnTrigger(int idx)
     {
         if(limit ? used : false) return;
+        EventTriggerData.currentEventTriggerData = eventTriggerData;
         eventIdx = idx;
         ((IBaseController)this).AddController();
         PopupManager.Instance.RestartButtonEnable(false);
@@ -70,7 +71,10 @@ public class FixedEventTrigger : EventTrigger, IBaseController
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
-        if((autoTrigger ? false : !Input.GetKeyDown(keyCode)) || !collider.CompareTag(targetTag) || (prerequisites != null && !prerequisites.isSatisfied)) return;
+        if((autoTrigger ? false : !Input.GetKeyDown(keyCode)) 
+            || !collider.CompareTag(targetTag) 
+            || (prerequisites != null && !prerequisites.isSatisfied)
+            || collider.GetComponent<UnitBase>()?.UnitState != UnitState.Default) return;
         targetPosition = collider.transform.position;
         OnTrigger();
     }

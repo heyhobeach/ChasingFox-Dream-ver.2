@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -17,27 +16,31 @@ public class MapData : ScriptableObject
         public bool used;
         public bool cleared;
         public Vector3 position;
+        public PlayerData.JsonData playerData;
 
         public static implicit operator JsonData(MapData data)
         {
             return new JsonData {
                 used = data.used,
                 cleared = data.cleared,
-                position = data.position
+                position = data.position,
+                playerData = data.playerData
             };
         }
     }
 
-    [DisableInspector] public string guid;
+    [DisableInInspector] public string guid;
     public Vector3 position;
     public bool used;
     public bool cleared;
+    public PlayerData.JsonData playerData;
 
     public void Init()
     {
         position = Vector3.zero;
         used = false;
         cleared = false;
+        playerData = null;
     }
 
     public void Init(JsonData mapData)
@@ -45,6 +48,7 @@ public class MapData : ScriptableObject
         position = mapData.position;
         used = mapData.used;
         cleared = mapData.cleared;
+        playerData = mapData.playerData;
     }
 
 #if UNITY_EDITOR
@@ -64,6 +68,7 @@ public class MapData : ScriptableObject
             used = false;
             cleared = false;
             position = Vector3.zero;
+            playerData = null;
         }
     }
 #endif

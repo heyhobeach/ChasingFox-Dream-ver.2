@@ -11,7 +11,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private WindowNode currentNode;
     private Stack<WindowNode> nodeStack = new();
     private Vector3 prevPosition;
-    [SerializeField, DisableInspector] private Vector3 targetPosition;
+    [SerializeField, DisableInInspector] private Vector3 targetPosition;
     public float moveSpeed = 1f;
     private float progress = 0;
     private bool _isMoving = false;
@@ -94,9 +94,11 @@ public class MainMenuManager : MonoBehaviour
         {
             SystemManager.Instance.CreateData(idx);
             save = SystemManager.Instance.saveData;
+            save.chapter = "Chp0";
         }
+        PageManger.Instance.LoadScene(save.chapter, false);
         yield return new WaitForSeconds(moveSpeed);
-        PageManger.Instance.LoadScene(save.chapter);
+        PageManger.Instance.SceneActive();
     }
     public void QuitGame() => StartCoroutine(Quit());
     private IEnumerator<WaitForSeconds> Quit()

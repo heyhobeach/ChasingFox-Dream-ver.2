@@ -9,7 +9,7 @@ namespace BehaviourTree
 {
     public abstract class CompositeNode : BehaviourNode
     {
-        [DisableInspector] public List<BehaviourNode> children = new();
+        [DisableInInspector] public List<BehaviourNode> children = new();
 
         public override BehaviourNode Clone()
         {
