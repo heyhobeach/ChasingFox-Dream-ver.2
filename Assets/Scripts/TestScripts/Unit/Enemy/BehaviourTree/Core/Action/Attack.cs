@@ -8,18 +8,23 @@ namespace BehaviourTree
     {
         public float aimingTime;
         public float delayTime;
+        public int attackCount = 1;
+        int attackIndex = 0;
         bool canAttack;
-        bool isAttacking;
+        // bool isAttacking;
         float time;
         Vector2 aimPos;
         Rigidbody2D targetRigidbody;
         
-        protected override void OnEnd() {}
+        protected override void OnEnd()
+        {
+            if(state == NodeState.Failure) blackboard.thisUnit.SetAni(false);
+        }
 
         protected override void OnStart()
         {
             time = 0;
-            isAttacking = false;
+            attackIndex = 0;
             if(blackboard.target) targetRigidbody = blackboard.target.GetComponent<Rigidbody2D>();
             if(!targetRigidbody) targetRigidbody = blackboard.target.GetComponent<PlayerUnit>()?.rg;
             if(targetRigidbody) aimPos = targetRigidbody.worldCenterOfMass;
@@ -32,28 +37,20 @@ namespace BehaviourTree
 
         protected override NodeState OnUpdate()
         {
-            if(isAttacking && !blackboard.thisUnit.isAttacking) return NodeState.Success;
-            if(!canAttack) 
-            {
-                blackboard.thisUnit.SetAni(false);
-                return NodeState.Failure;
-            }
+            if(!canAttack) return NodeState.Failure;
+            time += ServiceLocator.Get<GameManager>().ingameDeltaTime;
             if(time < aimingTime)
             {
-                time += Time.deltaTime;
                 if(targetRigidbody) aimPos = targetRigidbody.worldCenterOfMass;
                 else aimPos = blackboard.target.position;
                 canAttack = blackboard.thisUnit.AttackCheck(aimPos);
                 if(blackboard.thisUnit.shootingAnimationController != null) blackboard.thisUnit.shootingAnimationController.targetPosition = aimPos;
             }
-            else if(time < aimingTime+delayTime)
-            {
-                time += Time.deltaTime;
-            }
-            else if(!isAttacking && time >= aimingTime+delayTime)
+            else if(time >= aimingTime+(delayTime*attackIndex)) 
             {
                 blackboard.thisUnit.Attack(aimPos);
-                isAttacking = true;
+                attackIndex++;
+                if(attackIndex >= attackCount) return NodeState.Success;
             }
             return NodeState.Running;
         }

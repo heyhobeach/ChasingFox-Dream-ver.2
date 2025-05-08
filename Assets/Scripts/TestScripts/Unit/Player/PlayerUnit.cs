@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.U2D.Animation;
 
@@ -44,57 +46,82 @@ public abstract class PlayerUnit : UnitBase
 
     public MapSensor mapSensor;
 
+    public CameraManager.State cameraState;
+
+    protected MapType[] mapTypesEnter;
+    protected HashSet<MapType> mapTypesExit = new();
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
-        switch (CheckMapType(collision))
+        mapTypesEnter = CheckMapTypes(collision);
+        foreach(var map in mapTypesEnter)
         {
-            case MapType.Ground:
-            case MapType.Platform:
-                if(isJumping) 
-                {
-                    SetVerticalForce(0);
-                    SetVerticalVelocity(0);
+            switch (map)
+            {
+                case MapType.Ground:
+                case MapType.Platform:
+                    if(isJumping) 
+                    {
+                        SetVerticalForce(0);
+                        SetVerticalVelocity(0);
+                        isJumping = false;
+                    }
+                    break;
+                case MapType.Floor:
                     isJumping = false;
-                }
-                break;
-            case MapType.Floor:
-                isJumping = false;
-                if(vcForce > 0) SetVerticalVelocity(0);
-                AddVerticalVelocity(gravity * Time.fixedDeltaTime);
-                break;
-            case MapType.Wall:
-                SetHorizontalForce(0);
-                SetHorizontalVelocity(0);
-                break;
+                    if(vcForce > 0) SetVerticalVelocity(0);
+                    AddVerticalVelocity(gravity * Time.fixedDeltaTime);
+                    break;
+                case MapType.Wall:
+                    if(Mathf.Sign(hzForce) == Mathf.Sign((collision.GetContact(0).point - rg.position).x))
+                    {
+                        SetHorizontalForce(0);
+                        SetHorizontalVelocity(0);
+                    }
+                    break;
+            }
         }
     }
 
     protected virtual void OnCollisionStay2D(Collision2D collision)
     {
-        switch (CheckMapType(collision))
+        var maps = mapTypesEnter;
+        mapTypesEnter = CheckMapTypes(collision);
+        mapTypesExit.Clear();
+        foreach(var prevMap in maps)
         {
-            case MapType.Floor:
-                isJumping = false;
-                if(vcForce > 0) SetVerticalVelocity(0);
-                AddVerticalVelocity(gravity * Time.fixedDeltaTime);
-                break;
-            case MapType.Wall:
-                SetHorizontalForce(0);
-                SetHorizontalVelocity(0);
-                break;
+            if(!mapTypesEnter.Contains(prevMap)) mapTypesExit.Add(prevMap);
+        }
+        foreach(var map in mapTypesEnter)
+        {
+            switch (map)
+            {
+                case MapType.Floor:
+                    isJumping = false;
+                    if(vcVel > 0) SetVerticalVelocity(0);
+                    AddVerticalVelocity(gravity * Time.fixedDeltaTime);
+                    break;
+                case MapType.Wall:
+                    if(Mathf.Sign(hzForce) == Mathf.Sign((collision.GetContact(0).point - rg.position).x))
+                    {
+                        SetHorizontalForce(0);
+                        SetHorizontalVelocity(0);
+                    }
+                    break;
+            }
         }
     }
 
-    protected virtual void OnCollisionExit2D(Collision2D collision)
+    protected virtual void OnCollisionExit2D(Collision2D collision) 
     {
-
+        mapTypesExit.Clear();
+        foreach(var prevMap in mapTypesEnter) mapTypesExit.Add(prevMap);
     }
 
     protected override void Update()
     {
-        if(!isGrounded && unitState == UnitState.Default) unitState = UnitState.Air; // 기본 상태에서 공중에 뜰 시 공중 상태로 변경
-        else if(isGrounded && unitState == UnitState.Air) unitState = UnitState.Default; // 공중 상태에서 바닥에 닿을 시 기본 상태로 변경
+        if(!isGrounded && UnitState == UnitState.Default) UnitState = UnitState.Air; // 기본 상태에서 공중에 뜰 시 공중 상태로 변경
+        else if(isGrounded && UnitState == UnitState.Air) UnitState = UnitState.Default; // 공중 상태에서 바닥에 닿을 시 기본 상태로 변경
         base.Update();
     }
 
@@ -113,6 +140,7 @@ public abstract class PlayerUnit : UnitBase
     protected override void OnEnable()
     {
         base.OnEnable();
+        ServiceLocator.Get<CameraManager>().SetState(cameraState);
         mapSensor.Set(rg, GetComponent<CapsuleCollider2D>());
     }
     protected override void OnDisable()
@@ -123,10 +151,15 @@ public abstract class PlayerUnit : UnitBase
         SetVerticalVelocity(0);
     }
 
+    public override void Init()
+    {
+        base.Init();
+    }
+
     private float jumpingHight;
     public override bool Jump(KeyState jumpKey)
     {
-        if(ControllerChecker() || unitState == UnitState.FormChange || unitState == UnitState.Dash)
+        if(ControllerChecker() || UnitState == UnitState.FormChange || UnitState == UnitState.Dash)
         {
             isJumping = false;
             return false;
@@ -143,13 +176,13 @@ public abstract class PlayerUnit : UnitBase
                 AddVerticalVelocity(jumpImpulse);
                 return true;
             case KeyState.KeyStay:
-                jumpingHight += Time.deltaTime / jumpTime;
+                jumpingHight += ServiceLocator.Get<GameManager>().ingameDeltaTime / jumpTime;
                 if(!isJumping || jumpingHight >= 1)
                 {
                     isJumping = false;
                     return false;
                 }
-                AddVerticalVelocity(Mathf.Cos(jumpingHight) * jumpForce * Time.deltaTime);
+                AddVerticalVelocity(Mathf.Cos(jumpingHight) * jumpForce * ServiceLocator.Get<GameManager>().ingameDeltaTime);
                 return true;
             case KeyState.KeyUp:
                 isJumping = false;
@@ -161,9 +194,9 @@ public abstract class PlayerUnit : UnitBase
     public override bool Move(Vector2 dir)
     {
         if(ControllerChecker()) return false;
-        AddHorizontalVelocity(dir.x * movementSpeed * accelerate * Time.deltaTime);  // 가속도만큼 입력 방향에 힘을 추가
+        AddHorizontalVelocity(dir.x * movementSpeed * accelerate * ServiceLocator.Get<GameManager>().ingameDeltaTime);  // 가속도만큼 입력 방향에 힘을 추가
         if(dir.x == 0 && Mathf.Abs(hzVel) < 0.01f) hzVel = 0;
-        if(unitState == UnitState.FormChange || dir.x == 0) // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
+        if(UnitState == UnitState.FormChange || dir.x == 0) // 제어가 불가능한 상태일 경우 동작을 수행하지 않음
         {
             base.Move(Vector2.zero);
             return false;
@@ -175,7 +208,7 @@ public abstract class PlayerUnit : UnitBase
     // 수정 필요함
     public override bool Crouch(KeyState crouchKey)
     {
-        if (ControllerChecker() || unitState == UnitState.FormChange) return false;
+        if (ControllerChecker() || UnitState == UnitState.FormChange) return false;
         switch (crouchKey)
         {
             case KeyState.KeyDown:
@@ -248,7 +281,7 @@ public abstract class PlayerUnit : UnitBase
     {
         Debug.Assert(mapSensor.normal != Vector2.right, "Vector2.right(1, 0) 아님\nVector2.up으로 교체해주세요.");
 
-        if(isGrounded && Mathf.Abs(hzForce) > 0)
+        if(isGrounded && Mathf.Abs(hzVel) > 0)
         {
             int layerMask = 0;
             switch(mapSensor.groundType)
@@ -260,19 +293,20 @@ public abstract class PlayerUnit : UnitBase
                     layerMask = 1 << LayerMask.NameToLayer("OneWayPlatform");
                     break;
             }
-            Vector2 dir = Vector2.Perpendicular(-mapSensor.normal) * hzForce;
+            Vector2 dir = Vector2.Perpendicular(-mapSensor.normal) * hzVel;
             float mul = Mathf.Clamp(1 / mapSensor.normal.y, 1, 1.41f);
             dir *= mul;
 
             rg.position = rg.position + (dir * Time.fixedDeltaTime);
 
-            var hit = Physics2D.CircleCast(rg.position + (Vector2.up * BoxSizeX), BoxSizeX, Vector2.down, 1f, layerMask);
+            var hit = Physics2D.CircleCast(rg.position + (Vector2.up * BoxSizeX), BoxSizeX, Vector2.down, 0.5f, layerMask);
+
             if(hit && !isJumping) rg.MovePosition(rg.position + (Vector2.down * hit.distance));
-            else rg.MovePosition(rg.position + (Vector2.up * (vcForce * Time.fixedDeltaTime)));
+            else rg.MovePosition(rg.position + (Vector2.up * (vcVel * Time.fixedDeltaTime)));
         }
         else 
         {
-            Vector2 dir = new Vector2(hzForce, vcForce);
+            Vector2 dir = new Vector2(hzVel, vcVel);
 
             rg.MovePosition(rg.position + (dir * Time.fixedDeltaTime));
         }
@@ -298,21 +332,22 @@ public abstract class PlayerUnit : UnitBase
     /// </summary>
     /// <param name="collision">충돌체</param>
     /// <returns>충돌면의 MapType</returns>
-    protected MapType CheckMapType(Collision2D collision)
+    protected MapType[] CheckMapTypes(Collision2D collision)
     {
-        float angle = 0;
-        return CheckMapType(collision, ref angle);
+        MapType[] temp = new MapType[collision.contactCount];
+        for(int i=0; i<temp.Length; i++) temp[i] = CheckMapType(collision, i);
+
+        return temp;
     }
     /// <summary>
     /// 충돌면의 MapType을 반환
     /// </summary>
     /// <param name="collision">충돌체</param>
-    /// <param name="ref angle">충돌각 반환 (0 ~ 180)</param>
     /// <returns>충돌면의 MapType</returns>
-    protected MapType CheckMapType(Collision2D collision, ref float angle)
+    protected MapType CheckMapType(Collision2D collision, int idx = 0)
     {
         if(!(collision.gameObject.CompareTag("Map") || collision.gameObject.CompareTag("platform")) || collision.contactCount <= 0) return MapType.None;
-        angle = Mathf.Abs(Vector2.Angle(Vector2.up, collision.GetContact(collision.contactCount-1).normal));
+        var angle = Mathf.Abs(Vector2.Angle(Vector2.up, collision.GetContact(idx).normal));
         if(collision.gameObject.CompareTag("platform") && angle <= 50) return MapType.Platform;
         else if(collision.gameObject.CompareTag("platform") && angle > 50) return MapType.None;
         if(angle <= 50) return MapType.Ground;

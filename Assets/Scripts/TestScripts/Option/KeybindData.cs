@@ -13,6 +13,7 @@ public class KeybindData : ICloneable, IEnumerable
     public KeyCode dash;
     public KeyCode formChange;
     public KeyCode skill1;
+    public KeyCode skill2;
     public KeyCode retry;
 
     public object Clone()
@@ -28,6 +29,7 @@ public class KeybindData : ICloneable, IEnumerable
             dash = this.dash,
             formChange = this.formChange,
             skill1 = this.skill1,
+            skill2 = this.skill2,
             retry = this.retry
         };
     }
@@ -43,6 +45,7 @@ public class KeybindData : ICloneable, IEnumerable
         yield return dash;
         yield return formChange;
         yield return skill1;
+        yield return skill2;
         yield return retry;
     }
 }

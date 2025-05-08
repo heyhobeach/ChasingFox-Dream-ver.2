@@ -34,24 +34,24 @@ public class PopupManager : MonoBehaviour
         }
         instance = this;
         DontDestroyOnLoad(instance);
-    }
-
-
-    void Start()
-    {
         if(deathPopup == null) deathPopup = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Death Popup"), transform);
         if(pausePopup == null) pausePopup = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Pause Popup"), transform);
     }
+
     public void DeathPop()
     {
         var temp = deathPopup.GetComponent<TempDeathPopup>();
-        temp.info = "Press to Continue";
         temp.unityEvent.RemoveAllListeners();
-        temp.unityEvent.AddListener(GameManager.Instance.RetryScene);
+        temp.unityEvent.AddListener(() => PageManger.Instance.SceneActive());
         deathPopup.SetActive(true);
     }
     public void PausePop(bool enabled)
     {
+        if(enabled)
+        {
+            if(PageManger.Instance.isLoadingScene) RestartButtonEnable(false);
+        }
+        else RestartButtonEnable(true);
         pausePopup.SetActive(enabled);
         pausePopup.GetComponent<Canvas>().sortingOrder = 101;
     }

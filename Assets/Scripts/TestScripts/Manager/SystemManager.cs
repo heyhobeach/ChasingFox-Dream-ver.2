@@ -72,15 +72,20 @@ public class SystemManager : MonoBehaviour
             dash = KeyCode.Space,
             formChange = KeyCode.E,
             skill1 = KeyCode.Mouse1,
+            skill2 = KeyCode.LeftShift,
             retry = KeyCode.R
         };
+        var tempPlayerData = ScriptableObject.CreateInstance<PlayerData>();
+        tempPlayerData.Init();
         defaultSaveData = new SaveData{
-            chapter = "Chp0",
-            mapDatas = null,
-            eventTriggerDatas = null,
-            eventTriggerInstanceID = null,
-            eventIdx = 0,
-            karma = 65
+            chapter = "",
+            nextChapter = "Chp0",
+            playerData = tempPlayerData,
+            stageIdx = 0,
+            currentEventTriggerDataGuid = "",
+            inventoryData = new Inventory.Info[0],
+            mapData = new MapData.JsonData[0],
+            eventTriggerData = new EventTriggerData.JsonData[0]
         };
 
         resolutions = new Resolution[]{
@@ -271,12 +276,31 @@ public class SystemManager : MonoBehaviour
         }
         return saveDatas[index];
     }
+    [ContextMenu("Delete SaveData")]
+    public void DeleteData() => DeleteData(saveIndex);
     public void DeleteData(int index)
     {
         if(index < 0 || index >= saveDatas.Length) return;
         try { DeleteJson("SaveData" + index + ".sv"); }
         catch (FileNotFoundException e) { Debug.Log("SaveData" + index + " not found.\n" + e); }
         saveDatas[index] = null;
+    }
+    [ContextMenu("Create SaveData")]
+    public void CreateData()
+    {
+        var tempPlayerData = ScriptableObject.CreateInstance<PlayerData>();
+        tempPlayerData.Init();
+        defaultSaveData = new SaveData{
+            chapter = "",
+            nextChapter = "Chp0",
+            playerData = tempPlayerData,
+            stageIdx = 0,
+            currentEventTriggerDataGuid = "",
+            inventoryData = new Inventory.Info[0],
+            mapData = new MapData.JsonData[0],
+            eventTriggerData = new EventTriggerData.JsonData[0]
+        };
+        CreateData(saveIndex);
     }
     public void CreateData(int index)
     {
@@ -287,11 +311,4 @@ public class SystemManager : MonoBehaviour
     }
 
     public SaveData GetData() => saveDatas[saveIndex];
-
-    public void UpdateDataForEventTrigger(string eventTriggerInstanceID, int eventIdx)
-    {
-        if(saveData == null) return;
-        saveData.eventTriggerInstanceID = eventTriggerInstanceID;
-        saveData.eventIdx = eventIdx;
-    }
 }

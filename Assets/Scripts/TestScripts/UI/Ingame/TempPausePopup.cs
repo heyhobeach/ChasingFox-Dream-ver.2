@@ -5,7 +5,6 @@ public class TempPausePopup : MonoBehaviour
 {
     [SerializeField] private Button continueButton;
     [SerializeField] private Button restartButton;
-    [SerializeField] private Button inventoryButton;
     [SerializeField] private Button optionButton;
     [SerializeField] private Button mainMenuButton;
 
@@ -18,17 +17,19 @@ public class TempPausePopup : MonoBehaviour
     {
         continueButton.onClick.AddListener(() => 
         {
-            GameManager.Instance.Pause(false);
+            ServiceLocator.Get<GameManager>().Pause(false);
             gameObject.SetActive(false);
         });
         restartButton.onClick.AddListener(() => {
-            GameManager.Instance.RetryScene();
-            gameObject.SetActive(false);
+            if(ServiceLocator.Get<GameManager>().RetryScene())
+            {
+                PageManger.Instance.SceneActive();
+                gameObject.SetActive(false);
+            }
         });
-        inventoryButton.onClick.AddListener(() =>GameManager.Instance.InventoryEnable() );
         // optionButton.onClick.AddListener(() => );
         mainMenuButton.onClick.AddListener(() => {
-            GameManager.Instance.LoadScene("MainMenu");
+            ServiceLocator.Get<GameManager>().LoadScene("MainMenu");
             gameObject.SetActive(false);
         });
     }

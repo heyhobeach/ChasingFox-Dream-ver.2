@@ -52,12 +52,12 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     /// <summary>
     /// 유닛상태 열거형
     /// </summary>
-    protected UnitState unitState;
+    private UnitState unitState;
 
     /// <summary>
     /// 유닛의 현재 상태를 가져옴
     /// </summary>
-    public UnitState UnitState { get => unitState; set => unitState = value; }
+    public UnitState UnitState { get => unitState; set => SetUnitState(value); }
 
     protected float boxOffsetX;
     /// <summary>
@@ -159,6 +159,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
             anim.SetBool("isRun", true);
         }
         anim.SetFloat("dashMultiplier", dashDuration > 0 ? 1/dashDuration : 1);
+        anim.speed = ServiceLocator.Get<GameManager>().ingameTimescale;
     }
 
     // private void LateUpdate()
@@ -168,7 +169,7 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
     
     protected virtual void OnEnable()
     {
-        var col = gameObject.GetComponent<CapsuleCollider2D>();
+        var col = gameObject.GetComponent<CapsuleCollider2D>(); 
         boxSizeX = col.bounds.extents.x;
         boxSizeY = col.bounds.extents.y;
         boxOffsetX = col.offset.x;
@@ -220,11 +221,13 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
         return true;
     }
 
-    public virtual bool Skile1(Vector2 pos)
+    public virtual bool Skill1(Vector2 pos)
     {
         anim.SetTrigger("skill1");
         return true;
     }
+
+    public virtual bool Skill2(KeyState skileKey) => true;
 
     public virtual bool Reload(KeyState reloadKey)
     {
@@ -268,6 +271,27 @@ public abstract class UnitBase : MonoBehaviour, IUnitController
             case UnitState.Pause:
             return true;
             default: return false;
+        }
+    }
+
+    [VisibleEnum(typeof(UnitState))]
+    public void SetUnitState(int unitState) => SetUnitState(unitState);
+    private void SetUnitState(UnitState unitState)
+    {
+        switch(unitState)
+        {
+            case UnitState.Death:
+                this.unitState = unitState;
+            break;
+            case UnitState.KnockBack:
+            case UnitState.Stiffen:
+            case UnitState.Stiffen_er:
+            case UnitState.Pause:
+                if(this.unitState != UnitState.Death) this.unitState = unitState;
+            break;
+            default:
+                if(!ControllerChecker() || this.unitState == UnitState.Pause) this.unitState = unitState;
+            break;
         }
     }
 

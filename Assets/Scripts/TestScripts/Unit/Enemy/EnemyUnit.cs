@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using Com.LuisPedroFonseca.ProCamera2D;
 using Damageables;
 using UnityEngine;
@@ -28,7 +29,7 @@ public class EnemyUnit : UnitBase, IDamageable, ISelectObject
     protected override void Start()
     {
         base.Start();
-        unitState = UnitState.Default;
+        UnitState = UnitState.Default;
         health = _maxHealth;
         
         rg = GetComponent<Rigidbody2D>();
@@ -57,7 +58,7 @@ public class EnemyUnit : UnitBase, IDamageable, ISelectObject
             return false;
         }
         hzForce = (dir-(Vector2)transform.position).normalized.x;
-        transform.position = Vector2.MoveTowards(transform.position, dir, Time.deltaTime * movementSpeed);
+        transform.position = Vector2.MoveTowards(transform.position, dir, ServiceLocator.Get<GameManager>().ingameDeltaTime * movementSpeed);
         return base.Move(Vector2.right * Mathf.Sign(hzForce));
     }
 
@@ -65,7 +66,14 @@ public class EnemyUnit : UnitBase, IDamageable, ISelectObject
 
     public override bool Jump(KeyState jumpKey) => false;
 
-    public virtual bool AttackCheck(Vector3 attackPos) => true;
+    public virtual bool AttackCheck(Vector3 attackPos)
+    {
+        var pos = attackPos-transform.position;
+        bool isForword = Mathf.Sign(pos.normalized.x)>0&&!spriteRenderer.flipX ? true : Mathf.Sign(pos.normalized.x)<0&&spriteRenderer.flipX ? true : false;
+        var hits = Physics2D.RaycastAll(transform.position+Vector3.up, pos.normalized, pos.magnitude, 1<<LayerMask.NameToLayer("Map")|1<<LayerMask.NameToLayer("Wall")).Where(x => !x.collider.isTrigger);
+        if(hits.Count() == 0 && isForword) return true;
+        else return false;
+    }
 
     void IDamageable.Death()
     {

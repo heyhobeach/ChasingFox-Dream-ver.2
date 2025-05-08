@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -13,11 +14,9 @@ public class PlatformSensor : MonoBehaviour
     Vector2[] groundPoints = new Vector2[2];
     Vector2[] onPlaotformPoints = new Vector2[2];
 
-    [DisableInspector] public PlatformScript currentPlatform;
+    [DisableInInspector] public PlatformScript currentPlatform;
     public bool onPlatform;
     public Vector2 normal = Vector2.up;
-
-    private LayerMask layerMask;
 
     public void Set(Rigidbody2D target, Collider2D targetCol)
     {
@@ -37,11 +36,12 @@ public class PlatformSensor : MonoBehaviour
         onPlaotformPoints[1] = new Vector2(size.x - 0.1f, -size.y - 0.1f);
 
         col.points = defaultPoints;
-
-        layerMask = 1 << LayerMask.NameToLayer("OneWayPlatform");
     }
 
-    private void OnCollisionEnter2D(Collision2D collision) => CheckCollision(collision);
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(!isDelay) CheckCollision(collision);
+    }
     private void OnCollisionStay2D(Collision2D collision) => CheckCollision(collision);
     private void OnCollisionExit2D(Collision2D collision)
     {
@@ -53,13 +53,13 @@ public class PlatformSensor : MonoBehaviour
                 currentPlatform = null;
                 onPlatform = false;
                 normal = Vector2.up;
+                if(gameObject.activeSelf) StartCoroutine(Delay());
             }
         }
     }
 
-    private void Awake() => col = GetComponent<EdgeCollider2D>();
+    // private void Awake() => col = GetComponent<EdgeCollider2D>();
 
-    // private void Update() => transform.position = target.position;
     private void FixedUpdate()
     {
         transform.position = target.position;
@@ -67,14 +67,7 @@ public class PlatformSensor : MonoBehaviour
         if(currentPlatform) col.points = onPlaotformPoints;
         else
         {
-            if(GameManager.fps < 120)
-            {
-                var temp = 0.01f * (120 / GameManager.fps);
-                groundPoints[0] = new Vector2(-size.x - temp, -size.y - 0.1f);
-                groundPoints[1] = new Vector2(size.x + temp, -size.y - 0.1f);
-                col.points = groundPoints;
-            }
-            else col.points = defaultPoints;
+            col.points = defaultPoints;
             onPlatform = false;
         }
 
@@ -96,7 +89,6 @@ public class PlatformSensor : MonoBehaviour
                 break;
             case MapType.Floor:
                 psc.RemoveColliderMask(1 << target.gameObject.layer);
-                // normal = Vector2.up;
                 break;
             case MapType.Wall:
                 switch(psc.dObject)
@@ -117,6 +109,14 @@ public class PlatformSensor : MonoBehaviour
                 }
                 break;
         }
+    }
+
+    private bool isDelay;
+    private IEnumerator Delay()
+    {
+        isDelay = true;
+        yield return new WaitForFixedUpdate();
+        isDelay = false;
     }
     
     /// <summary>

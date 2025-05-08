@@ -5,6 +5,9 @@ using Com.LuisPedroFonseca.ProCamera2D;
 using Damageables;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 [RequireComponent(typeof(PlayerController))]
 /// <summary>
@@ -12,6 +15,7 @@ using UnityEngine;
 /// </summary>
 public class Player : MonoBehaviour, IUnitController, IDamageable
 {
+    [SerializeField, DisableInInspector] private PlayerData playerData;
     /// <summary>
     /// 폼을 저장하는 배열
     /// 0 : 인간, 1 : 늑대인간, 2 : 버서커
@@ -28,14 +32,9 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     public BrutalData brutalData { get => ((Werewolf)forms[1]).brutalData; set => ((Werewolf)forms[1]).brutalData = value; }
     public int currentGauge { get => ((Werewolf)forms[1]).currentGauge; set => ((Werewolf)forms[1]).currentGauge = value; }
 
-    [SerializeField] private int _maxHealth;    //?private아닌가 A : 맞음
-    public int maxHealth { get => _maxHealth; set => _maxHealth = value; }
-    [SerializeField] private int _health;
-    public int health { get => _health; set => _health = value; }
+    public int maxHealth { get => playerData.maxHealth; set => playerData.maxHealth = value; }
+    public int health { get => playerData.health; set => playerData.health = value; }
     public bool invalidation { get; set; }
-
-    public static GameObject pObject;
-
 
     /// <summary>
     /// 폼 체인지 딜레이 시간
@@ -52,31 +51,39 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     /// </summary>
     // [SerializeField] private float bulletTime;
 
-    private void OnEnable()
+    private void OnDisable()
     {
-        // if(changing != null)
-        // {
-        //     StopCoroutine(changing);
-        //     changing = null;
-        // }
+        StopAllCoroutines();
     }
 
-    public void Init(PlayerData playerData = null)
+
+    private void Awake()
+    {
+        var path = $"ScriptableObject Datas/Player Data/playerData";
+        playerData = Resources.Load<PlayerData>(path);
+        if(!playerData)
+        {
+            PlayerData asset = ScriptableObject.CreateInstance<PlayerData>();
+#if UNITY_EDITOR
+            AssetDatabase.CreateAsset(asset, "Assets/Resources/" + path + ".asset");
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+#endif
+            playerData = asset;
+            playerData.Init();
+        }
+    }
+
+    public void Init(PlayerData.JsonData playerData)
     {
         fixedDir = 1;
         invalidation = false;
 
-        if(playerData == null) 
-        {
-            playerData = new PlayerData();
-            playerData.Init();
-            playerData.health = maxHealth;
-            SystemManager.Instance.saveData.playerData = playerData;
-        }
-        health = playerData.health;
+        this.playerData.Init(playerData);
+
         changedForm = forms[playerData.formIdx];
-        ((Werewolf)forms[1]).brutalData = playerData.brutalData;
-        ((Werewolf)forms[1]).currentGauge = playerData.brutalGaugeRemaining;
+        brutalData = GameManager.GetBrutalData();
+        currentGauge = playerData.brutalGaugeRemaining;
         ((Werewolf)forms[1]).formChangeTest += () => FormChange();
         formChangeDelegate = ToWerewolf;
         ((Werewolf)forms[1]).currentCount = brutalData.isDoubleTime ? 2 : 1;
@@ -86,16 +93,11 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
             form.Init();
         }
         changedForm.gameObject.SetActive(true);
-        pObject = this.gameObject;
     }
-    public PlayerData DataSet()
-    {
-        PlayerData playerData = new();
-        playerData.health = health;
-        playerData.formIdx = Array.FindIndex(forms, (form) => form == changedForm);
-        playerData.brutalData = ((Werewolf)forms[1]).brutalData;
-        playerData.brutalGaugeRemaining = ((Werewolf)forms[1]).currentGauge;
 
+    public PlayerData.JsonData GetJsonData()
+    {
+        playerData.brutalGaugeRemaining = currentGauge;
         return playerData;
     }
 
@@ -117,7 +119,22 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
 
     public bool Attack(Vector3 clickPos) => changedForm.Attack(clickPos);
 
-    public bool Dash() => changedForm.Dash();
+    public bool Dash()
+    {
+        if(changedForm.Dash())
+        {
+            invalidation = true;
+            StartCoroutine(DashDelay());
+            return true;
+        }
+        return false;
+    }
+
+    IEnumerator DashDelay()
+    {
+        yield return new WaitForSeconds(0.3f);
+        invalidation = false;
+    }
 
     public void Death()
     {
@@ -131,12 +148,13 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
     }
     IEnumerator PopupDelay()
     {
-        yield return new WaitForSeconds(3f);
+        ServiceLocator.Get<GameManager>().RetryScene();
+        yield return new WaitForSeconds(1.5f);
         PopupManager.Instance.DeathPop();
-
     }
 
-    public bool Skile1(Vector2 pos) => changedForm.Skile1(pos);
+    public bool Skill1(Vector2 pos) => changedForm.Skill1(pos);
+    public bool Skill2(KeyState skileKey) => changedForm.Skill2(skileKey);
 
     private delegate bool FormChangeDelegate();
     private FormChangeDelegate formChangeDelegate;
@@ -170,26 +188,25 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         }
         return true;
 
-        Vector3 ClickPos()
-        {
-            var screenPoint = Input.mousePosition;//마우스 위치 가져옴
-            screenPoint.z = Camera.main.transform.position.z;
-            Vector3 pos = Camera.main.ScreenToWorldPoint(screenPoint);
-            pos.z = 0;
-            return pos;
-        }
+        // Vector3 ClickPos()
+        // {
+        //     var screenPoint = Input.mousePosition;//마우스 위치 가져옴
+        //     screenPoint.z = Camera.main.transform.position.z;
+        //     Vector3 pos = Camera.main.ScreenToWorldPoint(screenPoint);
+        //     pos.z = 0;
+        //     return pos;
+        // }
     }
 
     public bool Reload(KeyState reloadKey) => changedForm.Reload(reloadKey); 
 
-    void Update()
-    {
-        pObject = this.gameObject;
-        if(changedForm.GetType() != typeof(Werewolf))
-        {
-            if (changedForm.UnitState == UnitState.Dash) invalidation = true;
-            else invalidation = false;
-        }
+    // void Update()
+    // {
+        // if(changedForm.GetType() != typeof(Werewolf))
+        // {
+        //     if (changedForm.UnitState == UnitState.Dash) invalidation = true;
+        //     else invalidation = false;
+        // }
         // if(changedForm.GetType() == typeof(Werewolf) && ((Werewolf) changedForm).isFormChangeReady) FormChange();
         // if (changedForm.UnitState == UnitState.Dash)
         // {
@@ -203,7 +220,7 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
         // }
 
         //OverlapTest();
-    }
+    // }
 
     public void OverlapTest()//여기 부분 수정필요
     {

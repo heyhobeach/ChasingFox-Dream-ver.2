@@ -44,7 +44,7 @@ namespace BehaviourTree
         {
             isCan = false;
             playableDirector.enabled = false;
-            GameManager.Instance.interactionEvent._DisableUI();
+            ServiceLocator.Get<GameManager>().interactionEvent._DisableUI();
         }
         [MesageTarget] public void TimeLineStop()
         {

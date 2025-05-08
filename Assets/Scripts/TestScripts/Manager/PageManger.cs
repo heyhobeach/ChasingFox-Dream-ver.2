@@ -28,6 +28,9 @@ public class PageManger : MonoBehaviour
             return instance;
         }
     }
+    public bool isLoadingScene { get { return nextAo != null; } }
+    private AsyncOperation nextAo;
+    public Action aoComplatedAction;
 
     private void Awake()
     {
@@ -39,15 +42,27 @@ public class PageManger : MonoBehaviour
         instance = this;
         DontDestroyOnLoad(Instance);
     }
-    public void LoadScene(string sceneName)
+
+    public bool LoadScene(string sceneName, bool active = true)
     {
-        var loadAo = SceneManager.LoadSceneAsync("Loading", LoadSceneMode.Additive);
+        if(nextAo != null)
+        {
+            Debug.LogWarning("Scene is already loading. Please wait until the current scene is loaded.");
+            return false;
+        }
         var currentScene = SceneManager.GetActiveScene();
-        loadAo.completed += (ao) => { 
-            var unloadAo = SceneManager.UnloadSceneAsync(currentScene);
-            unloadAo.completed += (uao) => SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
+        nextAo = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+        nextAo.completed += (ao) => 
+        {
+            SceneManager.UnloadSceneAsync(currentScene);
+            aoComplatedAction?.Invoke();
+            aoComplatedAction = null;
+            nextAo = null;
         };
+        nextAo.allowSceneActivation = active;
+        return true;
     }
+    public void SceneActive() => nextAo.allowSceneActivation = true;
 
     public void Quit()
     {

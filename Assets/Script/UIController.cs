@@ -19,24 +19,28 @@ public class UIController : MonoBehaviour//해당 스크립트는 UI를 그리�
 
     public GameObject backgroundImage;
 
-    private static UIController instance = null;
-    public static UIController Instance
+    // private static UIController instance = null;
+    // public static UIController Instance
+    // {
+    //     get
+    //     {
+    //         if (instance == null) { return null; }
+    //         return instance;
+    //     }
+    // }
+    private void OnDestroy()
     {
-        get
-        {
-            if (instance == null) { return null; }
-            return instance;
-        }
+        ServiceLocator.Unregister(this);
     }
-
     private void Awake()
     {
-        if (instance != null)
-        {
-            Destroy(this.gameObject);
-            return;
-        }
-        instance = this;
+        // if (instance != null)
+        // {
+        //     Destroy(this.gameObject);
+        //     return;
+        // }
+        // instance = this;
+        ServiceLocator.Register(this);
         DialogueCanvasSetFalse();
         //DontDestroyOnLoad(this.gameObject);
     }

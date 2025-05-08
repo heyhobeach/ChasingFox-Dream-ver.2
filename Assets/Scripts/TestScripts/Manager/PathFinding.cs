@@ -11,9 +11,8 @@ public struct PathFinding : IJob
     [System.Serializable]
     public struct Node : IEquatable<Node>
     {
-        public bool isWall;
         public bool isRoad;
-        public bool isPoint;
+        public bool isGround;
         public bool isplatform;
         public Vector2Int ParentNode;
 
@@ -38,7 +37,8 @@ public struct PathFinding : IJob
     public NativeList<Node> FinalNodeList;
 
     [ReadOnly] public Vector3 startPosV3, targetPosV3;
-    private bool isPointSearching;
+    private bool isPlatformSearching;
+    private bool isGroundSearching;
 
     public NativeArray<bool> isLoad;
 
@@ -65,7 +65,8 @@ public struct PathFinding : IJob
             tempNode = NodeArray[idx];
         }
         TargetNode = NodeArray[GetIndex(TargetNode.x - bottomLeft.x, TargetNode.y - bottomLeft.y + tempNum)];
-        if(StartNode.isplatform) isPointSearching = true;
+        if(StartNode.isplatform) isPlatformSearching = true;
+        if(StartNode.isGround) isGroundSearching = true;
 
         OpenList.Add(StartNode);
 
@@ -83,6 +84,9 @@ public struct PathFinding : IJob
 
             OpenList.Remove(CurNode);
             ClosedList.Add(CurNode);
+
+            if(CurNode.isplatform) isPlatformSearching = true;
+            if(CurNode.isGround) isGroundSearching = true;
 
             if (CurNode.Equals(TargetNode))
             {
@@ -110,17 +114,20 @@ public struct PathFinding : IJob
             }
 
 
-            if(isPointSearching)
+            if(isPlatformSearching)
             {
                 OpenListAdd(CurNode.x + 1, CurNode.y + 1);
                 OpenListAdd(CurNode.x - 1, CurNode.y + 1);
                 OpenListAdd(CurNode.x - 1, CurNode.y - 1);
                 OpenListAdd(CurNode.x + 1, CurNode.y - 1);
             }
-            OpenListAdd(CurNode.x - 1, CurNode.y);
-            // OpenListAdd(CurNode.x, CurNode.y + 1);
-            OpenListAdd(CurNode.x + 1, CurNode.y);
-            // OpenListAdd(CurNode.x, CurNode.y - 1);
+            if(isGroundSearching)
+            {
+                OpenListAdd(CurNode.x - 1, CurNode.y);
+                // OpenListAdd(CurNode.x, CurNode.y + 1);
+                OpenListAdd(CurNode.x + 1, CurNode.y);
+                // OpenListAdd(CurNode.x, CurNode.y - 1);
+            }
         }
         Debug.LogError("Path find failure erorr");
         return;
@@ -128,21 +135,22 @@ public struct PathFinding : IJob
 
     private void OpenListAdd(int checkX, int checkY)
     {
-        if (checkX >= bottomLeft.x && checkX < topRight.x + 1 && checkY >= bottomLeft.y && checkY < topRight.y + 1 && !NodeArray[GetIndex(checkX - bottomLeft.x, checkY - bottomLeft.y)].isWall && !ClosedList.Contains(NodeArray[GetIndex(checkX - bottomLeft.x, checkY - bottomLeft.y)]))
+        if (checkX >= bottomLeft.x && checkX < topRight.x + 1 && checkY >= bottomLeft.y && checkY < topRight.y + 1 && !ClosedList.Contains(NodeArray[GetIndex(checkX - bottomLeft.x, checkY - bottomLeft.y)]))
         {
             if (NodeArray[GetIndex(checkX - bottomLeft.x, checkY - bottomLeft.y)].isRoad)
             {
                 Node NeighborNode = NodeArray[GetIndex(checkX - bottomLeft.x, checkY - bottomLeft.y)];
-                int MoveCost = CurNode.G + (NeighborNode.isPoint ? -35 : CurNode.x - checkX == 0 || CurNode.y - checkY == 0 ? 10 : 14);
-                if(NeighborNode.isPoint) 
-                {
-                    if(isPointSearching) isPointSearching = false;
-                    else isPointSearching = true;
-                }
-                if(NeighborNode.isPoint || MoveCost < NeighborNode.G || !OpenList.Contains(NeighborNode))
+                
+                if(CurNode.isplatform && !CurNode.isGround && NeighborNode.isGround && !NeighborNode.isplatform) return;
+                if(CurNode.isGround && !CurNode.isplatform && NeighborNode.isplatform && !NeighborNode.isGround) return;
+
+                int MoveCost = CurNode.G;
+                MoveCost += CurNode.x - checkX == 0 || CurNode.y - checkY == 0 ? 10 : 14;
+
+                if(MoveCost < NeighborNode.G || !OpenList.Contains(NeighborNode))
                 {
                     NeighborNode.G = MoveCost;
-                    NeighborNode.H = NeighborNode.isPoint ? 0 : (Mathf.Abs(NeighborNode.x - TargetNode.x) + Mathf.Abs(NeighborNode.y - TargetNode.y)) * 10;
+                    NeighborNode.H = (Mathf.Abs(NeighborNode.x - TargetNode.x) + Mathf.Abs(NeighborNode.y - TargetNode.y)) * 10;
                     NeighborNode.ParentNode.x = CurNode.x;
                     NeighborNode.ParentNode.y = CurNode.y;
 

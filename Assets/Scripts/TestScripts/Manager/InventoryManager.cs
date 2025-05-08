@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting;
@@ -12,17 +13,20 @@ public class InventoryManager : MonoBehaviour
     private static InventoryManager instance;
 
     public static InventoryManager Instance { get { return instance; } }
-    InventoryScripable invendata;
+    [DisableInInspector] public InventoryScripable invendata;
+    [DisableInInspector] public Inventory inventory;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created\
     private void Awake()
     {
 
         invendata = Resources.Load("Inventory") as InventoryScripable;//이걸 가져오면 저장이 어떻게 되는지?
+        Debug.Log("invendata" + invendata.name);
         if (instance == null)
         {
             instance = this;
         }
+        
     }
 
     /// <summary>
@@ -59,10 +63,21 @@ public class InventoryManager : MonoBehaviour
     /// <returns>InventoryScripable</returns>
     public InventoryScripable GetInventoryAll()
     {
+        if(invendata == null)
+        {
+            Debug.LogError("inventory is null");
+        }
+        else
+        {
+            Debug.Log("inventory count" + invendata.name);//여기서 아직 set이 안 되어있음
+        }
         return invendata;
     }
 
-
+    public Dictionary<int,Inventory.Info>.KeyCollection GetinventoryKeys()
+    {
+        return invendata.inventory.Keys;
+    }
     /// <summary>
     /// 스크립터블 오브젝트가 저장 되어있으므로 인벤데이터 사용하려 하면 invendata.inventory로 접근 현재 사용 안함
     /// </summary>

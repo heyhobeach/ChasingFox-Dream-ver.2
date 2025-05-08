@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System;
+using System.Threading.Tasks;
+using UnityEngine.Events;
+using Unity.VisualScripting;
+
+
+
 
 
 #if UNITY_EDITOR
@@ -20,13 +26,23 @@ public class Map : MonoBehaviour
     public bool used { get => mapData.used; set => mapData.used = value; }
     public bool cleared { get => mapData.cleared; set => mapData.cleared = value; }
     public Vector3 position { get => mapData.position; set => mapData.position = value; }
+    public PlayerData.JsonData playerData { get => mapData.playerData; set => mapData.playerData = value; }
 
-    [DisableInspector] public MapData mapData;
+    [DisableInInspector] public MapData mapData;
 
-    public void Reset() => mapData.Init();
+    public float Timelimit = -1f;
+    [SerializeField, DisableInInspector] private float playTime = 0f;
+    public UnityAction timeoutAction;
+    public List<MapEvent> mapEvents = new List<MapEvent>();
+    private Queue<MapEvent> mapEventQueue;
+
+    public void SortTimedEvents() => mapEvents.Sort();
+
+
+    public void DataReset() => mapData.Init();
     public void Init(MapData.JsonData data) => mapData.Init(data);
 
-    void Awake()
+    private void Awake()
     {
         var path = $"ScriptableObject Datas/{SceneManager.GetActiveScene().name}_{gameObject.name}";
         mapData = Resources.Load<MapData>(path);
@@ -43,38 +59,45 @@ public class Map : MonoBehaviour
             mapData.Init();
         }
 
-        enemyCount= enemyUnits.Count;
-        // gameObject.SetActive(false);
+        enemyCount = enemyUnits.Count;
+
         foreach (EnemyUnit unit in enemyUnits)
         {
-            unit.gameObject.SetActive(false);
+            if(!unit.IsUnityNull()) unit.gameObject.SetActive(false);
+            else Debug.LogError($"EnemyUnit not set in {gameObject.name}");
         }
+
+        mapEventQueue = new Queue<MapEvent>(mapEvents);
+
+        ServiceLocator.Get<GameManager>().maps.Add(this);
     }
 
     void Start()
     {
         foreach (EnemyUnit unit in enemyUnits)
         {
-            unit.onDeath += () => {
-                enemyCount--;
-                if(enemyCount <= 0) edgeCollider2D.enabled = false;
-            };
+            if(!unit.IsUnityNull()) unit.onDeath += EnemyDeathAction;
+            else Debug.LogError($"EnemyUnit not set in {gameObject.name}");
         }
     }
 
-    public void OnStart(Vector3 pos)
+    public async void OnStart(Vector3 pos)
     {
         if(cleared) return;
-        foreach (EnemyUnit unit in enemyUnits) unit.gameObject.SetActive(true);
+        foreach (EnemyUnit unit in enemyUnits) 
+        {
+            if(!unit.IsUnityNull()) unit.gameObject.SetActive(true);
+            else Debug.LogError($"EnemyUnit not set in {gameObject.name}");
+        }
         if(enemyCount > 0) edgeCollider2D.enabled = true;
         mapData.used = true;
         mapData.position = pos;
-        SystemManager.Instance.saveData.playerData = GameManager.Instance.player.GetComponent<Player>().DataSet();
-        SystemManager.Instance.saveData.playerData.pcm = GameManager.Instance.player.GetComponent<PlayerController>().DataSet();
+        mapData.playerData = ServiceLocator.Get<GameManager>().player.GetComponent<Player>().GetJsonData();
+        if(Timelimit > 0) await TimeUpdate();
     }
     public void OnEnd()
     {
-        if(GameManager.Instance.player.GetComponent<Player>().UnitState == UnitState.Death) return;
+        if(ServiceLocator.Get<GameManager>().player.GetComponent<Player>().UnitState == UnitState.Death) return;
         edgeCollider2D.enabled = false;
         mapData.cleared = true;
         foreach (EnemyUnit unit in enemyUnits) unit.gameObject.SetActive(false);
@@ -86,5 +109,38 @@ public class Map : MonoBehaviour
         yield return new WaitForSeconds(3);
         // gameObject.SetActive(false);
         foreach (EnemyUnit unit in enemyUnits) unit.gameObject.SetActive(false);
+    }
+    
+    async Awaitable TimeUpdate()
+    {
+        while (!mapData.cleared && playTime < Timelimit)
+        {
+            await Awaitable.FixedUpdateAsync();
+            if(!ServiceLocator.Get<GameManager>().isPaused)
+            {
+                playTime += Time.fixedDeltaTime;
+                if(mapEventQueue.Count > 0 && mapEventQueue.Peek().time >= playTime) mapEventQueue.Dequeue().action?.Invoke();
+            }
+        }
+        if(!mapData.cleared) timeoutAction?.Invoke();
+    }
+
+    private void EnemyDeathAction()
+    {
+        enemyCount--;
+        if(enemyCount <= 0) edgeCollider2D.enabled = false;
+    }
+
+    public void AddEnemyUnit(EnemyUnit unit)
+    {
+        enemyUnits.Add(unit);
+        unit.onDeath += EnemyDeathAction;
+        enemyCount++;
+    }
+    public void RemoveEnemyUnit(EnemyUnit unit)
+    {
+        enemyUnits.Remove(unit);
+        unit.onDeath -= EnemyDeathAction;
+        enemyCount--;
     }
 }

@@ -7,7 +7,7 @@ public class DatabaseManager : MonoBehaviour
     // Start is called before the first frame update
     public static DatabaseManager instance;//나중에 싱글턴 될듯
 
-    [DisableInspector] public string csv_FileName;
+    [DisableInInspector] public string csv_FileName;
     public enum Lang//언어 설정
     {
         KOR,
@@ -18,8 +18,8 @@ public class DatabaseManager : MonoBehaviour
 
     public int chapter = 0;//추후 0으로 수정 필요 이유 튜토리얼이 0부터 시작하기에
 
-    Dictionary<int, Dialogue> dialogueDic =new Dictionary<int, Dialogue>();
-    DialogueParser theParser;
+    public Dictionary<int, Dialogue> dialogueDic =new Dictionary<int, Dialogue>();
+    public DialogueParser theParser;
 
     public int endLine = 0, startLine = 0;//start = 0 end 대화 끝 시점 => start = end , end = 대화 끝 반복(짜야함) 딕셔너리 접근용 수
     public int lastIndex = 0;
@@ -89,6 +89,7 @@ public class DatabaseManager : MonoBehaviour
         }
     }
 
+
     public Dialogue[] GetDialogues(int startNum ,int endNum)
     {
         //Debug.Log("파서");
@@ -96,7 +97,7 @@ public class DatabaseManager : MonoBehaviour
 
         for(int i = 0; i <= endNum - startNum; i++)//1과 3 사이 내용을 가져 오려고 그러는것// <= 에서 < 로 수정 해 봄 2025-02-15 //되는것 같은데 sc
         {
-            
+
             if (startNum + i < 1)
             {
                 //Debug.Log("넘김");
@@ -107,6 +108,8 @@ public class DatabaseManager : MonoBehaviour
             {
                 //Debug.Log("else문");
             }//Debug.Log("리스트 삽입");
+            Debug.Log(string.Format("targer ={0}", startNum + i));
+            
             dialoguesList.Add(dialogueDic[startNum + i]);//지금 여기 문제
         }
         Debug.Log("GetDialogues 호출");

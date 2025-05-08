@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 // 유닛의 상태를 정의하는 열거형
+[Serializable]
 public enum UnitState
 {
     Default,        // 기본
@@ -84,5 +86,6 @@ public interface IUnitController
     /// <returns>재장전 동작이 성공적으로 수행되었을 시 true를 반환</returns>
     bool Reload(KeyState reloadKey);
 
-    bool Skile1(Vector2 pos);
+    bool Skill1(Vector2 pos);
+    bool Skill2(KeyState skileKey);
 }

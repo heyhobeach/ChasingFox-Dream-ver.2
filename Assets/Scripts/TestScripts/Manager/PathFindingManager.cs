@@ -33,38 +33,29 @@ public partial class GameManager : MonoBehaviour
     }
     public void MapSearch()
     {
-        // NodeArray�� ũ�� �����ְ�, isWall, x, y ����
         int sizeX = topRight.x - bottomLeft.x + 1;
         int sizeY = topRight.y - bottomLeft.y + 1;
         NodeArray = new PathFinding.Node[sizeX, sizeY];
 
-        for (int i = 0; i < sizeX; i++)//��κ� �ѹ��� ������
+        for (int i = 0; i < sizeX; i++)
         {
             for (int j = 0; j < sizeY; j++)
             {
-                bool isWall = false;//�̰� ������ �⺻������ ���������ִٰ� ����
                 bool isRoad = false;
-                bool isPoint = false;
+                bool isGround = false;
                 bool isplatform = false;
                 var temp = Physics2D.OverlapBoxAll(new Vector2(i + bottomLeft.x + correctionPos.x, j + bottomLeft.y + correctionPos.y), Vector2.one*0.9f, 0);
                 foreach (Collider2D col in temp)
                 {
-                    if (col.gameObject.layer == LayerMask.NameToLayer("Wall")) isWall = true;
-                    if (col.gameObject.layer == LayerMask.NameToLayer("Ground")) isRoad = true;
-                    if (col.gameObject.layer == LayerMask.NameToLayer("Point")) isPoint = true;
-                    if (col.gameObject.layer == LayerMask.NameToLayer("EnemyPlatform")) 
-                    {
-                        isRoad = true;
-                        isplatform = true;
-                    }
+                    if (col.gameObject.layer == LayerMask.NameToLayer("Ground")) isGround = true;
+                    if (col.gameObject.layer == LayerMask.NameToLayer("EnemyPlatform")) isplatform = true;
+                    if (col.gameObject.layer == LayerMask.NameToLayer("Wall")) isRoad = false;
                 }
-                if(!isWall) isWall = !isRoad && !isplatform;
-                if (isplatform || isPoint) isRoad = true;
+                if (isplatform || isGround) isRoad = true;
 
                 NodeArray[i, j] = new PathFinding.Node {
-                    isWall = isWall, 
-                    isRoad = isRoad, 
-                    isPoint = isPoint, 
+                    isRoad = isRoad,
+                    isGround = isGround,
                     isplatform = isplatform,
                     x = i + bottomLeft.x,
                     y = j + bottomLeft.y,
@@ -145,10 +136,6 @@ public partial class GameManager : MonoBehaviour
                 if(node.isRoad) Gizmos.DrawWireCube(new Vector3(node.x+correctionPos.x, node.y+correctionPos.y), Vector3.one*0.95f);
                 Gizmos.color = Color.blue;
                 if(node.isplatform) Gizmos.DrawWireCube(new Vector3(node.x+correctionPos.x, node.y+correctionPos.y), Vector3.one*0.95f);
-                Gizmos.color = Color.red;
-                if(node.isWall) Gizmos.DrawWireCube(new Vector3(node.x+correctionPos.x, node.y+correctionPos.y), Vector3.one*0.95f);
-                Gizmos.color = Color.blue;
-                if(node.isPoint) Gizmos.DrawWireCube(new Vector3(node.x+correctionPos.x, node.y+correctionPos.y), Vector3.one*0.85f);
 
                 Handles.Label(new Vector3(node.x+correctionPos.x, node.y+correctionPos.y), "G : " + node.G +  "\nH : " + node.H +  "\nF : " + node.F);
             }

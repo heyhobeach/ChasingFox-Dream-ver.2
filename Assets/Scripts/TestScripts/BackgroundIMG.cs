@@ -14,6 +14,6 @@ public class BackgroundIMG : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = new Vector3(GameManager.Instance.player.transform.position.x, transform.position.y, 0) + (Vector3.right * sprite.sprite.rect.width);
+        transform.position = new Vector3(ServiceLocator.Get<GameManager>().player.transform.position.x, transform.position.y, 0) + (Vector3.right * sprite.sprite.rect.width);
     }
 }

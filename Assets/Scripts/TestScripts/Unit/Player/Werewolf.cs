@@ -31,6 +31,7 @@ public class Werewolf : PlayerUnit
             brutalGauge?.Invoke(_currentGauge, brutalData.maxGage);
         }
     }
+    public void SetGauge(int value) => currentGauge = value;
     public int currentCount;
     [SerializeField] private float currentTime;
 
@@ -43,21 +44,14 @@ public class Werewolf : PlayerUnit
 
     public GameObject playerArea;
     public Image maskImage;
-    private Coroutine unscaledTimeCoroutine;
 
     private Collider2D[] selectObjects;
     
     protected override void OnEnable()
     {
         base.OnEnable();
-        var pi = CameraManager.Instance.proCamera2DPointerInfluence;
-        pi.MaxHorizontalInfluence = 5.15f;
-        pi.MaxVerticalInfluence = 0.3f;
-        pi.InfluenceSmoothness = 0.2f;
-        CameraManager.Instance.ChangeSize = 5.45f;
 
-        Time.timeScale = 0.3f;
-        Time.fixedDeltaTime = 0.02f * Time.timeScale;
+        ServiceLocator.Get<GameManager>().ingameTimescale = 0.3f;
         playerArea.transform.position = transform.position + Vector3.up;
         playerArea.transform.localScale = brutalData.brutalArea - Vector2.one;
         currentTime = brutalData.brutalTime;
@@ -65,8 +59,6 @@ public class Werewolf : PlayerUnit
         currentGauge -= brutalData.useGage;
 
         SelectObjects();
-
-        unscaledTimeCoroutine = StartCoroutine(UnscaledTime());
     }
 
     protected override void OnDisable()
@@ -77,13 +69,7 @@ public class Werewolf : PlayerUnit
             StopCoroutine(attackCoroutine);
             attackCoroutine = null;
         }
-        if(unscaledTimeCoroutine != null) 
-        {
-            StopCoroutine(unscaledTimeCoroutine);
-            unscaledTimeCoroutine = null;
-        }
-        Time.timeScale = 1f;
-        Time.fixedDeltaTime = 0.02f;
+        ServiceLocator.Get<GameManager>().ingameTimescale = 1f;
     }
 
     // private void Awake()
@@ -99,35 +85,33 @@ public class Werewolf : PlayerUnit
     //         return pos;
     //     }
     // }
-    protected override void Start()
+
+    public override void Init()
     {
-        Init();
+        cameraState = new() {
+            maxHorizontalInfluence = 5.15f,
+            maxVerticalInfluence = 0.3f,
+            influenceSmoothness = 0.2f,
+            changeSize = 5.45f
+        };
         meleeAttack.GetComponent<MaleeAttack>().Set(3, gameObject);
-        unitState = UnitState.FormChange;
+        UnitState = UnitState.FormChange;
+        base.Init();
     }
 
     protected override void FixedUpdate()
     {
         base.FixedUpdate();
         SelectObjects();
-    }
 
-    private IEnumerator UnscaledTime()
-    {
-        while(true)
+        if(ServiceLocator.Get<GameManager>().isPaused || attackCoroutine != null) return;
+        if(currentTime >= 0) 
         {
-            yield return new WaitForSecondsRealtime(0.02f);
-            if(GameManager.Instance.isPaused || attackCoroutine != null) continue;
-            Time.timeScale = 0.3f;
-            Time.fixedDeltaTime = 0.02f * Time.timeScale;
-            if(currentTime >= 0) 
-            {
-                currentTime -= 0.02f;
-                maskImage.material.SetFloat("_Alpha", Utils.EaseFromTo(0, brutalData.brutalTime, currentTime, EaseType.EaseOut) / brutalData.brutalTime);
-            }
-            else formChangeTest?.Invoke();
-            if(currentCount <= 0) formChangeTest?.Invoke();
+            currentTime -= 0.02f;
+            maskImage.material.SetFloat("_Alpha", Utils.EaseFromTo(0, brutalData.brutalTime, currentTime, EaseType.EaseOut) / brutalData.brutalTime);
         }
+        else formChangeTest?.Invoke();
+        if(currentCount <= 0) formChangeTest?.Invoke();
     }
 
     public override bool Attack(Vector3 clickPos) => MeleeAttack(clickPos);
@@ -161,14 +145,13 @@ public class Werewolf : PlayerUnit
             _bullet.GetComponent<Bullet>().Set(
                 shootingAnimationController.GetShootPosition(), 
                 clickPos, 
-                shootingAnimationController.GetShootRotation(), 
                 1, 
                 100, 
                 gObj, 
                 Vector2.zero
             );
         };
-        yield return new WaitForSecondsRealtime(0.5f);
+        yield return new WaitForSeconds(0.5f);
         attackCoroutine = null;
         if(currentCount <= 0) formChangeTest?.Invoke();
     }
@@ -180,7 +163,7 @@ public class Werewolf : PlayerUnit
         if(Physics2D.Linecast(transform.position, clickPos, 1<<LayerMask.NameToLayer("Map") | 1<<LayerMask.NameToLayer("Wall"))) return false;
         var hit = Physics2D.OverlapPoint(clickPos, 1<<LayerMask.NameToLayer("Enemy") | 1<<LayerMask.NameToLayer("GimmickObject"));
         if(!hit) return false;
-        if(hit.CompareTag("Enemy") && hit.GetComponent<EnemyUnit>().UnitState == UnitState.Death) return false;
+        if(hit.CompareTag("Enemy") && hit.GetComponent<EnemyUnit>()?.UnitState == UnitState.Death) return false;
 
         base.FormChange();
         currentCount--;
@@ -195,15 +178,13 @@ public class Werewolf : PlayerUnit
     private IEnumerator Attacking()
     {
         shootingAnimationController.NomalAni();
-        Time.timeScale = 1f;
-        Time.fixedDeltaTime = 0.02f;
+        ServiceLocator.Get<GameManager>().ingameTimescale = 0.3f;
         yield return new WaitForFixedUpdate();
         meleeAttack.SetActive(true);
         yield return new WaitForFixedUpdate();
         meleeAttack.SetActive(false);
-        yield return new WaitForSecondsRealtime(0.5f);
-        Time.timeScale = 0.3f;
-        Time.fixedDeltaTime = 0.02f * Time.timeScale;
+        yield return new WaitForSeconds(0.5f);
+        ServiceLocator.Get<GameManager>().ingameTimescale = 0.3f;
         attackCoroutine = null;
         if(currentCount <= 0) formChangeTest?.Invoke();
     }
@@ -215,7 +196,7 @@ public class Werewolf : PlayerUnit
 
     public override bool Dash() => false;
     public override bool FormChange() => base.FormChange();
-    public override bool Skile1(Vector2 pos) => RangedAttack(pos);
+    public override bool Skill1(Vector2 pos) => RangedAttack(pos);
 
     public override bool Reload(KeyState reloadKey) => false;
 
