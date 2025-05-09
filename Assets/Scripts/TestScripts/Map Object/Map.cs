@@ -11,8 +11,10 @@ using Unity.VisualScripting;
 
 
 
+
 #if UNITY_EDITOR
 using UnityEditor;
+using System.IO;
 #endif
 
 public class Map : MonoBehaviour
@@ -44,14 +46,20 @@ public class Map : MonoBehaviour
 
     private void Awake()
     {
-        var path = $"ScriptableObject Datas/{SceneManager.GetActiveScene().name}_{gameObject.name}";
-        mapData = Resources.Load<MapData>(path);
+        var path = $"ScriptableObject Datas/{gameObject.scene.name}/Map";
+        var fileName = gameObject.name.Replace('/', '_');
+        mapData = Resources.Load<MapData>($"{path}/{fileName}");
         if(!mapData)
         {
             MapData asset = ScriptableObject.CreateInstance<MapData>();
 #if UNITY_EDITOR
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory( $"Assets/Resources/{path}");
+                Debug.Log($"Created directory: {path}");
+            }
             asset.guid = Guid.NewGuid().ToString();
-            AssetDatabase.CreateAsset(asset, "Assets/Resources/" + path + ".asset");
+            AssetDatabase.CreateAsset(asset, $"Assets/Resources/{path}/{fileName}.asset");
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 #endif

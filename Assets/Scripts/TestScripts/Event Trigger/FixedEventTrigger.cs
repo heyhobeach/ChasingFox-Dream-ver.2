@@ -5,17 +5,6 @@ using UnityEngine;
 
 public class FixedEventTrigger : EventTrigger, IBaseController
 {
-    /// <summary>
-    /// 콜라이더 진입 시 이벤트 자동 트리거 여부
-    /// </summary>
-    public bool autoTrigger;
-    /// <summary>
-    /// autoTrigger가 false 시 트리거를 작동시키게 할 KeyCode
-    /// <para>후에 키 설정 도입 시 GetButtonDown기반 (string)으로 변경 필요</para>
-    /// </summary>
-    public KeyCode keyCode;
-    public QTE_Prerequisites prerequisites;
-    
     private Action _onDown;
     public Action onDown { get => _onDown; set => throw new NotImplementedException(); }
     private Action _onUp;
@@ -37,6 +26,7 @@ public class FixedEventTrigger : EventTrigger, IBaseController
             eventIdx = 0;
             if(limit) used = true;
             ((IBaseController)this).RemoveController();
+            foreach(var go in triggerActionObjects) go.SetActive(endObjectEnabled);
             return;
         }
 
@@ -55,18 +45,21 @@ public class FixedEventTrigger : EventTrigger, IBaseController
     /// </summary>
     public override void OnTrigger()
     {
-        if(limit ? used : false) return;
+        if(!triggerEnabled || limit ? used : false) return;
         EventTriggerData.currentEventTriggerData = eventTriggerData;
         ((IBaseController)this).AddController();
         PopupManager.Instance.RestartButtonEnable(false);
+        foreach(var go in triggerActionObjects) go.SetActive(true);
     }
-    public override void OnTrigger(int idx)
+    public override void OnTrigger(bool triggerEnabled)
     {
-        if(limit ? used : false) return;
+        this.triggerEnabled = true;
+        if(!triggerEnabled) return;
+        if(!triggerEnabled || limit ? used : false) return;
         EventTriggerData.currentEventTriggerData = eventTriggerData;
-        eventIdx = idx;
         ((IBaseController)this).AddController();
         PopupManager.Instance.RestartButtonEnable(false);
+        foreach(var go in triggerActionObjects) go.SetActive(true);
     }
 
     private void OnTriggerEnter2D(Collider2D collider)

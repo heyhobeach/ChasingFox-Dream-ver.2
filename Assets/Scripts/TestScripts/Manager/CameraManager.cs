@@ -19,7 +19,7 @@ public class CameraManager : MonoBehaviour, ISizeOverrider
     public ProCamera2DRooms proCamera2DRooms;
 
     private float _newSize;
-    private int _SOOrder = 2000;
+    private int _SOOrder = 3000;
     public int SOOrder { get => _SOOrder; set => _SOOrder = value; }
 
     public void SetState(State state)

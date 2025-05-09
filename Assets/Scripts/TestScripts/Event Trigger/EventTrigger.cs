@@ -3,8 +3,10 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
 #if UNITY_EDITOR
 using UnityEditor;
+using System.IO;
 #endif
 
 
@@ -20,6 +22,10 @@ public class EventTrigger : MonoBehaviour
             return _eventTriggerData;
         }
     }
+
+    [SerializeField] protected GameObject[] triggerActionObjects;
+    [SerializeField] protected bool endObjectEnabled = false;
+
     /// <summary>
     /// 이벤트를 작동시킬 대상의 태그
     /// </summary>
@@ -36,13 +42,22 @@ public class EventTrigger : MonoBehaviour
     /// <para>False == 무제한</para>
     /// </summary>
     public bool limit;
+    /// <summary>
+    /// 콜라이더 진입 시 이벤트 자동 트리거 여부
+    /// </summary>
+    public bool autoTrigger;
+    /// <summary>
+    /// autoTrigger가 false 시 트리거를 작동시키게 할 KeyCode
+    /// <para>후에 키 설정 도입 시 GetButtonDown기반 (string)으로 변경 필요</para>
+    /// </summary>
+    public KeyCode keyCode;
+    public QTE_Prerequisites prerequisites;
     public EventList[] eventLists;
     protected int eventIdx { get => eventTriggerData.eventIdx; set => eventTriggerData.eventIdx = value; }
     public bool used { get => eventTriggerData.used; set => eventTriggerData.used = value; }
+    public bool triggerEnabled { get => eventTriggerData.triggerEnabled; set => eventTriggerData.triggerEnabled = value; }
     protected bool eventLock;
     private Action action;
-
-    private bool enabledBackup;
 
     /// <summary>
     /// 이벤트 작동부
@@ -52,6 +67,7 @@ public class EventTrigger : MonoBehaviour
         if(eventIdx >= eventLists.Length)
         {
             EventTriggerData.currentEventTriggerData = null;
+            foreach(var go in triggerActionObjects) go.SetActive(endObjectEnabled);
             if(limit) used = true;
             eventIdx = 0;
             action = null;
@@ -73,16 +89,19 @@ public class EventTrigger : MonoBehaviour
     /// </summary>
     public virtual void OnTrigger()
     {
-        if(limit ? used : false) return;
+        if(!triggerEnabled || limit ? used : false) return;
         action = Controller;
         EventTriggerData.currentEventTriggerData = eventTriggerData;
+        foreach(var go in triggerActionObjects) go.SetActive(true);
     }
-    public virtual void OnTrigger(int idx)
+    public virtual void OnTrigger(bool triggerEnabled)
     {
-        if(limit ? used : false) return;
-        eventIdx = idx;
+        this.triggerEnabled = true;
+        if(!triggerEnabled) return;
+        if(!triggerEnabled || limit ? used : false) return;
         action = Controller;
         EventTriggerData.currentEventTriggerData = eventTriggerData;
+        foreach(var go in triggerActionObjects) go.SetActive(true);
     }
 
     private void OnTriggerEnter2D(Collider2D collider)
@@ -97,29 +116,35 @@ public class EventTrigger : MonoBehaviour
         action = null;
     }
 
-    public void DataReset() => eventTriggerData.Init(enabledBackup);
+    public void DataReset() => eventTriggerData.Init();
     public void Init(EventTriggerData.JsonData data)
     {
-        eventTriggerData.Init(data);
+        if(data != null) eventTriggerData.Init(data);
         GetComponent<BoxCollider2D>().enabled = true;
-        gameObject.SetActive(eventTriggerData.isEneable);
     }
     private void Init()
     {
-        enabledBackup = gameObject.activeSelf;
-        var path = $"ScriptableObject Datas/{SceneManager.GetActiveScene().name}_{gameObject.name}";
-        _eventTriggerData = Resources.Load<EventTriggerData>(path);
+        var path = $"ScriptableObject Datas/{gameObject.scene.name}/EventTrigger";
+        var fileName = gameObject.name.Replace('/', '_');
+        _eventTriggerData = Resources.Load<EventTriggerData>($"{path}/{fileName}");
+        Debug.Log($"EventTriggerData: {_eventTriggerData}");
         if(_eventTriggerData == null)
         {
+            Debug.Log($"EventTriggerData not found. Creating new one at {path}");
             EventTriggerData asset = ScriptableObject.CreateInstance<EventTriggerData>();
 #if UNITY_EDITOR
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory( $"Assets/Resources/{path}");
+                Debug.Log($"Created directory: {path}");
+            }
             asset.guid = Guid.NewGuid().ToString();
-            AssetDatabase.CreateAsset(asset, "Assets/Resources/" + path + ".asset");
+            AssetDatabase.CreateAsset(asset, $"Assets/Resources/{path}/{fileName}.asset");
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
 #endif
             _eventTriggerData = asset;
-            eventTriggerData.Init(enabledBackup);
+            eventTriggerData.Init();
         }
 
         GetComponent<BoxCollider2D>().isTrigger = true;
@@ -128,10 +153,7 @@ public class EventTrigger : MonoBehaviour
     }
     private void Awake() => Init();
 
-    private void Update()
-    {
-        if(action != null) action.Invoke();
-    }
+    private void Update() => action?.Invoke();
 
     protected IEnumerator LockTime(QTE_Prerequisites prerequisites)
     {
@@ -139,7 +161,4 @@ public class EventTrigger : MonoBehaviour
         yield return new WaitUntil(() => prerequisites.isSatisfied);
         eventLock = false;
     }
-
-    private void OnEnable() => eventTriggerData.isEneable = true;
-    private void OnDisable() => eventTriggerData.isEneable = false;
 }

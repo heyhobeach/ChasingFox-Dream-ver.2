@@ -97,6 +97,9 @@ public class MainMenuManager : MonoBehaviour
             save.chapter = "Chp0";
         }
         PageManger.Instance.LoadScene(save.chapter, false);
+        PageManger.Instance.aoComplatedAction = () =>{
+            ServiceLocator.Get<GameManager>().ApplySaveData();
+        };
         yield return new WaitForSeconds(moveSpeed);
         PageManger.Instance.SceneActive();
     }

@@ -14,45 +14,45 @@ public class EventTriggerData : ScriptableObject
     [Serializable]
     public class JsonData
     {
-        public string guid;
         public int eventIdx;
         public bool used;
-        public bool isEneable;
+        public bool triggerEnabled;
         public Vector2 targetPosition;
 
         public static implicit operator JsonData(EventTriggerData data)
         {
             return new JsonData {
-                guid = data.guid,
                 eventIdx = data.eventIdx,
                 used = data.used,
-                isEneable = data.isEneable,
+                triggerEnabled = data.triggerEnabled,
                 targetPosition = data.targetPosition
             };
         }
     }
 
     [DisableInInspector] public string guid;
+
+    [SerializeField] private bool enableOnAwake = false;
+    
     public int eventIdx;
     public bool used;
-    public bool isEneable;
+    public bool triggerEnabled;
     public Vector2 targetPosition;
 
     public static EventTriggerData currentEventTriggerData = null;
 
-    public void Init(bool enabled)
+    public void Init()
     {
         eventIdx = 0;
         used = false;
-        isEneable = enabled;
+        triggerEnabled = enableOnAwake;
         targetPosition = Vector2.zero;
     }
     public void Init(JsonData eventTriggerData)
     {
-        guid = eventTriggerData.guid;
         eventIdx = eventTriggerData.eventIdx;
         used = eventTriggerData.used;
-        isEneable = eventTriggerData.isEneable;
+        triggerEnabled = eventTriggerData.triggerEnabled;
         targetPosition = eventTriggerData.targetPosition;
     }
 
@@ -71,8 +71,9 @@ public class EventTriggerData : ScriptableObject
     {
         if(playModeStateChange == PlayModeStateChange.ExitingPlayMode)
         {
+            eventIdx = 0;
             used = false;
-            isEneable = false;
+            triggerEnabled = enableOnAwake;
             targetPosition = Vector2.zero;
         }
     }

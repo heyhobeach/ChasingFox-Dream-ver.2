@@ -21,6 +21,8 @@ public class InventoryManager : MonoBehaviour
     {
 
         invendata = Resources.Load("Inventory") as InventoryScripable;//이걸 가져오면 저장이 어떻게 되는지?
+        if(invendata.inventory == null) invendata.inventory = new Dictionary<int, Inventory.Info>();
+        if (invendata.news == null) invendata.news = new Dictionary<int, Inventory.News>();
         Debug.Log("invendata" + invendata.name);
         if (instance == null)
         {

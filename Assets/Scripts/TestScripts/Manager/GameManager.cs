@@ -90,7 +90,7 @@ public partial class GameManager : MonoBehaviour
         StopAllCoroutines();
         mapsearchCoroutine = null;
         if (isPaused) Pause();
-        ServiceLocator.Get<CameraManager>().proCamera2DRooms.OnStartedTransition.RemoveListener(MoveNextRoom);
+        ServiceLocator.Get<CameraManager>()?.proCamera2DRooms.OnStartedTransition.RemoveListener(MoveNextRoom);
     }
 
     private void Awake()
@@ -108,15 +108,14 @@ public partial class GameManager : MonoBehaviour
         Debug.Log("GameManager Init called");
         Time.fixedDeltaTime = 0.02f;
         var saveData = SystemManager.Instance.saveData;
-        Scene currentActiveScene = SceneManager.GetActiveScene();
 
-        maps = maps.OrderBy(x => x.transform.GetSiblingIndex()).ToList();
-        eventTriggers = eventTriggers.OrderBy(x => x.transform.GetSiblingIndex()).ToList();
+        maps = maps.Where(x => x.gameObject.scene == gameObject.scene).OrderBy(x => x.transform.GetSiblingIndex()).ToList();
+        eventTriggers = eventTriggers.Where(x => x.gameObject.scene == gameObject.scene).OrderBy(x => x.transform.GetSiblingIndex()).ToList();
 
         if(mapsearchCoroutine == null) mapsearchCoroutine = StartCoroutine(MapSearchStart());
 
         var allPlayerObjs = FindObjectsByType<Player>(FindObjectsSortMode.None);
-        player = allPlayerObjs.FirstOrDefault(p => p.gameObject.scene == currentActiveScene);
+        player = allPlayerObjs.FirstOrDefault(p => p.gameObject.scene == gameObject.scene);
         if (player == null)
         {
             Debug.LogError("Active scene does not contain a Player object!");
@@ -124,7 +123,7 @@ public partial class GameManager : MonoBehaviour
         }
 
         var allInteractionEvents = FindObjectsByType<InteractionEvent>(FindObjectsSortMode.None);
-        interactionEvent = allInteractionEvents.FirstOrDefault(e => e.gameObject.scene == currentActiveScene);
+        interactionEvent = allInteractionEvents.FirstOrDefault(e => e.gameObject.scene == gameObject.scene);
         if (interactionEvent == null) Debug.LogWarning("Active scene does not contain an InteractionEvent object!");
 
         var playerScript = player.GetComponent<Player>();
@@ -144,13 +143,13 @@ public partial class GameManager : MonoBehaviour
         }
         for(int i=0; i<eventTriggers.Count; i++)
         {
-            if(EventTriggerData.currentEventTriggerData != null 
+            eventTriggers[i].Init(null);
+            if(EventTriggerData.currentEventTriggerData != null
                 && EventTriggerData.currentEventTriggerData.guid.Equals(eventTriggers[i].eventTriggerData.guid))
             {
                 // player.transform.position = EventTriggerData.currentEventTriggerData.targetPosition;
                 eventTriggers[i].OnTrigger();
             }
-            eventTriggers[i].GetComponent<BoxCollider2D>().enabled = true;
         } 
 
         ProCamera2D.Instance.CameraTargets.Add(new CameraTarget(){ TargetTransform = player.transform });
@@ -166,17 +165,19 @@ public partial class GameManager : MonoBehaviour
 
         Debug.Log("ApplySaveData called");
 
-        Scene currentActiveScene = SceneManager.GetActiveScene();
-        var allPlayerObjs = FindObjectsByType<Player>(FindObjectsSortMode.None);
-        player = allPlayerObjs.FirstOrDefault(p => p.gameObject.scene == currentActiveScene);
+        maps = maps.Where(x => x.gameObject.scene == gameObject.scene).OrderBy(x => x.transform.GetSiblingIndex()).ToList();
+        eventTriggers = eventTriggers.Where(x => x.gameObject.scene == gameObject.scene).OrderBy(x => x.transform.GetSiblingIndex()).ToList();
 
-        if(saveData.chapter == currentActiveScene.name)
+        var allPlayerObjs = FindObjectsByType<Player>(FindObjectsSortMode.None);
+        player = allPlayerObjs.FirstOrDefault(p => p.gameObject.scene == gameObject.scene);
+
+        if(saveData.chapter == gameObject.scene.name)
         {
             PlayerData.lastRoomIdx = saveData.stageIdx;
 
-            InventoryManager.Instance.invendata.inventory?.Clear();
-            foreach(var item in SystemManager.Instance.saveData.inventoryData) 
-                InventoryManager.Instance.inventory?.AddInventory(item);
+            InventoryManager.Instance.invendata.inventory.Clear();
+            foreach(var item in saveData.inventoryData) 
+                InventoryManager.Instance.inventory.AddInventory(item);
 
             for(int i=0; i<maps.Count; i++) maps[i].Init(saveData.mapData[i]);
 
@@ -235,15 +236,17 @@ public partial class GameManager : MonoBehaviour
 
     public bool LoadScene(string name, bool active = true)
     {
-        if (SceneManager.GetActiveScene().name != name) 
+        if (gameObject.scene.name != name) 
         {
+            Debug.Log("data reset called");
             DataReset();
             SaveData();
         }
         ServiceLocator.Get<UIController>()?.DialogueCanvasSetFalse();
         return PageManger.Instance.LoadScene(name, active);
     }
-    public bool RetryScene() => LoadScene(SceneManager.GetActiveScene().name, false);
+    public void LoadScene(string name) => LoadScene(name, true);
+    public bool RetryScene() => LoadScene(gameObject.scene.name, false);
     public void GoHideoutScene(string nextChp)
     {
         SystemManager.Instance.saveData.nextChapter = nextChp;
@@ -265,7 +268,6 @@ public partial class GameManager : MonoBehaviour
 
     public void Quit()
     {
-        DataReset();
         PageManger.Instance.Quit();
     }
 
@@ -283,7 +285,7 @@ public partial class GameManager : MonoBehaviour
         playerData.pcm = player.GetComponent<PlayerController>().DataSet();
 
         SystemManager.Instance.saveData = new SaveData(){
-            chapter = SceneManager.GetActiveScene().name,
+            chapter = gameObject.scene.name,
             nextChapter = SystemManager.Instance.saveData.nextChapter,
             stageIdx = PlayerData.lastRoomIdx,
             currentEventTriggerDataGuid = EventTriggerData.currentEventTriggerData?.guid,
@@ -300,7 +302,7 @@ public partial class GameManager : MonoBehaviour
     {
         foreach (var map in maps) map.DataReset();
         foreach (var eventTrigger in eventTriggers) eventTrigger.DataReset();
-        SystemManager.Instance.saveData.chapter = SceneManager.GetActiveScene().name;
+        SystemManager.Instance.saveData.chapter = gameObject.scene.name;
         PlayerData.lastRoomIdx = 0;
         EventTriggerData.currentEventTriggerData = null;
     }

@@ -55,9 +55,9 @@ public class DoorOpen : MonoBehaviour, IBaseController
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
+        if(collider.gameObject.scene != gameObject.scene) return;
         if(opened || !(collider.CompareTag("Player") || collider.CompareTag("Enemy"))) return;
         target = collider.GetComponent<UnitBase>();
-        if(target.UnitState != UnitState.Default) return;
         var interactable = collider.gameObject.GetInterface<IDoorInteractable>();
 
         target.SetAni(false);
