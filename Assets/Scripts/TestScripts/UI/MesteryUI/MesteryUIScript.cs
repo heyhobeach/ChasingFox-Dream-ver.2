@@ -262,9 +262,20 @@ public class MesteryUIScript : MonoBehaviour
         }
         if (answerTexts[contentContextArrayIndex].Item1.Length <= 1)//문제가 아닐경우 해당 경우 마지막 라인 수정 필요
         {
+            //&& contentContextArrayIndex <= contentContextArray.Length - 1
             Debug.Log("문제가 아님");
             contentContextArrayIndex++;
-            SetDiaryTextProblem();
+            if (contentContextArrayIndex > contentContextArray.Length - 1)//여기가 중요
+            {
+                Debug.Log("마지막 라인 종료");
+                HomeDiary();
+                //EndMeystery();
+            }
+            else
+            {
+                SetDiaryTextProblem();
+            }
+
             return;
         }
         //bool is_correct = false;
@@ -334,17 +345,22 @@ public class MesteryUIScript : MonoBehaviour
         if (contentContextArrayIndex > contentContextArray.Length-1 )//여기가 중요
         {
             Debug.Log("마지막 라인 종료");
-            textContainer.RemoveFromClassList("diary-left");
-            GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("TracerNote").RemoveFromClassList("test2-2");
-            //추가 필요 flex none
-            currentElement.RemoveFromClassList("clickable");
-            currentElement.AddToClassList("sentence");
-            currentElement.text = originText[contentContextArrayIndex-1];
-            textContainerContent.style.display = DisplayStyle.Flex;
-            mesteryContainer.style.display = DisplayStyle.None;
+            HomeDiary();
             //EndMeystery();
             return;
         }
+    }
+    private void HomeDiary()
+    {
+        textContainer.RemoveFromClassList("diary-left");
+        GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("TracerNote").RemoveFromClassList("test2-2");
+        //추가 필요 flex none
+        currentElement.RemoveFromClassList("clickable");
+        currentElement.AddToClassList("sentence");
+        currentElement.text = originText[contentContextArrayIndex - 1];
+        textContainerContent.style.display = DisplayStyle.Flex;
+        mesteryContainer.style.display = DisplayStyle.None;
+        currentElement.UnregisterCallback<PointerDownEvent>(LoadMestery);
     }
 
     private void WrongAnswerPopDown()
@@ -539,7 +555,10 @@ public class MesteryUIScript : MonoBehaviour
             _part = part.Split(' ');
 
 
+
             var textelement = new TextElement { text = part, name = "textelement" };
+
+
 
             foreach (string p in _part)//여기 드래그 관련 내용들은 csv가 아닌 수집품의 내용 관련으로 갈것임 지금 해당내용은 테스트용이라고 생각하는것이 좋음 띄워 쓰기 관련은 인벤토리(수집품) 추리시 발생, 스페이스 기준
             {
