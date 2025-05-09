@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Unity.VisualScripting.Antlr3.Runtime;
+using UnityEditor.Search;
+
 //using UnityEditor.Rendering;
 
 using UnityEngine;
@@ -85,12 +87,25 @@ public class MesteryUIScript : MonoBehaviour
     bool is_hiddenmode = false;
 
     TextElement currentElement = new TextElement();
+    bool ishome = true;
 
     private async void Awake()
     {
         await CloseRoom(0.5f, GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("VisualElement"));
+        ishome = true;
     }
 
+    private void Update()
+    {
+        if (ishome)
+        {
+            Debug.Log("일기모드");
+        }
+        else
+        {
+            Debug.Log("추리 모드");
+        }
+    }
     private void OnEnable()
     {
         hidden_start_index = -1;
@@ -200,6 +215,7 @@ public class MesteryUIScript : MonoBehaviour
         }
         background.style.backgroundColor = new Color(0,0,0, 0);
         visual.style.display = DisplayStyle.None;
+        this.gameObject.SetActive(false);
     }
 
     public async Awaitable CloseRoom(float time,VisualElement visual)//지금 스프라이트 랜더러에서 값이 변경이 안되는듯함
@@ -218,6 +234,13 @@ public class MesteryUIScript : MonoBehaviour
         }
         background.style.backgroundColor = new Color(0,0,0, 0.2f);
         visual.style.visibility = Visibility.Visible;
+
+        visual.schedule.Execute(() =>
+        {
+            // 이 람다 표현식 안의 코드가 다음 UI 업데이트 주기(다음 프레임)에 실행됩니다.
+            diary_button_parent.style.display = DisplayStyle.Flex;
+        }).ExecuteLater(2);
+        //diary_button_parent.visible = true;
     }
 
     private void ButtonSet(VisualElement root)
@@ -234,11 +257,16 @@ public class MesteryUIScript : MonoBehaviour
         diary_button_finsh = root.Q<Button>("Finsh");
         diary_button_back.clickable.clicked += DiaryBackButtonEvent;
         diary_button_finsh.clickable.clicked += DiaryFinishButtonEvent;
-        diary_button_parent.visible = false;
+        diary_button_parent.style.display = DisplayStyle.None;
     }
 
     private void DiaryFinishButtonEvent()//정답 확인
     {
+        if (ishome)
+        {
+            EndMeystery();
+            return;
+        }
         Debug.Log("일기 finish");
 
         List<string>strings = new List<string>();
@@ -352,6 +380,7 @@ public class MesteryUIScript : MonoBehaviour
     }
     private void HomeDiary()
     {
+        ishome = true;
         textContainer.RemoveFromClassList("diary-left");
         GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("TracerNote").RemoveFromClassList("test2-2");
         //추가 필요 flex none
@@ -544,7 +573,7 @@ public class MesteryUIScript : MonoBehaviour
         List<List<string>> tags = new List<List<string>>();//___으로 변환 되어있는 내용에서 해당 번째가 person인지 destination인지 확인용
         foreach (string part in parts)//br기준,사실상 없는거나 마찬가지
         {
-            Debug.Log("part is " + part+"id =>"+id+"key length"+keys.Length);
+            //Debug.Log("part is " + part+"id =>"+id+"key length"+keys.Length);
             //if (keys.Length < 1)
             //{
             //    keys = new string[] { "" };
@@ -567,7 +596,7 @@ public class MesteryUIScript : MonoBehaviour
              && part != null
              && part.Contains(keys[0]);
                 //int a = part.IndexOf(keys[0]);
-                Debug.Log($"분리 후: [{p}] check[{check}]"); //지금 분리도 안 되는거같은데
+                //Debug.Log($"분리 후: [{p}] check[{check}]"); //지금 분리도 안 되는거같은데
 
                 if (check)
                 {
@@ -845,6 +874,7 @@ public class MesteryUIScript : MonoBehaviour
     private void LoadMestery(PointerDownEvent evt)//데이터를 미리 정해놔야할듯?
     {
         //textContainerContent.Clear();
+        ishome = false;
         textContainerContent.style.display = DisplayStyle.None;
         mesteryContainer.style.display = DisplayStyle.Flex;
         DiaryContentSet();
@@ -987,6 +1017,7 @@ public class MesteryUIScript : MonoBehaviour
 
     private async void EndMeystery()
     {
+        Debug.Log("end");
         await OpenRoom(0.7f, GetComponent<UIDocument>().rootVisualElement);
     }
 }

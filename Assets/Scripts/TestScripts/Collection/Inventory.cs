@@ -82,7 +82,7 @@ public class Inventory : MonoBehaviour
 
 
         Info info=new Info(news,collection._context,collection.keywords);
-        Debug.Log(string.Format("{0},{1},{2}", info.news.image_name, info.context, "collection"));
+        //Debug.Log(string.Format("{0},{1},{2}", info.news.image_name, info.context, "collection"));
         return info;
     }
 
@@ -93,7 +93,7 @@ public class Inventory : MonoBehaviour
         _news.image_name=news.image_name;
         _news.id=news.id;
         _news.chapter = news.chapter_info;
-        Debug.Log(string.Format("{0},{1}", _news.image_name, "news"));
+        //Debug.Log(string.Format("{0},{1}", _news.image_name, "news"));
         return _news;
     }
     public void AddInventory(Collection.CollectionScriptorble collection)//흔적
@@ -112,7 +112,7 @@ public class Inventory : MonoBehaviour
                 Debug.Log("수집 하지 않는 수집품");
                 return;
             }
-            Debug.Log("id추가"+SetInfoStruct(collection).news.id);
+            //Debug.Log("id추가"+SetInfoStruct(collection).news.id);
             AddInventory(SetInfoStruct(collection));
             //invenDic.Add(collection.id, SetInfoStruct(collection));
             //
