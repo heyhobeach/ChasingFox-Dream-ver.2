@@ -86,27 +86,11 @@ public class MesteryUIScript : MonoBehaviour
 
     bool is_hiddenmode = false;
 
-    TextElement currentElement = new TextElement();
+    TextElement currentElement;
     bool ishome = true;
 
-    private async void Awake()
-    {
-        await CloseRoom(0.5f, GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("VisualElement"));
-        ishome = true;
-    }
 
-    private void Update()
-    {
-        if (ishome)
-        {
-            Debug.Log("일기모드");
-        }
-        else
-        {
-            Debug.Log("추리 모드");
-        }
-    }
-    private void OnEnable()
+    private async void OnEnable()
     {
         hidden_start_index = -1;
   
@@ -140,35 +124,19 @@ public class MesteryUIScript : MonoBehaviour
         textContainerContent = root.Q<VisualElement>("textContainerContent");
         mesteryContainer = root.Q<VisualElement>("MysteryContainer");
 
+
         visualElement.Add(diary);
         visualElement.style.visibility = Visibility.Hidden;
 
 
         ButtonSet(root);
 
+        await CloseRoom(0.5f, GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("VisualElement"));
+        ishome = true;
+        currentElement = new TextElement();
 
-        var text1 = new TextElement { text = "클릭 이벤트 가능한 문장 1 ", name = "sentence1" };
-        var clickableText = new TextElement { text = "클릭 이벤트 가능한 문장 2", name = "clickableWord" };
-        var text2 = new TextElement { text = "클릭 이벤트 가능한 문장 3", name = "sentence2" };
-
-        // 클릭 이벤트 추가
-        List<TextElement> textList = new List<TextElement>();//이벤트가 들어가야하는 내용들
-        textList.Add(text1); textList.Add(text2); textList.Add(clickableText);
         SetDiaryText(ref textContainer, StartEvent("Diary_0.001"));//처음 수집품별 다이어리 내용
         //ui toolkit에서 제공하는 함수로 이벤트 등록에 사용됨
-        foreach (var text in textList)
-        {
-            text.RegisterCallback<PointerUpEvent>(even =>
-            {
-                Debug.Log("hello");
-            });
-        }
-        clickableText.RegisterCallback<PointerUpEvent>(evt =>
-        {
-            Debug.Log("클릭된 텍스트: 클릭 가능한 텍스트");
-
-
-        });
 
         //패널에 함수 등록
         visualElement.RegisterCallback<PointerDownEvent>(OnPointerDown);
@@ -220,9 +188,12 @@ public class MesteryUIScript : MonoBehaviour
 
     public async Awaitable CloseRoom(float time,VisualElement visual)//지금 스프라이트 랜더러에서 값이 변경이 안되는듯함
     {
+        //diary_button_parent.style.display = DisplayStyle.None;
         var background = GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("BackGround");
         float current = 0;
         float value_a = 255;
+        diary_button_parent.style.display = DisplayStyle.None;
+        diary_button_parent.style.visibility = Visibility.Hidden;
         while (current < time)
         {
             await Awaitable.EndOfFrameAsync();
@@ -238,9 +209,17 @@ public class MesteryUIScript : MonoBehaviour
         visual.schedule.Execute(() =>
         {
             // 이 람다 표현식 안의 코드가 다음 UI 업데이트 주기(다음 프레임)에 실행됩니다.
+            //Invoke("ButtonCreateTest", 0.3f);
             diary_button_parent.style.display = DisplayStyle.Flex;
-        }).ExecuteLater(2);
+            diary_button_parent.style.visibility = Visibility.Visible;
+        }).ExecuteLater(300);//하드 코딩인데 타이임이 적당하게 맞는데?
         //diary_button_parent.visible = true;
+    }
+
+    private void ButtonCreateTest()
+    {
+        diary_button_parent.style.display = DisplayStyle.Flex;
+        diary_button_parent.visible = true;
     }
 
     private void ButtonSet(VisualElement root)
@@ -258,6 +237,7 @@ public class MesteryUIScript : MonoBehaviour
         diary_button_back.clickable.clicked += DiaryBackButtonEvent;
         diary_button_finsh.clickable.clicked += DiaryFinishButtonEvent;
         diary_button_parent.style.display = DisplayStyle.None;
+        diary_button_parent.style.visibility = Visibility.Hidden;
     }
 
     private void DiaryFinishButtonEvent()//정답 확인
