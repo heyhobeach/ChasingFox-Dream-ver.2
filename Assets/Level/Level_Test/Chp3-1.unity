@@ -10082,8 +10082,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _eventTriggerData: {fileID: 0}
+  triggerActionObjects: []
+  endObjectEnabled: 0
   targetTag: Player
   limit: 0
+  autoTrigger: 0
+  keyCode: 0
+  prerequisites: {fileID: 0}
   eventLists:
   - enterPrerequisites: {fileID: 0}
     keyCode: 0
@@ -10470,8 +10475,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _eventTriggerData: {fileID: 0}
+  triggerActionObjects: []
+  endObjectEnabled: 0
   targetTag: Player
   limit: 1
+  autoTrigger: 0
+  keyCode: 0
+  prerequisites: {fileID: 0}
   eventLists:
   - enterPrerequisites: {fileID: 0}
     keyCode: 0
@@ -10551,9 +10561,6 @@ MonoBehaviour:
             m_BoolArgument: 1
           m_CallState: 2
     exitPrerequisites: {fileID: 0}
-  autoTrigger: 0
-  keyCode: 0
-  prerequisites: {fileID: 0}
 --- !u!61 &278074734
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -21357,7 +21364,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &531350562
 Transform:
   m_ObjectHideFlags: 0
@@ -21407,26 +21414,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _eventTriggerData: {fileID: 0}
+  triggerActionObjects:
+  - {fileID: 1555315959}
+  - {fileID: 81773031}
+  endObjectEnabled: 0
   targetTag: Player
   limit: 1
+  autoTrigger: 1
+  keyCode: 0
+  prerequisites: {fileID: 0}
   eventLists:
   - enterPrerequisites: {fileID: 0}
     keyCode: 0
     action:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 531350566}
-          m_TargetAssemblyTypeName: UnityEngine.Playables.PlayableDirector, UnityEngine
-          m_MethodName: Play
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
         - m_Target: {fileID: 1555315959}
           m_TargetAssemblyTypeName: UnityEngine.Playables.PlayableDirector, UnityEngine
           m_MethodName: SetActive
@@ -21447,20 +21449,17 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 1952601964}
           m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-          m_MethodName: LoadScene
+          m_MethodName: GoHideoutScene
           m_Mode: 5
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: 
+            m_StringArgument: Chp3-2
             m_BoolArgument: 0
           m_CallState: 2
     exitPrerequisites: {fileID: 0}
-  autoTrigger: 1
-  keyCode: 0
-  prerequisites: {fileID: 0}
 --- !u!61 &531350565
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -29820,8 +29819,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _eventTriggerData: {fileID: 0}
+  triggerActionObjects: []
+  endObjectEnabled: 0
   targetTag: Player
   limit: 0
+  autoTrigger: 0
+  keyCode: 0
+  prerequisites: {fileID: 0}
   eventLists:
   - enterPrerequisites: {fileID: 0}
     keyCode: 0
@@ -33874,8 +33878,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _eventTriggerData: {fileID: 0}
+  triggerActionObjects: []
+  endObjectEnabled: 0
   targetTag: Player
   limit: 0
+  autoTrigger: 0
+  keyCode: 0
+  prerequisites: {fileID: 0}
   eventLists:
   - enterPrerequisites: {fileID: 0}
     keyCode: 0
@@ -36728,8 +36737,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _eventTriggerData: {fileID: 0}
+  triggerActionObjects: []
+  endObjectEnabled: 0
   targetTag: Player
   limit: 0
+  autoTrigger: 0
+  keyCode: 0
+  prerequisites: {fileID: 0}
   eventLists:
   - enterPrerequisites: {fileID: 0}
     keyCode: 0
@@ -40201,8 +40215,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _eventTriggerData: {fileID: 0}
+  triggerActionObjects: []
+  endObjectEnabled: 0
   targetTag: Player
   limit: 1
+  autoTrigger: 0
+  keyCode: 0
+  prerequisites: {fileID: 0}
   eventLists:
   - enterPrerequisites: {fileID: 0}
     keyCode: 0
@@ -40282,9 +40301,6 @@ MonoBehaviour:
             m_BoolArgument: 1
           m_CallState: 2
     exitPrerequisites: {fileID: 0}
-  autoTrigger: 0
-  keyCode: 0
-  prerequisites: {fileID: 0}
 --- !u!61 &852982526
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -51630,7 +51646,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &919185986
 Transform:
   m_ObjectHideFlags: 0
@@ -51680,8 +51696,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _eventTriggerData: {fileID: 0}
+  triggerActionObjects:
+  - {fileID: 740830562}
+  - {fileID: 81773031}
+  endObjectEnabled: 0
   targetTag: Player
   limit: 1
+  autoTrigger: 1
+  keyCode: 0
+  prerequisites: {fileID: 0}
   eventLists:
   - enterPrerequisites: {fileID: 0}
     keyCode: 0
@@ -51700,51 +51723,15 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
-        - m_Target: {fileID: 740830562}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
     exitPrerequisites: {fileID: 919185991}
   - enterPrerequisites: {fileID: 0}
     keyCode: 0
     action:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 919185985}
+        - m_Target: {fileID: 2110330922}
           m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 740830562}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 81773031}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
+          m_MethodName: OnTrigger
           m_Mode: 6
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -51755,9 +51742,6 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
     exitPrerequisites: {fileID: 0}
-  autoTrigger: 1
-  keyCode: 0
-  prerequisites: {fileID: 0}
 --- !u!61 &919185989
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -52064,8 +52048,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _eventTriggerData: {fileID: 0}
+  triggerActionObjects: []
+  endObjectEnabled: 0
   targetTag: Player
   limit: 0
+  autoTrigger: 0
+  keyCode: 0
+  prerequisites: {fileID: 0}
   eventLists:
   - enterPrerequisites: {fileID: 0}
     keyCode: 0
@@ -55978,8 +55967,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _eventTriggerData: {fileID: 0}
+  triggerActionObjects: []
+  endObjectEnabled: 0
   targetTag: Player
   limit: 0
+  autoTrigger: 0
+  keyCode: 0
+  prerequisites: {fileID: 0}
   eventLists:
   - enterPrerequisites: {fileID: 0}
     keyCode: 0
@@ -59021,7 +59015,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1056597792
 Transform:
   m_ObjectHideFlags: 0
@@ -59071,8 +59065,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _eventTriggerData: {fileID: 0}
+  triggerActionObjects:
+  - {fileID: 1079257186}
+  - {fileID: 81773031}
+  endObjectEnabled: 0
   targetTag: Player
   limit: 1
+  autoTrigger: 1
+  keyCode: 0
+  prerequisites: {fileID: 0}
   eventLists:
   - enterPrerequisites: {fileID: 0}
     keyCode: 0
@@ -59091,9 +59092,15 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
-        - m_Target: {fileID: 1079257186}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
+    exitPrerequisites: {fileID: 1056597797}
+  - enterPrerequisites: {fileID: 0}
+    keyCode: 0
+    action:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1497923344}
+          m_TargetAssemblyTypeName: 
+          m_MethodName: OnTrigger
           m_Mode: 6
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -59104,39 +59111,6 @@ MonoBehaviour:
             m_BoolArgument: 1
           m_CallState: 2
     exitPrerequisites: {fileID: 1056597797}
-  - enterPrerequisites: {fileID: 0}
-    keyCode: 0
-    action:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1056597791}
-          m_TargetAssemblyTypeName: UnityEngine.Playables.PlayableDirector, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 1079257186}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    exitPrerequisites: {fileID: 1056597797}
-  autoTrigger: 1
-  keyCode: 0
-  prerequisites: {fileID: 0}
 --- !u!61 &1056597795
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -74396,8 +74370,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _eventTriggerData: {fileID: 0}
+  triggerActionObjects: []
+  endObjectEnabled: 0
   targetTag: Player
   limit: 0
+  autoTrigger: 0
+  keyCode: 0
+  prerequisites: {fileID: 0}
   eventLists:
   - enterPrerequisites: {fileID: 0}
     keyCode: 0
@@ -77838,7 +77817,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1497923342
 Transform:
   m_ObjectHideFlags: 0
@@ -77888,8 +77867,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _eventTriggerData: {fileID: 0}
+  triggerActionObjects:
+  - {fileID: 771609507}
+  - {fileID: 81773031}
+  endObjectEnabled: 0
   targetTag: Player
   limit: 1
+  autoTrigger: 1
+  keyCode: 0
+  prerequisites: {fileID: 0}
   eventLists:
   - enterPrerequisites: {fileID: 0}
     keyCode: 0
@@ -77900,18 +77886,6 @@ MonoBehaviour:
           m_TargetAssemblyTypeName: UnityEngine.Playables.PlayableDirector, UnityEngine
           m_MethodName: Play
           m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 771609507}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -77938,21 +77912,9 @@ MonoBehaviour:
     action:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 1497923341}
-          m_TargetAssemblyTypeName: UnityEngine.Playables.PlayableDirector, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 771609507}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
+        - m_Target: {fileID: 919185988}
+          m_TargetAssemblyTypeName: 
+          m_MethodName: OnTrigger
           m_Mode: 6
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -77963,9 +77925,6 @@ MonoBehaviour:
             m_BoolArgument: 0
           m_CallState: 2
     exitPrerequisites: {fileID: 1497923347}
-  autoTrigger: 1
-  keyCode: 0
-  prerequisites: {fileID: 0}
 --- !u!61 &1497923345
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -82290,8 +82249,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _eventTriggerData: {fileID: 0}
+  triggerActionObjects: []
+  endObjectEnabled: 0
   targetTag: Player
   limit: 0
+  autoTrigger: 0
+  keyCode: 0
+  prerequisites: {fileID: 0}
   eventLists:
   - enterPrerequisites: {fileID: 0}
     keyCode: 0
@@ -88844,8 +88808,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _eventTriggerData: {fileID: 0}
+  triggerActionObjects:
+  - {fileID: 81773031}
+  - {fileID: 1759937986}
+  endObjectEnabled: 0
   targetTag: Player
   limit: 1
+  autoTrigger: 1
+  keyCode: 0
+  prerequisites: {fileID: 0}
   eventLists:
   - enterPrerequisites: {fileID: 0}
     keyCode: 0
@@ -88864,39 +88835,15 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-        - m_Target: {fileID: 1759937986}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 81773031}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
     exitPrerequisites: {fileID: 1863049599}
   - enterPrerequisites: {fileID: 0}
     keyCode: 0
     action:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 1759937986}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
+        - m_Target: {fileID: 1056597794}
+          m_TargetAssemblyTypeName: 
+          m_MethodName: OnTrigger
           m_Mode: 6
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -88904,24 +88851,9 @@ MonoBehaviour:
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 1863049597}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
+            m_BoolArgument: 1
           m_CallState: 2
     exitPrerequisites: {fileID: 0}
-  autoTrigger: 1
-  keyCode: 0
-  prerequisites: {fileID: 0}
 --- !u!61 &1863049602
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -90816,8 +90748,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _eventTriggerData: {fileID: 0}
+  triggerActionObjects: []
+  endObjectEnabled: 0
   targetTag: Player
   limit: 0
+  autoTrigger: 0
+  keyCode: 0
+  prerequisites: {fileID: 0}
   eventLists:
   - enterPrerequisites: {fileID: 0}
     keyCode: 0
@@ -91290,8 +91227,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _eventTriggerData: {fileID: 0}
+  triggerActionObjects: []
+  endObjectEnabled: 0
   targetTag: Player
   limit: 0
+  autoTrigger: 0
+  keyCode: 0
+  prerequisites: {fileID: 0}
   eventLists:
   - enterPrerequisites: {fileID: 0}
     keyCode: 0
@@ -97637,7 +97579,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2110330919
 Transform:
   m_ObjectHideFlags: 0
@@ -97699,8 +97641,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _eventTriggerData: {fileID: 0}
+  triggerActionObjects:
+  - {fileID: 549679056}
+  - {fileID: 81773031}
+  endObjectEnabled: 0
   targetTag: Player
   limit: 1
+  autoTrigger: 1
+  keyCode: 0
+  prerequisites: {fileID: 0}
   eventLists:
   - enterPrerequisites: {fileID: 0}
     keyCode: 0
@@ -97719,76 +97668,25 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
-        - m_Target: {fileID: 549679056}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 81773031}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
     exitPrerequisites: {fileID: 2110330920}
   - enterPrerequisites: {fileID: 0}
     keyCode: 0
     action:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 2110330918}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 549679056}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
         - m_Target: {fileID: 531350564}
           m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_MethodName: OnTrigger
-          m_Mode: 1
+          m_Mode: 6
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
-            m_BoolArgument: 0
+            m_BoolArgument: 1
           m_CallState: 2
     exitPrerequisites: {fileID: 0}
-  autoTrigger: 1
-  keyCode: 0
-  prerequisites: {fileID: 0}
 --- !u!61 &2110330923
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -98422,8 +98320,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _eventTriggerData: {fileID: 0}
+  triggerActionObjects: []
+  endObjectEnabled: 0
   targetTag: Player
   limit: 0
+  autoTrigger: 0
+  keyCode: 0
+  prerequisites: {fileID: 0}
   eventLists:
   - enterPrerequisites: {fileID: 0}
     keyCode: 0

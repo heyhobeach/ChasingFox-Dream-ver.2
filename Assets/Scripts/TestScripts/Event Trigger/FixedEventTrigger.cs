@@ -64,6 +64,7 @@ public class FixedEventTrigger : EventTrigger, IBaseController
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
+        if(collider.gameObject.scene != gameObject.scene) return;
         if((autoTrigger ? false : !Input.GetKeyDown(keyCode)) 
             || !collider.CompareTag(targetTag) 
             || (prerequisites != null && !prerequisites.isSatisfied)

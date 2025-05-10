@@ -106,12 +106,14 @@ public class EventTrigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
+        if(collider.gameObject.scene != gameObject.scene) return;
         if(!collider.CompareTag(targetTag) || collider.GetComponent<UnitBase>()?.UnitState != UnitState.Default) return;
         targetPosition = collider.transform.position;
         OnTrigger();
     }
     protected virtual void OnTriggerExit2D(Collider2D collider)
     {
+        if(collider.gameObject.scene != gameObject.scene) return;
         if(!collider.CompareTag(targetTag)) return;
         action = null;
     }
