@@ -250,6 +250,10 @@ public class MesteryUIScript : MonoBehaviour
         Debug.Log("일기 finish");
 
         List<string>strings = new List<string>();
+        foreach(var i in answerTexts)
+        {
+            Debug.Log(i);
+        }
         var container = mesteryContainer.Query<TextElement>(className: "dropArea");
         string pattern = @"\s*,\s*";
         string textWithoutQuotes = answerTexts[contentContextArrayIndex].Item1.Replace("\"", "").Trim();
@@ -370,6 +374,10 @@ public class MesteryUIScript : MonoBehaviour
         textContainerContent.style.display = DisplayStyle.Flex;
         mesteryContainer.style.display = DisplayStyle.None;
         currentElement.UnregisterCallback<PointerDownEvent>(LoadMestery);
+        contentContextArrayIndex = 0;
+        mesteryContainer.Clear();
+        answerTexts.Clear();
+        originText.Clear();
     }
 
     private void WrongAnswerPopDown()
@@ -510,7 +518,6 @@ public class MesteryUIScript : MonoBehaviour
             Debug.LogError("버튼 범위 벗어남");
             return;
         }
-
 
 
         VisualElement problem = currentProblem;
