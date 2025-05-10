@@ -6,11 +6,14 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Unity.VisualScripting.Antlr3.Runtime;
+using UnityEditor.Search;
+
 //using UnityEditor.Rendering;
 
 using UnityEngine;
 
 using UnityEngine.UIElements;
+using UnityEngine.Windows;
 using static UnityEditor.Recorder.OutputPath;
 
 
@@ -21,6 +24,7 @@ public class MesteryUIScript : MonoBehaviour
     VisualElement dragGhost = null;
     VisualElement textContainer;//일기
     VisualElement textContainerContent;//일기의 내용을 담고 있음
+    VisualElement mesteryContainer;
 
     /// <summary>
     /// 버튼들을 담고있는 객체
@@ -82,13 +86,11 @@ public class MesteryUIScript : MonoBehaviour
 
     bool is_hiddenmode = false;
 
+    TextElement currentElement;
+    bool ishome = true;
 
-    private async void Awake()
-    {
-        await CloseRoom(0.5f, GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("VisualElement"));
-    }
 
-    private void OnEnable()
+    private async void OnEnable()
     {
         hidden_start_index = -1;
   
@@ -120,6 +122,8 @@ public class MesteryUIScript : MonoBehaviour
         //textContainer.setpa
         visualElement = root.Q<VisualElement>("VisualElement");
         textContainerContent = root.Q<VisualElement>("textContainerContent");
+        mesteryContainer = root.Q<VisualElement>("MysteryContainer");
+
 
         visualElement.Add(diary);
         visualElement.style.visibility = Visibility.Hidden;
@@ -127,29 +131,12 @@ public class MesteryUIScript : MonoBehaviour
 
         ButtonSet(root);
 
+        await CloseRoom(0.5f, GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("VisualElement"));
+        ishome = true;
+        currentElement = new TextElement();
 
-        var text1 = new TextElement { text = "클릭 이벤트 가능한 문장 1 ", name = "sentence1" };
-        var clickableText = new TextElement { text = "클릭 이벤트 가능한 문장 2", name = "clickableWord" };
-        var text2 = new TextElement { text = "클릭 이벤트 가능한 문장 3", name = "sentence2" };
-
-        // 클릭 이벤트 추가
-        List<TextElement> textList = new List<TextElement>();//이벤트가 들어가야하는 내용들
-        textList.Add(text1); textList.Add(text2); textList.Add(clickableText);
         SetDiaryText(ref textContainer, StartEvent("Diary_0.001"));//처음 수집품별 다이어리 내용
         //ui toolkit에서 제공하는 함수로 이벤트 등록에 사용됨
-        foreach (var text in textList)
-        {
-            text.RegisterCallback<PointerUpEvent>(even =>
-            {
-                Debug.Log("hello");
-            });
-        }
-        clickableText.RegisterCallback<PointerUpEvent>(evt =>
-        {
-            Debug.Log("클릭된 텍스트: 클릭 가능한 텍스트");
-
-
-        });
 
         //패널에 함수 등록
         visualElement.RegisterCallback<PointerDownEvent>(OnPointerDown);
@@ -196,13 +183,17 @@ public class MesteryUIScript : MonoBehaviour
         }
         background.style.backgroundColor = new Color(0,0,0, 0);
         visual.style.display = DisplayStyle.None;
+        this.gameObject.SetActive(false);
     }
 
     public async Awaitable CloseRoom(float time,VisualElement visual)//지금 스프라이트 랜더러에서 값이 변경이 안되는듯함
     {
+        //diary_button_parent.style.display = DisplayStyle.None;
         var background = GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("BackGround");
         float current = 0;
         float value_a = 255;
+        diary_button_parent.style.display = DisplayStyle.None;
+        diary_button_parent.style.visibility = Visibility.Hidden;
         while (current < time)
         {
             await Awaitable.EndOfFrameAsync();
@@ -214,6 +205,21 @@ public class MesteryUIScript : MonoBehaviour
         }
         background.style.backgroundColor = new Color(0,0,0, 0.2f);
         visual.style.visibility = Visibility.Visible;
+
+        visual.schedule.Execute(() =>
+        {
+            // 이 람다 표현식 안의 코드가 다음 UI 업데이트 주기(다음 프레임)에 실행됩니다.
+            //Invoke("ButtonCreateTest", 0.3f);
+            diary_button_parent.style.display = DisplayStyle.Flex;
+            diary_button_parent.style.visibility = Visibility.Visible;
+        }).ExecuteLater(300);//하드 코딩인데 타이임이 적당하게 맞는데?
+        //diary_button_parent.visible = true;
+    }
+
+    private void ButtonCreateTest()
+    {
+        diary_button_parent.style.display = DisplayStyle.Flex;
+        diary_button_parent.visible = true;
     }
 
     private void ButtonSet(VisualElement root)
@@ -230,20 +236,21 @@ public class MesteryUIScript : MonoBehaviour
         diary_button_finsh = root.Q<Button>("Finsh");
         diary_button_back.clickable.clicked += DiaryBackButtonEvent;
         diary_button_finsh.clickable.clicked += DiaryFinishButtonEvent;
-        diary_button_parent.visible = false;
+        diary_button_parent.style.display = DisplayStyle.None;
+        diary_button_parent.style.visibility = Visibility.Hidden;
     }
 
     private void DiaryFinishButtonEvent()//정답 확인
     {
-        Debug.Log("일기 finish");
-        if (contentContextArrayIndex >= contentContextArray.Length-1)
+        if (ishome)
         {
-            Debug.Log("마지막 라인 종료");
             EndMeystery();
             return;
         }
+        Debug.Log("일기 finish");
+
         List<string>strings = new List<string>();
-        var container = textContainerContent.Query<TextElement>(className: "dropArea");
+        var container = mesteryContainer.Query<TextElement>(className: "dropArea");
         string pattern = @"\s*,\s*";
         string textWithoutQuotes = answerTexts[contentContextArrayIndex].Item1.Replace("\"", "").Trim();
         string hiddentextWithoutQuotes = answerTexts[contentContextArrayIndex].Item2.Replace("\"", "").Trim();
@@ -261,41 +268,108 @@ public class MesteryUIScript : MonoBehaviour
             index++;
             strings.Add(i.text.Trim());
         }
-        if (answerTexts[contentContextArrayIndex].Item1.Length <= 1)
+        if (answerTexts[contentContextArrayIndex].Item1.Length <= 1)//문제가 아닐경우 해당 경우 마지막 라인 수정 필요
         {
+            //&& contentContextArrayIndex <= contentContextArray.Length - 1
+            Debug.Log("문제가 아님");
             contentContextArrayIndex++;
-            SetDiaryTextProblem();
-            return;
-        }
-        bool is_correct = false;
-
-        if (answer_strings.SequenceEqual(strings.ToArray()))//정답일경우
-        {
-            is_correct = true;
-            contentContextArrayIndex++;
-            if(contentContextArrayIndex>contentContextArray.Length)
+            if (contentContextArrayIndex > contentContextArray.Length - 1)//여기가 중요
             {
                 Debug.Log("마지막 라인 종료");
-                EndMeystery();
-                return;
+                HomeDiary();
+                //EndMeystery();
+            }
+            else
+            {
+                SetDiaryTextProblem();
+            }
+
+            return;
+        }
+        //bool is_correct = false;
+        foreach(string str in strings)
+        {
+            Debug.Log("제출 정답 =>" + str);
+        }
+        foreach(string str in answer_strings)
+        {
+            Debug.Log("일반 정답 =>" + str);
+        }
+        foreach (string str in hidden_answer_strings)
+        {
+            Debug.Log("히든 정답 =>" + str);
+        }
+        if (answer_strings.SequenceEqual(strings.ToArray()))//정답일경우
+        {
+            //is_correct = true;
+            contentContextArrayIndex++;
+            if(contentContextArrayIndex<=contentContextArray.Length-1)
+            {
+                CorrectRespon();
+                //Debug.Log("마지막 라인 종료");
+                //textContainer.RemoveFromClassList("diary-left");
+                //GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("TracerNote").RemoveFromClassList("test2-2");
+                ////추가 필요 flex none
+                //currentElement.RemoveFromClassList("clickable");
+                //currentElement.AddToClassList("sentence");
+                //currentElement.text = originText[contentContextArrayIndex];
+                //textContainerContent.style.display = DisplayStyle.Flex;
+                //mesteryContainer.style.display = DisplayStyle.None;
+                ////EndMeystery();
+                //return;
             }
             //is_hiddenmode = false;
-            CorrectRespon();
+
         }else if (hidden_answer_strings.SequenceEqual(strings.ToArray()))
         {
             Debug.Log("히든 정답 맞춤");
             is_hiddenmode = true;
-            CorrectRespon();
+            if (contentContextArrayIndex <= contentContextArray.Length - 1)
+            {
+                CorrectRespon();
+                //Debug.Log("마지막 라인 종료");
+                //textContainer.RemoveFromClassList("diary-left");
+                //GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("TracerNote").RemoveFromClassList("test2-2");
+                ////추가 필요 flex none
+                //currentElement.RemoveFromClassList("clickable");
+                //currentElement.AddToClassList("sentence");
+                //currentElement.text = originText[contentContextArrayIndex];
+                //textContainerContent.style.display = DisplayStyle.Flex;
+                //mesteryContainer.style.display = DisplayStyle.None;
+                ////EndMeystery();
+                //return;
+            }
         }
         else
         {
-            is_correct = false;
+            //is_correct = false;
             //textContainer.style.display = DisplayStyle.Flex;
             textContainer.Q<TextElement>("WrongAnswer").style.display = DisplayStyle.Flex;
 
             Invoke("WrongAnswerPopDown", 1);
             Debug.Log("오답");
         }
+
+        if (contentContextArrayIndex > contentContextArray.Length-1 )//여기가 중요
+        {
+            Debug.Log("마지막 라인 종료");
+            HomeDiary();
+            //EndMeystery();
+            return;
+        }
+    }
+    private void HomeDiary()
+    {
+        ishome = true;
+        textContainer.RemoveFromClassList("diary-left");
+        GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("TracerNote").RemoveFromClassList("test2-2");
+        //추가 필요 flex none
+        currentElement.RemoveFromClassList("clickable");
+        currentElement.AddToClassList("sentence");
+        currentElement.text = originText[contentContextArrayIndex - 1];
+        textContainerContent.style.display = DisplayStyle.Flex;
+        mesteryContainer.style.display = DisplayStyle.None;
+        currentElement.UnregisterCallback<PointerDownEvent>(LoadMestery);
     }
 
     private void WrongAnswerPopDown()
@@ -331,7 +405,7 @@ public class MesteryUIScript : MonoBehaviour
                 contentContext = dialogues[i].context[rowIndex];
                 
 
-
+                //mesteryContainer
                 //string[] keys = InventoryManager.Instance.GetInfo_(info_keys[i]).keywords;
                 string[] keys = InventoryManager.Instance.GetInfo_(int.Parse(dialogues[i].id)).keywords;
                 if (dialogues[i].problem.Length > 0)//해당 부분없으면 다른 csv파일상에서 접근시 문제 생김
@@ -406,20 +480,25 @@ public class MesteryUIScript : MonoBehaviour
 
         contentContextArray = contentContextList.ToArray();
 
-        foreach (string str in contentContextArray)
+        if (!isProblemCSV)
         {
-            Debug.Log("contentcontextArray ->" + str);
+            for (int number = 0; number < textList.Count; number++)
+            {
+                textContainerContent.Add(textList[number]);
+            }
         }
-        foreach(string str in originText)
+        else
         {
-            Debug.Log("originText ->" + str);
+            Debug.Log("textlist count is " + textList.Count);
+            
+            for (int number = 0; number < textList.Count; number++)
+            {
+                textContainerContent.Add(textList[number]);
+                //mesteryContainer.Add(textList[number]);
+            }
         }
-        //RefactoryingTest();
 
-        for (int number = 0; number < textList.Count; number++)
-        {
-            textContainerContent.Add(textList[number]);
-        }
+
         Debug.Log("answerTexts length " + answerTexts.Count +" , contentContextArray"+contentContextArray.Length);
     }
 
@@ -474,27 +553,38 @@ public class MesteryUIScript : MonoBehaviour
         List<List<string>> tags = new List<List<string>>();//___으로 변환 되어있는 내용에서 해당 번째가 person인지 destination인지 확인용
         foreach (string part in parts)//br기준,사실상 없는거나 마찬가지
         {
-            //Debug.Log("part is " + part);
+            //Debug.Log("part is " + part+"id =>"+id+"key length"+keys.Length);
+            //if (keys.Length < 1)
+            //{
+            //    keys = new string[] { "" };
+            //}
             //Debug.Log("id=>" + id);
-            Debug.Log(string.Format("part is {0} , id => {1} key is {2}", part, id, keys[0]));
+            //Debug.Log(string.Format("part is {0} , id => {1} key is {2}", part, id, keys[0]));
             string[] _part;
             _part = part.Split(' ');
 
 
+
             var textelement = new TextElement { text = part, name = "textelement" };
+
+
 
             foreach (string p in _part)//여기 드래그 관련 내용들은 csv가 아닌 수집품의 내용 관련으로 갈것임 지금 해당내용은 테스트용이라고 생각하는것이 좋음 띄워 쓰기 관련은 인벤토리(수집품) 추리시 발생, 스페이스 기준
             {
-                bool check = keys.Length > 0 && keys[0] != null && part != null && keys[0].Any(charInKey => part.Contains(charInKey));
+                bool check = keys.Length > 0
+             && keys[0] != null
+             && part != null
+             && part.Contains(keys[0]);
                 //int a = part.IndexOf(keys[0]);
-                Debug.Log($"분리 후: [{p}] check[{check}]"); //지금 분리도 안 되는거같은데
+                //Debug.Log($"분리 후: [{p}] check[{check}]"); //지금 분리도 안 되는거같은데
 
                 if (check)
                 {
                     Debug.Log(keys[0] + "Key 가지고 있음");
                     textelement.AddToClassList("clickable");
-                    textelement.RegisterCallback<PointerDownEvent>(evt => {
+                    textelement.RegisterCallback<PointerDownEvent>(evt => {//여기서 수정 해 볼까
                         mesteryEventNum = int.Parse(id);
+                        currentElement = textelement;
                         //Debug.Log("id" + id); 
                     });
                     textelement.RegisterCallback<PointerDownEvent>(LoadMestery);
@@ -519,7 +609,9 @@ public class MesteryUIScript : MonoBehaviour
         {
             contentContextArrayIndex = contentContextArray.Length;
             //this.gameObject.SetActive(false);
-            EndMeystery();
+            mesteryContainer.RemoveFromClassList("diary-left");
+            GetComponent<UIDocument>().rootVisualElement.Q<VisualElement>("TracerNote").RemoveFromClassList("test2-2");
+            //EndMeystery();
             Debug.Log("정답 못 맞춘 상태 히든 부분");
             return;
         }
@@ -531,7 +623,7 @@ public class MesteryUIScript : MonoBehaviour
 
 
         visuallist.AddToClassList("textOri");
-        if (textContainerContent.childCount >0)
+        if (mesteryContainer.childCount >0)
         {
             visuallist.AddToClassList("textPos");
         }
@@ -623,7 +715,7 @@ public class MesteryUIScript : MonoBehaviour
                 visuallist.Add(problemElement);
             }
         }
-        textContainerContent.Add(visuallist);
+        mesteryContainer.Add(visuallist);
         visuallist.schedule.Execute(() => {
             // 여기에 다음 프레임에 하고 싶은 동작
             visuallist.RemoveFromClassList("textPos");
@@ -761,7 +853,10 @@ public class MesteryUIScript : MonoBehaviour
 
     private void LoadMestery(PointerDownEvent evt)//데이터를 미리 정해놔야할듯?
     {
-        textContainerContent.Clear();
+        //textContainerContent.Clear();
+        ishome = false;
+        textContainerContent.style.display = DisplayStyle.None;
+        mesteryContainer.style.display = DisplayStyle.Flex;
         DiaryContentSet();
         MesterySystem();
         SetDiaryTextProblem();
@@ -814,8 +909,11 @@ public class MesteryUIScript : MonoBehaviour
             lineContainer.style.flexWrap = Wrap.Wrap;//이게 들어가야 줄 이상한거 없어짐
             //float estimatedLineHeightInPixels = 50f;
             //lineContainer.style.minHeight = new StyleLength(new Length(estimatedLineHeightInPixels, LengthUnit.Pixel));
-            string[] _part = part.Split(' ');
-
+            //string[] _part = part.Split(' ');
+            string pattern = @"""([^""]*)""|([^""\s]+)";
+            var matches = Regex.Matches(part, pattern);
+            string[] _part = matches.Cast<Match>().Select(m => m.Value).ToList().ToArray();
+            //string[] _part = Regex.Replace(part, @"(?<![""])\s+(?![^""]*[""])", "");
             foreach (string p in _part)//여기 드래그 관련 내용들은 csv가 아닌 수집품의 내용 관련으로 갈것임 지금 해당내용은 테스트용이라고 생각하는것이 좋음 띄워 쓰기 관련은 인벤토리(수집품) 추리시 발생
             {
                 //여기를 수정해야할듯?
@@ -824,7 +922,8 @@ public class MesteryUIScript : MonoBehaviour
                 foreach (string k in keys)
                 {
                     Debug.Log("Key = " + k);
-                    check = keys.Length > 0 && p != null && k != null && k.Any(c => p.Contains(c));
+                    check = keys.Length > 0 && p != null && k != null && p.Contains(k);
+
                     if (check)
                     {
                         key = k;
@@ -898,6 +997,7 @@ public class MesteryUIScript : MonoBehaviour
 
     private async void EndMeystery()
     {
+        Debug.Log("end");
         await OpenRoom(0.7f, GetComponent<UIDocument>().rootVisualElement);
     }
 }

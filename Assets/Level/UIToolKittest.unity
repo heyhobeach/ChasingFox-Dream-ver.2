@@ -300,7 +300,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1559352105}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -319,6 +319,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa15bfb7321b53044862d60984848238, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  invendata: {fileID: 0}
+  inventory: {fileID: 0}
 --- !u!114 &1559352111
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -332,11 +334,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tempcollections:
-  - {fileID: 11400000, guid: ad4394aa62c2e3343a1e0dafaf33593b, type: 2}
-  - {fileID: 11400000, guid: 149ec2431fafc6b4d82c3be54affb43d, type: 2}
-  - {fileID: 11400000, guid: 149ec2431fafc6b4d82c3be54affb43d, type: 2}
-  - {fileID: 11400000, guid: 44a49a11cbed84c4f861003090ac1180, type: 2}
-  - {fileID: 11400000, guid: 0c99b3f36c2f9c74dbafc4f9c10bb071, type: 2}
+  - {fileID: 11400000, guid: 9a980719d7c4abe46b1200d41babe31b, type: 2}
+  - {fileID: 11400000, guid: 63e0831565313cf4a9d28eaa16c49ef9, type: 2}
+  - {fileID: 11400000, guid: 09b16ae6c9e3342438bdd6245b0c0570, type: 2}
+  - {fileID: 11400000, guid: c204ad8805a550847bedccaa3bdd2dbc, type: 2}
+  - {fileID: 11400000, guid: cc82f068ee0d80c4ead29d5481be1fd5, type: 2}
   invenCount: 0
   newsCount: 0
 --- !u!1 &1773860831
@@ -484,6 +486,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 780399718565345525, guid: 5d7895005606c4340bbfaa2c9445cb0a, type: 3}
+      propertyPath: currentChapterNum
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 1505255237836197704, guid: 5d7895005606c4340bbfaa2c9445cb0a, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -534,15 +540,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1505255237836197704, guid: 5d7895005606c4340bbfaa2c9445cb0a, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1505255237836197704, guid: 5d7895005606c4340bbfaa2c9445cb0a, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1505255237836197704, guid: 5d7895005606c4340bbfaa2c9445cb0a, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1505255237836197704, guid: 5d7895005606c4340bbfaa2c9445cb0a, type: 3}
       propertyPath: m_AnchoredPosition.x
