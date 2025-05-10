@@ -72,12 +72,21 @@ public class Player : MonoBehaviour, IUnitController, IDamageable
             playerData = asset;
             playerData.Init();
         }
+        foreach(var form in forms)
+        {
+            form.GetComponent<Collider2D>().enabled = false;
+        }
     }
 
     public void Init(PlayerData.JsonData playerData)
     {
         fixedDir = 1;
         invalidation = false;
+
+        foreach(var form in forms)
+        {
+            form.GetComponent<Collider2D>().enabled = true;
+        }
 
         this.playerData.Init(playerData);
 
