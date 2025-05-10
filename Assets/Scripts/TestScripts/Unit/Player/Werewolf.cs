@@ -107,7 +107,7 @@ public class Werewolf : PlayerUnit
         if(ServiceLocator.Get<GameManager>().isPaused || attackCoroutine != null) return;
         if(currentTime >= 0) 
         {
-            currentTime -= 0.02f;
+            currentTime -= 0.02f * ServiceLocator.Get<GameManager>().ingameTimescale;
             maskImage.material.SetFloat("_Alpha", Utils.EaseFromTo(0, brutalData.brutalTime, currentTime, EaseType.EaseOut) / brutalData.brutalTime);
         }
         else formChangeTest?.Invoke();

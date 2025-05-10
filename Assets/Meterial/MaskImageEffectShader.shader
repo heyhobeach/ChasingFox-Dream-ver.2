@@ -8,14 +8,14 @@ Shader "Hidden/MaskImageEffectShader"
     }
     SubShader
     {
-        Tags { "RenderType"="Transparent-1" "Queue"="Overlay" }
+        Tags { "RenderType"="Transparent" "Queue"="Overlay" }
 
-        Stencil { Ref 1 Comp NotEqual Fail Replace Pass Replace }
         ZWrite Off
         Blend SrcAlpha OneMinusSrcAlpha // 투명도 처리
 
         Pass
         {
+            Stencil { Ref 0 Comp Equal Pass Replace Fail Keep }
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag

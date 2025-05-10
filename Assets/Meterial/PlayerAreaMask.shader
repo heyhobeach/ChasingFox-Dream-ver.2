@@ -7,7 +7,7 @@ Shader "Custom/StencilTest"
     }
     SubShader
     {
-        Tags { "RenderType"="Transparent" }
+        Tags { "RenderType"="Transparent-1" }
         Pass
         {
             Stencil { Ref 1 Comp Always Pass Replace }

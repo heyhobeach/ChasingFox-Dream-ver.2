@@ -14,8 +14,8 @@ Shader "Hidden/SelectedImageEffectShader"
     {
         Pass
         {
-            Tags { "Queue"="Transparent" }
-            Stencil { Ref 1 Comp Equal }
+            Tags { "Queue"="Transparent+1" }
+            Stencil { Ref 0 Comp NotEqual }
             ZWrite Off 
     
             Blend SrcAlpha OneMinusSrcAlpha // 알파 블렌딩 설정
@@ -99,6 +99,55 @@ Shader "Hidden/SelectedImageEffectShader"
                 }
 
                 return finalColor;
+            }
+            ENDCG
+        }
+
+        Pass
+        {
+            Tags { "Queue"="Transparent+1" }
+            Stencil { Ref 0 Comp Equal }
+            ZWrite Off 
+    
+            Blend SrcAlpha OneMinusSrcAlpha // 알파 블렌딩 설정
+            Cull Off // 양면 렌더링 설정
+
+            CGPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
+
+            sampler2D _MainTex;
+
+            #include "UnityCG.cginc"
+
+            struct appdata
+            {
+                float4 vertex : POSITION;
+                float2 uv : TEXCOORD0;
+            };
+
+            struct v2f
+            {
+                float2 uv : TEXCOORD0;
+                float4 vertex : SV_POSITION;
+            };
+
+
+            v2f vert (appdata v)
+            {
+                UNITY_SETUP_INSTANCE_ID(v);
+                v2f o;
+                o.vertex = UnityObjectToClipPos(v.vertex);
+                o.uv = v.uv;
+                return o;
+            }
+
+            fixed4 frag (v2f i) : SV_Target
+            {
+                UNITY_SETUP_INSTANCE_ID(i);
+                fixed4 mainTexColor = tex2D(_MainTex, i.uv);
+
+                return mainTexColor;
             }
             ENDCG
         }

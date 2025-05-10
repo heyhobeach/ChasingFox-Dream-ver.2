@@ -94,9 +94,9 @@ public class MainMenuManager : MonoBehaviour
         {
             SystemManager.Instance.CreateData(idx);
             save = SystemManager.Instance.saveData;
-            save.chapter = "Chp0";
+            PageManger.Instance.LoadScene("Chp0", false);
         }
-        PageManger.Instance.LoadScene(save.chapter, false);
+        else PageManger.Instance.LoadScene(save.chapter, false);
         PageManger.Instance.aoComplatedAction = () =>{
             ServiceLocator.Get<GameManager>().ApplySaveData();
         };
